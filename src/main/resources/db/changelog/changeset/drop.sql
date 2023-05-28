@@ -1,1 +1,1 @@
-DROP TABLE user_profile_analytics;
+DROP TABLE analytics_event;

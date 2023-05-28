@@ -1,6 +1,6 @@
 package faang.school.analytics.config.messaging;
 
-import faang.school.analytics.messaging.UserProfileViewListener;
+import faang.school.analytics.messaging.ProfileViewListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,7 @@ public class RedisProfileViewConfig {
     private String channel;
 
     @Bean
-    public MessageListenerAdapter profileViewAdapter(UserProfileViewListener profileViewListener) {
+    public MessageListenerAdapter profileViewAdapter(ProfileViewListener profileViewListener) {
         return new MessageListenerAdapter(profileViewListener);
     }
 

@@ -1,13 +1,13 @@
 package faang.school.analytics.controller;
 
 import faang.school.analytics.config.context.UserContext;
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.Interval;
-import faang.school.analytics.dto.UserProfileViewDto;
 import faang.school.analytics.exception.DataValidationException;
-import faang.school.analytics.service.UserProfileAnalyticsService;
+import faang.school.analytics.model.EventType;
+import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,20 +17,22 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class UserProfileAnalyticsController {
+public class AnalyticsEventController {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
-    private final UserProfileAnalyticsService userProfileAnalyticsService;
+    private final AnalyticsEventService analyticsEventService;
     private final UserContext userContext;
 
-    @GetMapping("/user/{userId}/analytics/view")
-    private List<UserProfileViewDto> getProfileViewAnalytics(@PathVariable long userId,
-                                                             @RequestParam(required = false) String interval,
-                                                             @RequestParam(required = false) String from,
-                                                             @RequestParam(required = false) String to) {
-        if (userContext.getUserId() == userId) {
+    @GetMapping("/analytics")
+    private List<AnalyticsEventDto> getProfileViewAnalytics(@RequestParam long receiverId,
+                                                            @RequestParam int eventType,
+                                                            @RequestParam(required = false) String interval,
+                                                            @RequestParam(required = false) String from,
+                                                            @RequestParam(required = false) String to) {
+        if (userContext.getUserId() == receiverId) {
+            EventType type = EventType.of(eventType);
             validateInterval(interval, from, to);
             LocalDateTime fromTime = null;
             LocalDateTime toTime = null;
@@ -48,7 +50,7 @@ public class UserProfileAnalyticsController {
             } catch (Exception e) {
                 throw new DataValidationException("Bad request", "Invalid date/interval format");
             }
-            return userProfileAnalyticsService.getProfileViewAnalytics(userId, actualInterval, fromTime, toTime);
+            return analyticsEventService.getAnalytics(receiverId, type, actualInterval, fromTime, toTime);
         } else {
             throw new DataValidationException("Bad request", "User can view only its own analytics");
         }
