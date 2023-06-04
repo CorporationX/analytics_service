@@ -2,7 +2,6 @@ package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.Interval;
-import faang.school.analytics.dto.event.ProfileViewEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -23,9 +22,8 @@ public class AnalyticsEventService {
     private final AnalyticsEventMapper analyticsEventMapper;
 
     @Transactional
-    public void saveEvent(ProfileViewEvent event) {
-        AnalyticsEvent view = analyticsEventMapper.toEntity(event);
-        analyticsEventRepository.save(view);
+    public void saveEvent(AnalyticsEvent event) {
+        analyticsEventRepository.save(event);
     }
 
     @Transactional(readOnly = true)
