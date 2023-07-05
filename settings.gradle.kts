@@ -1,1 +1,1 @@
-rootProject.name = "Analytics Service"
+rootProject.name = "analytics_service"
