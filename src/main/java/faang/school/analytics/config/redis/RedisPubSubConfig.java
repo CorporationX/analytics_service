@@ -29,7 +29,12 @@ public class RedisPubSubConfig {
   public RedisMessageListenerContainer redisContainer(RedisConnectionFactory redisConnectionFactory) {
     RedisMessageListenerContainer container = new RedisMessageListenerContainer();
     container.setConnectionFactory(redisConnectionFactory);
-    container.addMessageListener(messageSubscriber, channelTopic());
+
+    // Subscribe to all the channels defined in the RedisMessageSubscriber
+    for (String channel : messageSubscriber.getSubscribedChannels()) {
+      container.addMessageListener(messageSubscriber, new ChannelTopic(channel));
+    }
+
     return container;
   }
 
