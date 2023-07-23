@@ -1,7 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.service.redis.RedisMessageSubscriber;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -10,20 +10,9 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.context.annotation.Bean;
 
 @Configuration
+@RequiredArgsConstructor
 public class RedisPubSubConfig {
-  private static String  CHANNEL_TOPIC_NAME = "analytics_topic";
-
   private final RedisMessageSubscriber messageSubscriber;
-
-  @Autowired
-  public RedisPubSubConfig(RedisMessageSubscriber messageSubscriber) {
-    this.messageSubscriber = messageSubscriber;
-  }
-
-  @Bean
-  public ChannelTopic channelTopic() {
-    return new ChannelTopic(CHANNEL_TOPIC_NAME);
-  }
 
   @Bean
   public RedisMessageListenerContainer redisContainer(RedisConnectionFactory redisConnectionFactory) {
