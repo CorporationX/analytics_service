@@ -16,6 +16,7 @@ public class RedisMessageSubscriber implements MessageListener {
     String channel = new String(message.getChannel());
     String body = new String(message.getBody());
 
+    // Depends on channel name we can write here different logic
     System.out.println("Received message: " + body + " from channel: " + channel);
   }
 
