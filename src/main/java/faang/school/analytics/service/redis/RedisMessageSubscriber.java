@@ -1,5 +1,7 @@
 package faang.school.analytics.service.redis;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
@@ -8,8 +10,11 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
+@Slf4j
 public class RedisMessageSubscriber implements MessageListener {
-  private List<String> subscribedChannels = Arrays.asList("analytics_topic");
+  @Value("${spring.data.redis.channel.analytic}")
+  private String defaultChannelName;
+  private List<String> subscribedChannels = Arrays.asList(defaultChannelName);
 
   @Override
   public void onMessage(Message message, byte[] pattern) {
@@ -17,6 +22,7 @@ public class RedisMessageSubscriber implements MessageListener {
     String body = new String(message.getBody());
 
     // Depends on channel name we can write here different logic
+    log.info("Received message: " + body + " from channel: " + channel);
     System.out.println("Received message: " + body + " from channel: " + channel);
   }
 
