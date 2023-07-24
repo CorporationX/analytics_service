@@ -1,12 +1,13 @@
 package faang.school.analytics.service.redis;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -14,7 +15,12 @@ import java.util.List;
 public class RedisMessageSubscriber implements MessageListener {
   @Value("${spring.data.redis.channel.analytic}")
   private String defaultChannelName;
-  private List<String> subscribedChannels = Arrays.asList(defaultChannelName);
+  private List<String> subscribedChannels = new ArrayList<>();
+
+  @PostConstruct
+  private void postConstruct() {
+    subscribedChannels.add(defaultChannelName);
+  }
 
   @Override
   public void onMessage(Message message, byte[] pattern) {
