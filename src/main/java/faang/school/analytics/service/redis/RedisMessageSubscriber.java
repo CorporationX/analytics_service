@@ -13,7 +13,7 @@ import java.util.List;
 @Component
 @Slf4j
 public class RedisMessageSubscriber implements MessageListener {
-  @Value("${spring.data.redis.channel.analytic}")
+  @Value("${spring.data.redis.channels.analytic_channel.name}")
   private String defaultChannelName;
   private List<String> subscribedChannels = new ArrayList<>();
 
