@@ -1,8 +1,10 @@
 package faang.school.analytics.service.redis.listeners;
 
-import faang.school.analytics.mapper.UserEventMapper;
-import faang.school.analytics.service.redis.events.UserEvent;
+import faang.school.analytics.dto.AnalyticDto;
+import faang.school.analytics.mapper.AnalyticsMapper;
+import faang.school.analytics.service.analytics.AnalyticsService;
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,25 +19,26 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class UserEventsListener implements MessageListener {
+    @Getter
     @Value("${spring.data.redis.channels.user_events_channel.name}")
-    private String defaultChannelName;
-    private List<String> subscribedChannels = new ArrayList<>();
+    private String channelName;
 
-    private UserEventMapper userEventMapper;
+    private final AnalyticsService analyticsService;
+
+    private final AnalyticsMapper analyticsMapper;
+    private List<String> subscribedChannels = new ArrayList<>();
 
     @PostConstruct
     private void postConstruct() {
-        subscribedChannels.add(defaultChannelName);
+        subscribedChannels.add(channelName);
     }
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        String channel = new String(message.getChannel());
-        String body = new String(message.getBody());
-        UserEvent userEvent = userEventMapper.readValue(message.getBody(), UserEvent.class);
+        AnalyticDto analyticDto = analyticsMapper.readValue(message.getBody(), AnalyticDto.class);
 
-        // Depends on channel name we can write here different logic
-        log.info("Received message: " + body + " from channel: " + channel);
-        System.out.println("Received message: " + body + " from channel: " + channel);
+        analyticsService.create(analyticDto);
+
+        log.info("Received message: " + "User with id: " + analyticDto.getId() + " was " + analyticDto.getType());
     }
 }

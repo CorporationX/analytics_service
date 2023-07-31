@@ -16,7 +16,12 @@ public enum EventType {
     GOAL_COMPLETED,
     ACHIEVEMENT_RECEIVED,
     PROFILE_APPEARED_IN_SEARCH,
-    PROJECT_APPEARED_IN_SEARCH;
+    PROJECT_APPEARED_IN_SEARCH,
+
+    USER_CREATED,
+    USER_DELETED,
+    USER_UPDATED,
+    USER_DEACTIVATED;
 
     public static EventType of(int type) {
         for (EventType eventType : EventType.values()) {
