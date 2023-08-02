@@ -21,7 +21,10 @@ public enum EventType {
     USER_CREATED,
     USER_DELETED,
     USER_UPDATED,
-    USER_DEACTIVATED;
+    USER_DEACTIVATED,
+
+    PREMIUM_PURCHASED,
+    PREMIUM_CANCELED;
 
     public static EventType of(int type) {
         for (EventType eventType : EventType.values()) {

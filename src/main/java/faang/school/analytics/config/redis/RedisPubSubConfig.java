@@ -1,6 +1,8 @@
 package faang.school.analytics.config.redis;
 
 
+import faang.school.analytics.service.redis.listeners.PremiumEventsListener;
+import faang.school.analytics.service.redis.listeners.ProjectEventsListener;
 import faang.school.analytics.service.redis.listeners.UserEventsListener;
 
 import lombok.RequiredArgsConstructor;
@@ -19,12 +21,22 @@ public class RedisPubSubConfig {
   private String userEventChannelName;
   private final UserEventsListener userEventsListener;
 
+  @Value("${spring.data.redis.channels.project_events_channel.name}")
+  private String projectEventChannelName;
+  private final ProjectEventsListener projectEventsListener;
+
+  @Value("${spring.data.redis.channels.premium_events_channel.name}")
+  private String premiumEventChannelName;
+  private final PremiumEventsListener premiumEventsListener;
+
   @Bean
   public RedisMessageListenerContainer redisContainer(RedisConnectionFactory redisConnectionFactory) {
     RedisMessageListenerContainer container = new RedisMessageListenerContainer();
     container.setConnectionFactory(redisConnectionFactory);
 
     container.addMessageListener(userEventsListener, new ChannelTopic(userEventChannelName));
+    container.addMessageListener(projectEventsListener, new ChannelTopic(projectEventChannelName));
+    container.addMessageListener(premiumEventsListener, new ChannelTopic(premiumEventChannelName));
 
     return container;
   }

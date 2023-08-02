@@ -13,8 +13,10 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserEvent implements Serializable {
+public class ProjectEvent implements Serializable {
+    private Long projectId;
     private EventType eventType;
     private Date receivedAt;
-    private Long userId;
+    private Long receiverId;
+    private Long actorId;
 }

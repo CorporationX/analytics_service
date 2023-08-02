@@ -13,7 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserEvent implements Serializable {
+public class PremiumEvent implements Serializable {
     private EventType eventType;
     private Date receivedAt;
     private Long userId;
