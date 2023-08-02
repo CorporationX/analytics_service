@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -31,6 +32,7 @@ public class AnalyticsEvent {
     private EventType eventType;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     @Column(name = "received_at", nullable = false)
     private LocalDateTime receivedAt;
 }

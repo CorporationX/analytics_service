@@ -1,9 +1,10 @@
 package faang.school.analytics.config.redis;
 
-import faang.school.analytics.service.redis.RedisMessageSubscriber;
+
 import faang.school.analytics.service.redis.listeners.UserEventsListener;
-import jakarta.annotation.PostConstruct;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,20 +15,16 @@ import org.springframework.context.annotation.Bean;
 @Configuration
 @RequiredArgsConstructor
 public class RedisPubSubConfig {
-  private final RedisMessageSubscriber messageSubscriber;
+  @Value("${spring.data.redis.channels.user_events_channel.name}")
+  private String userEventChannelName;
   private final UserEventsListener userEventsListener;
-
-  @PostConstruct
-  private void postConstruct() {
-    System.out.println("DONE");
-  }
 
   @Bean
   public RedisMessageListenerContainer redisContainer(RedisConnectionFactory redisConnectionFactory) {
     RedisMessageListenerContainer container = new RedisMessageListenerContainer();
     container.setConnectionFactory(redisConnectionFactory);
 
-    container.addMessageListener(userEventsListener, new ChannelTopic(userEventsListener.getChannelName()));
+    container.addMessageListener(userEventsListener, new ChannelTopic(userEventChannelName));
 
     return container;
   }

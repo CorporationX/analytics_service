@@ -1,8 +1,12 @@
 package faang.school.analytics.service.redis.listeners;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.AnalyticDto;
 import faang.school.analytics.mapper.AnalyticsMapper;
+import faang.school.analytics.mapper.UserEventsMapper;
+import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.analytics.AnalyticsService;
+import faang.school.analytics.service.redis.events.UserEvent;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +16,7 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,26 +24,26 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class UserEventsListener implements MessageListener {
-    @Getter
-    @Value("${spring.data.redis.channels.user_events_channel.name}")
-    private String channelName;
-
     private final AnalyticsService analyticsService;
 
     private final AnalyticsMapper analyticsMapper;
-    private List<String> subscribedChannels = new ArrayList<>();
 
-    @PostConstruct
-    private void postConstruct() {
-        subscribedChannels.add(channelName);
-    }
+    private final UserEventsMapper userEventsMapper;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        AnalyticDto analyticDto = analyticsMapper.readValue(message.getBody(), AnalyticDto.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        UserEvent userEvent = null;
+        try {
+            userEvent = objectMapper.readValue(message.getBody(), UserEvent.class);
+            AnalyticsEvent analyticsEvent = userEventsMapper.toAnalyticsEvent(userEvent);
 
-        analyticsService.create(analyticDto);
+            analyticsService.create(analyticsMapper.toDto(analyticsEvent));
 
-        log.info("Received message: " + "User with id: " + analyticDto.getId() + " was " + analyticDto.getType());
+            log.info("Received message: " + "User with id: " + analyticsEvent.getId() + " was " + analyticsEvent.getEventType());
+        } catch (IOException e) {
+            log.error(e.toString());
+            throw new RuntimeException(e);
+        }
     }
 }
