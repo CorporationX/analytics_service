@@ -18,12 +18,11 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class ProjectEventsListener extends BaseListener {
     private final AnalyticsService analyticsService;
-
     private final ProjectEventsMapper projectEventsMapper;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void listen(Message message, byte[] pattern) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
         ProjectEvent projectEvent = objectMapper.readValue(message.getBody(), ProjectEvent.class);
         AnalyticsEvent analyticsEvent = projectEventsMapper.toAnalyticsEvent(projectEvent);
 

@@ -18,12 +18,11 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class PremiumEventsListener extends BaseListener {
     private final AnalyticsService analyticsService;
-
     private final PremiumEventsMapper premiumEventsMapper;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void listen(Message message, byte[] pattern) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
         PremiumEvent premiumEvent =  objectMapper.readValue(message.getBody(), PremiumEvent.class);
         AnalyticsEvent analyticsEvent = premiumEventsMapper.toAnalyticsEvent(premiumEvent);
 
