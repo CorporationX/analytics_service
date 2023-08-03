@@ -16,25 +16,19 @@ import java.io.IOException;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class UserEventsListener implements MessageListener {
+public class UserEventsListener extends BaseListener {
     private final AnalyticsService analyticsService;
 
     private final UserEventsMapper userEventsMapper;
 
     @Override
-    public void onMessage(Message message, byte[] pattern) {
+    public void listen(Message message, byte[] pattern) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        UserEvent userEvent = null;
-        try {
-            userEvent = objectMapper.readValue(message.getBody(), UserEvent.class);
-            AnalyticsEvent analyticsEvent = userEventsMapper.toAnalyticsEvent(userEvent);
+        UserEvent userEvent = objectMapper.readValue(message.getBody(), UserEvent.class);
+        AnalyticsEvent analyticsEvent = userEventsMapper.toAnalyticsEvent(userEvent);
 
-            analyticsService.create(analyticsEvent);
+        analyticsService.create(analyticsEvent);
 
-            log.info("Received message: " + "User with id: " + analyticsEvent.getId() + " was " + analyticsEvent.getEventType());
-        } catch (IOException e) {
-            log.error(e.toString());
-            throw new RuntimeException(e);
-        }
+        log.info("Received message: " + "User with id: " + analyticsEvent.getId() + " was " + analyticsEvent.getEventType());
     }
 }
