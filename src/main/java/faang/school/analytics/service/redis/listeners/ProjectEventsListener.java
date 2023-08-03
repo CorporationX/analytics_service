@@ -1,7 +1,6 @@
 package faang.school.analytics.service.redis.listeners;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.mapper.AnalyticsMapper;
 import faang.school.analytics.mapper.ProjectEventsMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.analytics.AnalyticsService;
@@ -20,8 +19,6 @@ import java.io.IOException;
 public class ProjectEventsListener implements MessageListener {
     private final AnalyticsService analyticsService;
 
-    private final AnalyticsMapper analyticsMapper;
-
     private final ProjectEventsMapper projectEventsMapper;
 
     @Override
@@ -32,7 +29,7 @@ public class ProjectEventsListener implements MessageListener {
             projectEvent = objectMapper.readValue(message.getBody(), ProjectEvent.class);
             AnalyticsEvent analyticsEvent = projectEventsMapper.toAnalyticsEvent(projectEvent);
 
-            analyticsService.create(analyticsMapper.toDto(analyticsEvent));
+            analyticsService.create(analyticsEvent);
 
             log.info("Received message: " + "Project with id: " + projectEvent.getProjectId() + " was " + analyticsEvent.getEventType());
         } catch (IOException e) {

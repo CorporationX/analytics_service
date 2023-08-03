@@ -1,7 +1,6 @@
 package faang.school.analytics.service.redis.listeners;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.mapper.AnalyticsMapper;
 import faang.school.analytics.mapper.PremiumEventsMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.analytics.AnalyticsService;
@@ -20,8 +19,6 @@ import java.io.IOException;
 public class PremiumEventsListener implements MessageListener {
     private final AnalyticsService analyticsService;
 
-    private final AnalyticsMapper analyticsMapper;
-
     private final PremiumEventsMapper premiumEventsMapper;
 
     @Override
@@ -32,7 +29,7 @@ public class PremiumEventsListener implements MessageListener {
             premiumEvent = objectMapper.readValue(message.getBody(), PremiumEvent.class);
             AnalyticsEvent analyticsEvent = premiumEventsMapper.toAnalyticsEvent(premiumEvent);
 
-            analyticsService.create(analyticsMapper.toDto(analyticsEvent));
+            analyticsService.create(analyticsEvent);
 
             log.info("Received message: " + "Premium with id: " + analyticsEvent.getId() + " was " + analyticsEvent.getEventType());
         } catch (IOException e) {
