@@ -1,7 +1,12 @@
 package faang.school.analytics.config.redis;
 
-import faang.school.analytics.service.redis.RedisMessageSubscriber;
+
+import faang.school.analytics.service.redis.listeners.PremiumEventsListener;
+import faang.school.analytics.service.redis.listeners.ProjectEventsListener;
+import faang.school.analytics.service.redis.listeners.UserEventsListener;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -12,17 +17,26 @@ import org.springframework.context.annotation.Bean;
 @Configuration
 @RequiredArgsConstructor
 public class RedisPubSubConfig {
-  private final RedisMessageSubscriber messageSubscriber;
+  @Value("${spring.data.redis.channels.user_events_channel.name}")
+  private String userEventChannelName;
+  private final UserEventsListener userEventsListener;
+
+  @Value("${spring.data.redis.channels.project_events_channel.name}")
+  private String projectEventChannelName;
+  private final ProjectEventsListener projectEventsListener;
+
+  @Value("${spring.data.redis.channels.premium_events_channel.name}")
+  private String premiumEventChannelName;
+  private final PremiumEventsListener premiumEventsListener;
 
   @Bean
   public RedisMessageListenerContainer redisContainer(RedisConnectionFactory redisConnectionFactory) {
     RedisMessageListenerContainer container = new RedisMessageListenerContainer();
     container.setConnectionFactory(redisConnectionFactory);
 
-    // Subscribe to all the channels defined in the RedisMessageSubscriber
-    for (String channel : messageSubscriber.getSubscribedChannels()) {
-      container.addMessageListener(messageSubscriber, new ChannelTopic(channel));
-    }
+    container.addMessageListener(userEventsListener, new ChannelTopic(userEventChannelName));
+    container.addMessageListener(projectEventsListener, new ChannelTopic(projectEventChannelName));
+    container.addMessageListener(premiumEventsListener, new ChannelTopic(premiumEventChannelName));
 
     return container;
   }
