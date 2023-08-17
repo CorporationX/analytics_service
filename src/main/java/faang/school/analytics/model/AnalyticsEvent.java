@@ -26,6 +26,9 @@ public class AnalyticsEvent {
     @Column(name = "actor_id", nullable = false)
     private long actorId;
 
+    @Column(name = "post_id")
+    private long postId;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "event_type", nullable = false)
     private EventType eventType;
