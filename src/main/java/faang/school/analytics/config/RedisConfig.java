@@ -14,7 +14,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 @Configuration
 @RequiredArgsConstructor
-public class RedisConfiguration {
+public class RedisConfig {
 
     private final LikePostMessageListener likePostMessageListener;
 
