@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Data
 @NoArgsConstructor
@@ -12,7 +13,7 @@ public class PostViewEvent {
     private Long userAuthorId;
     private Long projectAuthorId;
     private Long viewerId;
-    private LocalDateTime time = LocalDateTime.now();
+    private LocalDateTime time = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
     public PostViewEvent(Long postId, Long userAuthorId, Long projectAuthorId, Long viewerId) {
         this.postId = postId;
