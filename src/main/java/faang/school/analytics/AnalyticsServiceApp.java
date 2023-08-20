@@ -1,5 +1,6 @@
 package faang.school.analytics;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.boot.Banner;
@@ -9,7 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-@EnableFeignClients("school.faang.analytics.client")
+@EnableFeignClients("faang.school.analytics.client")
 public class AnalyticsServiceApp {
     public static void main(String[] args) {
         new SpringApplicationBuilder(AnalyticsServiceApp.class)
