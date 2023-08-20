@@ -10,6 +10,7 @@ public interface FollowEventMapper {
     @Mapping(source = "subscriberId", target = "actorId")
     @Mapping(source = "targetUserId", target = "receiverId")
     @Mapping(source = "subscriptionDateTime", target = "receivedAt")
+    @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.FOLLOWER)")
     AnalyticsEvent toEntity(FollowEventDto dto);
 
     FollowEventDto toDto(AnalyticsEvent dto);
