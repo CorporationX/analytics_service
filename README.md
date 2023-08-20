@@ -83,7 +83,7 @@ RESTful приложения калькулятор с единственным 
 * Используется TTL кэширование вычислений
   в [CalculationTtlCacheService](src/main/java/faang/school/analytics/service/cache/CalculationTtlCacheService.java)
 * Реализован простой Messaging через [Redis pub/sub](https://redis.io/docs/manual/pubsub/)
-  * [Конфигурация](src/main/java/faang/school/analytics/config/RedisConfig.java) –
+  * [Конфигурация](src/main/java/faang/school/analytics/RedisConfig/RedisConfig.java) –
     сетапится [RedisTemplate](https://docs.spring.io/spring-data/redis/docs/current/api/org/springframework/data/redis/core/RedisTemplate.html) –
     класс, для удобной работы с Redis силами Spring
   * [Отправитель](src/main/java/faang/school/analytics/service/messaging/RedisCalculationPublisher.java) – генерит

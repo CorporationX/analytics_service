@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class EventDto {
     private Long actorId;
+    private Long requesterId;
     private Long receiverId;
     private LocalDateTime receivedAt;
     private EventType eventType;

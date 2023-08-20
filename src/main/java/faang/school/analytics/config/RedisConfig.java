@@ -1,6 +1,7 @@
 package faang.school.analytics.config;
 
 import faang.school.analytics.listener.LikePostMessageListener;
+import faang.school.analytics.listener.MentorshipMessageListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 public class RedisConfig {
 
     private final LikePostMessageListener likePostMessageListener;
+    private final MentorshipMessageListener mentorshipMessageListener;
 
     @Value("${spring.data.redis.host}")
     private String host;
@@ -24,6 +26,8 @@ public class RedisConfig {
     private int port;
     @Value("${spring.data.redis.channels.event_channels.likePost}")
     private String likeTopicName;
+    @Value("${spring.data.redis.channels.event_channels.mentorship}")
+    private String mentorship;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -38,6 +42,17 @@ public class RedisConfig {
 
         MessageListenerAdapter likePostMessageListenerAdapter = new MessageListenerAdapter(likePostMessageListener);
         container.addMessageListener(likePostMessageListenerAdapter, new ChannelTopic(likeTopicName));
+
+        return container;
+    }
+
+    @Bean
+    public RedisMessageListenerContainer mentorshipMessageConsumerContainer(RedisConnectionFactory redisConnectionFactory) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(redisConnectionFactory);
+
+        MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(mentorshipMessageListener);
+        container.addMessageListener(messageListenerAdapter, new ChannelTopic(mentorship));
 
         return container;
     }

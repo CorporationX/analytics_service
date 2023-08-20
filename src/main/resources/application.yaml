@@ -25,6 +25,7 @@ spring:
         profile-view: profile_view_channel
         event_channels:
           likePost: /likes/post
+          mentorship: /mentorship
 
 server:
   port: 8086

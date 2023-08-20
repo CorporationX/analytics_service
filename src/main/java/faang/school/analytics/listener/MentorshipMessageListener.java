@@ -5,15 +5,13 @@ import faang.school.analytics.mapper.JsonObjectMapper;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
-public class LikePostMessageListener implements MessageListener {
+public class MentorshipMessageListener implements MessageListener {
 
     private final JsonObjectMapper jsonObjectMapper;
     private final AnalyticsEventService analyticsEventService;
@@ -21,7 +19,7 @@ public class LikePostMessageListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         EventDto eventDto = jsonObjectMapper.readValue(message.getBody(), EventDto.class);
-        eventDto.setEventType(EventType.POST_LIKE);
+        eventDto.setEventType(EventType.PROJECT_INVITE);
         analyticsEventService.saveEvent(eventDto);
     }
 }
