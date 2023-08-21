@@ -27,7 +27,7 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.event_channels.likePost}")
     private String likeTopicName;
     @Value("${spring.data.redis.channels.event_channels.mentorship}")
-    private String mentorship;
+    private String mentorshipName;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -52,7 +52,7 @@ public class RedisConfig {
         container.setConnectionFactory(redisConnectionFactory);
 
         MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(mentorshipMessageListener);
-        container.addMessageListener(messageListenerAdapter, new ChannelTopic(mentorship));
+        container.addMessageListener(messageListenerAdapter, new ChannelTopic(mentorshipName));
 
         return container;
     }

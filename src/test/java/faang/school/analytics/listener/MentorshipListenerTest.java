@@ -4,6 +4,7 @@ import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.mapper.JsonObjectMapper;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,12 +34,12 @@ public class MentorshipListenerTest {
 
         mentorshipMessageListener.onMessage(new Message() {
             @Override
-            public byte[] getBody() {
+            public byte @NotNull [] getBody() {
                 return message;
             }
 
             @Override
-            public byte[] getChannel() {
+            public byte @NotNull [] getChannel() {
                 return new byte[0];
             }
         }, message);
