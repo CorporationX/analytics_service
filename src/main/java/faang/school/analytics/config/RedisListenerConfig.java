@@ -13,19 +13,19 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 @RequiredArgsConstructor
 public class RedisListenerConfig {
 
-    private final MessageListener messageListener;
+    private final MessageListener postViewEventListener;
     private final RedisConnectionFactory connectionFactory;
 
     @Bean
     public MessageListenerAdapter messageListenerAdapter() {
-        return new MessageListenerAdapter(messageListener);
+        return new MessageListenerAdapter(postViewEventListener);
     }
 
     @Bean
     public RedisMessageListenerContainer redisContainer(ChannelTopic topic) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(messageListener, topic);
+        container.addMessageListener(postViewEventListener, topic);
 
         return container;
     }
