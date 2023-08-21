@@ -1,7 +1,6 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -25,7 +24,7 @@ public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventMapper analyticsEventMapper;
 
-    public void saveEvent(EventDto eventDto){
+    public void saveEvent(AnalyticsEventDto eventDto) {
         AnalyticsEvent analyticsEvent = analyticsEventMapper.toModel(eventDto);
         analyticsEventRepository.save(analyticsEvent);
         log.info("Saved event type: " + analyticsEvent.getEventType());
@@ -33,7 +32,7 @@ public class AnalyticsEventService {
 
     public List<AnalyticsEventDto> getAnalytics(long id, int type, LocalDateTime startDate, LocalDateTime endDate) {
         log.info("Get analytics task has started, id: {}, and type: {}", id, type);
-        Iterable<AnalyticsEvent> analyticsIterable = repository.findByReceiverIdAndEventType(id, EventType.of(type));
+        Iterable<AnalyticsEvent> analyticsIterable = analyticsEventRepository.findByReceiverIdAndEventType(id, EventType.of(type));
         Stream<AnalyticsEvent> analyticsStream = StreamSupport.stream(analyticsIterable.spliterator(), false);
         return analyticsStream.filter(event -> isEventInDateRange(event, startDate, endDate))
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())

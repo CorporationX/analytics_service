@@ -32,4 +32,9 @@ class FollowerEventMapperTest {
 
         assertEquals(model, result);
     }
+
+    @Test
+    void toDtoTest() {
+
+    }
 }

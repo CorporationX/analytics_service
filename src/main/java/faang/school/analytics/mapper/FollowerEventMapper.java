@@ -1,5 +1,6 @@
 package faang.school.analytics.mapper;
 
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.FollowerEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.InjectionStrategy;
@@ -15,4 +16,8 @@ public interface FollowerEventMapper {
    @Mapping(target = "receivedAt", source = "subscriptionTime")
    AnalyticsEvent toModel(FollowerEventDto eventDto);
 
+   @Mapping(target = "actorId", source = "followerId")
+   @Mapping(target = "receiverId", source = "followeeId")
+   @Mapping(target = "receivedAt", source = "subscriptionTime")
+   AnalyticsEventDto toDto(FollowerEventDto eventDto);
 }

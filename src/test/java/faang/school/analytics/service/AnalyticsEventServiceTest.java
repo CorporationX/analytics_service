@@ -69,7 +69,7 @@ class AnalyticsEventServiceTest {
         LocalDateTime startDate = LocalDateTime.now().minusMonths(1);
         LocalDateTime endDate = LocalDateTime.now();
 
-        when(repository.findByReceiverIdAndEventType(1, EventType.FOLLOWER)).thenReturn(iterable);
+        when(analyticsEventRepository.findByReceiverIdAndEventType(1, EventType.FOLLOWER)).thenReturn(iterable);
 
         List<AnalyticsEventDto> expected = List.of(analyticsEventMapper.toDto(firstEvent));
 
@@ -84,10 +84,10 @@ class AnalyticsEventServiceTest {
         LocalDateTime startDate = LocalDateTime.now().minusMonths(1);
         LocalDateTime endDate = LocalDateTime.now();
 
-        when(repository.findByReceiverIdAndEventType(1, EventType.FOLLOWER)).thenReturn(iterable);
+        when(analyticsEventRepository.findByReceiverIdAndEventType(1, EventType.FOLLOWER)).thenReturn(iterable);
 
         analyticsEventService.getAnalytics(1, 2, startDate, endDate);
 
-        verify(repository).findByReceiverIdAndEventType(1,EventType.FOLLOWER);
+        verify(analyticsEventRepository).findByReceiverIdAndEventType(1,EventType.FOLLOWER);
     }
 }

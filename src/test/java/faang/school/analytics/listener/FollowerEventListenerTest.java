@@ -1,10 +1,10 @@
 package faang.school.analytics.listener;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.FollowerEventDto;
 import faang.school.analytics.mapper.FollowerEventMapper;
 import faang.school.analytics.mapper.FollowerEventMapperImpl;
-import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.mapper.JsonObjectMapper;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class FollowerEventListenerTest {
     @Mock
     private AnalyticsEventService analyticsEventService;
     @Mock
-    private ObjectMapper objectMapper;
+    private JsonObjectMapper objectMapper;
     @Mock
     private Message message;
     @InjectMocks
@@ -43,7 +43,7 @@ class FollowerEventListenerTest {
                 .followeeId(2)
                 .subscriptionTime(currentTime)
                 .build();
-        AnalyticsEvent event = AnalyticsEvent.builder()
+        AnalyticsEventDto event = AnalyticsEventDto.builder()
                 .actorId(1)
                 .receiverId(2)
                 .eventType(EventType.FOLLOWER)
