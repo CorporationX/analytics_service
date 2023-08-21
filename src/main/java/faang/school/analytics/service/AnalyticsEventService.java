@@ -8,7 +8,6 @@ import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -26,6 +25,7 @@ public class AnalyticsEventService {
 
     public void saveEvent(AnalyticsEvent event) {
         repository.save(event);
+        log.info("Event: {}, has successful been saved into database", event.getEventType());
     }
 
     public List<AnalyticsEventDto> getAnalytics(long id, int type, LocalDateTime startDate, LocalDateTime endDate) {
