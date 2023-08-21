@@ -42,17 +42,7 @@ public class RedisConfig {
 
         MessageListenerAdapter likePostMessageListenerAdapter = new MessageListenerAdapter(likePostMessageListener);
         container.addMessageListener(likePostMessageListenerAdapter, new ChannelTopic(likeTopicName));
-
-        return container;
-    }
-
-    @Bean
-    public RedisMessageListenerContainer mentorshipMessageConsumerContainer(RedisConnectionFactory redisConnectionFactory) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(redisConnectionFactory);
-
-        MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(mentorshipMessageListener);
-        container.addMessageListener(messageListenerAdapter, new ChannelTopic(mentorshipName));
+        container.addMessageListener(likePostMessageListenerAdapter, new ChannelTopic(mentorshipName));
 
         return container;
     }
