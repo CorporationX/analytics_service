@@ -1,3 +1,4 @@
 databaseChangeLog:
   - include:
       file: db/changelog/changeset/analytics_V001__initial.sql
+

@@ -11,35 +11,34 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AnalyticsEventServiceTest {
 
-    @Mock
-    private AnalyticsEventRepository repository;
-    @Spy
-    private AnalyticsEventMapper analyticsEventMapper = new AnalyticsEventMapperImpl();
     @InjectMocks
-    private AnalyticsEventService analyticsEventService;
+    AnalyticsEventService analyticsEventService;
+    @Mock
+    AnalyticsEventRepository analyticsEventRepository;
+    AnalyticsEventMapper analyticsEventMapper;
 
-    private AnalyticsEvent firstEvent;
-    private AnalyticsEvent secondEvent;
+    AnalyticsEvent firstEvent;
+    AnalyticsEvent secondEvent;
 
     Iterable<AnalyticsEvent> iterable;
 
     @BeforeEach
     void setUp() {
-
+        analyticsEventMapper = new AnalyticsEventMapperImpl();
+        analyticsEventService = new AnalyticsEventService(analyticsEventRepository, analyticsEventMapper);
         LocalDateTime currentTime = LocalDateTime.now();
         firstEvent = AnalyticsEvent.builder().
                 id(1)
@@ -59,10 +58,10 @@ class AnalyticsEventServiceTest {
     }
 
     @Test
-    void saveEventTest() {
-        analyticsEventService.saveEvent(firstEvent);
-
-        verify(repository).save(firstEvent);
+    void saveEvent() {
+        AnalyticsEventDto eventDto = new AnalyticsEventDto();
+        analyticsEventService.saveEvent(eventDto);
+        verify(analyticsEventRepository).save(analyticsEventMapper.toModel(eventDto));
     }
 
     @Test
