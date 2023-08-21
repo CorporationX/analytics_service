@@ -19,7 +19,7 @@ public class AnalyticsEventService {
     private final PostViewEventMapper eventMapper;
 
     public void saveEvent(PostViewEventDto eventDto) {
-        AnalyticsEvent analyticsEvent = eventMapper.toEntity(eventDto);
+        AnalyticsEvent analyticsEvent = eventMapper.toModel(eventDto);
         analyticsEvent.setEventType(EventType.POST_VIEW);
 
         analyticsEventRepository.save(analyticsEvent);

@@ -12,7 +12,7 @@ public interface PostViewEventMapper {
     @Mapping(target = "actorId", source = "userId")
     @Mapping(target = "receiverId", source = "postId")
     @Mapping(target = "receivedAt", source = "viewTime")
-    AnalyticsEvent toEntity(PostViewEventDto dto);
+    AnalyticsEvent toModel(PostViewEventDto dto);
 
     PostViewEventDto toDto(AnalyticsEvent event);
 }

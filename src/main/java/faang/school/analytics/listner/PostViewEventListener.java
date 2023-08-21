@@ -2,7 +2,6 @@ package faang.school.analytics.listner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.PostViewEventDto;
-import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
