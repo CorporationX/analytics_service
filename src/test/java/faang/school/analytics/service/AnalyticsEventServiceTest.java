@@ -73,7 +73,7 @@ class AnalyticsEventServiceTest {
 
         List<AnalyticsEventDto> expected = List.of(analyticsEventMapper.toDto(firstEvent));
 
-        List<AnalyticsEventDto> result = analyticsEventService.getAnalytics(1, 2, startDate, endDate);
+        List<AnalyticsEventDto> result = analyticsEventService.getAnalytics(1, EventType.FOLLOWER, startDate, endDate);
 
         assertEquals(1, result.size());
         assertEquals(expected, result);
@@ -86,7 +86,7 @@ class AnalyticsEventServiceTest {
 
         when(analyticsEventRepository.findByReceiverIdAndEventType(1, EventType.FOLLOWER)).thenReturn(iterable);
 
-        analyticsEventService.getAnalytics(1, 2, startDate, endDate);
+        analyticsEventService.getAnalytics(1, EventType.FOLLOWER, startDate, endDate);
 
         verify(analyticsEventRepository).findByReceiverIdAndEventType(1,EventType.FOLLOWER);
     }

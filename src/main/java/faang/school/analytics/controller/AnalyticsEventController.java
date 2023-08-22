@@ -2,6 +2,7 @@ package faang.school.analytics.controller;
 
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ public class AnalyticsEventController {
 
     @GetMapping("/{id}/type/{type}")
     public List<AnalyticsEventDto> getAnalytics(@PathVariable long id,
-                                                @PathVariable int type,
+                                                @PathVariable EventType type,
                                                 @RequestParam("startDate") LocalDateTime startDate,
                                                 @RequestParam("endDate") LocalDateTime endDate) {
         return service.getAnalytics(id, type, startDate, endDate);

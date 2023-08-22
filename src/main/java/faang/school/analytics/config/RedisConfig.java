@@ -26,7 +26,7 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.event_channels.likePost}")
     private String likeTopicName;
     @Value("${spring.data.redis.channels.follower_channel.name}")
-    private String topicName;
+    private String followerTopicName;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -39,20 +39,12 @@ public class RedisConfig {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
-        container.addMessageListener(messageListener(), topic());
 
+        MessageListenerAdapter followerEventMessageListenerAdapter = new MessageListenerAdapter(followerEventListener);
         MessageListenerAdapter likePostMessageListenerAdapter = new MessageListenerAdapter(likePostMessageListener);
+
         container.addMessageListener(likePostMessageListenerAdapter, new ChannelTopic(likeTopicName));
+        container.addMessageListener(followerEventMessageListenerAdapter, new ChannelTopic(followerTopicName));
         return container;
-    }
-
-    @Bean
-    public MessageListenerAdapter messageListener() {
-        return new MessageListenerAdapter(followerEventListener);
-    }
-
-    @Bean
-    public ChannelTopic topic() {
-        return new ChannelTopic(topicName);
     }
 }

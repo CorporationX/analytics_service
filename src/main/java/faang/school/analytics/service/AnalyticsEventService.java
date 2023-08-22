@@ -30,9 +30,9 @@ public class AnalyticsEventService {
         log.info("Saved event type: " + analyticsEvent.getEventType());
     }
 
-    public List<AnalyticsEventDto> getAnalytics(long id, int type, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<AnalyticsEventDto> getAnalytics(long id, EventType type, LocalDateTime startDate, LocalDateTime endDate) {
         log.info("Get analytics task has started, id: {}, and type: {}", id, type);
-        Iterable<AnalyticsEvent> analyticsIterable = analyticsEventRepository.findByReceiverIdAndEventType(id, EventType.of(type));
+        Iterable<AnalyticsEvent> analyticsIterable = analyticsEventRepository.findByReceiverIdAndEventType(id, type);
         Stream<AnalyticsEvent> analyticsStream = StreamSupport.stream(analyticsIterable.spliterator(), false);
         return analyticsStream.filter(event -> isEventInDateRange(event, startDate, endDate))
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
@@ -43,9 +43,6 @@ public class AnalyticsEventService {
     private boolean isEventInDateRange(AnalyticsEvent event, LocalDateTime startDate, LocalDateTime endDate) {
         LocalDateTime receivedAt = event.getReceivedAt();
 
-        if (receivedAt.isAfter(startDate) && receivedAt.isBefore(endDate)) {
-            return true;
-        }
-        return receivedAt.isEqual(startDate) || receivedAt.isEqual(endDate);
+        return !(receivedAt.isBefore(startDate) || receivedAt.isAfter(endDate));
     }
 }
