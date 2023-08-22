@@ -7,14 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class EventDto {
-    private Long actorId;
-    private Long receiverId;
-    private LocalDateTime receivedAt;
+@NoArgsConstructor
+@Builder
+public class AnalyticsEventDto {
+
+    private long id;
+    private long receiverId;
+    private long actorId;
     private EventType eventType;
+    private LocalDateTime receivedAt;
 }

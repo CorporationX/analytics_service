@@ -1,11 +1,11 @@
 package faang.school.analytics.config;
 
+import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.LikePostMessageListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -17,6 +17,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 public class RedisConfig {
 
     private final LikePostMessageListener likePostMessageListener;
+    private final FollowerEventListener followerEventListener;
 
     @Value("${spring.data.redis.host}")
     private String host;
@@ -24,6 +25,8 @@ public class RedisConfig {
     private int port;
     @Value("${spring.data.redis.channels.event_channels.likePost}")
     private String likeTopicName;
+    @Value("${spring.data.redis.channels.follower_channel.name}")
+    private String followerTopicName;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -32,13 +35,16 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer likePostMessageConsumerContainer(RedisConnectionFactory redisConnectionFactory) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(redisConnectionFactory);
+    public RedisMessageListenerContainer redisContainer() {
+        RedisMessageListenerContainer container
+                = new RedisMessageListenerContainer();
+        container.setConnectionFactory(redisConnectionFactory());
 
+        MessageListenerAdapter followerEventMessageListenerAdapter = new MessageListenerAdapter(followerEventListener);
         MessageListenerAdapter likePostMessageListenerAdapter = new MessageListenerAdapter(likePostMessageListener);
-        container.addMessageListener(likePostMessageListenerAdapter, new ChannelTopic(likeTopicName));
 
+        container.addMessageListener(likePostMessageListenerAdapter, new ChannelTopic(likeTopicName));
+        container.addMessageListener(followerEventMessageListenerAdapter, new ChannelTopic(followerTopicName));
         return container;
     }
 }
