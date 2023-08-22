@@ -1,6 +1,6 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.SearchAppearanceEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
@@ -17,7 +17,7 @@ public class AnalyticsEventService {
     private final AnalyticsEventMapper analyticsEventMapper;
 
     @Transactional
-    public void save(AnalyticsEventDto event) {
+    public void save(SearchAppearanceEventDto event) {
         AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(event);
         analyticsEventRepository.save(analyticsEvent);
         log.debug("Analytics event saved: {}", analyticsEvent);

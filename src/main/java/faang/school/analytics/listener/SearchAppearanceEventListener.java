@@ -1,6 +1,6 @@
 package faang.school.analytics.listener;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.SearchAppearanceEventDto;
 import faang.school.analytics.mapper.JsonObjectMapper;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -17,7 +17,7 @@ public class SearchAppearanceEventListener implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-            AnalyticsEventDto event = jsonObjectMapper.fromJson(message.getBody(), AnalyticsEventDto.class);
+        SearchAppearanceEventDto event = jsonObjectMapper.fromJson(message.getBody(), SearchAppearanceEventDto.class);
             event.setEventType(EventType.PROFILE_APPEARED_IN_SEARCH);
         analyticsEventService.save(event);
         System.out.println("Analytics event saved: " + event);
