@@ -25,6 +25,7 @@ spring:
         profile-view: profile_view_channel
         like_channel: like_channel
 
+
 server:
   port: 8086
 
