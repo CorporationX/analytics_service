@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -34,12 +33,12 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory) {
+    public RedisMessageListenerContainer redisMessageListenerContainer() {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
+        container.setConnectionFactory(jedisConnectionFactory());
 
         MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(mentorshipRequestedEventListener);
-        container.addMessageListener(messageListenerAdapter, new ChannelTopic(mentorshipRequestedTopic)); // название в конфиге
+        container.addMessageListener(messageListenerAdapter, new ChannelTopic(mentorshipRequestedTopic));
         return container;
     }
 }
