@@ -3,7 +3,7 @@ package faang.school.analytics.followEvents;
 import faang.school.analytics.dto.followEvent.FollowEventDto;
 import faang.school.analytics.messaging.followEvent.FollowEventListener;
 import faang.school.analytics.service.follow.FollowEventWorker;
-import faang.school.analytics.util.Mapper;
+import faang.school.analytics.util.JsonMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,7 +21,7 @@ public class FollowEventListenerTest {
     Message message;
 
     @Mock
-    Mapper mapper;
+    JsonMapper mapper;
 
     @Mock
     FollowEventWorker followEventWorker;

@@ -2,8 +2,7 @@ package faang.school.analytics.messaging.followEvent;
 
 import faang.school.analytics.dto.followEvent.FollowEventDto;
 import faang.school.analytics.service.follow.FollowEventWorker;
-import faang.school.analytics.util.Mapper;
-import lombok.AllArgsConstructor;
+import faang.school.analytics.util.JsonMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FollowEventListener implements MessageListener {
 
-    private final Mapper mapper;
+    private final JsonMapper mapper;
     private final FollowEventWorker followEventWorker;
 
     @Override

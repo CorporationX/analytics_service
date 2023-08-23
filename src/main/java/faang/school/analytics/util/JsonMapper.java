@@ -11,7 +11,7 @@ import java.util.Optional;
 @Component
 @Slf4j
 @AllArgsConstructor
-public class Mapper {
+public class JsonMapper {
     private ObjectMapper objectMapper;
 
     public <T> Optional<T> toObject(String json, Class<T> valueType) {
