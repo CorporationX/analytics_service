@@ -22,6 +22,8 @@ spring:
       port: 6379
       host: localhost
       channels:
+        follower_channel:
+          name: follower_channel
         profile-view: profile_view_channel
         event_channels:
           likePost: /likes/post
