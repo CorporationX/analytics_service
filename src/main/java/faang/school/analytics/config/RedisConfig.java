@@ -45,11 +45,10 @@ public class RedisConfig {
 
         MessageListenerAdapter followerEventMessageListenerAdapter = new MessageListenerAdapter(followerEventListener);
         MessageListenerAdapter likePostMessageListenerAdapter = new MessageListenerAdapter(likePostMessageListener);
-        MessageListenerAdapter mentorshipMessageListenerAdapter = new MessageListenerAdapter(mentorshipMessageListener);
 
         container.addMessageListener(likePostMessageListenerAdapter, new ChannelTopic(likeTopicName));
         container.addMessageListener(followerEventMessageListenerAdapter, new ChannelTopic(followerTopicName));
-        container.addMessageListener(mentorshipMessageListenerAdapter, new ChannelTopic(mentorshipName));
+        container.addMessageListener(likePostMessageListenerAdapter, new ChannelTopic(mentorshipName));
 
         return container;
     }
