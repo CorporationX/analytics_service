@@ -21,8 +21,8 @@ public class FollowEventListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         log.info("FollowEventListener has received a message: " + message.toString());
-        FollowEventDto followEventDto = mapper.toObject(message.toString(), FollowEventDto.class);
-        followEventWorker.saveFollowEvent(followEventDto);
-        log.info(followEventDto.toString() + " " + "has been saved");
+        mapper.toObject(message.toString(), FollowEventDto.class)
+                .ifPresent(followEventWorker::saveFollowEvent);
+        log.info(message+ " " + "has been handled");
     }
 }

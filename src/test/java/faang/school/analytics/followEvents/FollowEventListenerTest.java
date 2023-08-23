@@ -12,6 +12,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.Message;
 
+import java.util.Optional;
+
 @ExtendWith(MockitoExtension.class)
 public class FollowEventListenerTest {
 
@@ -29,14 +31,14 @@ public class FollowEventListenerTest {
 
     @Test
     void messageReceiveTest() {
-        FollowEventDto FollowerEventDto = new FollowEventDto();
+        FollowEventDto followerEventDto = new FollowEventDto();
 
         Mockito.when(message.toString()).thenReturn("s");
         Mockito.when(mapper.toObject(Mockito.anyString(), Mockito.eq(FollowEventDto.class)))
-                .thenReturn(FollowerEventDto);
+                .thenReturn(Optional.of(followerEventDto));
 
         followEventListener.onMessage(message, "".getBytes());
 
-        Mockito.verify(followEventWorker, Mockito.times(1)).saveFollowEvent(FollowerEventDto);
+        Mockito.verify(followEventWorker, Mockito.times(1)).saveFollowEvent(followerEventDto);
     }
 }

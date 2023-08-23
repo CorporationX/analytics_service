@@ -3,6 +3,7 @@ package faang.school.analytics.service;
 import faang.school.analytics.dto.followEvent.FollowEventDto;
 import faang.school.analytics.mapper.FollowEventMapper;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
     private final FollowEventMapper followEventMapper;
 
+    @Transactional
     public void followEventSave(FollowEventDto followEventDto) {
         var event = followEventMapper.toEntity(followEventDto);
         analyticsEventRepository.save(event);

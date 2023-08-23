@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -13,14 +14,13 @@ import java.io.IOException;
 public class Mapper {
     private ObjectMapper objectMapper;
 
-    public <T> T toObject(String json, Class<T> valueType) {
-        T object;
+    public <T> Optional<T> toObject(String json, Class<T> valueType) {
+        T object = null;
         try {
             object = objectMapper.readValue(json, valueType);
         } catch (IOException e) {
             log.error("Exception with json mapping: " + e.getMessage());
-            throw new RuntimeException(e);
         }
-        return object;
+        return Optional.ofNullable(object);
     }
 }
