@@ -19,6 +19,8 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
 
     private final LikePostMessageListener likePostMessageListener;
+    private final FollowerEventListener followerEventListener;
+
     @Value("${spring.data.redis.host}")
     private String host;
     @Value("${spring.data.redis.port}")
@@ -27,6 +29,8 @@ public class RedisConfig {
     private String likeTopicName;
     @Value("${spring.data.redis.channels.post_channel.name}")
     private String postTopicName;
+    @Value("${spring.data.redis.channels.follower_channel.name}")
+    private String followerTopicName;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -35,13 +39,16 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer likePostMessageConsumerContainer(RedisConnectionFactory redisConnectionFactory) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(redisConnectionFactory);
+    public RedisMessageListenerContainer redisContainer() {
+        RedisMessageListenerContainer container
+                = new RedisMessageListenerContainer();
+        container.setConnectionFactory(redisConnectionFactory());
 
+        MessageListenerAdapter followerEventMessageListenerAdapter = new MessageListenerAdapter(followerEventListener);
         MessageListenerAdapter likePostMessageListenerAdapter = new MessageListenerAdapter(likePostMessageListener);
-        container.addMessageListener(likePostMessageListenerAdapter, new ChannelTopic(likeTopicName));
 
+        container.addMessageListener(likePostMessageListenerAdapter, new ChannelTopic(likeTopicName));
+        container.addMessageListener(followerEventMessageListenerAdapter, new ChannelTopic(followerTopicName));
         return container;
     }
 
