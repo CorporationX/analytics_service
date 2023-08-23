@@ -1,8 +1,10 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.PostViewEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
+import faang.school.analytics.mapper.PostViewEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
@@ -18,9 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,7 +44,7 @@ class AnalyticsEventServiceTest {
     @BeforeEach
     void setUp() {
         analyticsEventMapper = new AnalyticsEventMapperImpl();
-        analyticsEventService = new AnalyticsEventService(analyticsEventRepository, analyticsEventMapper);
+        analyticsEventService = new AnalyticsEventService(analyticsEventRepository, analyticsEventMapper, postViewEventMapper);
         LocalDateTime currentTime = LocalDateTime.now();
         firstEvent = AnalyticsEvent.builder().
                 id(1)
@@ -61,7 +61,6 @@ class AnalyticsEventServiceTest {
                 .receivedAt(currentTime.minusMonths(2))
                 .build();
         iterable = List.of(firstEvent, secondEvent);
-//        analyticsEventMapper = new AnalyticsEventMapperImpl();
         analyticsEventService = new AnalyticsEventService(analyticsEventRepository,analyticsEventMapper, postViewEventMapper);
         eventDto = PostViewEventDto.builder()
                 .authorId(1L)
@@ -75,16 +74,7 @@ class AnalyticsEventServiceTest {
                 .build();
     }
 
-//    @Test
-//    void saveEvent() {
-//        EventDto eventDto = new EventDto();
-//        analyticsEventService.saveEvent(eventDto);
-//        verify(analyticsEventRepository).save(analyticsEventMapper.toModel(eventDto));
-//    }
-
     @Test
-    void saveEvent() {
-        AnalyticsEventDto eventDto = new AnalyticsEventDto();
     void testSaveEvent() {
         when(postViewEventMapper.toModel(eventDto)).thenReturn(analyticsEvent);
         analyticsEventService.saveEvent(eventDto);

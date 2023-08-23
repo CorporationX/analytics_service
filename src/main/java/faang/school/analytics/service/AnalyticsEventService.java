@@ -1,7 +1,9 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.dto.EventDto;
+import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.PostViewEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.mapper.PostViewEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
@@ -48,7 +50,6 @@ public class AnalyticsEventService {
         analyticsEventRepository.save(analyticsEvent);
         log.info("AnalyticsEvent: {} was saved successfully in DB", analyticsEvent.getEventType());
     }
-}
 
     private boolean isEventInDateRange(AnalyticsEvent event, LocalDateTime startDate, LocalDateTime endDate) {
         LocalDateTime receivedAt = event.getReceivedAt();

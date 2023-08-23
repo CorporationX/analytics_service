@@ -1,10 +1,12 @@
 package faang.school.analytics.config;
 
+import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.LikePostMessageListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
@@ -20,6 +22,7 @@ public class RedisConfig {
 
     private final LikePostMessageListener likePostMessageListener;
     private final FollowerEventListener followerEventListener;
+    private final MessageListener postViewEventListener;
 
     @Value("${spring.data.redis.host}")
     private String host;
@@ -39,9 +42,13 @@ public class RedisConfig {
     }
 
     @Bean
+    public MessageListenerAdapter messageListenerAdapter() {
+        return new MessageListenerAdapter(postViewEventListener);
+    }
+
+    @Bean
     public RedisMessageListenerContainer redisContainer() {
-        RedisMessageListenerContainer container
-                = new RedisMessageListenerContainer();
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
 
         MessageListenerAdapter followerEventMessageListenerAdapter = new MessageListenerAdapter(followerEventListener);
@@ -49,6 +56,7 @@ public class RedisConfig {
 
         container.addMessageListener(likePostMessageListenerAdapter, new ChannelTopic(likeTopicName));
         container.addMessageListener(followerEventMessageListenerAdapter, new ChannelTopic(followerTopicName));
+        container.addMessageListener(postViewEventListener, postTopic());
         return container;
     }
 
