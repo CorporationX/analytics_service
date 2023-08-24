@@ -33,7 +33,7 @@ public class PostViewListener implements MessageListener {
 
             analyticsEventService.saveEvent(event);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            log.error("event could not be received, error message: {}", e.getMessage());
         }
     }
 }
