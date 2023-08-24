@@ -15,11 +15,11 @@ import org.yaml.snakeyaml.events.CommentEvent;
 public interface CommentEventMapper {
     @Mapping(source = "postId", target = "receiverId")
     @Mapping(source = "authorId", target = "actorId")
-    @Mapping(source = "publishedAt", target = "receivedAt")
+    @Mapping(source = "createdAt", target = "receivedAt")
     AnalyticsEvent toEntity(CommentEventDto commentEventDto);
 
     @Mapping(source = "receiverId", target = "postId")
     @Mapping(source = "actorId", target = "authorId")
-    @Mapping(source = "receivedAt", target = "publishedAt")
+    @Mapping(source = "receivedAt", target = "createdAt")
     AnalyticsEventDto toDto(CommentEventDto commentEvent);
 }

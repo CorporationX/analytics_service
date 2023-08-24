@@ -14,5 +14,5 @@ public class CommentEventDto {
     private long postId;
     private long authorId;
     private long commentId;
-    private LocalDateTime publishedAt;
+    private LocalDateTime createdAt;
 }
