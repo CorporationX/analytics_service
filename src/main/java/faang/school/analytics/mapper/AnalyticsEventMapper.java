@@ -15,5 +15,8 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "receiverId", source = "authorId")
     AnalyticsEvent toEntity(PostViewEventDto event);
 
-    AnalyticsEventDto toDto(AnalyticsEvent entity);
+    @Mapping(target = "createdAt", source = "receivedAt")
+    @Mapping(target = "userId", source = "actorId")
+    @Mapping(target = "authorId", source = "receiverId")
+    PostViewEventDto toDto(AnalyticsEvent entity);
 }
