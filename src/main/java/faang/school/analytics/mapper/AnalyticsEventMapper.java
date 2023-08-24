@@ -4,11 +4,12 @@ import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
-
 import org.mapstruct.ReportingPolicy;
+import org.springframework.stereotype.Component;
 
+@Component
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface AnalyticsEventMapper {
-    AnalyticsEvent toEntity(AnalyticsEventDto eventDto);
-    AnalyticsEventDto toDto(AnalyticsEvent event);
+    AnalyticsEvent toEntity(AnalyticsEventDto analyticsEventDto);
+    AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
 }
