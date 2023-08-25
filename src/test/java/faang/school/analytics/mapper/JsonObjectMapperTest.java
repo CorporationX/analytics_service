@@ -47,5 +47,4 @@ class JsonObjectMapperTest {
         verify(objectMapper).readValue(jsonBytes, Object.class);
         assertNull(resultObject);
     }
-
 }
