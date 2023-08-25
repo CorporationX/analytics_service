@@ -7,6 +7,7 @@ import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,9 +22,9 @@ public class AnalyticsEventController {
 
     private final AnalyticsEventService analyticsEventService;
 
-    @GetMapping
+    @GetMapping("/{idUser}")
     @ResponseBody
-    public AnalyticsDto getProfileViewsAnalytics(Long idUser, int eventTypeNumber,
+    public AnalyticsDto getProfileViewsAnalytics(@PathVariable Long idUser, int eventTypeNumber,
                                                  @RequestParam(required = false) String interval,
                                                  @RequestParam(required = false) List<String> dates){
         EventType eventType = EventType.of(eventTypeNumber);
