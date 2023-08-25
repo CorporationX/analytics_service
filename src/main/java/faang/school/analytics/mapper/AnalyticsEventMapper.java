@@ -9,8 +9,9 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface AnalyticsEventMapper {
 
-    @Mapping(target = "receiverId", expression = "java(profileViewEvent -> profileViewEvent.getIdVisited)")
-    @Mapping(target = "actorId", expression = "java(profileViewEvent -> profileViewEvent.getIdVisitor)")
-    @Mapping(target = "eventType", expression = "java(EventType.of(1)")
+    @Mapping(target = "receiverId", expression = "java(profileViewEvent.getIdVisited())")
+    @Mapping(target = "actorId", expression = "java(profileViewEvent.getIdVisitor())")
+    @Mapping(target = "eventType", ignore = true, expression = "java(EventType.of(1))")
     AnalyticsEvent viewProfileToAnalyticsEvent(ProfileViewEvent profileViewEvent);
+
 }
