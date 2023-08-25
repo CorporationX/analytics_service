@@ -64,41 +64,4 @@ public class AnalyticsEventController {
         }
         return analyticsEventService.getAnalytics(idUser, eventType, requiredInterval, startDate, endDate);
     }
-
-//    @GetMapping("/{idUser}")
-//    public AnalyticsDto getProfileViewsAnalytics(@PathVariable Long idUser, @RequestParam Optional<Integer> eventTypeNumber,
-//                                                 @RequestParam Optional<String> eventTypeName,
-//                                                 @RequestParam Optional<String> interval,
-//                                                 @RequestParam Optional<List<String>> dates){
-//        String nameEvent = eventTypeName.orElseGet(() -> null);
-//        Integer numberOfEvent = eventTypeNumber.orElseGet(() -> null);
-//        if(nameEvent == null && numberOfEvent == null){
-//            throw new IllegalArgumentException("Select required event type");
-//        }
-//
-//        EventType eventType = null;
-//        if(nameEvent == null) {
-//            eventType = EventType.of(numberOfEvent);
-//        } else if(numberOfEvent == null){
-//            eventType = EventType.get(nameEvent);
-//        }
-//
-//        String intervalName = interval.orElseGet(() -> null);
-//        List<String> datesStartEnd = dates.orElseGet(() -> null);
-//        if(intervalName == null && datesStartEnd == null){
-//            throw new IllegalArgumentException("Select required time interval");
-//        }
-//
-//        Interval requiredInterval = null;
-//        LocalDateTime startDate = null;
-//        LocalDateTime endDate = null;
-//        if(datesStartEnd == null){
-//            requiredInterval = Interval.get(intervalName);
-//        }
-//        if(intervalName == null){
-//            startDate = LocalDateTime.parse(datesStartEnd.get(0));
-//            endDate = LocalDateTime.parse(datesStartEnd.get(1));
-//        }
-//        return analyticsEventService.getAnalytics(idUser, eventType, requiredInterval, startDate, endDate);
-//    }
 }
