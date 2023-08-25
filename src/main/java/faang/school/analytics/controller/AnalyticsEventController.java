@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/analytics")
 public class AnalyticsEventController {
@@ -23,7 +24,6 @@ public class AnalyticsEventController {
     private final AnalyticsEventService analyticsEventService;
 
     @GetMapping("/{idUser}")
-    @ResponseBody
     public AnalyticsDto getProfileViewsAnalytics(@PathVariable Long idUser, int eventTypeNumber,
                                                  @RequestParam(required = false) String interval,
                                                  @RequestParam(required = false) List<String> dates){
