@@ -14,7 +14,6 @@ import org.springframework.data.redis.connection.Message;
 
 import java.io.IOException;
 
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
