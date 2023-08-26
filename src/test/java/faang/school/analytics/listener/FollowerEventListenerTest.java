@@ -44,8 +44,8 @@ class FollowerEventListenerTest {
                 .subscriptionTime(currentTime)
                 .build();
         AnalyticsEventDto event = AnalyticsEventDto.builder()
-                .actorId(1)
-                .receiverId(2)
+                .actorId(1L)
+                .receiverId(2L)
                 .eventType(EventType.FOLLOWER)
                 .receivedAt(currentTime)
                 .build();

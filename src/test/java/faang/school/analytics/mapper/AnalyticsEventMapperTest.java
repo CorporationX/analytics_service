@@ -24,14 +24,14 @@ class AnalyticsEventMapperTest {
         analyticsEventMapper = new AnalyticsEventMapperImpl();
         LocalDateTime currentTime = LocalDateTime.now();
         dto = AnalyticsEventDto.builder()
-                .receiverId(1)
-                .actorId(2)
+                .receiverId(1L)
+                .actorId(2L)
                 .eventType(EventType.FOLLOWER)
                 .receivedAt(currentTime)
                 .build();
         model = AnalyticsEvent.builder()
-                .receiverId(1)
-                .actorId(2)
+                .receiverId(1L)
+                .actorId(2L)
                 .eventType(EventType.FOLLOWER)
                 .receivedAt(currentTime)
                 .build();

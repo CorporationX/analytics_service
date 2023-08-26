@@ -1,6 +1,6 @@
 package faang.school.analytics.listener;
 
-import faang.school.analytics.dto.EventDto;
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.mapper.JsonObjectMapper;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -18,7 +18,7 @@ public class MentorshipMessageListener implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        EventDto eventDto = jsonObjectMapper.readValue(message.getBody(), EventDto.class);
+        AnalyticsEventDto eventDto = jsonObjectMapper.readValue(message.getBody(), AnalyticsEventDto.class);
         eventDto.setEventType(EventType.PROJECT_INVITE);
         analyticsEventService.saveEvent(eventDto);
     }

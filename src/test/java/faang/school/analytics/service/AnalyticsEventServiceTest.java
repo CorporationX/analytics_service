@@ -61,7 +61,7 @@ class AnalyticsEventServiceTest {
 
     @Test
     void saveEvent() {
-        EventDto eventDto = new EventDto();
+        AnalyticsEventDto eventDto = new AnalyticsEventDto();
         analyticsEventService.saveEvent(eventDto);
         verify(analyticsEventRepository).save(analyticsEventMapper.toModel(eventDto));
     }
