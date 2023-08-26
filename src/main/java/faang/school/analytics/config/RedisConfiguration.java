@@ -1,6 +1,6 @@
 package faang.school.analytics.config;
 
-import faang.school.analytics.listener.PostViewListener;
+import faang.school.analytics.listener.PostViewEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,8 +27,8 @@ public class RedisConfiguration {
     }
 
     @Bean
-    public MessageListenerAdapter postViewAdapter(PostViewListener postViewListener) {
-        return new MessageListenerAdapter(postViewListener);
+    public MessageListenerAdapter postViewAdapter(PostViewEventListener postViewEventListener) {
+        return new MessageListenerAdapter(postViewEventListener);
     }
 
     @Bean

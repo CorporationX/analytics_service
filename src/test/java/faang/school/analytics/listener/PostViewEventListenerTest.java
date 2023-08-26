@@ -5,7 +5,6 @@ import faang.school.analytics.dto.redis.PostViewEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,13 +16,13 @@ import java.io.IOException;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class PostViewListenerTest {
+class PostViewEventListenerTest {
 
     @Mock
     private ObjectMapper objectMapper;
@@ -35,7 +34,7 @@ class PostViewListenerTest {
     private AnalyticsEventMapper analyticsEventMapper;
 
     @InjectMocks
-    private PostViewListener postViewListener;
+    private PostViewEventListener postViewEventListener;
 
     @Test
     void testOnMessageSuccess() throws IOException {
@@ -49,24 +48,22 @@ class PostViewListenerTest {
         Message mockMessage = mock(Message.class);
         when(mockMessage.getBody()).thenReturn(body);
 
-        postViewListener.onMessage(mockMessage, new byte[0]);
+        postViewEventListener.onMessage(mockMessage, new byte[0]);
 
         verify(analyticsEventMapper, times(1)).toEntity(postViewEventDto);
         verify(analyticsEventService, times(1)).saveEvent(analyticsEvent);
     }
 
     @Test
-    void testOnMessageIOException() throws IOException {
-        byte[] body = "test message".getBytes();
+    public void testInvalidMessageHandling() throws IOException {
+        Message message = mock(Message.class);
+        when(message.getBody()).thenReturn("invalid_message".getBytes());
+        when(objectMapper.readValue(message.getBody(), PostViewEventDto.class))
+                .thenThrow(new IOException("Deserialization error"));
 
-        when(objectMapper.readValue(body, PostViewEventDto.class)).thenThrow(new IOException());
+        postViewEventListener.onMessage(message, new byte[0]);
 
-        Message mockMessage = mock(Message.class);
-        when(mockMessage.getBody()).thenReturn(body);
-
-        Assertions.assertThrows(RuntimeException.class, () -> postViewListener.onMessage(mockMessage, new byte[0]));
-
-        verify(analyticsEventMapper, never()).toEntity(any());
-        verify(analyticsEventService, never()).saveEvent(any());
+        verifyNoInteractions(analyticsEventService);
+        verifyNoInteractions(analyticsEventMapper);
     }
 }

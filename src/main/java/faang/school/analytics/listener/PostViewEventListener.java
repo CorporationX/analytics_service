@@ -17,7 +17,7 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class PostViewListener implements MessageListener {
+public class PostViewEventListener implements MessageListener {
 
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
