@@ -23,7 +23,7 @@ spring:
       host: localhost
       channels:
         comment_channel:
-          name: comment_channel
+          name: comment_topic
         follower_channel:
           name: follower_channel
         profile-view: profile_view_channel
