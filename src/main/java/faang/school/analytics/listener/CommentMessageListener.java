@@ -5,6 +5,7 @@ import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.mapper.JsonObjectMapper;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.connection.Message;
@@ -23,6 +24,7 @@ public class CommentMessageListener implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         CommentEventDto commentEventDto = jsonObjectMapper.readValue(message.getBody(), CommentEventDto.class);
         AnalyticsEventDto analyticsEvent = analyticsEventMapper.toAnalyticsEventDto(commentEventDto);
+        analyticsEvent.setEventType(EventType.POST_COMMENT);
         analyticsEventService.saveEvent(analyticsEvent);
     }
 }

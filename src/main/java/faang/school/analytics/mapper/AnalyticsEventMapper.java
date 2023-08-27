@@ -2,7 +2,6 @@ package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.CommentEventDto;
-import faang.school.analytics.dto.PubSubEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.mapstruct.BeforeMapping;
@@ -15,13 +14,6 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface AnalyticsEventMapper {
-
-    @BeforeMapping
-    private void defineEventClass(PubSubEvent eventDto, @MappingTarget AnalyticsEvent analyticsEvent) {
-        if (eventDto instanceof CommentEventDto) {
-            analyticsEvent.setEventType(EventType.POST_COMMENT);
-        }
-    }
 
     AnalyticsEvent toModel(AnalyticsEventDto eventDto);
 

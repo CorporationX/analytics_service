@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommentEventDto implements PubSubEvent{
+public class CommentEventDto {
 
     private long authorId;
     private long postId;
