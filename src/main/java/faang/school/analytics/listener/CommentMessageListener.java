@@ -8,12 +8,14 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class CommentMessageListener implements MessageListener {
 
     private final AnalyticsEventService analyticsEventService;
@@ -26,5 +28,6 @@ public class CommentMessageListener implements MessageListener {
         AnalyticsEventDto analyticsEvent = analyticsEventMapper.toAnalyticsEventDto(commentEventDto);
         analyticsEvent.setEventType(EventType.POST_COMMENT);
         analyticsEventService.saveEvent(analyticsEvent);
+        log.info("Message from topic: {}, has been received.", message.getChannel());
     }
 }

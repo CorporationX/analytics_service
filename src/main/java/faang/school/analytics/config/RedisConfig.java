@@ -33,7 +33,7 @@ public class RedisConfig {
     private String followerTopicName;
     @Value("${spring.data.redis.channels.event_channels.mentorship}")
     private String mentorshipName;
-    @Value("${spring.data.redis.channels.event_channels.mentorship}")
+    @Value("${spring.data.redis.channels.comment_channel.name}")
     private String commentTopicName;
 
 
