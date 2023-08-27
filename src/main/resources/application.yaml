@@ -23,6 +23,7 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+        posts-view: posts_view
 
 server:
   port: 8086
