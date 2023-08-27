@@ -24,6 +24,7 @@ spring:
       channel:
         profile-view: profile_view_channel
         posts-view: posts_view
+        followers-view: followers_view
 
 server:
   port: 8086
@@ -35,3 +36,7 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+user-service:
+  host: localhost
+  port: 8080

@@ -1,5 +1,6 @@
 package faang.school.analytics.config;
 
+import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.PostViewEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,8 @@ public class RedisConfiguration {
     private int port;
     @Value("${spring.data.redis.channel.posts-view}")
     private String postViewChannel;
+    @Value("${spring.data.redis.channel.followers-view}")
+    private String followerChannel;
 
     @Bean
     public JedisConnectionFactory connectionFactory() {
@@ -31,13 +34,24 @@ public class RedisConfiguration {
     }
 
     @Bean
+    public MessageListenerAdapter followerAdapter(FollowerEventListener followerEventListener) {
+        return new MessageListenerAdapter(followerEventListener);
+    }
+
+    @Bean
     public ChannelTopic postViewTopic() {
         return new ChannelTopic(postViewChannel);
     }
 
     @Bean
+    public ChannelTopic followerTopic() {
+        return new ChannelTopic(followerChannel);
+    }
+
+    @Bean
     public RedisMessageListenerContainer container(JedisConnectionFactory connectionFactory,
-                                                   MessageListenerAdapter profileViewAdapter) {
+                                                   MessageListenerAdapter profileViewAdapter,
+                                                   FollowerEventListener followerEventListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.addMessageListener(profileViewAdapter, postViewTopic());
