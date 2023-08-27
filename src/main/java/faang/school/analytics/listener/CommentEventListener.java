@@ -1,9 +1,9 @@
 package faang.school.analytics.listener;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.CommentEventDto;
-import faang.school.analytics.mapper.CommentEventMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.mapper.JsonObjectMapper;
+import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +18,13 @@ import org.springframework.stereotype.Component;
 public class CommentEventListener implements MessageListener {
     private final JsonObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
-    private final CommentEventMapper commentEventMapper;
+    private final AnalyticsEventMapper analyticsEventMapper;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         CommentEventDto commentEventDto = objectMapper.fromJson(message.getBody(), CommentEventDto.class);
-        AnalyticsEventDto analyticsEventDto = commentEventMapper.toDto(commentEventDto);
-        analyticsEventDto.setEventType(EventType.POST_COMMENT);
-        analyticsEventService.save(analyticsEventDto);
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(commentEventDto);
+        analyticsEvent.setEventType(EventType.POST_COMMENT);
+        analyticsEventService.save(analyticsEvent);
     }
 }
