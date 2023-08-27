@@ -2,6 +2,7 @@ package faang.school.analytics.config;
 
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.LikePostMessageListener;
+import faang.school.analytics.listener.MentorshipMessageListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,7 @@ public class RedisConfig {
     private final LikePostMessageListener likePostMessageListener;
     private final FollowerEventListener followerEventListener;
     private final MessageListener postViewEventListener;
+    private final MentorshipMessageListener mentorshipMessageListener;
 
     @Value("${spring.data.redis.host}")
     private String host;
@@ -34,6 +36,8 @@ public class RedisConfig {
     private String postTopicName;
     @Value("${spring.data.redis.channels.follower_channel.name}")
     private String followerTopicName;
+    @Value("${spring.data.redis.channels.event_channels.mentorship}")
+    private String mentorshipName;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -53,10 +57,12 @@ public class RedisConfig {
 
         MessageListenerAdapter followerEventMessageListenerAdapter = new MessageListenerAdapter(followerEventListener);
         MessageListenerAdapter likePostMessageListenerAdapter = new MessageListenerAdapter(likePostMessageListener);
+        MessageListenerAdapter mentorshipMessageListenerAdapter = new MessageListenerAdapter(likePostMessageListener);
 
         container.addMessageListener(likePostMessageListenerAdapter, new ChannelTopic(likeTopicName));
         container.addMessageListener(followerEventMessageListenerAdapter, new ChannelTopic(followerTopicName));
-        container.addMessageListener(postViewEventListener, postTopic());
+        container.addMessageListener(mentorshipMessageListenerAdapter, new ChannelTopic(mentorshipName));
+
         return container;
     }
 

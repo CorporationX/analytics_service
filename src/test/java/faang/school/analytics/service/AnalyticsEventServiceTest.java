@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -28,8 +29,11 @@ class AnalyticsEventServiceTest {
 
     @InjectMocks
     AnalyticsEventService analyticsEventService;
+
     @Mock
     AnalyticsEventRepository analyticsEventRepository;
+
+    AnalyticsEventMapper analyticsEventMapper;
     @Spy
     private PostViewEventMapper postViewEventMapper;
     private AnalyticsEventMapper analyticsEventMapper;
@@ -72,6 +76,13 @@ class AnalyticsEventServiceTest {
                 .receiverId(1L)
                 .eventType(EventType.POST_VIEW)
                 .build();
+    }
+
+    @Test
+    void saveEvent() {
+        EventDto eventDto = new EventDto();
+        analyticsEventService.saveEvent(eventDto);
+        verify(analyticsEventRepository).save(analyticsEventMapper.toModel(eventDto));
     }
 
     @Test
