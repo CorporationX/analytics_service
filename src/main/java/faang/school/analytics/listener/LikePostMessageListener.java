@@ -1,6 +1,6 @@
 package faang.school.analytics.listener;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.mapper.JsonObjectMapper;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -20,7 +20,7 @@ public class LikePostMessageListener implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        AnalyticsEventDto eventDto = jsonObjectMapper.readValue(message.getBody(), AnalyticsEventDto.class);
+        EventDto eventDto = jsonObjectMapper.readValue(message.getBody(), EventDto.class);
         eventDto.setEventType(EventType.POST_LIKE);
         analyticsEventService.saveEvent(eventDto);
     }

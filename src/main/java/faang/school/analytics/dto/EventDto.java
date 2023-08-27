@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventDto {
+
     private Long actorId;
     private Long requesterId;
     private Long receiverId;
