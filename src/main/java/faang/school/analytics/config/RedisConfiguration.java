@@ -50,11 +50,12 @@ public class RedisConfiguration {
 
     @Bean
     public RedisMessageListenerContainer container(JedisConnectionFactory connectionFactory,
-                                                   MessageListenerAdapter profileViewAdapter,
-                                                   FollowerEventListener followerEventListener) {
+                                                   MessageListenerAdapter postViewAdapter,
+                                                   MessageListenerAdapter followerAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(profileViewAdapter, postViewTopic());
+        container.addMessageListener(postViewAdapter, postViewTopic());
+        container.addMessageListener(followerAdapter, followerTopic());
         return container;
     }
 }

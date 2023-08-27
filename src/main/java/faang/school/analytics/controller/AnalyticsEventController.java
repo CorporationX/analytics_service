@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 @Slf4j
 public class AnalyticsEventController {
-    @GetMapping("/analytics/{id}")
-    public
-
-    }
+//    @GetMapping("/analytics/{id}")
+//    public
+//
+//    }
 
 }
