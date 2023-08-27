@@ -1,8 +1,10 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.EventDto;
+import faang.school.analytics.dto.PostViewEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
+import faang.school.analytics.mapper.PostViewEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -26,11 +29,11 @@ class AnalyticsEventServiceTest {
 
     @InjectMocks
     AnalyticsEventService analyticsEventService;
-
     @Mock
     AnalyticsEventRepository analyticsEventRepository;
-
     AnalyticsEventMapper analyticsEventMapper;
+    private PostViewEventDto eventDto;
+    private AnalyticsEvent analyticsEvent;
 
     AnalyticsEvent firstEvent;
     AnalyticsEvent secondEvent;
@@ -57,10 +60,21 @@ class AnalyticsEventServiceTest {
                 .receivedAt(currentTime.minusMonths(2))
                 .build();
         iterable = List.of(firstEvent, secondEvent);
+        analyticsEventService = new AnalyticsEventService(analyticsEventRepository,analyticsEventMapper);
+        eventDto = PostViewEventDto.builder()
+                .authorId(1L)
+                .postId(1L)
+                .userId(1L)
+                .build();
+        analyticsEvent = AnalyticsEvent.builder()
+                .actorId(1L)
+                .receiverId(1L)
+                .eventType(EventType.POST_VIEW)
+                .build();
     }
 
     @Test
-    void saveEvent() {
+    void testSaveEvent() {
         EventDto eventDto = new EventDto();
         analyticsEventService.saveEvent(eventDto);
         verify(analyticsEventRepository).save(analyticsEventMapper.toModel(eventDto));
@@ -73,9 +87,9 @@ class AnalyticsEventServiceTest {
 
         when(analyticsEventRepository.findByReceiverIdAndEventType(1, EventType.FOLLOWER)).thenReturn(iterable);
 
-        List<AnalyticsEventDto> expected = List.of(analyticsEventMapper.toDto(firstEvent));
+        List<EventDto> expected = List.of(analyticsEventMapper.toDto(firstEvent));
 
-        List<AnalyticsEventDto> result = analyticsEventService.getAnalytics(1, EventType.FOLLOWER, startDate, endDate);
+        List<EventDto> result = analyticsEventService.getAnalytics(1, EventType.FOLLOWER, startDate, endDate);
 
         assertEquals(1, result.size());
         assertEquals(expected, result);

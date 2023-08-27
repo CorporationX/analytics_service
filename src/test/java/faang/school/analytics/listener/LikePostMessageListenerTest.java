@@ -1,6 +1,6 @@
 package faang.school.analytics.listener;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.mapper.JsonObjectMapper;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -26,10 +26,10 @@ class LikePostMessageListenerTest {
 
     @Test
     void onMessage() {
-        AnalyticsEventDto eventDto = AnalyticsEventDto.builder().build();
+        EventDto eventDto = EventDto.builder().build();
         String a = "message";
         byte[] message = a.getBytes();
-        Mockito.when(jsonObjectMapper.readValue(message, AnalyticsEventDto.class)).thenReturn(eventDto);
+        Mockito.when(jsonObjectMapper.readValue(message, EventDto.class)).thenReturn(eventDto);
 
         likePostMessageListener.onMessage(new Message() {
             @Override
@@ -43,7 +43,7 @@ class LikePostMessageListenerTest {
             }
         }, message);
         Mockito.verify(analyticsEventService).saveEvent(eventDto);
-        AnalyticsEventDto eventDtoExpected = AnalyticsEventDto.builder().eventType(EventType.POST_LIKE).build();
+        EventDto eventDtoExpected = EventDto.builder().eventType(EventType.POST_LIKE).build();
         assertEquals(eventDtoExpected,eventDto);
     }
 }

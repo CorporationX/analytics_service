@@ -7,11 +7,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @RequiredArgsConstructor
@@ -19,6 +23,7 @@ public class RedisConfig {
 
     private final LikePostMessageListener likePostMessageListener;
     private final FollowerEventListener followerEventListener;
+    private final MessageListener postViewEventListener;
     private final MentorshipMessageListener mentorshipMessageListener;
 
     @Value("${spring.data.redis.host}")
@@ -27,6 +32,8 @@ public class RedisConfig {
     private int port;
     @Value("${spring.data.redis.channels.event_channels.likePost}")
     private String likeTopicName;
+    @Value("${spring.data.redis.channels.post_channel.name}")
+    private String postTopicName;
     @Value("${spring.data.redis.channels.follower_channel.name}")
     private String followerTopicName;
     @Value("${spring.data.redis.channels.event_channels.mentorship}")
@@ -45,12 +52,24 @@ public class RedisConfig {
 
         MessageListenerAdapter followerEventMessageListenerAdapter = new MessageListenerAdapter(followerEventListener);
         MessageListenerAdapter likePostMessageListenerAdapter = new MessageListenerAdapter(likePostMessageListener);
-        MessageListenerAdapter mentorshipMessageListenerAdapter = new MessageListenerAdapter(likePostMessageListener);
+        MessageListenerAdapter mentorshipMessageListenerAdapter = new MessageListenerAdapter(mentorshipMessageListener);
+        MessageListenerAdapter postMessageListenerAdapter = new MessageListenerAdapter(postViewEventListener);
 
         container.addMessageListener(likePostMessageListenerAdapter, new ChannelTopic(likeTopicName));
         container.addMessageListener(followerEventMessageListenerAdapter, new ChannelTopic(followerTopicName));
         container.addMessageListener(mentorshipMessageListenerAdapter, new ChannelTopic(mentorshipName));
+        container.addMessageListener(postMessageListenerAdapter, new ChannelTopic(postTopicName));
 
         return container;
+    }
+
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
+
+        return template;
     }
 }

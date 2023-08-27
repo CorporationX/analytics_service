@@ -13,15 +13,16 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class LikePostMessageListener implements MessageListener {
+public class PostViewEventListener implements MessageListener {
 
     private final JsonObjectMapper jsonObjectMapper;
     private final AnalyticsEventService analyticsEventService;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
+        log.info("PostViewEventListener has received a new message");
         EventDto eventDto = jsonObjectMapper.readValue(message.getBody(), EventDto.class);
-        eventDto.setEventType(EventType.POST_LIKE);
+        eventDto.setEventType(EventType.POST_VIEW);
         analyticsEventService.saveEvent(eventDto);
     }
 }
