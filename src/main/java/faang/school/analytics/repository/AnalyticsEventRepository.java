@@ -1,5 +1,6 @@
 package faang.school.analytics.repository;
 
+
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.springframework.data.repository.CrudRepository;
