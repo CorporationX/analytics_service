@@ -23,14 +23,14 @@ public class RedisConfig {
     private String recommendationChannel;
 
     @Bean
-    public MessageListenerAdapter recommendationMessageListener(RecommendationListener listener) {
-        return new MessageListenerAdapter(listener);
-    }
-
-    @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
         log.info("Crated redis connection factory with host: {}, port: {}", host, port);
         return new JedisConnectionFactory();
+    }
+
+    @Bean
+    public MessageListenerAdapter recommendationMessageListener(RecommendationListener listener) {
+        return new MessageListenerAdapter(listener);
     }
 
     @Bean
