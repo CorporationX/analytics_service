@@ -23,9 +23,9 @@ spring:
       host: localhost
       channels:
         profile_view_channel:
-          name: profile_view_channel
+          name: profile-view-channel
         mentorship_requested_channel:
-          name: mentorship_requested_channel
+          name: mentorship-requested-channel
 
 server:
   port: 8086

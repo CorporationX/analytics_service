@@ -1,8 +1,8 @@
 package faang.school.analytics.listener;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.MentorshipRequestedEventDto;
-import faang.school.analytics.mapper.JsonObjectMapper;
 import faang.school.analytics.mapper.MentorshipRequestedEventMapper;
 import faang.school.analytics.mapper.MentorshipRequestedEventMapperImpl;
 import faang.school.analytics.model.EventType;
@@ -15,6 +15,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.Message;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 import static org.mockito.Mockito.*;
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.*;
 class MentorshipRequestedEventListenerTest {
 
     @Mock
-    private JsonObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
     @Mock
     private AnalyticsEventService analyticsEventService;
     @Spy
@@ -35,7 +36,7 @@ class MentorshipRequestedEventListenerTest {
     private MentorshipRequestedEventListener eventListener;
 
     @Test
-    void testOnMessage() {
+    void testOnMessage() throws IOException {
 
         byte[] pattern = new byte[0];
         LocalDateTime timeNow = LocalDateTime.now();
@@ -54,11 +55,14 @@ class MentorshipRequestedEventListenerTest {
                 .build();
 
         when(message.getBody()).thenReturn(pattern);
-        when(objectMapper.fromJson(pattern, MentorshipRequestedEventDto.class)).thenReturn(mentorshipRequestedEventDto);
+        when(objectMapper.readValue(pattern, MentorshipRequestedEventDto.class))
+                .thenReturn(mentorshipRequestedEventDto);
+        when(mentorshipRequestedEventMapper.toDto(mentorshipRequestedEventDto))
+                .thenReturn(analyticsEventDto);
 
         eventListener.onMessage(message, pattern);
 
-        verify(objectMapper).fromJson(pattern, MentorshipRequestedEventDto.class);
+        verify(objectMapper).readValue(pattern, MentorshipRequestedEventDto.class);
         verify(mentorshipRequestedEventMapper).toDto(mentorshipRequestedEventDto);
         verify(analyticsEventService).save(analyticsEventDto);
     }
