@@ -1,4 +1,4 @@
-package faang.school.analytics.mapper;
+package faang.school.analytics.mapper.search_appearance_event;
 
 import faang.school.analytics.dto.SearchAppearanceEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
