@@ -10,5 +10,6 @@ import org.mapstruct.ReportingPolicy;
 public interface EventMapper {
     @Mapping(target = "receiverId", source = "authorId")
     @Mapping(target = "actorId", source = "commentId")
+    @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType. POST_COMMENT)")
     AnalyticsEvent toEntity(CommentEventDto commentEventDto);
 }

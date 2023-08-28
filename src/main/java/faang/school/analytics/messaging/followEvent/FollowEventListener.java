@@ -1,6 +1,7 @@
 package faang.school.analytics.messaging.followEvent;
 
 import faang.school.analytics.dto.followEvent.FollowEventDto;
+import faang.school.analytics.service.comment.CommentEventWorker;
 import faang.school.analytics.service.follow.FollowEventWorker;
 import faang.school.analytics.util.JsonMapper;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class FollowEventListener implements MessageListener {
-
     private final JsonMapper mapper;
     private final FollowEventWorker followEventWorker;
 
