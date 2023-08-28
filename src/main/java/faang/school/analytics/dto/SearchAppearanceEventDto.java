@@ -17,6 +17,4 @@ public class SearchAppearanceEventDto {
     private long actorId;
     private EventType eventType;
     private LocalDateTime receivedAt;
-
-
 }

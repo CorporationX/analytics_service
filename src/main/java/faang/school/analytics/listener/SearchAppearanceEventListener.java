@@ -1,25 +1,29 @@
 package faang.school.analytics.listener;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.SearchAppearanceEventDto;
-import faang.school.analytics.mapper.JsonObjectMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.service.AnalyticsEventService;
-import lombok.RequiredArgsConstructor;
+import faang.school.analytics.repository.AnalyticsEventRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
-import org.springframework.data.redis.connection.MessageListener;
+
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
-public class SearchAppearanceEventListener implements MessageListener {
-    private final JsonObjectMapper jsonObjectMapper;
-    private final AnalyticsEventService analyticsEventService;
+@Slf4j
+public class SearchAppearanceEventListener extends AbstractListener<SearchAppearanceEventDto> {
+    public SearchAppearanceEventListener(ObjectMapper objectMapper,
+                                         AnalyticsEventMapper analyticsEventMapper,
+                                         AnalyticsEventRepository analyticsEventRepository) {
+        super(objectMapper, analyticsEventMapper, analyticsEventRepository);
+    }
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        SearchAppearanceEventDto event = jsonObjectMapper.fromJson(message.getBody(), SearchAppearanceEventDto.class);
-            event.setEventType(EventType.PROFILE_APPEARED_IN_SEARCH);
-        analyticsEventService.save(event);
+        SearchAppearanceEventDto event = readValue(message.getBody(), SearchAppearanceEventDto.class);
+        event.setEventType(EventType.PROFILE_APPEARED_IN_SEARCH);
+        save(analyticsEventMapper.toEntity(event));
         System.out.println("Analytics event saved: " + event);
     }
 }

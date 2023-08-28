@@ -23,9 +23,9 @@ spring:
       host: localhost
       channels:
         profile-view:
-          name: profile_view_channel
+          name: profile-view-channel
         search-appearance:
-          name: search_appearance_channel
+          name: search-appearance-channel
 
 server:
   port: 8086
