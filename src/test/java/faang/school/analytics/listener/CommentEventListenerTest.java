@@ -1,10 +1,10 @@
 package faang.school.analytics.listener;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
-import faang.school.analytics.mapper.JsonObjectMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.Message;
 import org.junit.jupiter.api.extension.ExtendWith;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -19,24 +20,20 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class CommentEventListenerTest {
     @Mock
-    private JsonObjectMapper objectMapper;
-
-    @Mock
     private AnalyticsEventService analyticsEventService;
-
     @Mock
     private AnalyticsEventMapper analyticsEventMapper;
+    @Mock
+    private Message message;
 
     @InjectMocks
     private CommentEventListener commentEventListener;
 
-    @Mock
-    private Message message;
-
     @Test
-    void testOnMessage() {
+    void onMessage_ValidMessage_SuccessfulProcessing() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
 
-        byte[] pattern = new byte[0];
         LocalDateTime timeNow = LocalDateTime.now();
 
         CommentEventDto commentEventDto = CommentEventDto.builder()
@@ -46,22 +43,26 @@ class CommentEventListenerTest {
                 .createdAt(timeNow)
                 .build();
 
-        AnalyticsEvent analyticsEvent = AnalyticsEvent.builder()
-                .receiverId(1L)
-                .actorId(2L)
-                .eventType(EventType.POST_COMMENT)
-                .receivedAt(timeNow)
-                .build();
+        String json = objectMapper.writeValueAsString(commentEventDto);
 
-        when(message.getBody()).thenReturn(pattern);
-        when(analyticsEventMapper.toEntity(commentEventDto)).thenReturn(analyticsEvent);
+        byte[] bodyBytes = json.getBytes();
 
-        when(objectMapper.fromJson(pattern, CommentEventDto.class)).thenReturn(commentEventDto);
+        when(message.getBody()).thenReturn(bodyBytes);
+        when(analyticsEventMapper.toEntity(commentEventDto)).thenReturn(new AnalyticsEvent());
 
-        commentEventListener.onMessage(message, new byte[0]);
+        commentEventListener.onMessage(message, null);
 
-        verify(objectMapper).fromJson(pattern, (CommentEventDto.class));
-        verify(analyticsEventMapper).toEntity(any(CommentEventDto.class));
-        verify(analyticsEventService).save(analyticsEvent);
+        verify(analyticsEventService).save(any(AnalyticsEvent.class));
+        verify(analyticsEventMapper).toEntity(commentEventDto);
+    }
+
+    @Test
+    void onMessage_InvalidMessage_LogsError() throws IOException {
+        String invalidJson = "invalid-json";
+        byte[] invalidJsonBytes = invalidJson.getBytes();
+
+        doReturn(invalidJsonBytes).when(message).getBody();
+
+        commentEventListener.onMessage(message, null);
     }
 }
