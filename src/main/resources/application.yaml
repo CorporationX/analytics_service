@@ -21,8 +21,11 @@ spring:
     redis:
       port: 6379
       host: localhost
-      channel:
-        profile-view: profile_view_channel
+      channels:
+        profile_view_channel:
+          name: profile-view-channel
+        mentorship_requested_channel:
+          name: mentorship-requested-channel
 
 server:
   port: 8086

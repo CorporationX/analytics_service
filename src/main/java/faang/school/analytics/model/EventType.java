@@ -16,7 +16,9 @@ public enum EventType {
     GOAL_COMPLETED,
     ACHIEVEMENT_RECEIVED,
     PROFILE_APPEARED_IN_SEARCH,
+    MENTORSHIP_REQUESTED,
     PROJECT_APPEARED_IN_SEARCH;
+
 
     public static EventType of(int type) {
         for (EventType eventType : EventType.values()) {
