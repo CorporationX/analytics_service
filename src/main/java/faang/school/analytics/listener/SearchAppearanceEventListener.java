@@ -24,6 +24,6 @@ public class SearchAppearanceEventListener extends AbstractListener<SearchAppear
         SearchAppearanceEventDto event = readValue(message.getBody(), SearchAppearanceEventDto.class);
         event.setEventType(EventType.PROFILE_APPEARED_IN_SEARCH);
         save(analyticsEventMapper.toEntity(event));
-        System.out.println("Analytics event saved: " + event);
+        log.info("Analytics event saved: " + event);
     }
 }
