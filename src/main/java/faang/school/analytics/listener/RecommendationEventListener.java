@@ -2,6 +2,7 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.RecommendationRequestEventDto;
+import faang.school.analytics.exception.DeserializeJSONException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -27,7 +28,7 @@ public class RecommendationEventListener implements MessageListener {
         try {
             event = objectMapper.readValue(message.getBody(), RecommendationRequestEventDto.class);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new DeserializeJSONException("Could not deserialize event");
         }
         AnalyticsEvent analyticsEvent = analyticsMapper.toEntity(event);
         analyticsEvent.setEventType(EventType.RECOMMENDATION_RECEIVED);
