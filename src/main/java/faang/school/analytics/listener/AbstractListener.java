@@ -8,6 +8,7 @@ import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
@@ -27,6 +28,7 @@ public abstract class AbstractListener<T> implements MessageListener {
         }
     }
 
+    @Transactional
     protected void save(AnalyticsEvent event) {
         repository.save(event);
         log.info("Saved new analytics event: {}", event);

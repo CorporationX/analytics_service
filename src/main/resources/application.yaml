@@ -24,6 +24,7 @@ spring:
       channels:
         profile_view: profile-view-channel
         recommendation: recommendation-channel
+        post_view: post-view-channel
 
 server:
   port: 8086

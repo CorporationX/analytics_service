@@ -1,5 +1,6 @@
 package faang.school.analytics.config;
 
+import faang.school.analytics.listener.PostViewEventListener;
 import faang.school.analytics.listener.RecommendationListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,8 @@ public class RedisConfig {
     private int port;
     @Value("${spring.data.redis.channels.recommendation}")
     private String recommendationChannel;
+    @Value("${spring.data.redis.channels.post_view}")
+    private String postViewChannel;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -29,8 +32,13 @@ public class RedisConfig {
     }
 
     @Bean
-    public MessageListenerAdapter recommendationMessageListener(RecommendationListener listener) {
+    public MessageListenerAdapter recommendationAdapter(RecommendationListener listener) {
         return new MessageListenerAdapter(listener);
+    }
+
+    @Bean
+    public MessageListenerAdapter postViewAdapter(PostViewEventListener postViewEventListener) {
+        return new MessageListenerAdapter(postViewEventListener);
     }
 
     @Bean
@@ -39,10 +47,17 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationMessageListener) {
+    public ChannelTopic postViewTopic() {
+        return new ChannelTopic(postViewChannel);
+    }
+
+    @Bean
+    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationAdapter,
+                                                        MessageListenerAdapter postViewAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(recommendationMessageListener, recommendationTopic());
+        container.addMessageListener(recommendationAdapter, recommendationTopic());
+        container.addMessageListener(postViewAdapter, postViewTopic());
         return container;
     }
 }
