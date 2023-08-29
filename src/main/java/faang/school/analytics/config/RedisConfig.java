@@ -1,7 +1,7 @@
 package faang.school.analytics.config;
 
 import faang.school.analytics.listener.PostViewEventListener;
-import faang.school.analytics.listener.RecommendationListener;
+import faang.school.analytics.listener.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +32,7 @@ public class RedisConfig {
     }
 
     @Bean
-    public MessageListenerAdapter recommendationAdapter(RecommendationListener listener) {
+    public MessageListenerAdapter recommendationAdapter(RecommendationEventListener listener) {
         return new MessageListenerAdapter(listener);
     }
 

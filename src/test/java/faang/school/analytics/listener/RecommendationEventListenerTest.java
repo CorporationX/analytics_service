@@ -21,9 +21,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RecommendationListenerTest {
+class RecommendationEventListenerTest {
     @InjectMocks
-    private RecommendationListener recommendationListener;
+    private RecommendationEventListener recommendationEventListener;
     @Mock
     private ObjectMapper objectMapper;
     @Mock
@@ -60,19 +60,19 @@ class RecommendationListenerTest {
 
     @Test
     void onMessage_shouldInvokeReadValueMethod() throws IOException {
-        recommendationListener.onMessage(message, null);
+        recommendationEventListener.onMessage(message, null);
         verify(objectMapper).readValue(message.getBody(), RecommendationEventDto.class);
     }
 
     @Test
     void onMessage_shouldInvokeToEntityMethod() {
-        recommendationListener.onMessage(message, null);
+        recommendationEventListener.onMessage(message, null);
         verify(analyticsEventMapper).toEntity(recommendationEvent);
     }
 
     @Test
     void onMessage_shouldInvokeSaveMethod() {
-        recommendationListener.onMessage(message, null);
+        recommendationEventListener.onMessage(message, null);
         verify(repository).save(analyticsEvent);
     }
 }

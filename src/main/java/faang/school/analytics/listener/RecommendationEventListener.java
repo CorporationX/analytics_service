@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class RecommendationListener extends AbstractListener<RecommendationEventDto> {
-    public RecommendationListener(ObjectMapper objectMapper,
-                                  AnalyticsEventMapper analyticsEventMapper,
-                                  AnalyticsEventRepository repository) {
+public class RecommendationEventListener extends AbstractListener<RecommendationEventDto> {
+    public RecommendationEventListener(ObjectMapper objectMapper,
+                                       AnalyticsEventMapper analyticsEventMapper,
+                                       AnalyticsEventRepository repository) {
         super(objectMapper, analyticsEventMapper, repository);
     }
 
