@@ -14,9 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FollowerEventDto {
-    private long userId;
-    private long receiverId;
-    private long actorId;
+    private Long followerId;
+    private Long followeeId;
     private String eventType;
-    private LocalDateTime viewedAt;
+    LocalDateTime timestamp;
 }

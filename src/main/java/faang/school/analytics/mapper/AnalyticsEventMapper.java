@@ -1,6 +1,5 @@
 package faang.school.analytics.mapper;
 
-import faang.school.analytics.dto.redis.AnalyticsEventDto;
 import faang.school.analytics.dto.redis.PostViewEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.InjectionStrategy;
