@@ -1,5 +1,6 @@
 package faang.school.analytics.service;
 
+import faang.school.analytics.dto.AnalyticRequestDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
@@ -38,7 +39,9 @@ class AnalyticServiceTest {
         when(analyticsEventRepository.findByReceiverIdAndEventTypeAndReceivedAtBetween(
                 receiverId, type, start, end))
                 .thenReturn(fakeEventStream);
-        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, type, interval, start, end);
+
+        AnalyticRequestDto analyticRequestDto = AnalyticRequestDto.builder().receiverId(receiverId).eventType(type).interval(interval).startDate(start).endDate(end).build();
+        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(analyticRequestDto);
         assertNotNull(result);
         assertEquals(fakeEvents.size(), result.size());
     }

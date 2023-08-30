@@ -26,17 +26,4 @@ public enum EventType {
         }
         throw new IllegalArgumentException("Unknown event type: " + type);
     }
-
-    public static EventType parseEventType(String input) {
-        try {
-            int eventTypeValue = Integer.parseInt(input);
-            return EventType.of(eventTypeValue);
-        } catch (NumberFormatException e) {
-            try {
-                return EventType.valueOf(input.toUpperCase());
-            } catch (IllegalArgumentException ex) {
-                throw new IllegalArgumentException("Invalid EventType value: " + input);
-            }
-        }
-    }
 }
