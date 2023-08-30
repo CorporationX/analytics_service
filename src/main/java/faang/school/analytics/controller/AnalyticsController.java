@@ -18,6 +18,7 @@ public class AnalyticsController {
 
     @PostMapping("/get/filtered")
     public ResponseEntity<List<AnalyticsDto>> getAnalytics(@RequestBody @Valid AnalyticsFilterDto analyticsFilter) {
-        return ResponseEntity.ok(analyticsService.getAnalytics(analyticsFilter));
+        var analytics = analyticsService.getAnalytics(analyticsFilter);
+        return ResponseEntity.ok(analytics);
     }
 }

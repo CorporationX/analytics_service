@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -29,19 +30,19 @@ public class AnalyticsControllerTest {
     @Test
     void getAnalyticsTest() throws Exception {
         AnalyticsFilterDto filterDto = new AnalyticsFilterDto(1L, EventType.FOLLOWER, null, null);
-        mvc.perform(post("/analytics/get/filtered")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonMapper.toJson(filterDto).get()))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        performGetFilteredAnalytics(filterDto, MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     void getAnalyticsWrongFilterTest() throws Exception {
         AnalyticsFilterDto filterDto = new AnalyticsFilterDto();
+        performGetFilteredAnalytics(filterDto, MockMvcResultMatchers.status().isBadRequest());
+    }
 
+    private void performGetFilteredAnalytics(AnalyticsFilterDto filterDto, ResultMatcher expectedStatus) throws Exception {
         mvc.perform(post("/analytics/get/filtered")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonMapper.toJson(filterDto).get()))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                .andExpect(expectedStatus);
     }
 }

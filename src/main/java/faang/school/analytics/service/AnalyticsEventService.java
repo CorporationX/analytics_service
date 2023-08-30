@@ -46,6 +46,6 @@ public class AnalyticsEventService {
     private boolean isInTimeInterval(AnalyticsEvent event, AnalyticsFilterDto filterDto) {
         LocalDateTime receivedAt = event.getReceivedAt();
         LocalDateTime start = filterDto.getStart(), end = filterDto.getEnd();
-        return (end == null || receivedAt.isBefore(end)) && (start == null || receivedAt.isAfter(start));
+        return (end == null || !receivedAt.isAfter(end)) && (start == null || !receivedAt.isBefore(start));
     }
 }

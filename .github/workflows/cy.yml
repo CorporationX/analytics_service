@@ -43,6 +43,3 @@ jobs:
 
       - name: Build
         run: ./gradlew build --no-daemon
-
-      - name: Run tests
-        run: ./gradlew test --no-daemon
