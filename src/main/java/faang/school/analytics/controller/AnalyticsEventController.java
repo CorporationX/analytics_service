@@ -38,7 +38,7 @@ public class AnalyticsEventController {
         if(!eventTypeName.isBlank() && eventTypeNumber > 0){
             throw new IllegalArgumentException("Select only one type parameter");
         }
-        if(interval.isBlank() && dates.size()<1){
+        if(interval.isBlank() && dates.isEmpty()){
             throw new IllegalArgumentException("Select required time interval");
         }
         if(!interval.isBlank() && dates.size() <= 2 && dates.size() >= 1){
@@ -55,7 +55,7 @@ public class AnalyticsEventController {
         Interval requiredInterval = null;
         LocalDateTime startDate = null;
         LocalDateTime endDate = null;
-        if(dates.size()<1){
+        if(dates.isEmpty()){
             requiredInterval = Interval.get(interval);
         }
         if(interval.isBlank()){

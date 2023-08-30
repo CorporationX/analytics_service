@@ -2,10 +2,13 @@ package faang.school.analytics.config;
 
 import faang.school.analytics.messaging.ProfileViewEventListener;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
@@ -17,6 +20,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @Configuration
+@PropertySource(value = {"classpath:redis.properties"})
 @RequiredArgsConstructor
 public class RedisConfig {
     @Value("${spring.data.redis.host}")
@@ -25,9 +29,15 @@ public class RedisConfig {
     private int port;
 
     private final ProfileViewEventListener profileViewEventListener;
+
+    @Bean
+    Logger logger(){
+        return LoggerFactory.getLogger(RedisConfig.class);
+    }
+
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
-        System.out.println(port);
+        logger().info("port - " + port);
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
         return new JedisConnectionFactory(config);
     }
@@ -39,7 +49,7 @@ public class RedisConfig {
 
     @Bean
     public ChannelTopic viewProfileTopic() {
-        return new ChannelTopic("viewProfileTopic");
+        return new ChannelTopic("${viewProfileTopic}");
     }
 
     @Bean
