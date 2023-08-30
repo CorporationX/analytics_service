@@ -1,10 +1,9 @@
 package faang.school.analytics.listener;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.CommentEventDto;
+import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.mapper.JsonObjectMapper;
-import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,7 @@ public class CommentMessageListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         CommentEventDto commentEventDto = jsonObjectMapper.readValue(message.getBody(), CommentEventDto.class);
-        AnalyticsEventDto analyticsEvent = analyticsEventMapper.toAnalyticsEventDto(commentEventDto);
+        EventDto analyticsEvent = analyticsEventMapper.toEventDto(commentEventDto);
         analyticsEvent.setEventType(EventType.POST_COMMENT);
         analyticsEventService.saveEvent(analyticsEvent);
         log.info("Message from topic: {}, has been received.", message.getChannel());

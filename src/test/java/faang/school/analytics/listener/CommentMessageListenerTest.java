@@ -1,7 +1,7 @@
 package faang.school.analytics.listener;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.CommentEventDto;
+import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.mapper.JsonObjectMapper;
 import faang.school.analytics.model.EventType;
@@ -30,7 +30,7 @@ class CommentMessageListenerTest {
     @InjectMocks
     private CommentMessageListener listener;
     private CommentEventDto commentEventDto;
-    private AnalyticsEventDto analyticsEventDto;
+    private EventDto eventDto;
     private Message message;
     private String body;
     private byte[] pattern;
@@ -38,22 +38,21 @@ class CommentMessageListenerTest {
     @BeforeEach
     public void setUp() {
         commentEventDto = CommentEventDto.builder().build();
-        analyticsEventDto = AnalyticsEventDto.builder().build();
+        eventDto = EventDto.builder().build();
         body = "body";
         pattern = new byte[]{1};
         message = new DefaultMessage(pattern, body.getBytes());
     }
 
-
     @Test
     void testOnMessage() {
         when(jsonObjectMapper.readValue(message.getBody(), CommentEventDto.class)).thenReturn(commentEventDto);
-        when(analyticsEventMapper.toAnalyticsEventDto(commentEventDto)).thenReturn(analyticsEventDto);
+        when(analyticsEventMapper.toEventDto(commentEventDto)).thenReturn(eventDto);
 
         listener.onMessage(message, pattern);
 
-        verify(analyticsEventMapper).toAnalyticsEventDto(commentEventDto);
-        verify(analyticsEventService).saveEvent(analyticsEventDto);
-        assertEquals(analyticsEventDto.getEventType(), EventType.POST_COMMENT);
+        verify(analyticsEventMapper).toEventDto(commentEventDto);
+        verify(analyticsEventService).saveEvent(eventDto);
+        assertEquals(eventDto.getEventType(), EventType.POST_COMMENT);
     }
 }
