@@ -24,6 +24,9 @@ spring:
       channel:
         profile-view: profile_view_channel
 
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
 server:
   port: 8086
 
