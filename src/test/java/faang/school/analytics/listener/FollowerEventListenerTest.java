@@ -1,6 +1,6 @@
 package faang.school.analytics.listener;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.dto.FollowerEventDto;
 import faang.school.analytics.mapper.FollowerEventMapper;
 import faang.school.analytics.mapper.FollowerEventMapperImpl;
@@ -43,7 +43,7 @@ class FollowerEventListenerTest {
                 .followeeId(2)
                 .subscriptionTime(currentTime)
                 .build();
-        AnalyticsEventDto event = AnalyticsEventDto.builder()
+        EventDto event = EventDto.builder()
                 .actorId(1L)
                 .receiverId(2L)
                 .eventType(EventType.FOLLOWER)

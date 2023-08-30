@@ -1,7 +1,6 @@
 package faang.school.analytics.mapper;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.dto.CommentEventDto;
+import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.mapstruct.BeforeMapping;
@@ -15,8 +14,9 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface AnalyticsEventMapper {
 
-    AnalyticsEvent toModel(AnalyticsEventDto eventDto);
+    AnalyticsEvent toModel(EventDto eventDto);
 
+    EventDto toDto(AnalyticsEvent event);
     AnalyticsEventDto toDto(AnalyticsEvent event);
 
     @Mapping(source = "authorId", target = "actorId")

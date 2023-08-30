@@ -30,6 +30,8 @@ spring:
         event_channels:
           likePost: /likes/post
           mentorship: /mentorship
+        post_channel:
+          name: post_channel
 
 server:
   port: 8086

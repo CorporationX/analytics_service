@@ -1,7 +1,6 @@
 package faang.school.analytics.mapper;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.dto.CommentEventDto;
+import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +14,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class AnalyticsEventMapperTest {
 
     private AnalyticsEventMapper analyticsEventMapper;
-    private AnalyticsEventDto analyticsEventDto;
+
+    private EventDto dto;
+
     private AnalyticsEvent model;
     private CommentEventDto commentEventDto;
 
@@ -23,7 +24,7 @@ class AnalyticsEventMapperTest {
     void setUp() {
         analyticsEventMapper = new AnalyticsEventMapperImpl();
         LocalDateTime currentTime = LocalDateTime.now();
-        analyticsEventDto = AnalyticsEventDto.builder()
+        dto = EventDto.builder()
                 .receiverId(1L)
                 .actorId(2L)
                 .eventType(EventType.FOLLOWER)
@@ -46,16 +47,15 @@ class AnalyticsEventMapperTest {
 
     @Test
     void toModelTest() {
-        AnalyticsEvent result = analyticsEventMapper.toModel(analyticsEventDto);
+        AnalyticsEvent result = analyticsEventMapper.toModel(dto);
 
         assertEquals(model, result);
     }
 
     @Test
     void toDto() {
-        AnalyticsEventDto result = analyticsEventMapper.toDto(model);
-
-        assertEquals(analyticsEventDto, result);
+        EventDto result = analyticsEventMapper.toDto(model);
+        assertEquals(model, result);
     }
 
 
