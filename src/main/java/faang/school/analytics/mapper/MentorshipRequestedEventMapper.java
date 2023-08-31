@@ -13,9 +13,11 @@ public interface MentorshipRequestedEventMapper {
 
     @Mapping(target = "actorId", source = "requesterId")
     @Mapping(target ="receivedAt", source = "createdAt")
-    AnalyticsEvent toEntity(MentorshipRequestedEventDto analyticsEventDto);
+    AnalyticsEvent toEntityFromAnalyticsEventDto(MentorshipRequestedEventDto analyticsEventDto);
 
     @Mapping(target = "actorId", source = "requesterId")
     @Mapping(target ="receivedAt", source = "createdAt" )
     AnalyticsEventDto toDto(MentorshipRequestedEventDto analyticsEvent);
+
+    AnalyticsEvent toEntityFromAnalyticsEventDto(AnalyticsEventDto analyticsEventDto);
 }

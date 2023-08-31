@@ -22,7 +22,7 @@ class MentorshipRequestedEventMapperTest {
                 .createdAt(LocalDateTime.parse("2023-08-14T12:00:00"))
                 .build();
 
-        AnalyticsEvent entity = mapper.toEntity(dto);
+        AnalyticsEvent entity = mapper.toEntityFromAnalyticsEventDto(dto);
 
         assertEquals(dto.getRequesterId(), entity.getActorId());
         assertEquals(dto.getReceiverId(), entity.getReceiverId());
