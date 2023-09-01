@@ -1,5 +1,6 @@
 package faang.school.analytics;
 
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.redis.event.LikeEvent;
@@ -20,4 +21,8 @@ public interface AnalyticsEventMapper {
     default void setLikeType(@MappingTarget AnalyticsEvent analyticsEvent) {
         analyticsEvent.setEventType(EventType.POST_LIKE);
     }
+
+    AnalyticsEvent toEntity(AnalyticsEventDto analyticsEventDto);
+
+    AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
 }
