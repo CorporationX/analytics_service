@@ -1,5 +1,6 @@
 package faang.school.analytics.mapper;
 
+import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.dto.RecommendationEventDto;
 import faang.school.analytics.dto.redis.PostViewEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
@@ -9,9 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -83,5 +82,43 @@ class AnalyticsEventMapperTest {
         assertEquals(createdAt, dto.getCreatedAt());
         assertEquals(1L, dto.getUserId());
         assertEquals(2L, dto.getAuthorId());
+    }
+
+    @Test
+    void toCommentEntity_shouldMatchAllFields() {
+        CommentEventDto commentEventDto = new CommentEventDto();
+
+        commentEventDto.setAuthorId(1L);
+        commentEventDto.setDate(LocalDateTime.of(2023, 8, 24, 12, 34, 56));
+
+        AnalyticsEvent actual = mapper.toCommentEntity(commentEventDto);
+
+        AnalyticsEvent expected = new AnalyticsEvent();
+        expected.setActorId(1L);
+        expected.setReceivedAt(commentEventDto.getDate());
+        expected.setEventType(mapper.getEventType());
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void toCommentDto_shouldMatchAllFields() {
+        AnalyticsEvent analyticsEvent = new AnalyticsEvent();
+
+        analyticsEvent.setActorId(1L);
+        analyticsEvent.setReceivedAt(LocalDateTime.of(2023, 8, 24, 12, 34, 56));
+
+        CommentEventDto actual = mapper.toCommentDto(analyticsEvent);
+
+        CommentEventDto expected = new CommentEventDto();
+        expected.setAuthorId(1L);
+        expected.setDate(analyticsEvent.getReceivedAt());
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getCommentEventType_shouldReturnCommentEventType() {
+        assertEquals(EventType.POST_COMMENT, mapper.getEventType());
     }
 }
