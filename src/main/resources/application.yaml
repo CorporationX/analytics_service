@@ -21,8 +21,9 @@ spring:
     redis:
       port: 6379
       host: localhost
-      channel:
-        profile-view: profile_view_channel
+      channels:
+        profile-view: profile-view-channel
+        recommendation_request_channel: recommendation-request-channel
 
 server:
   port: 8086
