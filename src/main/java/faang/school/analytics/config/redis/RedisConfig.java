@@ -15,7 +15,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
-public class RedisConfiguration {
+public class RedisConfig {
     private final SearchAppearanceEventListener searchAppearanceEventListener;
     @Value("${spring.data.redis.host}")
     private String host;
@@ -32,13 +32,20 @@ public class RedisConfiguration {
     }
 
     @Bean
+    public ChannelTopic searchAppearanceTopic() {
+        return new ChannelTopic(searchAppearanceTopic);
+    }
+
+    @Bean
+    public MessageListenerAdapter messageListenerAdapter() {
+        return new MessageListenerAdapter(searchAppearanceEventListener);
+    }
+
+    @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(JedisConnectionFactory connectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-
-        MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(searchAppearanceEventListener);
-        container.addMessageListener(messageListenerAdapter, new ChannelTopic(searchAppearanceTopic));
-
+        container.addMessageListener(messageListenerAdapter(), searchAppearanceTopic());
         return container;
     }
 }
