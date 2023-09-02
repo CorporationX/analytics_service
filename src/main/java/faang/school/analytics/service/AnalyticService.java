@@ -1,6 +1,7 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticRequestDto;
+import faang.school.analytics.exception.DataValidException;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.DateRange;
 import faang.school.analytics.model.EventType;
@@ -27,9 +28,14 @@ public class AnalyticService {
 
     private AnalyticRequestDto ensureStartAndEndAreSet(AnalyticRequestDto analyticRequestDto){
         if (analyticRequestDto.getStartDate() == null || analyticRequestDto.getEndDate() == null) {
-            DateRange range = Interval.getDateRange(analyticRequestDto.getInterval());
-            analyticRequestDto.setStartDate(range.getStartDate());
-            analyticRequestDto.setEndDate(range.getEndDate());
+            if (analyticRequestDto.getInterval() == null) {
+                throw new DataValidException("Interval and dates cannot be null at the same time");
+            } else {
+                DateRange range = Interval.getDateRange(analyticRequestDto.getInterval());
+                analyticRequestDto.setStartDate(range.getStartDate());
+                analyticRequestDto.setEndDate(range.getEndDate());
+            }
+
         }
         return analyticRequestDto;
     }

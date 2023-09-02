@@ -25,13 +25,7 @@ public class AnalyticController {
 
     @GetMapping
     public ResponseEntity<?> getAnalytics(@RequestBody @Valid AnalyticRequestDto analyticRequestDto) {
-        try {
-            List<AnalyticsEvent> analytics = analyticService.getAnalytics(analyticRequestDto);
-            return ResponseEntity.ok(analytics);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Invalid parameters: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
-        }
+        List<AnalyticsEvent> analytics = analyticService.getAnalytics(analyticRequestDto);
+        return ResponseEntity.ok(analytics);
     }
 }
