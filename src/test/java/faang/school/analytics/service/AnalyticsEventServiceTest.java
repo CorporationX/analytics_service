@@ -60,9 +60,9 @@ public class AnalyticsEventServiceTest {
 
     @Test
     void savePostEvent_ShouldBeSaved() {
-        service.savePostEvent(mockPostViewEvent());
+        analyticsEventService.savePostEvent(mockPostViewEvent());
 
-        Mockito.verify(repository).save(Mockito.any(AnalyticsEvent.class));
+        Mockito.verify(analyticsEventRepository).save(Mockito.any(AnalyticsEvent.class));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class AnalyticsEventServiceTest {
 
     private AnalyticsEvent mockAnalyticsEvent() {
         return AnalyticsEvent.builder()
-                .id(0L)
+                .id(null)
                 .receiverId(1L)
                 .actorId(1L)
                 .eventType(EventType.POST_VIEW)
