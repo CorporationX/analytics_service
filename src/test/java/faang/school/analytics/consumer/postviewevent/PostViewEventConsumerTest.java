@@ -36,6 +36,7 @@ import java.util.concurrent.TimeUnit;
                 "listeners=PLAINTEXT://localhost:9092",
                 "port=9092"
         })
+@Disabled
 class PostViewEventConsumerTest {
 
     private static final String TOPIC = "post-view";

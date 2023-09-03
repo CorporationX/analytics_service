@@ -53,7 +53,6 @@ class AnalyticsEventServiceTest {
                 .receiverId(1L)
                 .actorId(1L)
                 .eventType(EventType.POST_VIEW)
-                .receivedAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
                 .build();
     }
 }

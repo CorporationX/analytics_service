@@ -13,7 +13,7 @@ public class PostViewEvent {
     private Long userAuthorId;
     private Long projectAuthorId;
     private Long viewerId;
-    private LocalDateTime time = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    private LocalDateTime time;
 
     public PostViewEvent(Long postId, Long userAuthorId, Long projectAuthorId, Long viewerId) {
         this.postId = postId;
