@@ -1,5 +1,6 @@
 package faang.school.analytics.config;
 
+import faang.school.analytics.listener.CommentMessageListener;
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.LikePostMessageListener;
 import faang.school.analytics.listener.MentorshipMessageListener;
@@ -25,6 +26,7 @@ public class RedisConfig {
     private final FollowerEventListener followerEventListener;
     private final MessageListener postViewEventListener;
     private final MentorshipMessageListener mentorshipMessageListener;
+    private final CommentMessageListener commentMessageListener;
 
     @Value("${spring.data.redis.host}")
     private String host;
@@ -38,6 +40,8 @@ public class RedisConfig {
     private String followerTopicName;
     @Value("${spring.data.redis.channels.event_channels.mentorship}")
     private String mentorshipName;
+    @Value("${spring.data.redis.channels.comment_channel.name}")
+    private String commentTopicName;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -54,11 +58,13 @@ public class RedisConfig {
         MessageListenerAdapter likePostMessageListenerAdapter = new MessageListenerAdapter(likePostMessageListener);
         MessageListenerAdapter mentorshipMessageListenerAdapter = new MessageListenerAdapter(mentorshipMessageListener);
         MessageListenerAdapter postMessageListenerAdapter = new MessageListenerAdapter(postViewEventListener);
+        MessageListenerAdapter commentMessageListenerAdapter = new MessageListenerAdapter(commentMessageListener);
 
         container.addMessageListener(likePostMessageListenerAdapter, new ChannelTopic(likeTopicName));
         container.addMessageListener(followerEventMessageListenerAdapter, new ChannelTopic(followerTopicName));
         container.addMessageListener(mentorshipMessageListenerAdapter, new ChannelTopic(mentorshipName));
         container.addMessageListener(postMessageListenerAdapter, new ChannelTopic(postTopicName));
+        container.addMessageListener(commentMessageListenerAdapter, new ChannelTopic(commentTopicName));
 
         return container;
     }
