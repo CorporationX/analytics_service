@@ -1,4 +1,4 @@
-package faang.school.analytics.followEvents;
+package faang.school.analytics.messaging;
 
 import faang.school.analytics.dto.followEvent.FollowEventDto;
 import faang.school.analytics.messaging.followEvent.FollowEventListener;
