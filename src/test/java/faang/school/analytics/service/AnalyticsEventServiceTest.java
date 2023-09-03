@@ -2,7 +2,9 @@ package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsDto;
 import faang.school.analytics.dto.AnalyticsFilterDto;
+import faang.school.analytics.dto.PostViewEvent;
 import faang.school.analytics.dto.followEvent.FollowEventDto;
+import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.mapper.EventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -14,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -24,8 +27,13 @@ public class AnalyticsEventServiceTest {
 
     @Mock
     AnalyticsEventRepository analyticsEventRepository;
+
     @Mock
     EventMapper eventMapper;
+
+    @Spy
+    private AnalyticsEventMapperImpl mapper;
+
     @InjectMocks
     AnalyticsEventService analyticsEventService;
 
@@ -41,6 +49,20 @@ public class AnalyticsEventServiceTest {
         filterDto = new AnalyticsFilterDto(1L, EventType.FOLLOWER, null, null);
         followEventDto = new FollowEventDto();
 
+    }
+
+    @Test
+    void savePostEvent_ShouldMapCorrectly() {
+        AnalyticsEvent actual = mapper.toAnalyticsEvent(mockPostViewEvent());
+
+        Assertions.assertEquals(mockAnalyticsEvent(), actual);
+    }
+
+    @Test
+    void savePostEvent_ShouldBeSaved() {
+        analyticsEventService.savePostEvent(mockPostViewEvent());
+
+        Mockito.verify(analyticsEventRepository).save(Mockito.any(AnalyticsEvent.class));
     }
 
     @Test
@@ -66,5 +88,18 @@ public class AnalyticsEventServiceTest {
 
         var result = analyticsEventService.getAnalytics(filterDto);
         Assertions.assertTrue(result.isEmpty());
+    }
+
+    private PostViewEvent mockPostViewEvent() {
+        return new PostViewEvent(1L, 1L, null, 1L);
+    }
+
+    private AnalyticsEvent mockAnalyticsEvent() {
+        return AnalyticsEvent.builder()
+                .id(null)
+                .receiverId(1L)
+                .actorId(1L)
+                .eventType(EventType.POST_VIEW)
+                .build();
     }
 }
