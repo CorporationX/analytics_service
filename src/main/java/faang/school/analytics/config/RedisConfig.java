@@ -6,15 +6,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfig {
+
+    private final LikeEventListener likeEventListener;
+    private final MentorshipRequestedEventListener mentorshipRequestedEventListener;
 
     @Value("${spring.data.redis.host}")
     private String host;
@@ -33,31 +39,25 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(MessageListenerAdapter mentorshipRequestedMessageListener,
-                                                                       MessageListenerAdapter likeEventMessageListener) {
+    public RedisMessageListenerContainer redisMessageListenerContainer() {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(mentorshipRequestedMessageListener, mentorshipRequestedTopic());
-        container.addMessageListener(likeEventMessageListener, likeEventTopic());
+
+        MessageListenerAdapter mentorshipRequestedMessageListener = new MessageListenerAdapter(mentorshipRequestedEventListener);
+        MessageListenerAdapter likeEventMessageListener = new MessageListenerAdapter(likeEventListener);
+
+        container.addMessageListener(mentorshipRequestedMessageListener, new ChannelTopic(mentorshipRequestedTopic));
+        container.addMessageListener(likeEventMessageListener, new ChannelTopic(likeEventTopic));
         return container;
     }
 
     @Bean
-    public MessageListenerAdapter mentorshipRequestedMessageListener(MentorshipRequestedEventListener listener) {
-        return new MessageListenerAdapter(listener);
-    }
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
 
-    @Bean
-    public MessageListenerAdapter likeEventMessageListener(LikeEventListener listener) {
-        return new MessageListenerAdapter(listener);
-    }
-
-    @Bean
-    public ChannelTopic mentorshipRequestedTopic() {
-        return new ChannelTopic(mentorshipRequestedTopic);
-    }
-    @Bean
-    public ChannelTopic likeEventTopic() {
-        return new ChannelTopic(likeEventTopic);
+        return template;
     }
 }
