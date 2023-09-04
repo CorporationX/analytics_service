@@ -28,7 +28,7 @@ public class RedisConfig {
     private String postViewChannel;
     @Value("${spring.data.redis.channels.mentorship_requested_channel.name}")
     private String mentorshipRequestedTopic;
-    @Value("${spring.data.redis.channels.comment_event_channel.name}")
+    @Value("${spring.data.redis.channels.comment_event.name}")
     private String commentEventTopicName;
 
 

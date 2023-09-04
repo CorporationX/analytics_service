@@ -1,6 +1,7 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.CommentEventDto;
+import faang.school.analytics.dto.MentorshipRequestedEventDto;
 import faang.school.analytics.dto.RecommendationEventDto;
 import faang.school.analytics.dto.redis.PostViewEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
@@ -43,16 +44,24 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "eventType", expression = "java(getEventType())")
     AnalyticsEvent toCommentEntity(CommentEventDto commentEventDto);
 
-
     @Mapping(target = "authorId", source = "actorId")
     @Mapping(target = "date", source = "receivedAt")
     CommentEventDto toCommentDto(AnalyticsEvent entity);
 
+
+    @Mapping(target = "actorId", source = "requesterId")
+    @Mapping(target ="receivedAt", source = "createdAt")
+    @Mapping(target = "eventType", expression = "java(getMentorshipRequestType())")
+    AnalyticsEvent toMentorshipRequestedEntity(MentorshipRequestedEventDto dto);
     default EventType getRecommendationType() {
         return EventType.RECOMMENDATION_RECEIVED;
     }
 
     default EventType getEventType() {
         return EventType.POST_COMMENT;
+    }
+
+    default EventType getMentorshipRequestType() {
+        return EventType.MENTORSHIP_REQUESTED;
     }
 }
