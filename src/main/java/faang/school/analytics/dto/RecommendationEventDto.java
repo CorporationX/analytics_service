@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RecommendationRequestEventDto {
+public class RecommendationEventDto {
 
     private Long recommendationId;
 

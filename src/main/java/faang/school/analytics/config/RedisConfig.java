@@ -23,8 +23,8 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int port;
 
-    @Value("${spring.data.redis.channels.recommendation_request_channel}")
-    private String recommendationRequestChannelName;
+    @Value("${spring.data.redis.channels.recommendation_channel}")
+    private String recommendationChannelName;
 
     private final RecommendationEventListener recommendationEventListener;
 
@@ -47,12 +47,12 @@ public class RedisConfig {
     RedisMessageListenerContainer redisContainer() {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
-        container.addMessageListener(recommendationEventListener, topicRecommendationRequest());
+        container.addMessageListener(recommendationEventListener, topicRecommendation());
         return container;
     }
 
     @Bean
-    ChannelTopic topicRecommendationRequest() {
-        return new ChannelTopic(recommendationRequestChannelName);
+    ChannelTopic topicRecommendation() {
+        return new ChannelTopic(recommendationChannelName);
     }
 }
