@@ -28,7 +28,7 @@ spring:
         mentorship_requested_channel:
           name: mentorship-requested-channel
         comment_event:
-          name: comment-event-channel
+          name: comments-channel
 
 server:
   port: 8086

@@ -88,14 +88,14 @@ class AnalyticsEventMapperTest {
     void toCommentEntity_shouldMatchAllFields() {
         CommentEventDto commentEventDto = new CommentEventDto();
 
-        commentEventDto.setAuthorId(1L);
-        commentEventDto.setDate(LocalDateTime.of(2023, 8, 24, 12, 34, 56));
+        commentEventDto.setAuthorIdComment(1L);
+        commentEventDto.setCreatedAt(LocalDateTime.of(2023, 8, 24, 12, 34, 56));
 
         AnalyticsEvent actual = mapper.toCommentEntity(commentEventDto);
 
         AnalyticsEvent expected = new AnalyticsEvent();
         expected.setActorId(1L);
-        expected.setReceivedAt(commentEventDto.getDate());
+        expected.setReceivedAt(commentEventDto.getCreatedAt());
         expected.setEventType(mapper.getEventType());
 
         assertEquals(expected, actual);
@@ -111,8 +111,8 @@ class AnalyticsEventMapperTest {
         CommentEventDto actual = mapper.toCommentDto(analyticsEvent);
 
         CommentEventDto expected = new CommentEventDto();
-        expected.setAuthorId(1L);
-        expected.setDate(analyticsEvent.getReceivedAt());
+        expected.setAuthorIdComment(1L);
+        expected.setCreatedAt(analyticsEvent.getReceivedAt());
 
         assertEquals(expected, actual);
     }

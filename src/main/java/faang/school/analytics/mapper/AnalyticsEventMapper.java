@@ -39,13 +39,13 @@ public interface AnalyticsEventMapper {
     PostViewEventDto toPostViewEvent(AnalyticsEvent entity);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "actorId", source = "authorId")
-    @Mapping(target = "receivedAt", source = "date")
+    @Mapping(target = "actorId", source = "authorIdComment")
+    @Mapping(target = "receivedAt", source = "createdAt")
     @Mapping(target = "eventType", expression = "java(getEventType())")
     AnalyticsEvent toCommentEntity(CommentEventDto commentEventDto);
 
-    @Mapping(target = "authorId", source = "actorId")
-    @Mapping(target = "date", source = "receivedAt")
+    @Mapping(target = "authorIdComment", source = "actorId")
+    @Mapping(target = "createdAt", source = "receivedAt")
     CommentEventDto toCommentDto(AnalyticsEvent entity);
 
 

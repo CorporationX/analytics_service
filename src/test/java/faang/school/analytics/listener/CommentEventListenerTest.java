@@ -37,8 +37,8 @@ class CommentEventListenerTest {
     void setUp() throws IOException {
         LocalDateTime dateTime = LocalDateTime.of(2023, 1, 1, 0, 0, 0);
         commentEventDto = CommentEventDto.builder()
-                .authorId(2L)
-                .date(dateTime)
+                .idComment(2L)
+                .createdAt(dateTime)
                 .build();
 
         analyticsEvent = AnalyticsEvent.builder()
