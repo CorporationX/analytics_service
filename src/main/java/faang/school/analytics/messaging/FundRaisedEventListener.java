@@ -3,6 +3,7 @@ package faang.school.analytics.messaging;
 import faang.school.analytics.dto.fundRasing.FundRaisedEvent;
 import faang.school.analytics.util.JsonMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class FundRaisedEventListener implements MessageListener {
 
@@ -18,6 +20,7 @@ public class FundRaisedEventListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         FundRaisedEvent event = getEvent(message);
+        log.info("Received FundRaisedEvent: {}", event);
     }
 
     private FundRaisedEvent getEvent(Message message) {
