@@ -1,21 +1,21 @@
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
+    driver_class_name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres
     username: user
     password: password
 
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database_platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: none
-    show-sql: true
+      ddl_auto: none
+    show_sql: true
     properties:
       hibernate:
         format_sql: true
 
   liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.yaml
+    change_log: classpath:db/changelog/db.changelog-master.yaml
 
   data:
     redis:
@@ -29,6 +29,8 @@ spring:
           name: mentorship-requested-channel
         comment_event:
           name: comments-channel
+        search_appearance:
+          name: search-appearance-channel
 
 server:
   port: 8086
@@ -37,6 +39,6 @@ logging:
   level:
     root: info
 
-project-service:
+project_service:
   host: localhost
   port: 8082
