@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class FundRaisedEventWorker {
+public class FundRaisedEventHandler {
 
     private final AnalyticsEventService service;
     private final AnalyticsEventMapper mapper;
