@@ -1,5 +1,6 @@
 package faang.school.analytics.config;
 
+import faang.school.analytics.redis.listener.FollowerEventListener;
 import faang.school.analytics.redis.listener.LikeEventListener;
 import faang.school.analytics.redis.listener.MentorshipRequestedEventListener;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class RedisConfig {
 
     private final LikeEventListener likeEventListener;
     private final MentorshipRequestedEventListener mentorshipRequestedEventListener;
+    private final FollowerEventListener followerEventListener;
 
     @Value("${spring.data.redis.host}")
     private String host;
@@ -30,7 +32,8 @@ public class RedisConfig {
     private String mentorshipRequestedTopic;
     @Value("${spring.data.redis.channel.like_channel}")
     private String likeEventTopic;
-
+    @Value("${spring.data.redis.channels.follower_channel}")
+    private String followerTopic;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -45,9 +48,12 @@ public class RedisConfig {
 
         MessageListenerAdapter mentorshipRequestedMessageListener = new MessageListenerAdapter(mentorshipRequestedEventListener);
         MessageListenerAdapter likeEventMessageListener = new MessageListenerAdapter(likeEventListener);
+        MessageListenerAdapter followerEventMessageListenerAdapter = new MessageListenerAdapter(followerEventListener);
+
 
         container.addMessageListener(mentorshipRequestedMessageListener, new ChannelTopic(mentorshipRequestedTopic));
         container.addMessageListener(likeEventMessageListener, new ChannelTopic(likeEventTopic));
+        container.addMessageListener(followerEventMessageListenerAdapter, new ChannelTopic(followerTopic));
         return container;
     }
 

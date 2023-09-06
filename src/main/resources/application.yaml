@@ -25,6 +25,7 @@ spring:
         profile-view: profile_view_channel
         like_channel: like_channel
         mentorship_requested_channel: mentorship-requested-channel
+        follower_channel: follower_channel
 
 
 server:
