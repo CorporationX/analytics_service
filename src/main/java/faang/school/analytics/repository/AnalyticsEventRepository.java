@@ -1,4 +1,4 @@
-package faang.school.analytics.repository.search_appearance_event;
+package faang.school.analytics.repository;
 
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;

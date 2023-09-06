@@ -1,14 +1,12 @@
 package faang.school.analytics.config;
 
-import faang.school.analytics.listener.CommentEventListener;
-import faang.school.analytics.listener.MentorshipRequestedEventListener;
-import faang.school.analytics.listener.PostViewEventListener;
-import faang.school.analytics.listener.RecommendationEventListener;
+import faang.school.analytics.listener.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
@@ -30,12 +28,15 @@ public class RedisConfig {
     private String mentorshipRequestedTopic;
     @Value("${spring.data.redis.channels.comment_event.name}")
     private String commentEventTopicName;
+    @Value("${spring.data.redis.channels.search-appearance.name}")
+    private String searchAppearanceTopic;
 
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
         log.info("Crated redis connection factory with host: {}, port: {}", host, port);
-        return new JedisConnectionFactory();
+        RedisStandaloneConfiguration redisConfiguration = new RedisStandaloneConfiguration(host, port);
+        return new JedisConnectionFactory(redisConfiguration);
     }
 
     @Bean
@@ -58,6 +59,15 @@ public class RedisConfig {
         return new MessageListenerAdapter(commentEventlistener);
     }
 
+    @Bean
+    public MessageListenerAdapter searchAppearanceAdapter(SearchAppearanceEventListener searchAppearanceEventListener) {
+        return new MessageListenerAdapter(searchAppearanceEventListener);
+    }
+
+    @Bean
+    public ChannelTopic searchAppearanceTopic() {
+        return new ChannelTopic(searchAppearanceTopic);
+    }
 
     @Bean
     public ChannelTopic recommendationTopic() {
@@ -83,13 +93,15 @@ public class RedisConfig {
     public RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationAdapter,
                                                         MessageListenerAdapter postViewAdapter,
                                                         MessageListenerAdapter mentorshipRequestedMessageListener,
-                                                        MessageListenerAdapter commentEventAdapter) {
+                                                        MessageListenerAdapter commentEventAdapter,
+                                                        MessageListenerAdapter searchAppearanceAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(recommendationAdapter, recommendationTopic());
         container.addMessageListener(postViewAdapter, postViewTopic());
         container.addMessageListener(mentorshipRequestedMessageListener, mentorshipRequestedTopic());
         container.addMessageListener(commentEventAdapter, commentEventTopic());
+        container.addMessageListener(searchAppearanceAdapter, searchAppearanceTopic());
         return container;
     }
 }

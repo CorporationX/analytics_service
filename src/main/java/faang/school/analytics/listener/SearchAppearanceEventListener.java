@@ -2,9 +2,9 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.SearchAppearanceEventDto;
-import faang.school.analytics.mapper.search_appearance_event.AnalyticsEventMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.repository.search_appearance_event.AnalyticsEventRepository;
+import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 
@@ -23,7 +23,7 @@ public class SearchAppearanceEventListener extends AbstractListener<SearchAppear
     public void onMessage(Message message, byte[] pattern) {
         SearchAppearanceEventDto event = readValue(message.getBody(), SearchAppearanceEventDto.class);
         event.setEventType(EventType.PROFILE_APPEARED_IN_SEARCH);
-        save(analyticsEventMapper.toEntity(event));
+        save(analyticsEventMapper.fromSearchAppearanceEventDtoToEntity(event));
         log.info("Analytics event saved: " + event);
     }
 }

@@ -2,9 +2,9 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.SearchAppearanceEventDto;
-import faang.school.analytics.mapper.search_appearance_event.AnalyticsEventMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.repository.search_appearance_event.AnalyticsEventRepository;
+import faang.school.analytics.repository.AnalyticsEventRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +33,7 @@ class SearchAppearanceEventListenerTest {
     private Message message;
     private SearchAppearanceEventDto searchAppearanceEventDto;
     private AnalyticsEvent analyticsEvent;
-    private byte [] jsonPattern;
+    private byte[] jsonPattern;
 
 
     @BeforeEach
@@ -54,11 +54,11 @@ class SearchAppearanceEventListenerTest {
     @Test
     void testOnMessage() {
         when(searchAppearanceEventListener.readValue(message.getBody(), SearchAppearanceEventDto.class)).thenReturn(searchAppearanceEventDto);
-        when(analyticsEventMapper.toEntity(searchAppearanceEventDto)).thenReturn(analyticsEvent);
+        when(analyticsEventMapper.fromSearchAppearanceEventDtoToEntity(searchAppearanceEventDto)).thenReturn(analyticsEvent);
 
         searchAppearanceEventListener.onMessage(message, jsonPattern);
 
-        verify(analyticsEventMapper, times(1)).toEntity(searchAppearanceEventDto);
+        verify(analyticsEventMapper, times(1)).fromSearchAppearanceEventDtoToEntity(searchAppearanceEventDto);
     }
 
     @Test
