@@ -1,5 +1,6 @@
 package faang.school.analytics.config;
 
+import faang.school.analytics.listener.CommentEventListener;
 import faang.school.analytics.listener.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +27,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.recommendation_channel}")
     private String recommendationChannelName;
 
+    @Value("${spring.data.redis.channels.comment_event_channel}")
+    private String commentEventChannelName;
+
     private final RecommendationEventListener recommendationEventListener;
 
     @Bean
@@ -44,15 +48,21 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer() {
+    RedisMessageListenerContainer redisContainer(CommentEventListener commentEventListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(recommendationEventListener, topicRecommendation());
+        container.addMessageListener(commentEventListener, topicCommentEvent());
         return container;
     }
 
     @Bean
     ChannelTopic topicRecommendation() {
         return new ChannelTopic(recommendationChannelName);
+    }
+
+    @Bean
+    ChannelTopic topicCommentEvent() {
+        return new ChannelTopic(commentEventChannelName);
     }
 }
