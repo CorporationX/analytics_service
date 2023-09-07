@@ -1,6 +1,7 @@
 package faang.school.analytics.messaging;
 
 import faang.school.analytics.dto.fundRasing.FundRaisedEvent;
+import faang.school.analytics.service.FundRaisedEventHandler;
 import faang.school.analytics.util.JsonMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,12 +17,14 @@ import java.util.Arrays;
 public class FundRaisedEventListener implements MessageListener {
 
     private final JsonMapper jsonMapper;
+    private final FundRaisedEventHandler handler;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         FundRaisedEvent event = getEvent(message);
-
         log.info("Received FundRaisedEvent: {}", event);
+
+        handler.save(event);
     }
 
     private FundRaisedEvent getEvent(Message message) {

@@ -57,6 +57,11 @@ public class AnalyticsEventService {
         log.info("Saved analytics event: {}", analyticsEvent);
     }
 
+    public void save(AnalyticsEvent event) {
+        analyticsEventRepository.save(event);
+        log.info("Saved analytics event: {}", event);
+    }
+
     private boolean isInTimeInterval(AnalyticsEvent event, AnalyticsFilterDto filterDto) {
         LocalDateTime receivedAt = event.getReceivedAt();
         LocalDateTime start = filterDto.getStart(), end = filterDto.getEnd();
