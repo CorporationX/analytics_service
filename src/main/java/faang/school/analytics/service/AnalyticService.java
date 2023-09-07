@@ -4,14 +4,12 @@ import faang.school.analytics.dto.AnalyticRequestDto;
 import faang.school.analytics.exception.DataValidException;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.DateRange;
-import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,15 +25,12 @@ public class AnalyticService {
     }
 
     private AnalyticRequestDto ensureStartAndEndAreSet(AnalyticRequestDto analyticRequestDto){
-        if (analyticRequestDto.getStartDate() == null || analyticRequestDto.getEndDate() == null) {
-            if (analyticRequestDto.getInterval() == null) {
-                throw new DataValidException("Interval and dates cannot be null at the same time");
-            } else {
-                DateRange range = Interval.getDateRange(analyticRequestDto.getInterval());
-                analyticRequestDto.setStartDate(range.getStartDate());
-                analyticRequestDto.setEndDate(range.getEndDate());
-            }
-
+        if ((analyticRequestDto.getStartDate() == null || analyticRequestDto.getEndDate() == null) && analyticRequestDto.getInterval() == null) {
+            throw new DataValidException("Interval and dates cannot be null at the same time");
+        } else if(analyticRequestDto.getStartDate() == null || analyticRequestDto.getEndDate() == null){
+            DateRange range = Interval.getDateRange(analyticRequestDto.getInterval());
+            analyticRequestDto.setStartDate(range.getStartDate());
+            analyticRequestDto.setEndDate(range.getEndDate());
         }
         return analyticRequestDto;
     }
