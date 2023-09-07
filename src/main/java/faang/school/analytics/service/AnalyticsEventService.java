@@ -59,6 +59,7 @@ public class AnalyticsEventService {
 
     public void save(AnalyticsEvent event) {
         analyticsEventRepository.save(event);
+        log.info("Saved analytics event: {}", event);
     }
 
     private boolean isInTimeInterval(AnalyticsEvent event, AnalyticsFilterDto filterDto) {
