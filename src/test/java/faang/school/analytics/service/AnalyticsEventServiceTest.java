@@ -11,6 +11,7 @@ import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -88,6 +89,21 @@ public class AnalyticsEventServiceTest {
 
         var result = analyticsEventService.getAnalytics(filterDto);
         Assertions.assertTrue(result.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Save analytics event")
+    void saveAnalyticsEvent() {
+        AnalyticsEvent analyticsEvent = AnalyticsEvent.builder()
+                .id(null)
+                .actorId(123L)
+                .receiverId(67890L)
+                .eventType(EventType.FUND_RAISED)
+                .receivedAt(LocalDateTime.parse("2023-09-07T12:34:56"))
+                .build();
+        analyticsEventService.save(analyticsEvent);
+
+        Mockito.verify(analyticsEventRepository, Mockito.times(1)).save(analyticsEvent);
     }
 
     private PostViewEvent mockPostViewEvent() {
