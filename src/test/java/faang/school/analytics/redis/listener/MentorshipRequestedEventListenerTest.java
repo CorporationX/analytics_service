@@ -3,6 +3,7 @@ package faang.school.analytics.redis.listener;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.MentorshipRequestedEventDto;
+import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import faang.school.analytics.mapper.MentorshipRequestedEventMapper;
 import faang.school.analytics.mapper.MentorshipRequestedEventMapperImpl;
 import faang.school.analytics.model.EventType;
@@ -18,7 +19,6 @@ import org.springframework.data.redis.connection.Message;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

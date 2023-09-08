@@ -1,4 +1,4 @@
-package faang.school.analytics.redis.event;
+package faang.school.analytics.dto.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

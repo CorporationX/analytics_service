@@ -1,4 +1,4 @@
-package faang.school.analytics.redis.listener;
+package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.AnalyticsEventDto;
