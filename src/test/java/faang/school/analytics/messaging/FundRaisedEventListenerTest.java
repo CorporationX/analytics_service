@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.DefaultMessage;
 import org.springframework.data.redis.connection.Message;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
@@ -52,7 +53,7 @@ class FundRaisedEventListenerTest {
         FundRaisedEvent event = FundRaisedEvent.builder()
                 .donorId(123)
                 .projectId(67890)
-                .amount("100.00")
+                .amount(new BigDecimal("100.00"))
                 .timestamp(LocalDateTime.parse("2023-09-07T12:34:56"))
                 .build();
         String json = """

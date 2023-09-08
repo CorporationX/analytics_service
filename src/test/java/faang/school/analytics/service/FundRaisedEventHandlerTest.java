@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static org.mockito.Mockito.times;
@@ -35,7 +36,7 @@ class FundRaisedEventHandlerTest {
         FundRaisedEvent event = FundRaisedEvent.builder()
                 .donorId(123)
                 .projectId(67890)
-                .amount("100.00")
+                .amount(new BigDecimal("100.00"))
                 .timestamp(LocalDateTime.parse("2023-09-07T12:34:56"))
                 .build();
         AnalyticsEvent analyticsEvent = AnalyticsEvent.builder()

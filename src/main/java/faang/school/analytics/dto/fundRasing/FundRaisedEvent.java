@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -12,6 +13,6 @@ public class FundRaisedEvent {
     private long donorId;
     private long projectId;
     @Pattern(regexp = "[0-9]+")
-    private String amount;
+    private BigDecimal amount;
     private LocalDateTime timestamp;
 }
