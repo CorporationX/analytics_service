@@ -1,6 +1,6 @@
 package faang.school.analytics.config;
 
-import faang.school.analytics.messaging.PostViewEventListener;
+import faang.school.analytics.listeners.PostViewEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
