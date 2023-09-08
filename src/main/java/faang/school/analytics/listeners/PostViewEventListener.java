@@ -1,4 +1,4 @@
-package faang.school.analytics.messaging;
+package faang.school.analytics.listeners;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.PostViewEventDto;
