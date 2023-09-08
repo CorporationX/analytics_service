@@ -20,32 +20,29 @@ public class AnalyticsEventService {
 
     private final AnalyticsEventRepository analyticsEventRepository;
 
-    public void saveEvent(AnalyticsEvent analyticsEvent){
+    public void saveEvent(AnalyticsEvent analyticsEvent) {
         analyticsEventRepository.save(analyticsEvent);
     }
 
     public AnalyticsDto getAnalytics(Long userId, EventType eventType, Interval interval,
-                                     LocalDateTime startDate, LocalDateTime endDate){
-        Stream<AnalyticsEvent> requiredEvents = analyticsEventRepository.findByReceiverIdAndEventType(userId, eventType);
-        LocalDateTime now = LocalDateTime.now();
-        requiredEvents = requiredEvents.sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt));
-        if(interval != null){
-            switch (interval){
-                case DAY -> requiredEvents = requiredEvents.filter(requiredEvent -> now.minusDays(1).isBefore(requiredEvent.getReceivedAt()));
-                case WEEK -> requiredEvents = requiredEvents.filter(requiredEvent -> now.minusDays(7).isBefore(requiredEvent.getReceivedAt()));
-                case MONTH -> requiredEvents = requiredEvents.filter(requiredEvent -> now.minusMonths(1).isBefore(requiredEvent.getReceivedAt()));
-                case YEAR -> requiredEvents = requiredEvents.filter(requiredEvent -> now.minusYears(1).isBefore(requiredEvent.getReceivedAt()));
+                                     LocalDateTime startDate, LocalDateTime endDate) {
+        Stream<AnalyticsEvent> requiredEvents = null;
+        LocalDateTime today = LocalDateTime.now();
+        if (interval != null) {
+            switch (interval) {
+                case DAY -> requiredEvents = analyticsEventRepository.findOrderedAndFilteredByTimeInterval(
+                        userId, eventType, today.minusDays(1), today);
+                case WEEK -> requiredEvents = analyticsEventRepository.findOrderedAndFilteredByTimeInterval(
+                        userId, eventType, today.minusDays(7), today);
+                case MONTH -> requiredEvents = analyticsEventRepository.findOrderedAndFilteredByTimeInterval(
+                        userId, eventType, today.minusMonths(1), today);
+                case YEAR -> requiredEvents = analyticsEventRepository.findOrderedAndFilteredByTimeInterval(
+                        userId, eventType, today.minusYears(1), today);
             }
         }
-        if(startDate != null || endDate != null){
-            requiredEvents = requiredEvents.filter(requiredEvent -> {
-                        assert startDate != null;
-                        return startDate.isBefore(requiredEvent.getReceivedAt());
-                    })
-                    .filter(requiredEvent -> {
-                        assert endDate != null;
-                        return endDate.isAfter(requiredEvent.getReceivedAt());
-                    });
+        if (startDate != null && endDate != null) {
+            requiredEvents = analyticsEventRepository.findOrderedAndFilteredByTimeInterval(
+                    userId, eventType, startDate, endDate);
         }
         return new AnalyticsDto(userId, requiredEvents.map(AnalyticsEvent::getActorId).toList(), eventType);
     }

@@ -41,7 +41,7 @@ public class AnalyticsEventController {
         if(interval.isBlank() && dates.isEmpty()){
             throw new IllegalArgumentException("Select required time interval");
         }
-        if(!interval.isBlank() && dates.size() <= 2 && dates.size() >= 1){
+        if(!interval.isBlank() && dates.size() == 2){
             throw new IllegalArgumentException("Select only interval parameter or start/end dates");
         }
 
