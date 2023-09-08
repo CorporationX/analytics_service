@@ -4,11 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.exception.DeserializeJSONException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.connection.Message;
+import org.springframework.data.redis.connection.MessageListener;
 
 import java.io.IOException;
 
 @RequiredArgsConstructor
-public class AbstractEventListener<T> {
+public class AbstractEventListener<T> implements MessageListener {
 
     private final ObjectMapper objectMapper;
 
@@ -20,5 +21,10 @@ public class AbstractEventListener<T> {
             throw new DeserializeJSONException("Could not deserialize event");
         }
         return event;
+    }
+
+    @Override
+    public void onMessage(Message message, byte[] pattern) {
+
     }
 }

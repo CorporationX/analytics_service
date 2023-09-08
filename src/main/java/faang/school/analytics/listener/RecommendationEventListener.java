@@ -8,11 +8,10 @@ import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
-import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RecommendationEventListener extends AbstractEventListener<RecommendationEventDto> implements MessageListener {
+public class RecommendationEventListener extends AbstractEventListener<RecommendationEventDto> {
 
     private final AnalyticsEventMapper analyticsMapper;
     private final AnalyticsEventService analyticsEventService;
