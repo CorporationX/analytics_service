@@ -1,0 +1,1 @@
+CREATE INDEX idx_received_at ON analytics_event (received_at);
