@@ -1,6 +1,8 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticRequestDto;
+import faang.school.analytics.dto.AnalyticResponseDto;
+import faang.school.analytics.mapper.AnalyticMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
@@ -27,6 +29,8 @@ class AnalyticServiceTest {
 
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
+    @Mock
+    private AnalyticMapper mapper;
     @Test
     public void testGetAnalytics() {
         long receiverId = 1;
@@ -35,13 +39,17 @@ class AnalyticServiceTest {
         LocalDateTime start = LocalDateTime.now().minusDays(7);
         LocalDateTime end = LocalDateTime.now();
         List<AnalyticsEvent> fakeEvents = createFakeEvents();
-        Stream<AnalyticsEvent> fakeEventStream = fakeEvents.stream();
+        List<AnalyticResponseDto> responseDto = List.of(AnalyticResponseDto.builder().id(2L).build(), AnalyticResponseDto.builder().id(1L).build());
+        AnalyticRequestDto analyticRequestDto = AnalyticRequestDto.builder().receiverId(receiverId).eventType(type).interval(interval).startDate(start).endDate(end).build();
+
         when(analyticsEventRepository.findByReceiverIdAndEventTypeAndReceivedAtBetween(
                 receiverId, type, start, end))
-                .thenReturn(fakeEventStream);
+                .thenReturn(fakeEvents.stream());
+        when(mapper.toDtoList(fakeEvents)).thenReturn(responseDto);
 
-        AnalyticRequestDto analyticRequestDto = AnalyticRequestDto.builder().receiverId(receiverId).eventType(type).interval(interval).startDate(start).endDate(end).build();
-        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(analyticRequestDto);
+        List<AnalyticResponseDto> result = analyticsEventService.getAnalytics(analyticRequestDto);
+
+        assertEquals(result, responseDto);
         assertNotNull(result);
         assertEquals(fakeEvents.size(), result.size());
     }
