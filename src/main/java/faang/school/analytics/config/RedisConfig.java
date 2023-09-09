@@ -1,5 +1,6 @@
 package faang.school.analytics.config;
 
+import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,7 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
@@ -25,6 +27,9 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channels.recommendation_channel}")
     private String recommendationChannelName;
+
+    @Value("${spring.data.redis.channels.mentorshipRequest_chanel}")
+    private String mentorshipRequestChannelName;
 
     private final RecommendationEventListener recommendationEventListener;
 
@@ -44,15 +49,26 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer() {
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter mentorshipRequestListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(recommendationEventListener, topicRecommendation());
+        container.addMessageListener(mentorshipRequestListener, topicMentorshipRequest());
         return container;
     }
 
     @Bean
     ChannelTopic topicRecommendation() {
         return new ChannelTopic(recommendationChannelName);
+    }
+
+    @Bean
+    ChannelTopic topicMentorshipRequest() {
+        return new ChannelTopic(mentorshipRequestChannelName);
+    }
+
+    @Bean
+    MessageListenerAdapter mentorshipRequestListener(MentorshipRequestedEventListener mentorshipRequestedEventListener) {
+        return new MessageListenerAdapter(mentorshipRequestedEventListener);
     }
 }
