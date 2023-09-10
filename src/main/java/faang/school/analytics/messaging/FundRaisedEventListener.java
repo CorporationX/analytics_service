@@ -23,6 +23,7 @@ public class FundRaisedEventListener implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         FundRaisedEvent event = getEvent(message);
         log.info("Received FundRaisedEvent: {}", event);
+
         handler.save(event);
     }
 
