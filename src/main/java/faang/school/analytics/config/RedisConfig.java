@@ -12,6 +12,7 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
@@ -30,7 +31,15 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.comment_event_channel}")
     private String commentEventChannelName;
 
-    private final RecommendationEventListener recommendationEventListener;
+    @Bean
+    public MessageListenerAdapter recommendationEventListener(RecommendationEventListener listener) {
+        return new MessageListenerAdapter(listener);
+    }
+
+    @Bean
+    public MessageListenerAdapter commentEventListener(CommentEventListener listener) {
+        return new MessageListenerAdapter(listener);
+    }
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -48,7 +57,7 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(CommentEventListener commentEventListener) {
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter commentEventListener, MessageListenerAdapter recommendationEventListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(recommendationEventListener, topicRecommendation());
