@@ -13,21 +13,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class RecommendationEventListener extends AbstractEventListener<RecommendationEventDto> {
 
-    private final AnalyticsEventMapper analyticsMapper;
-    private final AnalyticsEventService analyticsEventService;
-
     @Autowired
     public RecommendationEventListener(ObjectMapper objectMapper, AnalyticsEventMapper analyticsMapper, AnalyticsEventService analyticsEventService) {
-        super(objectMapper);
-        this.analyticsMapper = analyticsMapper;
-        this.analyticsEventService = analyticsEventService;
+        super(objectMapper, analyticsMapper, analyticsEventService);
     }
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         RecommendationEventDto event = convertJsonToString(message, RecommendationEventDto.class);
-        AnalyticsEvent analyticsEvent = analyticsMapper.toEntity(event);
+        AnalyticsEvent analyticsEvent = super.analyticsMapper.toEntity(event);
         analyticsEvent.setEventType(EventType.RECOMMENDATION_RECEIVED);
-        analyticsEventService.create(analyticsEvent);
+        super.analyticsEventService.create(analyticsEvent);
     }
 }

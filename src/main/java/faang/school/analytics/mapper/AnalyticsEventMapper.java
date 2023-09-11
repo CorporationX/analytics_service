@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", typeConversionPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", typeConversionPolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
 
     @Mapping(source = "recommendationId", target = "receiverId")

@@ -13,21 +13,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommentEventListener extends AbstractEventListener<CommentEventDto> {
 
-    private final AnalyticsEventMapper analyticsMapper;
-    private final AnalyticsEventService analyticsEventService;
-
     @Autowired
     public CommentEventListener(ObjectMapper objectMapper, AnalyticsEventMapper analyticsMapper, AnalyticsEventService analyticsEventService) {
-        super(objectMapper);
-        this.analyticsMapper = analyticsMapper;
-        this.analyticsEventService = analyticsEventService;
+        super(objectMapper, analyticsMapper, analyticsEventService);
     }
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         CommentEventDto event = convertJsonToString(message, CommentEventDto.class);
-        AnalyticsEvent analyticsEvent = analyticsMapper.toEntity(event);
+        AnalyticsEvent analyticsEvent = super.analyticsMapper.toEntity(event);
         analyticsEvent.setEventType(EventType.POST_COMMENT);
-        analyticsEventService.create(analyticsEvent);
+        super.analyticsEventService.create(analyticsEvent);
     }
 }
