@@ -27,6 +27,8 @@ spring:
           name: follower_channel
         comment_channel:
           name: comment_channel
+        fund_raised_event:
+          name: fund-raised-channel
 
 
   kafka:
