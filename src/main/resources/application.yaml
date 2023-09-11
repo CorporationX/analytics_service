@@ -21,10 +21,17 @@ spring:
     redis:
       port: 6379
       host: localhost
-      channel:
-        profile-view: profile_view_channel
-        posts-view: posts_view
+      channels:
+        profile_view: profile-view-channel
+        recommendation: recommendation-channel
+        post_view: post-view-channel
         followers-view: followers_view
+        mentorship_requested_channel:
+          name: mentorship-requested-channel
+        comment_event:
+          name: comments-channel
+        search_appearance:
+          name: search-appearance-channel
 
 server:
   port: 8086
@@ -36,7 +43,3 @@ logging:
 project-service:
   host: localhost
   port: 8082
-
-user-service:
-  host: localhost
-  port: 8080
