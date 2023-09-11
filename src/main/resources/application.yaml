@@ -27,7 +27,7 @@ spring:
           name: follower_channel
         comment_channel:
           name: comment_channel
-        fund-raised-event:
+        fund_raised_event:
           name: fund-raised-channel
 
 
