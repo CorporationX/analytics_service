@@ -43,3 +43,6 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+analytics:
+  latest_events_period_of_time: '1 day'
