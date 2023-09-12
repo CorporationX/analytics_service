@@ -25,13 +25,13 @@ spring:
         profile_view: profile-view-channel
         recommendation: recommendation-channel
         post_view: post-view-channel
-        followers-view: followers_view
         mentorship_requested_channel:
           name: mentorship-requested-channel
         comment_event:
           name: comments-channel
         search_appearance:
           name: search-appearance-channel
+        followers_view: followers-view-channel
 
 server:
   port: 8086
