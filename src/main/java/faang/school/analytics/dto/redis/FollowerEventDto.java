@@ -1,6 +1,7 @@
 package faang.school.analytics.dto.redis;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import faang.school.analytics.model.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,6 @@ import java.time.LocalDateTime;
 public class FollowerEventDto {
     private Long followerId;
     private Long followeeId;
-    private String eventType;
-    LocalDateTime timestamp;
+    private EventType eventType;
+    private LocalDateTime timestamp;
 }
