@@ -28,7 +28,7 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.recommendation_channel}")
     private String recommendationChannelName;
 
-    @Value("${spring.data.redis.channels.mentorshipRequest_chanel}")
+    @Value("${spring.data.redis.channels.mentorship_request_chanel}")
     private String mentorshipRequestChannelName;
 
     private final RecommendationEventListener recommendationEventListener;

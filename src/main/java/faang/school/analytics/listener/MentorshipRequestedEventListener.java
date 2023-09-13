@@ -28,7 +28,7 @@ public class MentorshipRequestedEventListener extends AbstractEventListener<Ment
     public void onMessage(Message message, byte[] pattern) {
         MentorshipRequestEvent event = convertJsonToString(message, MentorshipRequestEvent.class);
         AnalyticsEvent analyticsEvent = analyticsMapper.toEntity(event);
-        analyticsEvent.setEventType(EventType.ADDED_TO_FAVOURITES);
+        analyticsEvent.setEventType(EventType.MENTORSHIP_REQUEST);
         analyticsEventService.create(analyticsEvent);
     }
 }
