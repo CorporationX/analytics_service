@@ -1,6 +1,7 @@
 package faang.school.analytics.config;
 
 import faang.school.analytics.redis.listener.FollowerEventListener;
+import faang.school.analytics.redis.listener.CommentEventListener;
 import faang.school.analytics.redis.listener.LikeEventListener;
 import faang.school.analytics.redis.listener.MentorshipRequestedEventListener;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class RedisConfig {
     private final LikeEventListener likeEventListener;
     private final MentorshipRequestedEventListener mentorshipRequestedEventListener;
     private final FollowerEventListener followerEventListener;
+    private final CommentEventListener commentEventListener;
 
     @Value("${spring.data.redis.host}")
     private String host;
@@ -32,8 +34,11 @@ public class RedisConfig {
     private String mentorshipRequestedTopic;
     @Value("${spring.data.redis.channel.like_channel}")
     private String likeEventTopic;
-    @Value("${spring.data.redis.channels.follower_channel}")
+    @Value("${spring.data.redis.channel.follower_channel}")
     private String followerTopic;
+    @Value("${spring.data.redis.channel.comment_channel}")
+    private String commentEventTopic;
+
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -50,10 +55,12 @@ public class RedisConfig {
         MessageListenerAdapter likeEventMessageListener = new MessageListenerAdapter(likeEventListener);
         MessageListenerAdapter followerEventMessageListenerAdapter = new MessageListenerAdapter(followerEventListener);
 
+        MessageListenerAdapter commentEventMessageListener = new MessageListenerAdapter(commentEventListener);
 
         container.addMessageListener(mentorshipRequestedMessageListener, new ChannelTopic(mentorshipRequestedTopic));
         container.addMessageListener(likeEventMessageListener, new ChannelTopic(likeEventTopic));
         container.addMessageListener(followerEventMessageListenerAdapter, new ChannelTopic(followerTopic));
+        container.addMessageListener(commentEventMessageListener, new ChannelTopic(commentEventTopic));
         return container;
     }
 
