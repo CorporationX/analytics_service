@@ -32,12 +32,12 @@ public class RedisConfig {
     private String commentEventChannelName;
 
     @Bean
-    public MessageListenerAdapter recommendationEventListener(RecommendationEventListener listener) {
+    public MessageListenerAdapter recommendationEventAdapter(RecommendationEventListener listener) {
         return new MessageListenerAdapter(listener);
     }
 
     @Bean
-    public MessageListenerAdapter commentEventListener(CommentEventListener listener) {
+    public MessageListenerAdapter commentEventAdapter(CommentEventListener listener) {
         return new MessageListenerAdapter(listener);
     }
 
@@ -57,11 +57,12 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter commentEventListener, MessageListenerAdapter recommendationEventListener) {
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationEventAdapter,
+                                                 MessageListenerAdapter commentEventAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
-        container.addMessageListener(recommendationEventListener, topicRecommendation());
-        container.addMessageListener(commentEventListener, topicCommentEvent());
+        container.addMessageListener(recommendationEventAdapter, topicRecommendation());
+        container.addMessageListener(commentEventAdapter, topicCommentEvent());
         return container;
     }
 
