@@ -23,6 +23,11 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+    kafka:
+      port: 9092
+      host: localhost
+      group-id:
+        profile-view: profile_view
 
 server:
   port: 8086
