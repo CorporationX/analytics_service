@@ -13,8 +13,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AbstractEventListener<T> implements MessageListener {
 
-    final AnalyticsEventMapper analyticsMapper;
-    final AnalyticsEventService analyticsEventService;
+    protected final AnalyticsEventMapper analyticsMapper;
+    protected final AnalyticsEventService analyticsEventService;
     private final ObjectMapper objectMapper;
 
     public AbstractEventListener(ObjectMapper objectMapper, AnalyticsEventMapper analyticsMapper, AnalyticsEventService analyticsEventService) {
