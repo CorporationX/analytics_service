@@ -26,6 +26,7 @@ spring:
         like_channel: like_channel
         mentorship_requested_channel: mentorship-requested-channel
         comment_channel: comment-channel
+        search_appearance_channel: search_appearance_channel
 
 server:
   port: 8086

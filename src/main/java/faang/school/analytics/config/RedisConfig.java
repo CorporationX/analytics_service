@@ -3,6 +3,7 @@ package faang.school.analytics.config;
 import faang.school.analytics.redis.listener.CommentEventListener;
 import faang.school.analytics.redis.listener.LikeEventListener;
 import faang.school.analytics.redis.listener.MentorshipRequestedEventListener;
+import faang.school.analytics.redis.listener.SearchAppearanceListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,7 @@ public class RedisConfig {
     private final LikeEventListener likeEventListener;
     private final MentorshipRequestedEventListener mentorshipRequestedEventListener;
     private final CommentEventListener commentEventListener;
+    private final SearchAppearanceListener searchAppearanceListener;
 
     @Value("${spring.data.redis.host}")
     private String host;
@@ -34,6 +36,8 @@ public class RedisConfig {
     private String likeEventTopic;
     @Value("${spring.data.redis.channel.comment_channel}")
     private String commentEventTopic;
+    @Value("${spring.data.redis.channel.search_appearance_channel}")
+    private String searchAppearanceEventTopic;
 
 
     @Bean
@@ -50,10 +54,13 @@ public class RedisConfig {
         MessageListenerAdapter mentorshipRequestedMessageListener = new MessageListenerAdapter(mentorshipRequestedEventListener);
         MessageListenerAdapter likeEventMessageListener = new MessageListenerAdapter(likeEventListener);
         MessageListenerAdapter commentEventMessageListener = new MessageListenerAdapter(commentEventListener);
+        MessageListenerAdapter searchAppearanceEventMessageListener = new MessageListenerAdapter(searchAppearanceListener);
+
 
         container.addMessageListener(mentorshipRequestedMessageListener, new ChannelTopic(mentorshipRequestedTopic));
         container.addMessageListener(likeEventMessageListener, new ChannelTopic(likeEventTopic));
         container.addMessageListener(commentEventMessageListener, new ChannelTopic(commentEventTopic));
+        container.addMessageListener(searchAppearanceEventMessageListener, new ChannelTopic(searchAppearanceEventTopic));
         return container;
     }
 
