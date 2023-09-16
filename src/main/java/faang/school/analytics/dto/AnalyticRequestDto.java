@@ -8,9 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @AllArgsConstructor
@@ -21,9 +20,9 @@ public class AnalyticRequestDto {
     private EventType eventType;
     private Interval interval;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime startDate;
+    private ZonedDateTime startDate;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime endDate;
+    private ZonedDateTime endDate;
 
     @AssertTrue(message = "Either 'interval' or both 'startDate' and 'endDate' must be provided.")
     private boolean isIntervalOrStartAndEndProvided() {

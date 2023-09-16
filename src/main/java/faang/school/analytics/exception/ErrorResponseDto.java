@@ -5,22 +5,22 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
-public class ErrorResponse {
+public class ErrorResponseDto {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime timestamp;
+    private ZonedDateTime timestamp;
 
     private String error;
     private int status;
     private String message;
     private String url;
 
-    public ErrorResponse(String message){
+    public ErrorResponseDto(String message){
         this.message = message;
     }
 }
