@@ -23,7 +23,5 @@ public class FollowerEventListener extends AbstractListener<FollowerEventDto> {
         FollowerEventDto followerEventDto = readValue(message.getBody(), FollowerEventDto.class);
         log.info("Received new follower event message: {}", followerEventDto);
         save(analyticsEventMapper.toEntity(followerEventDto));
-
-
     }
 }

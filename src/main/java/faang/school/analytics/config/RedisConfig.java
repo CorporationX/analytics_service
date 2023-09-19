@@ -28,7 +28,7 @@ public class RedisConfig {
     private String mentorshipRequestedTopic;
     @Value("${spring.data.redis.channels.comment_event.name}")
     private String commentEventTopicName;
-    @Value("${spring.data.redis.channels.search-appearance.name}")
+    @Value("${spring.data.redis.channels.search_appearance.name}")
     private String searchAppearanceTopic;
     @Value("${spring.data.redis.channels.followers_view}")
     private String followersEventChannel;
