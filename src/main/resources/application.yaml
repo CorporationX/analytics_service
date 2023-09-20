@@ -6,16 +6,16 @@ spring:
     password: password
 
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database_platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: none
-    show-sql: true
+      ddl_auto: none
+    show_sql: true
     properties:
       hibernate:
         format_sql: true
 
   liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.yaml
+    change_log: classpath:db/changelog/db.changelog-master.yaml
 
   data:
     redis:
@@ -41,9 +41,5 @@ logging:
     root: info
 
 project-service:
-  host: localhost
-  port: 8082
-
-user-service:
   host: localhost
   port: 8082
