@@ -45,7 +45,7 @@ public class RedisConfig {
     public MessageListenerAdapter followerEventAdapter(FollowerEventListener listener) {
         return new MessageListenerAdapter(listener);
     }
-  
+
     @Bean
     public MessageListenerAdapter commentEventAdapter(CommentEventListener listener) {
         return new MessageListenerAdapter(listener);
@@ -86,6 +86,8 @@ public class RedisConfig {
     @Bean
     ChannelTopic topicFollower() {
         return new ChannelTopic(followerChannelName);
+    }
+
     @Bean
     ChannelTopic topicCommentEvent() {
         return new ChannelTopic(commentEventChannelName);
