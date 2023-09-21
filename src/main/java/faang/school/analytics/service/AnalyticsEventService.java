@@ -22,4 +22,9 @@ public class AnalyticsEventService {
         analyticsEventRepository.save(analyticsEvent);
         log.info("Saved analytics event: {}", analyticsEvent.getEventType());
     }
+
+    @Transactional
+    public void saveAnalyticsEvent(AnalyticsEvent analyticsEvent) {
+        analyticsEventRepository.save(analyticsEvent);
+    }
 }

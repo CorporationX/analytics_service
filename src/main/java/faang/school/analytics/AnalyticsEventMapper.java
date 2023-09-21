@@ -2,6 +2,7 @@ package faang.school.analytics;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.CommentEventDto;
+import faang.school.analytics.dto.ProjectViewEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.redis.event.LikeEvent;
@@ -42,4 +43,12 @@ public interface AnalyticsEventMapper {
     AnalyticsEvent toEntity(AnalyticsEventDto analyticsEventDto);
 
     AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
+    public default AnalyticsEvent mapToAnalyticsEvent(ProjectViewEvent projectViewEvent) {
+        AnalyticsEvent analyticsEvent = new AnalyticsEvent();
+        analyticsEvent.setId(projectViewEvent.getProjectId());
+        analyticsEvent.setReceiverId(projectViewEvent.getUserId());
+        analyticsEvent.setReceivedAt(projectViewEvent.getTimestamp());
+
+        return analyticsEvent;
+    }
 }
