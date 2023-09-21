@@ -1,6 +1,8 @@
 package faang.school.analytics.config;
 
+
 import faang.school.analytics.listener.FollowerEventListener;
+import faang.school.analytics.listener.CommentEventListener;
 import faang.school.analytics.listener.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +33,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.follower_channel}")
     private String followerChannelName;
 
+    @Value("${spring.data.redis.channels.comment_event_channel}")
+    private String commentEventChannelName;
+
     @Bean
     public MessageListenerAdapter recommendationEventAdapter(RecommendationEventListener listener) {
         return new MessageListenerAdapter(listener);
@@ -38,6 +43,11 @@ public class RedisConfig {
 
     @Bean
     public MessageListenerAdapter followerEventAdapter(FollowerEventListener listener) {
+        return new MessageListenerAdapter(listener);
+    }
+  
+    @Bean
+    public MessageListenerAdapter commentEventAdapter(CommentEventListener listener) {
         return new MessageListenerAdapter(listener);
     }
 
@@ -58,11 +68,13 @@ public class RedisConfig {
 
     @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationEventAdapter,
+                                                 MessageListenerAdapter commentEventAdapter,
                                                  MessageListenerAdapter followerEventAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(recommendationEventAdapter, topicRecommendation());
         container.addMessageListener(followerEventAdapter, topicFollower());
+        container.addMessageListener(commentEventAdapter, topicCommentEvent());
         return container;
     }
 
@@ -74,5 +86,8 @@ public class RedisConfig {
     @Bean
     ChannelTopic topicFollower() {
         return new ChannelTopic(followerChannelName);
+    @Bean
+    ChannelTopic topicCommentEvent() {
+        return new ChannelTopic(commentEventChannelName);
     }
 }
