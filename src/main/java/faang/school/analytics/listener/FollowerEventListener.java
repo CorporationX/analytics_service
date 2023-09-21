@@ -7,7 +7,9 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.springframework.data.redis.connection.Message;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FollowerEventListener extends AbstractEventListener<FollowerEventDto>{
 
     public FollowerEventListener(ObjectMapper objectMapper,
