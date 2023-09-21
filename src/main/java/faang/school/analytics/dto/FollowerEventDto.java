@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FollowerEventDto {
-    private Long foloweeId;
+    private Long followeeId;
     private Long followerId;
     private LocalDateTime subscriptionTime;
 }
