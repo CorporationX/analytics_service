@@ -3,6 +3,7 @@ package faang.school.analytics.mapper;
 import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.dto.RecommendationEventDto;
 import faang.school.analytics.dto.SearchAppearanceEventDto;
+import faang.school.analytics.dto.redis.FollowerEventDto;
 import faang.school.analytics.dto.redis.PostViewEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -23,6 +24,7 @@ class AnalyticsEventMapperTest {
     private AnalyticsEvent analyticsEventExpected;
     private RecommendationEventDto recommendationEventExpected;
     private SearchAppearanceEventDto searchAppearanceEventDto;
+    private FollowerEventDto followerEventDto;
     private LocalDateTime dateTime;
 
     @BeforeEach
@@ -45,6 +47,13 @@ class AnalyticsEventMapperTest {
                 .receiverId(1L)
                 .actorId(2L)
                 .receivedAt(dateTime)
+                .build();
+
+        followerEventDto = FollowerEventDto.builder()
+                .followerId(1L)
+                .followeeId(2L)
+                .eventType(EventType.FOLLOWER)
+                .timestamp(dateTime)
                 .build();
     }
 
@@ -155,5 +164,17 @@ class AnalyticsEventMapperTest {
                 .build();
         SearchAppearanceEventDto dto = mapper.toSearchAppearanceEventDto(analyticsEventExpected);
         assertEquals(searchAppearanceEventDto, dto);
+    }
+
+    @Test
+    void testToFollowerEventDto() {
+        analyticsEventExpected = AnalyticsEvent.builder()
+                .receiverId(2L)
+                .actorId(1L)
+                .eventType(EventType.FOLLOWER)
+                .receivedAt(dateTime)
+                .build();
+        FollowerEventDto dto = mapper.toDto(analyticsEventExpected);
+        assertEquals(followerEventDto, dto);
     }
 }

@@ -28,8 +28,10 @@ public class RedisConfig {
     private String mentorshipRequestedTopic;
     @Value("${spring.data.redis.channels.comment_event.name}")
     private String commentEventTopicName;
-    @Value("${spring.data.redis.channels.search-appearance.name}")
+    @Value("${spring.data.redis.channels.search_appearance.name}")
     private String searchAppearanceTopic;
+    @Value("${spring.data.redis.channels.followers_view}")
+    private String followersEventChannel;
 
 
     @Bean
@@ -65,6 +67,11 @@ public class RedisConfig {
     }
 
     @Bean
+    public MessageListenerAdapter followerEventAdapter(FollowerEventListener listener) {
+        return new MessageListenerAdapter(listener);
+    }
+
+    @Bean
     public ChannelTopic searchAppearanceTopic() {
         return new ChannelTopic(searchAppearanceTopic);
     }
@@ -90,11 +97,17 @@ public class RedisConfig {
     }
 
     @Bean
+    public ChannelTopic followerTopic() {
+        return new ChannelTopic(followersEventChannel);
+    }
+
+    @Bean
     public RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationAdapter,
                                                         MessageListenerAdapter postViewAdapter,
                                                         MessageListenerAdapter mentorshipRequestedMessageListener,
                                                         MessageListenerAdapter commentEventAdapter,
-                                                        MessageListenerAdapter searchAppearanceAdapter) {
+                                                        MessageListenerAdapter searchAppearanceAdapter,
+                                                        MessageListenerAdapter followerEventAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(recommendationAdapter, recommendationTopic());
@@ -102,6 +115,7 @@ public class RedisConfig {
         container.addMessageListener(mentorshipRequestedMessageListener, mentorshipRequestedTopic());
         container.addMessageListener(commentEventAdapter, commentEventTopic());
         container.addMessageListener(searchAppearanceAdapter, searchAppearanceTopic());
+        container.addMessageListener(followerEventAdapter, followerTopic());
         return container;
     }
 }

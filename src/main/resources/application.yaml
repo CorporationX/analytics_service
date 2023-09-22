@@ -1,6 +1,6 @@
 spring:
   datasource:
-    driver_class_name: org.postgresql.Driver
+    driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres
     username: user
     password: password
@@ -31,6 +31,7 @@ spring:
           name: comments-channel
         search_appearance:
           name: search-appearance-channel
+        followers_view: follower-channel
 
 server:
   port: 8086
@@ -39,6 +40,6 @@ logging:
   level:
     root: info
 
-project_service:
+project-service:
   host: localhost
   port: 8082

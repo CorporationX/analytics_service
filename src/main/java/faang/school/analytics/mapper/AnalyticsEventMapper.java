@@ -4,6 +4,7 @@ import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.dto.MentorshipRequestedEventDto;
 import faang.school.analytics.dto.RecommendationEventDto;
 import faang.school.analytics.dto.SearchAppearanceEventDto;
+import faang.school.analytics.dto.redis.FollowerEventDto;
 import faang.school.analytics.dto.redis.PostViewEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -64,6 +65,16 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "receiverId", source = "receiverId")
     @Mapping(target = "actorId", source = "actorId")
     SearchAppearanceEventDto toSearchAppearanceEventDto(AnalyticsEvent analyticsEvent);
+
+    @Mapping(source = "followeeId", target = "receiverId")
+    @Mapping(source = "followerId", target = "actorId")
+    @Mapping(source = "timestamp", target = "receivedAt")
+    AnalyticsEvent toEntity(FollowerEventDto event);
+
+    @Mapping(source = "receiverId", target = "followeeId")
+    @Mapping(source = "actorId", target = "followerId")
+    @Mapping(source = "receivedAt", target = "timestamp")
+    FollowerEventDto toDto(AnalyticsEvent entity);
 
     default EventType getRecommendationType() {
         return EventType.RECOMMENDATION_RECEIVED;
