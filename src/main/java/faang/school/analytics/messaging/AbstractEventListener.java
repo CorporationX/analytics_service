@@ -1,6 +1,8 @@
 package faang.school.analytics.messaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.service.analytics.AnalyticsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -12,6 +14,8 @@ import java.io.IOException;
 public abstract class AbstractEventListener<T> {
 
     protected final ObjectMapper objectMapper;
+    protected final AnalyticsEventMapper analyticsEventMapper;
+    protected final AnalyticsService analyticsService;
 
     protected T mapEvent(Message message, Class<T> eventType) {
         try {
