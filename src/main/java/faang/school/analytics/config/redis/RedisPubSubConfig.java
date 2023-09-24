@@ -1,6 +1,5 @@
 package faang.school.analytics.config.redis;
 
-
 import faang.school.analytics.messaging.LikeEventListener;
 import faang.school.analytics.service.redis.listeners.PremiumEventsListener;
 import faang.school.analytics.service.redis.listeners.ProjectEventsListener;
@@ -36,17 +35,19 @@ public class RedisPubSubConfig {
     private String likeEventChannelName;
     private final LikeEventListener likeEventListener;
 
-
     @Bean
     public RedisMessageListenerContainer redisContainer(RedisConnectionFactory redisConnectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory);
 
+        MessageListenerAdapter userEventListenerAdapter = new MessageListenerAdapter(userEventsListener);
+        MessageListenerAdapter projectEventListenerAdapter = new MessageListenerAdapter(projectEventsListener);
+        MessageListenerAdapter premiumEventListenerAdapter = new MessageListenerAdapter(premiumEventsListener);
         MessageListenerAdapter likeEventsListenerAdapter = new MessageListenerAdapter(likeEventListener);
 
-        container.addMessageListener(userEventsListener, new ChannelTopic(userEventChannelName));
-        container.addMessageListener(projectEventsListener, new ChannelTopic(projectEventChannelName));
-        container.addMessageListener(premiumEventsListener, new ChannelTopic(premiumEventChannelName));
+        container.addMessageListener(userEventListenerAdapter, new ChannelTopic(userEventChannelName));
+        container.addMessageListener(projectEventListenerAdapter, new ChannelTopic(projectEventChannelName));
+        container.addMessageListener(premiumEventListenerAdapter, new ChannelTopic(premiumEventChannelName));
         container.addMessageListener(likeEventsListenerAdapter, new ChannelTopic(likeEventChannelName));
 
         return container;
