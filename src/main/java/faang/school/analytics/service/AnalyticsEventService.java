@@ -35,7 +35,6 @@ public class AnalyticsEventService {
     @Transactional
     public void commentEventSave(CommentEventDto commentEventDto) {
         AnalyticsEvent analyticsEvent = eventMapper.toEntity(commentEventDto);
-        analyticsEvent.setReceivedAt(LocalDateTime.now()); // В бд это поле и так заполняется дефолтно
         analyticsEventRepository.save(analyticsEvent);
     }
 
