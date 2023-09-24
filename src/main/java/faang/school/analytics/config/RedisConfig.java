@@ -2,6 +2,7 @@ package faang.school.analytics.config;
 
 import faang.school.analytics.messaging.CommentEventListener;
 import faang.school.analytics.messaging.FundRaisedEventListener;
+import faang.school.analytics.messaging.LikeEventListener;
 import faang.school.analytics.messaging.followEvent.FollowEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,9 +31,12 @@ public class RedisConfig {
     private String commentEvent;
     @Value("${spring.data.redis.channels.fund_raised_event.name}")
     private String fundRaisedEvent;
+    @Value("${spring.data.redis.channels.like_channel.name")
+    private String likeEvent;
     private final FollowEventListener followEventListener;
     private final CommentEventListener commentEventListener;
     private final FundRaisedEventListener fundRaisedEventListener;
+    private final LikeEventListener likeEventListener;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -66,12 +70,18 @@ public class RedisConfig {
     }
 
     @Bean
+    ChannelTopic likeTopic() {
+        return new ChannelTopic(likeEvent);
+    }
+
+    @Bean
     RedisMessageListenerContainer redisContainer() {
         final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(new MessageListenerAdapter(followEventListener), followerTopic());
         container.addMessageListener(new MessageListenerAdapter(commentEventListener), commentTopic());
-        container.addMessageListener(new MessageListenerAdapter(followEventListener), fundRaisedTopic());
+        container.addMessageListener(new MessageListenerAdapter(fundRaisedEventListener), fundRaisedTopic());
+        container.addMessageListener(new MessageListenerAdapter(likeEventListener), likeTopic());
         return container;
     }
 }
