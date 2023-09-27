@@ -31,7 +31,7 @@ public class RedisConfig {
     private String commentEvent;
     @Value("${spring.data.redis.channels.fund_raised_event.name}")
     private String fundRaisedEvent;
-    @Value("${spring.data.redis.channels.like_channel.name")
+    @Value("${spring.data.redis.channels.like_channel.name}")
     private String likeEvent;
     private final FollowEventListener followEventListener;
     private final CommentEventListener commentEventListener;
