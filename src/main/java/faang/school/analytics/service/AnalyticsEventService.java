@@ -3,7 +3,7 @@ package faang.school.analytics.service;
 import faang.school.analytics.dto.AnalyticsDto;
 import faang.school.analytics.dto.AnalyticsFilterDto;
 import faang.school.analytics.dto.CommentEventDto;
-import faang.school.analytics.dto.LikeEvent;
+import faang.school.analytics.dto.LikeEventDto;
 import faang.school.analytics.dto.PostViewEvent;
 import faang.school.analytics.dto.followEvent.FollowEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -34,8 +34,8 @@ public class AnalyticsEventService {
     }
 
     @Transactional
-    public void likeEventSave(LikeEvent likeEvent) {
-        AnalyticsEvent event = mapper.toEvent(likeEvent);
+    public void likeEventSave(LikeEventDto likeEventDto) {
+        AnalyticsEvent event = mapper.toEvent(likeEventDto);
         analyticsEventRepository.save(event);
     }
 

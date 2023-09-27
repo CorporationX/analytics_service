@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LikeEvent {
+public class LikeEventDto {
 
     @NotNull
     private Long userId;

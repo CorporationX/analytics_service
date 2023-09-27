@@ -1,6 +1,6 @@
 package faang.school.analytics.messaging;
 
-import faang.school.analytics.dto.LikeEvent;
+import faang.school.analytics.dto.LikeEventDto;
 import faang.school.analytics.service.like.LikeEventWorker;
 import faang.school.analytics.util.JsonMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class LikeEventListener implements MessageListener {
     private final LikeEventWorker likeEventWorker;
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        jsonMapper.toObject(message.toString(), LikeEvent.class)
+        jsonMapper.toObject(message.toString(), LikeEventDto.class)
                 .ifPresent(s -> likeEventWorker.saveLikeEvent(s));
         log.info(message+ " " + "send");
     }
