@@ -2,6 +2,7 @@ package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsDto;
 import faang.school.analytics.dto.AnalyticsFilterDto;
+import faang.school.analytics.dto.LikeEventDto;
 import faang.school.analytics.dto.PostViewEvent;
 import faang.school.analytics.dto.followEvent.FollowEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
@@ -21,6 +22,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,6 +44,7 @@ public class AnalyticsEventServiceTest {
     AnalyticsDto analyticsDto;
     AnalyticsFilterDto filterDto;
     FollowEventDto followEventDto;
+    LikeEventDto likeEventDto;
 
     @BeforeEach
     void setUp() {
@@ -50,6 +53,27 @@ public class AnalyticsEventServiceTest {
         filterDto = new AnalyticsFilterDto(1L, EventType.FOLLOWER, null, null);
         followEventDto = new FollowEventDto();
 
+        likeEventDto = LikeEventDto
+                .builder()
+                .postId(1L)
+                .authorPostId(1L)
+                .createdAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
+                .userId(1L)
+                .build();
+    }
+
+    @Test
+    void saveLikeEvent_ShouldMapCorrectly() {
+        AnalyticsEvent actual = mapper.toEvent(likeEventDto);
+
+        Assertions.assertEquals(mockAnalyticsLikeEvent(), actual);
+    }
+
+    @Test
+    void saveLikeEvent_ShouldBeSaved() {
+        analyticsEventService.likeEventSave(likeEventDto);
+
+        Mockito.verify(analyticsEventRepository).save(Mockito.any(AnalyticsEvent.class));
     }
 
     @Test
@@ -116,6 +140,16 @@ public class AnalyticsEventServiceTest {
                 .receiverId(1L)
                 .actorId(1L)
                 .eventType(EventType.POST_VIEW)
+                .build();
+    }
+
+    private AnalyticsEvent mockAnalyticsLikeEvent() {
+        return AnalyticsEvent.builder()
+                .id(null)
+                .receiverId(1L)
+                .actorId(1L)
+                .eventType(EventType.POST_LIKE)
+                .receivedAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
                 .build();
     }
 }
