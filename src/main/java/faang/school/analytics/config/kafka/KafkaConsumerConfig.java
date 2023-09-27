@@ -1,5 +1,7 @@
 package faang.school.analytics.config.kafka;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import faang.school.analytics.messaging.event.ProfileViewEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +11,9 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,14 +27,13 @@ public class KafkaConsumerConfig {
     @Value("${spring.data.kafka.host}")
     private String host;
 
-    @Value("${spring.data.kafka.group-id.profile-view}")
+    @Value("${spring.data.kafka.group-id}")
     private String groupId;
 
-    @Value("${spring.data.redis.channel.profile-view}")
+    @Value("${spring.data.kafka.channel.profile-view}")
     private String channel;
 
-    @Bean
-    public ConsumerFactory<String, String> consumerFactory() {
+    public Map<String, Object> defineProps() {
         Map<String, Object> props = new HashMap<>();
         props.put(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, String.format("%s:%s", host, port));
@@ -38,16 +42,8 @@ public class KafkaConsumerConfig {
         props.put(
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(
-                ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        return new DefaultKafkaConsumerFactory<>(props);
-    }
-
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory =
-                new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory());
-        return factory;
+                ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        return props;
     }
 
 }

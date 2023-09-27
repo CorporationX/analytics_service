@@ -26,8 +26,15 @@ spring:
     kafka:
       port: 9092
       host: localhost
-      group-id:
-        profile-view: profile_view
+      consumer:
+        properties:
+          spring:
+            json:
+              trusted:
+                packages: '*'
+      group-id: analytics_service
+      channel:
+        profile-view: profile_view_channel
 
 server:
   port: 8086
