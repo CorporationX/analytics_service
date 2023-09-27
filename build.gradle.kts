@@ -22,6 +22,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign:4.0.2")
+    implementation("org.jetbrains:annotations:24.0.0")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     /**
