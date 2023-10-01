@@ -1,8 +1,8 @@
 package faang.school.analytics.config;
 
-
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.CommentEventListener;
+import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,6 +50,10 @@ public class RedisConfig {
     public MessageListenerAdapter commentEventAdapter(CommentEventListener listener) {
         return new MessageListenerAdapter(listener);
     }
+    @Value("${spring.data.redis.channels.mentorship_request_chanel}")
+    private String mentorshipRequestChannelName;
+
+    private final RecommendationEventListener recommendationEventListener;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -69,9 +73,12 @@ public class RedisConfig {
     @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationEventAdapter,
                                                  MessageListenerAdapter commentEventAdapter,
-                                                 MessageListenerAdapter followerEventAdapter) {
+                                                 MessageListenerAdapter followerEventAdapter,
+                                                 MessageListenerAdapter mentorshipRequestListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
+        container.addMessageListener(recommendationEventListener, topicRecommendation());
+        container.addMessageListener(mentorshipRequestListener, topicMentorshipRequest());
         container.addMessageListener(recommendationEventAdapter, topicRecommendation());
         container.addMessageListener(followerEventAdapter, topicFollower());
         container.addMessageListener(commentEventAdapter, topicCommentEvent());
@@ -81,6 +88,16 @@ public class RedisConfig {
     @Bean
     ChannelTopic topicRecommendation() {
         return new ChannelTopic(recommendationChannelName);
+    }
+
+    @Bean
+    ChannelTopic topicMentorshipRequest() {
+        return new ChannelTopic(mentorshipRequestChannelName);
+    }
+
+    @Bean
+    MessageListenerAdapter mentorshipRequestListener(MentorshipRequestedEventListener mentorshipRequestedEventListener) {
+        return new MessageListenerAdapter(mentorshipRequestedEventListener);
     }
 
     @Bean

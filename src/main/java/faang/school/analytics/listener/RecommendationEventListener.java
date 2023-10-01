@@ -11,12 +11,10 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RecommendationEventListener extends AbstractEventListener<RecommendationEventDto>{
+public class RecommendationEventListener extends AbstractEventListener<RecommendationEventDto> {
 
     @Autowired
-    public RecommendationEventListener(ObjectMapper objectMapper,
-                                       AnalyticsEventMapper analyticsMapper,
-                                       AnalyticsEventService analyticsEventService) {
+    public RecommendationEventListener(ObjectMapper objectMapper, AnalyticsEventMapper analyticsMapper, AnalyticsEventService analyticsEventService) {
         super(objectMapper, analyticsMapper, analyticsEventService);
     }
 
