@@ -34,6 +34,18 @@ spring:
           name: project_events_channel
         like_events_channel:
           name: like_events_channel
+    kafka:
+      port: 9092
+      host: localhost
+      consumer:
+        properties:
+          spring:
+            json:
+              trusted:
+                packages: '*'
+      group-id: analytics_service
+      channel:
+        profile-view: profile_view_channel
 
 server:
   port: 8086
