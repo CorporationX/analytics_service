@@ -17,12 +17,13 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,7 +45,7 @@ public class AnalyticsServiceTest {
     }
 
     @Test
-    public void testAnalytics() {
+    public void testAnalyticsByInterval() {
         AnalyticsIntervalDto analyticsIntervalDto = AnalyticsIntervalDto.builder()
                 .receiverId(1L)
                 .eventType(EventType.FOLLOWER)
@@ -52,21 +53,20 @@ public class AnalyticsServiceTest {
                 .build();
         List<AnalyticsEvent> analyticsEvents = Arrays.asList(
                 new AnalyticsEvent(1L, 1L, 1L, EventType.FOLLOWER, LocalDateTime.now()),
-                new AnalyticsEvent(2L, 2L, 2L, EventType.FOLLOWER, LocalDateTime.now())
+                new AnalyticsEvent(2L, 1L, 1L, EventType.FOLLOWER, LocalDateTime.now())
         );
         List<AnalyticEventDto> analyticEventsDto = Arrays.asList(
                 new AnalyticEventDto(1L, 1L, 1L, EventType.FOLLOWER, LocalDateTime.now()),
-                new AnalyticEventDto(2L, 2L, 2L, EventType.FOLLOWER, LocalDateTime.now())
+                new AnalyticEventDto(2L, 1L, 1L, EventType.FOLLOWER, LocalDateTime.now())
         );
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType
-                (analyticsIntervalDto.getReceiverId(), analyticsIntervalDto.getEventType()))
-                .thenReturn(analyticsEvents.stream());
+        when(analyticsEventRepository.getEventsByInterval(any(LocalDateTime.class), eq(analyticsIntervalDto.getReceiverId()),
+                eq(analyticsIntervalDto.getEventType().toString()))).thenReturn(analyticsEvents);
 
         List<AnalyticEventDto> result = analyticsService.getAnalytics(analyticsIntervalDto);
 
         assertEquals(result.size(), 2);
-        assertEquals(result.get(1).getId(), analyticEventsDto.get(0).getId());
+        assertEquals(result.get(1).getId(), analyticEventsDto.get(1).getId());
     }
 
     @Test
@@ -74,13 +74,7 @@ public class AnalyticsServiceTest {
         AnalyticsIntervalDto analyticsIntervalDto = AnalyticsIntervalDto.builder()
                 .receiverId(1L)
                 .eventType(EventType.FOLLOWER)
-                .interval("invalid")
                 .build();
-        List<AnalyticsEvent> analyticsEvents = new ArrayList<>();
-
-        when(analyticsEventRepository.findByReceiverIdAndEventType
-                (analyticsIntervalDto.getReceiverId(), analyticsIntervalDto.getEventType()))
-                .thenReturn(analyticsEvents.stream());
 
         assertThrows(DataValidationException.class, () -> analyticsService.getAnalytics(analyticsIntervalDto));
     }

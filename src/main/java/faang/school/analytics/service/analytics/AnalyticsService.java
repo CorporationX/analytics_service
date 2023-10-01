@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,6 +25,7 @@ public class AnalyticsService {
     @Value("${analytics.latest_events_period_of_time}")
     private String latestPeriodOfTime;
 
+    private static final String INTERVAL_PATTERN = "^([0-9]*)([a-zA-Z]+)$";
     private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventMapper analyticsEventMapper;
 
@@ -43,28 +42,25 @@ public class AnalyticsService {
 
     @Transactional(readOnly = true)
     public List<AnalyticEventDto> getAnalytics(AnalyticsIntervalDto analyticsIntervalDto) {
-        List<AnalyticsEvent> analyticsEvents = analyticsEventRepository.findByReceiverIdAndEventType
-                (analyticsIntervalDto.getReceiverId(), analyticsIntervalDto.getEventType()).toList();
-        List<AnalyticsEvent> getEvents = new ArrayList<>();
+        List<AnalyticsEvent> getEvents;
 
         if (analyticsIntervalDto.getInterval() != null) {
             LocalDateTime startDate = calculateStartDate(analyticsIntervalDto.getInterval());
-            getEvents = analyticsEvents.stream().filter(analyticsEvent ->
-                    analyticsEvent.getReceivedAt().isAfter(startDate)).toList();
+            getEvents = analyticsEventRepository.getEventsByInterval
+                    (startDate, analyticsIntervalDto.getReceiverId(), analyticsIntervalDto.getEventType().toString());
         } else if (analyticsIntervalDto.getFrom() != null && analyticsIntervalDto.getTo() != null) {
-            getEvents = analyticsEvents.stream().filter(analyticsEvent ->
-                    analyticsEvent.getReceivedAt().isAfter(analyticsIntervalDto.getFrom()) &&
-                            analyticsEvent.getReceivedAt().isBefore(analyticsIntervalDto.getTo())).toList();
+            getEvents = analyticsEventRepository.getEventsByDates
+                    (analyticsIntervalDto.getFrom(), analyticsIntervalDto.getTo(),
+                            analyticsIntervalDto.getReceiverId(), analyticsIntervalDto.getEventType().toString());
+        } else {
+            throw new DataValidationException("Search data not specified");
         }
 
-        return getEvents.stream()
-                .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
-                .map(analyticsEventMapper::toDto)
-                .toList();
+        return getEvents.stream().map(analyticsEventMapper::toDto).toList();
     }
 
     private LocalDateTime calculateStartDate(String interval) {
-        Pattern pattern = Pattern.compile("^([0-9]*)([a-zA-Z]+)$");
+        Pattern pattern = Pattern.compile(INTERVAL_PATTERN);
         Matcher matcher = pattern.matcher(interval);
 
         if (matcher.matches()) {
@@ -74,7 +70,7 @@ public class AnalyticsService {
             try {
                 Intervals intervals = Intervals.valueOf(intervalType.toUpperCase());
                 return intervals.dateFrom(LocalDateTime.now(), amount);
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 throw new DataValidationException("Invalid interval type: " + interval);
             }
         } else {
