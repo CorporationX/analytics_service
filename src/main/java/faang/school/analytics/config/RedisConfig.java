@@ -36,6 +36,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.comment_event_channel}")
     private String commentEventChannelName;
 
+    @Value("${spring.data.redis.channels.mentorship_request_channel}")
+    private String mentorshipRequestChannelName;
+
     @Bean
     public MessageListenerAdapter recommendationEventAdapter(RecommendationEventListener listener) {
         return new MessageListenerAdapter(listener);
@@ -50,8 +53,11 @@ public class RedisConfig {
     public MessageListenerAdapter commentEventAdapter(CommentEventListener listener) {
         return new MessageListenerAdapter(listener);
     }
-    @Value("${spring.data.redis.channels.mentorship_request_chanel}")
-    private String mentorshipRequestChannelName;
+
+    @Bean
+    MessageListenerAdapter mentorshipRequestListener(MentorshipRequestedEventListener listener) {
+        return new MessageListenerAdapter(listener);
+    }
 
     private final RecommendationEventListener recommendationEventListener;
 
@@ -93,11 +99,6 @@ public class RedisConfig {
     @Bean
     ChannelTopic topicMentorshipRequest() {
         return new ChannelTopic(mentorshipRequestChannelName);
-    }
-
-    @Bean
-    MessageListenerAdapter mentorshipRequestListener(MentorshipRequestedEventListener mentorshipRequestedEventListener) {
-        return new MessageListenerAdapter(mentorshipRequestedEventListener);
     }
 
     @Bean
