@@ -20,7 +20,6 @@ public class ProjectViewEventListener {
 
     @EventListener
     public void handleProjectViewEvent(ProjectViewEvent projectViewEvent) {
-        // Преобразование ProjectViewEvent в AnalyticsEvent с использованием analyticsEventMapper
         AnalyticsEvent analyticsEvent = analyticsEventMapper.mapToAnalyticsEvent(projectViewEvent);
 
         analyticsEventService.saveAnalyticsEvent(analyticsEvent);
