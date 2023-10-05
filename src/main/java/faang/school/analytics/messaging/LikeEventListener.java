@@ -1,7 +1,7 @@
 package faang.school.analytics.messaging;
 
 import faang.school.analytics.dto.LikeEventDto;
-import faang.school.analytics.service.like.LikeEventWorker;
+import faang.school.analytics.service.AnalyticsEventService;
 import faang.school.analytics.util.JsonMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +15,11 @@ import org.springframework.stereotype.Component;
 public class LikeEventListener implements MessageListener {
 
     private final JsonMapper jsonMapper;
-    private final LikeEventWorker likeEventWorker;
+    private final AnalyticsEventService analyticsEventService;
     @Override
     public void onMessage(Message message, byte[] pattern) {
         jsonMapper.toObject(message.toString(), LikeEventDto.class)
-                .ifPresent(s -> likeEventWorker.saveLikeEvent(s));
+                .ifPresent(s -> analyticsEventService.likeEventSave(s));
         log.info(message+ " " + "send");
     }
 }

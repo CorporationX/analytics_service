@@ -1,7 +1,7 @@
 package faang.school.analytics.messaging;
 
 import faang.school.analytics.dto.LikeEventDto;
-import faang.school.analytics.service.like.LikeEventWorker;
+import faang.school.analytics.service.AnalyticsEventService;
 import faang.school.analytics.util.JsonMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +19,7 @@ class LikeEventListenerTest {
     @Mock
     private JsonMapper jsonMapper;
     @Mock
-    private LikeEventWorker likeEventWorker;
+    private AnalyticsEventService analyticsEventService;
     @Mock
     private Message message;
     @InjectMocks
@@ -34,7 +34,7 @@ class LikeEventListenerTest {
 
         likeEventListener.onMessage(message, "".getBytes());
 
-        Mockito.verify(likeEventWorker, Mockito.times(1))
-                .saveLikeEvent(likeEventDto);
+        Mockito.verify(analyticsEventService, Mockito.times(1))
+                .likeEventSave(likeEventDto);
     }
 }
