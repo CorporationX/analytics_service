@@ -3,6 +3,7 @@ package faang.school.analytics.config;
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.CommentEventListener;
 import faang.school.analytics.listener.MentorshipRequestedEventListener;
+import faang.school.analytics.listener.LikePostEventListener;
 import faang.school.analytics.listener.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +40,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.mentorship_request_channel}")
     private String mentorshipRequestChannelName;
 
+    @Value("${spring.data.redis.channels.like_channel}")
+    private String likePostChannelName;
+
     @Bean
     public MessageListenerAdapter recommendationEventAdapter(RecommendationEventListener listener) {
         return new MessageListenerAdapter(listener);
@@ -56,6 +60,11 @@ public class RedisConfig {
 
     @Bean
     MessageListenerAdapter mentorshipRequestListener(MentorshipRequestedEventListener listener) {
+        return new MessageListenerAdapter(listener);
+    }
+
+    @Bean
+    public MessageListenerAdapter likePostEventAdapter(LikePostEventListener listener) {
         return new MessageListenerAdapter(listener);
     }
 
@@ -80,7 +89,8 @@ public class RedisConfig {
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationEventAdapter,
                                                  MessageListenerAdapter commentEventAdapter,
                                                  MessageListenerAdapter followerEventAdapter,
-                                                 MessageListenerAdapter mentorshipRequestListener) {
+                                                 MessageListenerAdapter mentorshipRequestListener,
+                                                 MessageListenerAdapter likePostEventAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(recommendationEventListener, topicRecommendation());
@@ -88,6 +98,7 @@ public class RedisConfig {
         container.addMessageListener(recommendationEventAdapter, topicRecommendation());
         container.addMessageListener(followerEventAdapter, topicFollower());
         container.addMessageListener(commentEventAdapter, topicCommentEvent());
+        container.addMessageListener(likePostEventAdapter, topicLikePost());
         return container;
     }
 
@@ -109,5 +120,10 @@ public class RedisConfig {
     @Bean
     ChannelTopic topicCommentEvent() {
         return new ChannelTopic(commentEventChannelName);
+    }
+
+    @Bean
+    ChannelTopic topicLikePost() {
+        return new ChannelTopic(likePostChannelName);
     }
 }
