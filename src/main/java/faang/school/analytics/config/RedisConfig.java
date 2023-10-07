@@ -1,6 +1,10 @@
 package faang.school.analytics.config;
 
-import faang.school.analytics.listener.*;
+import faang.school.analytics.listener.FollowerEventListener;
+import faang.school.analytics.listener.CommentEventListener;
+import faang.school.analytics.listener.MentorshipRequestedEventListener;
+import faang.school.analytics.listener.LikePostEventListener;
+import faang.school.analytics.listener.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +37,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.comment_event_channel}")
     private String commentEventChannelName;
 
+    @Value("${spring.data.redis.channels.mentorship_request_channel}")
+    private String mentorshipRequestChannelName;
+
     @Value("${spring.data.redis.channels.like_channel}")
     private String likePostChannelName;
 
@@ -52,12 +59,14 @@ public class RedisConfig {
     }
 
     @Bean
-    public MessageListenerAdapter likePostEventAdapter(LikePostEventListener listener) {
+    MessageListenerAdapter mentorshipRequestListener(MentorshipRequestedEventListener listener) {
         return new MessageListenerAdapter(listener);
     }
 
-    @Value("${spring.data.redis.channels.mentorship_request_chanel}")
-    private String mentorshipRequestChannelName;
+    @Bean
+    public MessageListenerAdapter likePostEventAdapter(LikePostEventListener listener) {
+        return new MessageListenerAdapter(listener);
+    }
 
     private final RecommendationEventListener recommendationEventListener;
 
@@ -101,11 +110,6 @@ public class RedisConfig {
     @Bean
     ChannelTopic topicMentorshipRequest() {
         return new ChannelTopic(mentorshipRequestChannelName);
-    }
-
-    @Bean
-    MessageListenerAdapter mentorshipRequestListener(MentorshipRequestedEventListener mentorshipRequestedEventListener) {
-        return new MessageListenerAdapter(mentorshipRequestedEventListener);
     }
 
     @Bean
