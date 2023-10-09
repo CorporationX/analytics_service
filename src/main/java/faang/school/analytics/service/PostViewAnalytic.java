@@ -5,21 +5,24 @@ import faang.school.analytics.mapper.PostViewMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AnalyticsService {
+public class PostViewAnalytic<T> implements AnalyticService<PostViewEventDto> {
     private final AnalyticsEventRepository analyticsEventRepository;
     private final PostViewMapper postViewMapper;
 
-    @Transactional
-    public AnalyticsEvent savePostViewEvent(PostViewEventDto postViewEventDto){
-        AnalyticsEvent event = postViewMapper.ToAnalyticsEvent(postViewEventDto);
+    @Override
+    public void save(PostViewEventDto eventDto) {
+        AnalyticsEvent event = postViewMapper.ToAnalyticsEvent(eventDto);
         event.setEventType(EventType.POST_VIEW);
+        analyticsEventRepository.save(event);
+    }
 
-        return analyticsEventRepository.save(event);
+    @Override
+    public boolean supportsEventType(PostViewEventDto eventType) {
+        return eventType.getClass() == PostViewEventDto.class;
     }
 }
