@@ -32,6 +32,8 @@ spring:
           mentorship: /mentorship
         post_channel:
           name: post_channel
+        project_view_channel:
+          name: project_view_channel
 
 server:
   port: 8086
