@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Optional;
 
 @Component
@@ -32,5 +33,15 @@ public class JsonMapper {
             log.error("An error with mapping to json with " + event + ". " + e.getMessage());
         }
         return Optional.ofNullable(result);
+    }
+
+    public <T> Optional<T> toObjectFromByte(byte[] bytes, Class<T> valueType) {
+        T object = null;
+        try {
+            object = objectMapper.readValue(bytes, valueType);
+        } catch (IOException e) {
+            log.error("Error when converting json to event string with " + bytes + "." + "\nIOException: ", e);
+        }
+        return Optional.ofNullable(object);
     }
 }

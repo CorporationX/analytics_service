@@ -3,6 +3,7 @@ package faang.school.analytics.config;
 import faang.school.analytics.messaging.CommentEventListener;
 import faang.school.analytics.messaging.FundRaisedEventListener;
 import faang.school.analytics.messaging.LikeEventListener;
+import faang.school.analytics.messaging.RecommendationReceivedEventListener;
 import faang.school.analytics.messaging.followEvent.FollowEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,10 +34,14 @@ public class RedisConfig {
     private String fundRaisedEvent;
     @Value("${spring.data.redis.channels.like_channel.name}")
     private String likeEvent;
+    @Value("${spring.data.redis.channels.recommendation_received_channel.name}")
+    private String recommendationReceivedChannel;
+
     private final FollowEventListener followEventListener;
     private final CommentEventListener commentEventListener;
     private final FundRaisedEventListener fundRaisedEventListener;
     private final LikeEventListener likeEventListener;
+    private final RecommendationReceivedEventListener recommendationReceivedEventListener;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -75,6 +80,11 @@ public class RedisConfig {
     }
 
     @Bean
+    ChannelTopic recommendationReceivedChannel() {
+        return new ChannelTopic(recommendationReceivedChannel);
+    }
+
+    @Bean
     RedisMessageListenerContainer redisContainer() {
         final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
@@ -82,6 +92,7 @@ public class RedisConfig {
         container.addMessageListener(new MessageListenerAdapter(commentEventListener), commentTopic());
         container.addMessageListener(new MessageListenerAdapter(fundRaisedEventListener), fundRaisedTopic());
         container.addMessageListener(new MessageListenerAdapter(likeEventListener), likeTopic());
+        container.addMessageListener(new MessageListenerAdapter(recommendationReceivedEventListener), recommendationReceivedChannel());
         return container;
     }
 }
