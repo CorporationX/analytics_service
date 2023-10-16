@@ -24,6 +24,7 @@ spring:
       channel:
         profile-view: profile_view_channel
         post-view: post_view_channel
+        recommendation_view: recommendation_channel
 
 
 server:
