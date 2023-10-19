@@ -34,10 +34,11 @@ class RecommendationReceivedTest {
         recommendationReceivedEvent.setAuthorId(1L);
         recommendationReceivedEvent.setCreatedAt(LocalDateTime.now());
 
-        Mockito.when(message.toString()).thenReturn("s");
-        Mockito.lenient().when(jsonMapper.toObject(Mockito.anyString(), Mockito.eq(RecommendationReceivedEvent.class)))
+        Mockito.when(message.getBody())
+                .thenReturn("s".getBytes());
+        Mockito.when(jsonMapper.toObjectFromByte(message.getBody(),
+                        Mockito.eq(RecommendationReceivedEvent.class)))
                 .thenReturn(Optional.of(recommendationReceivedEvent));
-
         recommendationReceivedEventListener.onMessage(message, "".getBytes());
 
         Mockito.verify(analyticsEventService, Mockito.times(1))
