@@ -36,8 +36,7 @@ class RecommendationReceivedTest {
 
         Mockito.when(message.getBody())
                 .thenReturn("s".getBytes());
-        Mockito.when(jsonMapper.toObjectFromByte(message.getBody(),
-                        Mockito.eq(RecommendationReceivedEvent.class)))
+        Mockito.when(jsonMapper.toObjectFromByte(message.getBody(), RecommendationReceivedEvent.class))
                 .thenReturn(Optional.of(recommendationReceivedEvent));
         recommendationReceivedEventListener.onMessage(message, "".getBytes());
 
