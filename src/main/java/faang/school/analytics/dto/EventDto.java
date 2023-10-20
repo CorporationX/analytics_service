@@ -19,4 +19,5 @@ public class EventDto {
     private Long receiverId;
     private EventType eventType;
     private LocalDateTime receivedAt;
+    private Long projectId;
 }
