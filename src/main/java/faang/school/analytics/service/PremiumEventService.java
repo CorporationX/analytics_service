@@ -17,16 +17,18 @@ public class PremiumEventService {
     public void save(PremiumEvent premiumEvent) {
         AnalyticsEvent model = AnalyticsEvent.builder()
                 .receiverId(premiumEvent.getUserId())
-                .actorId(premiumEvent.getPremiumId())
                 .receivedAt(premiumEvent.getTimestamp())
                 .build();
 
         if (premiumEvent.getPremiumPeriod() == PremiumPeriod.ONE_MONTH){
             model.setEventType(PREMIUM_ONE_MONTH);
+            model.setActorId(PREMIUM_ONE_MONTH.ordinal());
         } else if (premiumEvent.getPremiumPeriod() == PremiumPeriod.THREE_MONTHS) {
             model.setEventType(PREMIUM_THREE_MONTHS);
+            model.setActorId(PREMIUM_THREE_MONTHS.ordinal());
         } else {
             model.setEventType(PREMIUM_ONE_YEAR);
+            model.setActorId(PREMIUM_ONE_YEAR.ordinal());
         }
 
         analyticsEventRepository.save(model);
