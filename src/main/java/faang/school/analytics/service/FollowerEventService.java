@@ -15,7 +15,7 @@ public class FollowerEventService {
     public void save(FollowerEvent followerEvent) {
         AnalyticsEvent model = AnalyticsEvent.builder()
                 .receiverId(followerEvent.getFollowerId())
-                .actorId(followerEvent.getFolloweeId())
+                .actorId(EventType.FOLLOWER.ordinal())
                 .eventType(EventType.FOLLOWER)
                 .receivedAt(followerEvent.getTimestamp())
                 .build();
