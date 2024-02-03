@@ -1,28 +1,20 @@
 package faang.school.analytics.listener;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.FollowerEvent;
 import faang.school.analytics.service.FollowerEventService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.connection.Message;
-import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.Arrays;
-
 @Component
-@RequiredArgsConstructor
-public class FollowerEventListener implements MessageListener {
-    private final ObjectMapper objectMapper;
+public class FollowerEventListener extends AbstractEventListener<FollowerEvent> {
     private final FollowerEventService followerEventService;
+
+    public FollowerEventListener(FollowerEventService followerEventService) {
+        super(FollowerEvent.class);
+        this.followerEventService = followerEventService;
+    }
+
     @Override
-    public void onMessage(Message message, byte[] pattern) {
-        try {
-            FollowerEvent followerEvent = objectMapper.readValue(message.getBody(), FollowerEvent.class);
-            followerEventService.save(followerEvent);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    protected void processEvent(FollowerEvent event) {
+        followerEventService.save(event);
     }
 }

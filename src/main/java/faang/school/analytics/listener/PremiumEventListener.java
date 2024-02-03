@@ -1,27 +1,20 @@
 package faang.school.analytics.listener;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.premium.PremiumEvent;
 import faang.school.analytics.service.PremiumEventService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.connection.Message;
-import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-
 @Component
-@RequiredArgsConstructor
-public class PremiumEventListener implements MessageListener {
-    private final ObjectMapper objectMapper;
+public class PremiumEventListener extends AbstractEventListener<PremiumEvent> {
     private final PremiumEventService premiumEventService;
+
+    public PremiumEventListener(PremiumEventService premiumEventService) {
+        super(PremiumEvent.class);
+        this.premiumEventService = premiumEventService;
+    }
+
     @Override
-    public void onMessage(Message message, byte[] pattern) {
-        try {
-            PremiumEvent premiumEvent = objectMapper.readValue(message.getBody(), PremiumEvent.class);
-            premiumEventService.save(premiumEvent);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    protected void processEvent(PremiumEvent event) {
+        premiumEventService.save(event);
     }
 }
