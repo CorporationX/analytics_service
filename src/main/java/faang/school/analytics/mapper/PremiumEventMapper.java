@@ -16,7 +16,7 @@ public interface PremiumEventMapper {
             @Mapping(target = "receiverId", source = "userId"),
             @Mapping(target = "receivedAt", source = "timestamp"),
             @Mapping(target = "eventType", expression = "java(getEventType(premiumEvent))"),
-            @Mapping(target = "actorId", expression = "java(getEventType(premiumEvent).ordinal())")
+            @Mapping(target = "actorId", source = "premiumId")
     })
     AnalyticsEvent toAnalyticsEvent(PremiumEvent premiumEvent);
 
