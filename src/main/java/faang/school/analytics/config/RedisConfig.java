@@ -1,5 +1,6 @@
 package faang.school.analytics.config;
 
+import faang.school.analytics.listener.CommentEventListener;
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.PremiumEventListener;
 import lombok.RequiredArgsConstructor;
@@ -19,19 +20,18 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
     @Value("${spring.data.redis.host}")
     private String redisHost;
-
     @Value("${spring.data.redis.port}")
     private int redisPort;
-
     @Value("${spring.data.redis.channels.follower_channel.name}")
     private String followerChannelName;
-
     @Value("${spring.data.redis.channels.premium_channel.name}")
     private String premiumChannelName;
+    @Value("${spring.data.redis.channels.comment_channel.name}")
+    private String commentChannelName;
 
     private final FollowerEventListener followerEventListener;
-
     private final PremiumEventListener premiumEventListener;
+    private final CommentEventListener commentEventListener;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -69,12 +69,23 @@ public class RedisConfig {
     }
 
     @Bean
+    ChannelTopic commentChannel() {
+        return new ChannelTopic(commentChannelName);
+    }
+
+    @Bean
+    MessageListenerAdapter commentListener() {
+        return new MessageListenerAdapter(commentEventListener);
+    }
+
+    @Bean
     RedisMessageListenerContainer redisContainer() {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener(), followerChannel());
         container.addMessageListener(premiumListener(), premiumChannel());
+        container.addMessageListener(commentListener(), commentChannel());
         return container;
     }
 }
