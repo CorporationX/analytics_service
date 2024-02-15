@@ -1,6 +1,7 @@
 package faang.school.analytics.config;
 
 import faang.school.analytics.listener.FollowerEventListener;
+import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.PremiumEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,9 +30,12 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.premium_channel.name}")
     private String premiumChannelName;
 
-    private final FollowerEventListener followerEventListener;
+    @Value("${spring.data.redis.channels.mentorship_topic.name}")
+    private String mentorshipRequestedTopicName;
 
+    private final FollowerEventListener followerEventListener;
     private final PremiumEventListener premiumEventListener;
+    private final MentorshipRequestedEventListener mentorshipRequestedEventListener;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -59,6 +63,11 @@ public class RedisConfig {
     }
 
     @Bean
+    ChannelTopic mentorshipRequestedTopic() {
+        return new ChannelTopic(mentorshipRequestedTopicName);
+    }
+
+    @Bean
     MessageListenerAdapter followerListener() {
         return new MessageListenerAdapter(followerEventListener);
     }
@@ -69,12 +78,18 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter mentorshipRequestedListener() {
+        return new MessageListenerAdapter(mentorshipRequestedEventListener);
+    }
+
+    @Bean
     RedisMessageListenerContainer redisContainer() {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener(), followerChannel());
         container.addMessageListener(premiumListener(), premiumChannel());
+        container.addMessageListener(mentorshipRequestedListener(), mentorshipRequestedTopic());
         return container;
     }
 }
