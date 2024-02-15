@@ -11,7 +11,7 @@ import org.mapstruct.ReportingPolicy;
 public interface MentorshipRequestedMapper {
     @Mappings({
             @Mapping(target = "receiverId", source = "receiverId"),
-            @Mapping(target = "actorId", expression = "requesterId"),
+            @Mapping(target = "actorId", source = "requesterId"),
             @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.MENTORSHIP_REQUESTED)"),
             @Mapping(target = "receivedAt", source = "timestamp")
     })
