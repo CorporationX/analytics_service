@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AnalyticsService{
+public class AnalyticsEventService {
 
     private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventMapper mapper;
