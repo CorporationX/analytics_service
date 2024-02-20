@@ -10,7 +10,7 @@ import org.springframework.data.redis.connection.Message;
 import java.io.IOException;
 import java.util.List;
 
-public class AbstractEventListener<T> {
+public abstract class AbstractEventListener<T> {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
@@ -18,7 +18,7 @@ public class AbstractEventListener<T> {
     @Autowired
     private List<AnalyticsEventMapper<T>> analyticsEventMappers;
 
-    public void saveAnalyticsEvent(Message message, Class<T> type) {
+    protected void saveAnalyticsEvent(Message message, Class<T> type) {
         try {
             T t = objectMapper.readValue(message.getBody(), type);
 
@@ -28,8 +28,6 @@ public class AbstractEventListener<T> {
                     .orElseThrow(() ->
                             new IllegalArgumentException("Mapper not found for given type " + type.getName()))
                     .toAnalyticsEvent(t);
-
-            //analyticsEvent.setReceivedAt(LocalDateTime.now());
 
             analyticsEventService.saveAnalyticsEvent(analyticsEvent);
         } catch (IOException e) {
