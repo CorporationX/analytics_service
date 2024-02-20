@@ -2,7 +2,6 @@ package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.follower.FollowerEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,6 +42,5 @@ class AnalyticsEventMapperTest {
     @Test
     void testToEntity() {
         assertEquals(event, analyticsEventMapper.toEntity(eventDto));
-
     }
 }
