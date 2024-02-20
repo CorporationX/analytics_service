@@ -1,6 +1,5 @@
 package faang.school.analytics.mapper.base;
 
-import faang.school.analytics.dto.ProjectViewEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 
 public interface AnalyticsEventMapper<T> {
