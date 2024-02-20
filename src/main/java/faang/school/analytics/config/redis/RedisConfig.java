@@ -1,6 +1,6 @@
 package faang.school.analytics.config.redis;
 
-import faang.school.analytics.messaging.FollowerEventListener;
+import faang.school.analytics.listener.FollowerEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,12 +14,12 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
-    @Value("${spring.redis.host}")
+    @Value("${spring.data.redis.host}")
     private String redisHost;
 
-    @Value("${spring.redis.port}")
+    @Value("${spring.data.redis.port}")
     private int redisPort;
-    @Value("${redis.channels.follower_event_topic}")
+    @Value("${spring.data.redis.channel.follower_channel.name}")
     private String followerEventTopic;
 
     @Bean
@@ -33,7 +33,7 @@ public class RedisConfig {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(jedisConnectionFactory());
         template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new StringRedisSerializer()); ///json
+        template.setValueSerializer(new StringRedisSerializer());
         return template;
     }
 
@@ -49,10 +49,10 @@ public class RedisConfig {
 
     @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerEventListener) {
-        RedisMessageListenerContainer container
-                = new RedisMessageListenerContainer();
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerEventListener, followerTopic());
+
         return container;
     }
 }
