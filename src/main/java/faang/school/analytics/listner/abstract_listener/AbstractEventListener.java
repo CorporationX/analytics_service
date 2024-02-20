@@ -29,7 +29,7 @@ public abstract class AbstractEventListener<T> {
                             new IllegalArgumentException("Mapper not found for given type " + type.getName()))
                     .toAnalyticsEvent(t);
 
-            analyticsEventService.saveAnalyticsEvent(analyticsEvent);
+            analyticsEventService.save(analyticsEvent);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
