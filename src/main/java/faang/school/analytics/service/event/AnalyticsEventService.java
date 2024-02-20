@@ -22,6 +22,6 @@ public class AnalyticsEventService {
         followerEvent.setEventType(EventType.FOLLOWER);
         log.info("Старт saveAnalyticsEvent: {}", followerEventDto);
         analyticsEventRepository.save(followerEvent);
-        log.info("Сохранено - {} ", followerEvent);
+        log.info("Сохранен AnalyticsEvent - {} ", followerEvent);
     }
 }
