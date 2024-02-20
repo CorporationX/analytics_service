@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "Spring",unmappedSourcePolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "Spring", unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
 
     @Mapping(source = "subscriptionTime", target = "receivedAt")
