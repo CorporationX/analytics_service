@@ -1,25 +1,27 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
 
     public AnalyticsEvent save(AnalyticsEvent analyticsEvent) {
-        return analyticsEventRepository.save(analyticsEvent);
+        AnalyticsEvent savedAnalyticsEvent = analyticsEventRepository.save(analyticsEvent);
+        log.info("Analytics event with ID {} was saved", savedAnalyticsEvent.getId());
+        return savedAnalyticsEvent;
     }
 
     public void deleteById (long id) {
         analyticsEventRepository.deleteById(id);
+        log.info("Analytics event with ID {} was deleted", id);
     }
 
     public AnalyticsEvent getById(long id) {

@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.base.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 public abstract class AbstractEventListener<T> {
     @Autowired
     private ObjectMapper objectMapper;
@@ -28,9 +30,10 @@ public abstract class AbstractEventListener<T> {
                     .orElseThrow(() ->
                             new IllegalArgumentException("Mapper not found for given type " + type.getName()))
                     .toAnalyticsEvent(t);
-
+            log.debug("Analytics event was created: {}", analyticsEvent);
             analyticsEventService.save(analyticsEvent);
         } catch (IOException e) {
+            log.debug("Analytics event was not created cause of IOException");
             throw new RuntimeException(e);
         }
     }
