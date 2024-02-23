@@ -43,7 +43,7 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic followerTopic() {
+    ChannelTopic recommendationTopic() {
         return new ChannelTopic(recommendationChannelName);
     }
 
@@ -52,7 +52,7 @@ public class RedisConfig {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(recommendationListener, followerTopic());
+        container.addMessageListener(recommendationListener, recommendationTopic());
         return container;
     }
 }
