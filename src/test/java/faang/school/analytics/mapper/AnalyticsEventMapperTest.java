@@ -2,6 +2,7 @@ package faang.school.analytics.mapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import faang.school.analytics.dto.MentorshipRequestedEvent;
 import faang.school.analytics.dto.RecommendationEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,7 @@ public class AnalyticsEventMapperTest {
     private AnalyticsEventMapper analyticsEventMapper = Mappers.getMapper(AnalyticsEventMapper.class);
     private AnalyticsEvent analyticsEvent;
     private RecommendationEvent recommendationEvent;
+    LocalDateTime fixedTime = LocalDateTime.of(2024, 2, 22, 20, 6, 30);
 
     @BeforeEach
     void setUp() {
@@ -42,6 +44,11 @@ public class AnalyticsEventMapperTest {
         assertEquals(analyticsEvent, analyticsEventMapper.toEntity(recommendationEvent));
     }
 
-
+    @Test
+    public void testMapperMentorshipRequestedEvent() {
+        MentorshipRequestedEvent mentorshipRequestedEvent = new MentorshipRequestedEvent(1L, 3L, fixedTime);
+        assertEquals(analyticsEvent.getReceiverId(), analyticsEventMapper.MentorshipRequestedEventToEntity(mentorshipRequestedEvent).getReceiverId());
+        assertEquals(analyticsEvent.getActorId(), analyticsEventMapper.MentorshipRequestedEventToEntity(mentorshipRequestedEvent).getActorId());
+    }
 
 }

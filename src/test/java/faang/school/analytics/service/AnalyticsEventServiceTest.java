@@ -2,6 +2,7 @@ package faang.school.analytics.service;
 
 import static org.mockito.Mockito.*;
 
+import faang.school.analytics.dto.MentorshipRequestedEvent;
 import faang.school.analytics.dto.RecommendationEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
@@ -31,6 +32,7 @@ public class AnalyticsEventServiceTest {
     private RecommendationEvent recommendationEvent;
     @Captor
     private ArgumentCaptor<AnalyticsEvent> captor;
+    LocalDateTime fixedTime = LocalDateTime.of(2024, 2, 22, 20, 6, 30);
     @BeforeEach
     void setUp() {
         LocalDateTime fixedTime = LocalDateTime.of(2024, 2, 22, 20, 6, 30);
@@ -56,5 +58,13 @@ public class AnalyticsEventServiceTest {
         verify(analyticsEventRepository, times(1)).save(captor.capture());
     }
 
+    @Test
+    public void testMentorshipRequestedIsSaved() {
+        MentorshipRequestedEvent mentorshipRequestedEvent = new MentorshipRequestedEvent(1L, 3L, fixedTime);
+
+        when(analyticsEventMapper.MentorshipRequestedEventToEntity(mentorshipRequestedEvent)).thenReturn(analyticsEvent);
+        analyticsEventService.saveMentorshipRequestedEvent(mentorshipRequestedEvent);
+        verify(analyticsEventRepository, times(1)).save(captor.capture());
+    }
 
 }
