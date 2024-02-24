@@ -28,6 +28,7 @@ public class FollowerEventListener implements MessageListener {
                     followerEventDto.getFolloweeId());
             analyticsEventService.saveAnalyticsEvent(followerEventDto);
         } catch (IOException e) {
+            log.error("Не удалось преобразовать событие ", e);
             throw new RuntimeException(e);
         }
     }
