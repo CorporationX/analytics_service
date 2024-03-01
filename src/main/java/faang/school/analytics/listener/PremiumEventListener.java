@@ -1,20 +1,20 @@
 package faang.school.analytics.listener;
 
-import faang.school.analytics.dto.premium.PremiumEvent;
-import faang.school.analytics.service.PremiumEventService;
+import faang.school.analytics.dto.event_broker.PremiumEvent;
+import faang.school.analytics.service.EventService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PremiumEventListener extends AbstractEventListener<PremiumEvent> {
-    private final PremiumEventService premiumEventService;
+    private final EventService eventService;
 
-    public PremiumEventListener(PremiumEventService premiumEventService) {
+    public PremiumEventListener(EventService eventService) {
         super(PremiumEvent.class);
-        this.premiumEventService = premiumEventService;
+        this.eventService = eventService;
     }
 
     @Override
     protected void processEvent(PremiumEvent event) {
-        premiumEventService.save(event);
+        eventService.savePremium(event);
     }
 }

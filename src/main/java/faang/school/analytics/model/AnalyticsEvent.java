@@ -1,36 +1,33 @@
 package faang.school.analytics.model;
-
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.cassandra.core.mapping.Column;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-@Table(name="analytics_event")
+@Table("analytics_event")
 public class AnalyticsEvent {
+    @PrimaryKey
+    private UUID id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Column("receiver_id")
+    private Long receiverId;
 
-    @Column(name="receiver_id", nullable = false)
-    private long receiverId;
+    @Column("actor_id")
+    private Long actorId;
 
-    @Column(name = "actor_id", nullable = false)
-    private long actorId;
+    @Column("event_type")
+    private String eventType;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "event_type", nullable = false)
-    private EventType eventType;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "received_at", nullable = false)
+    @Column("received_at")
     private LocalDateTime receivedAt;
 }

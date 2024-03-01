@@ -1,0 +1,10 @@
+version: '3'
+services:
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra-node
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra
+      - CASSANDRA_CLUSTER_NAME=TestCluster
