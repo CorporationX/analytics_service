@@ -8,12 +8,12 @@ import org.mapstruct.factory.Mappers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GoalCompletedEventMapperTest {
-    private final GoalCompletedEventMapper goalCompletedEventMapper = Mappers.getMapper(GoalCompletedEventMapper.class);
+class AnalyticsEventMapperTest {
+    private final AnalyticsEventMapper analyticsEventMapper = Mappers.getMapper(AnalyticsEventMapper.class);
     @Test
     void testToAnalyticsEvent() {
         GoalCompletedEvent goalCompletedEvent = GoalCompletedEvent.builder().build();
         AnalyticsEvent analyticsEvent = AnalyticsEvent.builder().eventType(EventType.GOAL_COMPLETED).build();
-        assertEquals(analyticsEvent,goalCompletedEventMapper.toAnalyticsEvent(goalCompletedEvent));
+        assertEquals(analyticsEvent, analyticsEventMapper.toAnalyticsEvent(goalCompletedEvent));
     }
 }
