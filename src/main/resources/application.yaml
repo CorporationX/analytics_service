@@ -1,4 +1,8 @@
 spring:
+  mvc:
+    servlet:
+      path: /api/v1
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres
@@ -16,7 +20,6 @@ spring:
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-
   data:
     redis:
       port: 6379
@@ -24,9 +27,6 @@ spring:
       channels:
         profile_view_channel:
           name: profile_view_channel
-  mvc:
-    servlet:
-      path: /api/v1
 
 server:
   port: 8086

@@ -13,7 +13,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-public class Redis {
+public class RedisConfig {
     @Value("${spring.data.redis.host}")
     String host;
     @Value("${spring.data.redis.port}")
