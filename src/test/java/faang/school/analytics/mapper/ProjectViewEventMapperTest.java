@@ -1,7 +1,6 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.ProjectViewEvent;
-import faang.school.analytics.mapper.base.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.junit.jupiter.api.Test;

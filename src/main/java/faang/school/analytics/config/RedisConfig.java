@@ -18,7 +18,7 @@ public class RedisConfig {
     String host;
     @Value("${spring.data.redis.port}")
     int port;
-    @Value("${spring.data.redis.channels.profile_view_channel.name}")
+    @Value("${spring.data.redis.channel.project_view.project_view_channel}")
     String profileViewChannelName;
 
     @Bean

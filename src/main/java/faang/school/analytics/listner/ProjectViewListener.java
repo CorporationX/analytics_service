@@ -2,7 +2,7 @@ package faang.school.analytics.listner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.ProjectViewEvent;
-import faang.school.analytics.mapper.base.AnalyticsEventMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
