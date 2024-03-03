@@ -21,9 +21,9 @@ spring:
     redis:
       port: 6379
       host: localhost
-      channels:
-        premium_bought_channel:
-          name: premium_bought_channel
+      channel:
+        premium_bought:
+          name: premium_bought
 
 server:
   port: 8086

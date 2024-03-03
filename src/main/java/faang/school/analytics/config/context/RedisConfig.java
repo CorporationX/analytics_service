@@ -17,12 +17,11 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfig {
-    private final PremiumBoughtEventListener eventListener;
     @Value("${spring.data.redis.host}")
     private String host;
     @Value("${spring.data.redis.port}")
     private int port;
-    @Value(("${spring.data.redis.channels.premium_bought_channel.name}"))
+    @Value("${spring.data.redis.channel.premium_bought.name}")
     private String premiumBoughtChannelName;
 
     @Bean
@@ -41,21 +40,21 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter premiumBoughtListener() {
-        return new MessageListenerAdapter(eventListener);
+    MessageListenerAdapter premiumBoughtListener(PremiumBoughtEventListener premiumBoughtEventListener) {
+        return new MessageListenerAdapter(premiumBoughtEventListener);
     }
 
     @Bean
-    ChannelTopic channelTopic() {
+    ChannelTopic premiumBoughtTopic() {
         return new ChannelTopic(premiumBoughtChannelName);
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(PremiumBoughtEventListener eventListener) {
+    RedisMessageListenerContainer redisContainer() {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(premiumBoughtListener(), channelTopic());
+        container.addMessageListener(premiumBoughtListener(), premiumBoughtTopic());
         return container;
     }
 
