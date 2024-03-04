@@ -20,8 +20,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 public class RedisMessageSubscriber implements MessageListener {
-    private static final Logger logger =
-            LoggerFactory.getLogger(RedisMessageSubscriber.class);
     private final ApplicationEventPublisher eventPublisher;
 
     private final ObjectMapper objectMapper;
@@ -35,7 +33,7 @@ public class RedisMessageSubscriber implements MessageListener {
 
             eventPublisher.publishEvent(event);
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 }

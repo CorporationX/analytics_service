@@ -33,6 +33,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int port;
 
+    @Value("${redis.topic.name:SearchAppearanceEvent}")
+    private String topicSearchAppearanceEvent;
+
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
         System.out.println(port);
@@ -69,6 +72,6 @@ public class RedisConfig {
 
     @Bean
     ChannelTopic topic() {
-        return new ChannelTopic("SearchAppearanceEvent");
+        return new ChannelTopic(topicSearchAppearanceEvent);
     }
 }
