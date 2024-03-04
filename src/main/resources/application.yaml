@@ -23,6 +23,7 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+        recommendation: recommendation_channel
 
 server:
   port: 8086
