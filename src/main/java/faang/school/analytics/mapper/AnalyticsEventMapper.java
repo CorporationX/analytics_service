@@ -8,12 +8,12 @@ import org.mapstruct.Mappings;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface MentorshipRequestedMapper {
+public interface AnalyticsEventMapper {
     @Mappings({
             @Mapping(target = "receiverId", source = "receiverId"),
             @Mapping(target = "actorId", source = "requesterId"),
             @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.MENTORSHIP_REQUESTED)"),
-            @Mapping(target = "receivedAt", source = "timestamp")
+            @Mapping(target = "receivedAt", source = "receivedAt")
     })
     AnalyticsEvent toAnalyticsEvent(MentorshipRequestedEvent mentorshipRequestedEvent);
 }

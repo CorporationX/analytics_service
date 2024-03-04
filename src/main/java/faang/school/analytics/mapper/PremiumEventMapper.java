@@ -14,7 +14,7 @@ import org.mapstruct.ReportingPolicy;
 public interface PremiumEventMapper {
     @Mappings({
             @Mapping(target = "receiverId", source = "userId"),
-            @Mapping(target = "receivedAt", source = "timestamp"),
+            @Mapping(target = "receivedAt", source = "receivedAt"),
             @Mapping(target = "eventType", expression = "java(getEventType(premiumEvent))"),
             @Mapping(target = "actorId", expression = "java(getEventType(premiumEvent).ordinal())")
     })

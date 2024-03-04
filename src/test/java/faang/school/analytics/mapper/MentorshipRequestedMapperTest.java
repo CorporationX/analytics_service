@@ -12,15 +12,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class MentorshipRequestedMapperTest {
-    private final MentorshipRequestedMapper mentorshipRequestedMapper = new MentorshipRequestedMapperImpl();
+    private final AnalyticsEventMapper analyticsEventMapper = new AnalyticsEventMapperImpl();
     private final MentorshipRequestedEvent event = new MentorshipRequestedEvent(1L, 2L, LocalDateTime.now());
 
     @Test
     void toAnalyticsEvent() {
-        AnalyticsEvent analyticsEvent = mentorshipRequestedMapper.toAnalyticsEvent(event);
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(event);
         assertEquals(event.getRequesterId(), analyticsEvent.getActorId());
         assertEquals(event.getReceiverId(), analyticsEvent.getReceiverId());
-        assertEquals(event.getTimestamp(), analyticsEvent.getReceivedAt());
+        assertEquals(event.getReceivedAt(), analyticsEvent.getReceivedAt());
         assertEquals(faang.school.analytics.model.EventType.MENTORSHIP_REQUESTED, analyticsEvent.getEventType());
     }
 }

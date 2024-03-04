@@ -31,7 +31,7 @@ public class RedisConfig {
     private String premiumChannelName;
 
     @Value("${spring.data.redis.channels.mentorship_topic.name}")
-    private String mentorshipRequestedTopicName;
+    private String mentorshipRequestedChannelName;
 
     private final FollowerEventListener followerEventListener;
     private final PremiumEventListener premiumEventListener;
@@ -63,8 +63,8 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic mentorshipRequestedTopic() {
-        return new ChannelTopic(mentorshipRequestedTopicName);
+    ChannelTopic mentorshipRequestedChannel() {
+        return new ChannelTopic(mentorshipRequestedChannelName);
     }
 
     @Bean
@@ -89,7 +89,7 @@ public class RedisConfig {
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener(), followerChannel());
         container.addMessageListener(premiumListener(), premiumChannel());
-        container.addMessageListener(mentorshipRequestedListener(), mentorshipRequestedTopic());
+        container.addMessageListener(mentorshipRequestedListener(), mentorshipRequestedChannel());
         return container;
     }
 }

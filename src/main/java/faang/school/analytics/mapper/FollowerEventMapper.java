@@ -13,7 +13,7 @@ public interface FollowerEventMapper {
         @Mapping(target = "receiverId", source = "followeeId"),
         @Mapping(target = "actorId", expression = "java(faang.school.analytics.model.EventType.FOLLOWER.ordinal())"),
         @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.FOLLOWER)"),
-        @Mapping(target = "receivedAt", source = "timestamp")
+        @Mapping(target = "receivedAt", source = "receivedAt")
     })
     AnalyticsEvent toAnalyticsEvent(FollowerEvent followerEvent);
 }

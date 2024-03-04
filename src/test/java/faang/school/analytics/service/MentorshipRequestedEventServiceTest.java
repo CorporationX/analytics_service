@@ -1,8 +1,8 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.MentorshipRequestedEvent;
-import faang.school.analytics.mapper.MentorshipRequestedMapper;
-import faang.school.analytics.mapper.MentorshipRequestedMapperImpl;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @ExtendWith(MockitoExtension.class)
 class MentorshipRequestedEventServiceTest {
     @Spy
-    private MentorshipRequestedMapper mentorshipRequestedMapper = new MentorshipRequestedMapperImpl();
+    private AnalyticsEventMapper mentorshipRequestedMapper = new AnalyticsEventMapperImpl();
     @Mock
     private AnalyticsEventService analyticsEventService;
     @InjectMocks
