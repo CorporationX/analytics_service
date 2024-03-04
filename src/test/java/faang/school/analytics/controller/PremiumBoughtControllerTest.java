@@ -2,7 +2,7 @@ package faang.school.analytics.controller;
 
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.service.PremiumBoughtService;
+import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +19,7 @@ class PremiumBoughtControllerTest {
     @InjectMocks
     private PremiumBoughtController premiumBoughtController;
     @Mock
-    private PremiumBoughtService premiumBoughtService;
+    private AnalyticsEventService premiumBoughtService;
 
     @Test
     void successGetAnalytics() {

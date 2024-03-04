@@ -50,11 +50,11 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer() {
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter premiumBoughtListener) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(premiumBoughtListener(), premiumBoughtTopic());
+        container.addMessageListener(premiumBoughtListener, premiumBoughtTopic());
         return container;
     }
 

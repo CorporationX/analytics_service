@@ -1,8 +1,7 @@
 package faang.school.analytics.mapper;
 
-import faang.school.analytics.dto.PremiumBoughtEventDto;
+import faang.school.analytics.dto.PremiumBoughtEvent;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Spy;
@@ -17,7 +16,7 @@ class PremiumBoughtMapperTest {
 
     @Test
     void toAnalyticsEvent() {
-        PremiumBoughtEventDto eventDto = PremiumBoughtEventDto.builder()
+        PremiumBoughtEvent eventDto = PremiumBoughtEvent.builder()
                 .receiverId(1L)
                 .amountPayment(10)
                 .daysSubscription(30)
@@ -29,18 +28,4 @@ class PremiumBoughtMapperTest {
         assertEquals(eventEntity, actualEvent);
     }
 
-    @Test
-    void successMappingToPremiumBoughtEventDto() {
-        AnalyticsEvent eventEntity = AnalyticsEvent.builder()
-                .id(1L)
-                .receiverId(1L)
-                .actorId(1L)
-                .eventType(EventType.PREMIUM_BOUGHT)
-                .build();
-        PremiumBoughtEventDto eventDto = new PremiumBoughtEventDto();
-        eventDto.setReceiverId(1L);
-
-        PremiumBoughtEventDto actualEventDto = premiumBoughtMapper.toPremiumBoughtEventDto(eventEntity);
-        assertEquals(eventDto, actualEventDto);
-    }
 }

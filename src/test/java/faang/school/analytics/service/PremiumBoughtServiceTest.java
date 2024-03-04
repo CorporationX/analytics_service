@@ -1,6 +1,6 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.dto.PremiumBoughtEventDto;
+import faang.school.analytics.dto.PremiumBoughtEvent;
 import faang.school.analytics.mapper.PremiumBoughtMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class PremiumBoughtServiceTest {
     @InjectMocks
-    private PremiumBoughtService premiumBoughtService;
+    private AnalyticsEventService premiumBoughtService;
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
     @Spy
@@ -33,7 +33,7 @@ class PremiumBoughtServiceTest {
     @Test
     void successSavedEvent() {
         LocalDateTime timeCreated = LocalDateTime.now();
-        PremiumBoughtEventDto eventDto = PremiumBoughtEventDto.builder()
+        PremiumBoughtEvent eventDto = PremiumBoughtEvent.builder()
                 .receiverId(1L)
                 .amountPayment(10)
                 .daysSubscription(30)
@@ -41,7 +41,6 @@ class PremiumBoughtServiceTest {
                 .build();
 
         AnalyticsEvent eventEntity = premiumBoughtMapper.toAnalyticsEvent(eventDto);
-        eventEntity.setEventType(EventType.PREMIUM_BOUGHT);
         premiumBoughtService.saveEvent(eventDto);
         verify(analyticsEventRepository, times(1)).save(eventEntity);
     }
