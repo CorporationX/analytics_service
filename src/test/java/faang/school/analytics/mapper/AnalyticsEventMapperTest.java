@@ -26,7 +26,6 @@ public class AnalyticsEventMapperTest {
     void setUp() {
         LocalDateTime fixedTime = LocalDateTime.of(2024, 2, 22, 20, 6, 30);
         analyticsEvent = AnalyticsEvent.builder()
-                .id(2L)
                 .actorId(1L)
                 .receiverId(3L)
                 .receivedAt(fixedTime)
@@ -41,14 +40,13 @@ public class AnalyticsEventMapperTest {
 
     @Test
     public void testMapper() {
-        assertEquals(analyticsEvent, analyticsEventMapper.toEntity(recommendationEvent));
+        assertEquals(analyticsEvent, analyticsEventMapper.recomendationEventToAnalyticsEvent(recommendationEvent));
     }
 
     @Test
     public void testMapperMentorshipRequestedEvent() {
         MentorshipRequestedEvent mentorshipRequestedEvent = new MentorshipRequestedEvent(1L, 3L, fixedTime);
-        assertEquals(analyticsEvent.getReceiverId(), analyticsEventMapper.MentorshipRequestedEventToEntity(mentorshipRequestedEvent).getReceiverId());
-        assertEquals(analyticsEvent.getActorId(), analyticsEventMapper.MentorshipRequestedEventToEntity(mentorshipRequestedEvent).getActorId());
+        assertEquals(analyticsEvent.getReceiverId(), analyticsEventMapper.mentorshipRequestedEventToAnalyticsEvent(mentorshipRequestedEvent).getReceiverId());
+        assertEquals(analyticsEvent.getActorId(), analyticsEventMapper.mentorshipRequestedEventToAnalyticsEvent(mentorshipRequestedEvent).getActorId());
     }
-
 }

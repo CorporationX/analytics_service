@@ -53,7 +53,7 @@ public class AnalyticsEventServiceTest {
 
     @Test
     public void testAnalyticsEventIsSaved() {
-        when(analyticsEventMapper.toEntity(recommendationEvent)).thenReturn(analyticsEvent);
+        when(analyticsEventMapper.recomendationEventToAnalyticsEvent(recommendationEvent)).thenReturn(analyticsEvent);
         analyticsEventService.saveRecommendationEvent(recommendationEvent);
         verify(analyticsEventRepository, times(1)).save(captor.capture());
     }
@@ -62,7 +62,7 @@ public class AnalyticsEventServiceTest {
     public void testMentorshipRequestedIsSaved() {
         MentorshipRequestedEvent mentorshipRequestedEvent = new MentorshipRequestedEvent(1L, 3L, fixedTime);
 
-        when(analyticsEventMapper.MentorshipRequestedEventToEntity(mentorshipRequestedEvent)).thenReturn(analyticsEvent);
+        when(analyticsEventMapper.mentorshipRequestedEventToAnalyticsEvent(mentorshipRequestedEvent)).thenReturn(analyticsEvent);
         analyticsEventService.saveMentorshipRequestedEvent(mentorshipRequestedEvent);
         verify(analyticsEventRepository, times(1)).save(captor.capture());
     }

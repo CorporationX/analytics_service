@@ -9,12 +9,11 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "Spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
-    @Mapping(source = "recommendationId", target = "id")
     @Mapping(source = "authorId", target = "actorId")
     @Mapping(source = "createdAt", target = "receivedAt")
-    AnalyticsEvent toEntity(RecommendationEvent recommendationEvent);
+    AnalyticsEvent recomendationEventToAnalyticsEvent(RecommendationEvent recommendationEvent);
 
     @Mapping(source = "requesterId", target = "actorId")
     @Mapping(source = "createdAt", target = "receivedAt")
-    AnalyticsEvent MentorshipRequestedEventToEntity(MentorshipRequestedEvent mentorshipRequestedEvent);
+    AnalyticsEvent mentorshipRequestedEventToAnalyticsEvent(MentorshipRequestedEvent mentorshipRequestedEvent);
 }
