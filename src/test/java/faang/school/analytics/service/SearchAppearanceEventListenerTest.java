@@ -1,38 +1,45 @@
 package faang.school.analytics.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.event.SearchAppearanceEvent;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
-import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.listener.SearchAppearanceEventListener;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.redis.connection.Message;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class SearchAppearanceEventListenerTest {
     @Mock
-    private AnalyticsEventService analyticsEventService;
+    private ApplicationEventPublisher eventPublisher;
+
     @Mock
-    private AnalyticsEventMapper analyticsEventMapper;
+    private ObjectMapper objectMapper;
     @InjectMocks
     private SearchAppearanceEventListener searchAppearanceEventListener;
 
     @Test
-    public void testOnApplicationEventSaveAnalyticsEvent() {
-        SearchAppearanceEvent searchAppearanceEvent = new SearchAppearanceEvent(1L, 2L, LocalDateTime.now());
-        AnalyticsEvent analyticsEvent = new AnalyticsEvent();
-        analyticsEvent.setReceiverId(1L);
-        analyticsEvent.setActorId(2L);
-        analyticsEvent.setReceivedAt(LocalDateTime.now());
+    public void testOnMessageWhenValidMessage() throws IOException {
+        Message message = mock(Message.class);
+        when(message.getBody()).thenReturn("valid message".getBytes());
+        when(objectMapper.readValue(any(String.class), eq(SearchAppearanceEvent.class)))
+                .thenReturn(new SearchAppearanceEvent(1L, 2L, LocalDateTime.now()));
 
-        Mockito.when(analyticsEventMapper.toAnalyticsEvent(searchAppearanceEvent)).thenReturn(analyticsEvent);
+        searchAppearanceEventListener.onMessage(message, null);
 
-        searchAppearanceEventListener.onApplicationEvent(searchAppearanceEvent);
-
-        Mockito.verify(analyticsEventService, Mockito.times(1)).save(analyticsEvent);
+        verify(eventPublisher, times(1)).publishEvent(any(SearchAppearanceEvent.class));
     }
 }

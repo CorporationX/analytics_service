@@ -1,14 +1,13 @@
-package faang.school.analytics.service;
+package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.event.SearchAppearanceEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,10 +15,10 @@ import java.io.IOException;
 /**
  * @author Alexander Bulgakov
  */
-@Service
+@Component
 @RequiredArgsConstructor
 @Slf4j
-public class RedisMessageSubscriber implements MessageListener {
+public class SearchAppearanceEventListener implements MessageListener {
     private final ApplicationEventPublisher eventPublisher;
 
     private final ObjectMapper objectMapper;

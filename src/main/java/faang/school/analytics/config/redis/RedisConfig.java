@@ -1,7 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.service.RedisMessageSubscriber;
+import faang.school.analytics.listener.SearchAppearanceEventListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -65,8 +65,8 @@ public class RedisConfig {
 
     @Bean
     MessageListenerAdapter messageListenerAdapter() {
-        RedisMessageSubscriber subscriber =
-                new RedisMessageSubscriber(eventPublisher, objectMapper);
+        SearchAppearanceEventListener subscriber =
+                new SearchAppearanceEventListener(eventPublisher, objectMapper);
         return new MessageListenerAdapter(subscriber);
     }
 
