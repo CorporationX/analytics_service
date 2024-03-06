@@ -2,6 +2,9 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.event.SearchAppearanceEvent;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -19,7 +22,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 public class SearchAppearanceEventListener implements MessageListener {
-    private final ApplicationEventPublisher eventPublisher;
+    private final AnalyticsEventService analyticsEventService;
+    private final AnalyticsEventMapper analyticsEventMapper;
 
     private final ObjectMapper objectMapper;
 
@@ -30,7 +34,8 @@ public class SearchAppearanceEventListener implements MessageListener {
             SearchAppearanceEvent event = objectMapper
                     .readValue(messageBody, SearchAppearanceEvent.class);
 
-            eventPublisher.publishEvent(event);
+            AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(event);
+            analyticsEventService.save(analyticsEvent);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
