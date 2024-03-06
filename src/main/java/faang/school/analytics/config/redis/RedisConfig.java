@@ -2,6 +2,8 @@ package faang.school.analytics.config.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.listener.SearchAppearanceEventListener;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.service.AnalyticsEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -23,8 +25,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
     @Autowired
-    private ApplicationEventPublisher eventPublisher;
-
+    private AnalyticsEventService analyticsEventService;
+    @Autowired
+    private AnalyticsEventMapper analyticsEventMapper;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -66,7 +69,10 @@ public class RedisConfig {
     @Bean
     MessageListenerAdapter messageListenerAdapter() {
         SearchAppearanceEventListener subscriber =
-                new SearchAppearanceEventListener(eventPublisher, objectMapper);
+                new SearchAppearanceEventListener(
+                        analyticsEventService,
+                        analyticsEventMapper,
+                        objectMapper);
         return new MessageListenerAdapter(subscriber);
     }
 
