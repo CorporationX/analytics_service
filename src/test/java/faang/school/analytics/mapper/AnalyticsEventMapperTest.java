@@ -4,6 +4,7 @@ import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.GoalCompletedEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
+import faang.school.analytics.dto.CommentEventDto;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -42,5 +43,25 @@ class AnalyticsEventMapperTest {
         GoalCompletedEvent goalCompletedEvent = GoalCompletedEvent.builder().build();
         AnalyticsEvent analyticsEvent = AnalyticsEvent.builder().eventType(EventType.GOAL_COMPLETED).build();
         assertEquals(analyticsEvent, analyticsEventMapper.toAnalyticsEvent(goalCompletedEvent));
+    }
+
+    @Test
+    void testToEntity() {
+        // Arrange
+        CommentEventDto commentEvent = CommentEventDto.builder()
+                .authorId(1L)
+                .receiverId(10L)
+                .createdAt(LocalDateTime.now()).build();
+
+        // Act
+        AnalyticsEvent entity = analyticsEventMapper.toAnalyticsEvent(commentEvent);
+
+        // Assert
+        assertAll(
+                () -> assertEquals(entity.getActorId(), commentEvent.getAuthorId()),
+                () -> assertEquals(entity.getReceiverId(), commentEvent.getReceiverId()),
+                () -> assertEquals(entity.getReceivedAt(), commentEvent.getCreatedAt()),
+                () -> assertEquals(entity.getEventType(), EventType.POST_COMMENT)
+        );
     }
 }

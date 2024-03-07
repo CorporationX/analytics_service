@@ -1,5 +1,6 @@
 package faang.school.analytics.config;
 
+import faang.school.analytics.listener.CommentEventListener;
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.PremiumEventListener;
@@ -20,22 +21,21 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
     @Value("${spring.data.redis.host}")
     private String redisHost;
-
     @Value("${spring.data.redis.port}")
     private int redisPort;
-
     @Value("${spring.data.redis.channels.follower_channel.name}")
     private String followerChannelName;
-
     @Value("${spring.data.redis.channels.premium_channel.name}")
     private String premiumChannelName;
+    @Value("${spring.data.redis.channels.comment_channel.name}")
+    private String commentChannelName;
 
     @Value("${spring.data.redis.channels.goal_completed_channel.name}")
     private String goalCompletedChannelName;
 
     private final FollowerEventListener followerEventListener;
-
     private final PremiumEventListener premiumEventListener;
+    private final CommentEventListener commentEventListener;
 
     private final GoalCompletedEventListener goalCompletedEventListener;
 
@@ -70,6 +70,11 @@ public class RedisConfig {
     }
 
     @Bean
+    ChannelTopic commentChannel() {
+        return new ChannelTopic(commentChannelName);
+    }
+
+    @Bean
     MessageListenerAdapter followerListener() {
         return new MessageListenerAdapter(followerEventListener);
     }
@@ -85,6 +90,11 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter commentListener() {
+        return new MessageListenerAdapter(commentEventListener);
+    }
+
+    @Bean
     RedisMessageListenerContainer redisContainer() {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
@@ -92,6 +102,7 @@ public class RedisConfig {
         container.addMessageListener(followerListener(), followerChannel());
         container.addMessageListener(premiumListener(), premiumChannel());
         container.addMessageListener(goalCompletedListener(), goalCompletedChannel());
+        container.addMessageListener(commentListener(), commentChannel());
         return container;
     }
 }

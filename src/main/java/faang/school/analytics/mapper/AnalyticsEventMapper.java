@@ -1,6 +1,7 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.dto.FollowerEvent;
 import faang.school.analytics.dto.GoalCompletedEvent;
 import faang.school.analytics.dto.premium.PremiumEvent;
@@ -18,26 +19,27 @@ public interface AnalyticsEventMapper {
 
     AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
 
+    @Mapping(target = "actorId", source = "authorId")
+    @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.POST_COMMENT)")
+    @Mapping(target = "receivedAt", source = "createdAt")
+    AnalyticsEvent toAnalyticsEvent(CommentEventDto commentEventDto);
+
     @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.GOAL_COMPLETED)")
     @Mapping(target = "receivedAt", source = "goalCompletedAt")
     @Mapping(target = "receiverId", source = "userId")
     @Mapping(target = "actorId", source = "goalId")
     AnalyticsEvent toAnalyticsEvent(GoalCompletedEvent goalCompletedEvent);
 
-    @Mappings({
-            @Mapping(target = "receiverId", source = "followeeId"),
-            @Mapping(target = "actorId", expression = "java(faang.school.analytics.model.EventType.FOLLOWER.ordinal())"),
-            @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.FOLLOWER)"),
-            @Mapping(target = "receivedAt", source = "timestamp")
-    })
+    @Mapping(target = "receiverId", source = "followeeId")
+    @Mapping(target = "actorId", expression = "java(faang.school.analytics.model.EventType.FOLLOWER.ordinal())")
+    @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.FOLLOWER)")
+    @Mapping(target = "receivedAt", source = "timestamp")
     AnalyticsEvent toAnalyticsEvent(FollowerEvent followerEvent);
 
-    @Mappings({
-            @Mapping(target = "receiverId", source = "userId"),
-            @Mapping(target = "receivedAt", source = "timestamp"),
-            @Mapping(target = "eventType", expression = "java(getEventType(premiumEvent))"),
-            @Mapping(target = "actorId", expression = "java(getEventType(premiumEvent).ordinal())")
-    })
+    @Mapping(target = "receiverId", source = "userId")
+    @Mapping(target = "receivedAt", source = "timestamp")
+    @Mapping(target = "eventType", expression = "java(getEventType(premiumEvent))")
+    @Mapping(target = "actorId", expression = "java(getEventType(premiumEvent).ordinal())")
     AnalyticsEvent toAnalyticsEvent(PremiumEvent premiumEvent);
 
     default EventType getEventType(PremiumEvent premiumEvent) {

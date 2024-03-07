@@ -1,6 +1,7 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 public abstract class AbstractEventListener<T> implements MessageListener {
     private ObjectMapper objectMapper;
@@ -17,6 +19,7 @@ public abstract class AbstractEventListener<T> implements MessageListener {
     public void setObjectMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
+
     public AbstractEventListener(Class<T> eventType) {
         this.eventType = eventType;
     }
@@ -27,6 +30,7 @@ public abstract class AbstractEventListener<T> implements MessageListener {
             T event = objectMapper.readValue(message.getBody(), eventType);
             processEvent(event);
         } catch (IOException e) {
+            log.error("Error processing incoming event - " + message, e);
             e.printStackTrace();
         }
     }
