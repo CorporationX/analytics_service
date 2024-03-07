@@ -22,10 +22,9 @@ spring:
       port: 6379
       host: localhost
       channel:
-        profile-view:
-          name: profile_view_channel
-        follower_channel:
-          name: follower_channel
+        profile-view: profile_view_channel
+        recommendation: recommendation_channel
+        follower_channel: follower_channel
 
 server:
   port: 8086

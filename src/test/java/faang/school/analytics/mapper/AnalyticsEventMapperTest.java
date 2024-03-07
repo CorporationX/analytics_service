@@ -1,6 +1,10 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.follower.FollowerEventDto;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import faang.school.analytics.dto.RecommendationEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +23,10 @@ class AnalyticsEventMapperTest {
     @Spy
     private AnalyticsEventMapper analyticsEventMapper = Mappers.getMapper(AnalyticsEventMapper.class);
     private AnalyticsEvent event;
+    private AnalyticsEvent recommendationAnaliticsEvent;
     private FollowerEventDto eventDto;
+
+    private RecommendationEvent recommendationEvent;
 
     @BeforeEach
     void setUp() {
@@ -32,15 +39,35 @@ class AnalyticsEventMapperTest {
                 .receivedAt(fixedTime)
                 .build();
 
+        recommendationAnaliticsEvent = AnalyticsEvent.builder()
+                .id(2L)
+                .receiverId(3L)
+                .actorId(1L)
+                .receivedAt(fixedTime)
+                .build();
+
         eventDto = FollowerEventDto.builder()
                 .followeeId(1L)
                 .followerId(2L)
                 .subscriptionTime(fixedTime)
                 .build();
+
+        recommendationEvent = RecommendationEvent.builder()
+                .authorId(1L)
+                .recommendationId(2L)
+                .receiverId(3L)
+                .createdAt(fixedTime)
+                .build();
+    }
+
+    @Test
+    public void testMapper() {
+        assertEquals(recommendationAnaliticsEvent, analyticsEventMapper.toEntity(recommendationEvent));
     }
 
     @Test
     void testToEntity() {
         assertEquals(event, analyticsEventMapper.toEntity(eventDto));
     }
+
 }
