@@ -2,6 +2,7 @@ package faang.school.analytics.config;
 
 import faang.school.analytics.listener.CommentEventListener;
 import faang.school.analytics.listener.FollowerEventListener;
+import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.PremiumEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,9 +30,14 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.comment_channel.name}")
     private String commentChannelName;
 
+    @Value("${spring.data.redis.channels.goal_completed_channel.name}")
+    private String goalCompletedChannelName;
+
     private final FollowerEventListener followerEventListener;
     private final PremiumEventListener premiumEventListener;
     private final CommentEventListener commentEventListener;
+
+    private final GoalCompletedEventListener goalCompletedEventListener;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -59,6 +65,11 @@ public class RedisConfig {
     }
 
     @Bean
+    ChannelTopic goalCompletedChannel() {
+        return new ChannelTopic(goalCompletedChannelName);
+    }
+
+    @Bean
     MessageListenerAdapter followerListener() {
         return new MessageListenerAdapter(followerEventListener);
     }
@@ -66,6 +77,11 @@ public class RedisConfig {
     @Bean
     MessageListenerAdapter premiumListener() {
         return new MessageListenerAdapter(premiumEventListener);
+    }
+
+    @Bean
+    MessageListenerAdapter goalCompletedListener() {
+        return new MessageListenerAdapter(goalCompletedEventListener);
     }
 
     @Bean
@@ -85,6 +101,7 @@ public class RedisConfig {
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener(), followerChannel());
         container.addMessageListener(premiumListener(), premiumChannel());
+        container.addMessageListener(goalCompletedListener(), goalCompletedChannel());
         container.addMessageListener(commentListener(), commentChannel());
         return container;
     }
