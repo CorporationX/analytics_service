@@ -1,6 +1,7 @@
 package faang.school.analytics.controller;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -34,8 +35,10 @@ public class AnalyticsEventController {
 
         analyticsEventValidator.validateRequest(interval, fromDate, toDate);
         @Nullable Interval intervalEnum = convertAnalyticsParam.convertInterval(interval);
-        @Nullable LocalDateTime from = convertAnalyticsParam.convertFromDate(fromDate);
-        @Nullable LocalDateTime to = convertAnalyticsParam.convertToDate(toDate);
+        @Nullable LocalDateTime from = convertAnalyticsParam.convertFromDate(fromDate)
+                .orElse(null);
+        @Nullable LocalDateTime to = convertAnalyticsParam.convertToDate(toDate)
+                .orElse(null);
 
         return analyticsEventService.getAnalytics(receiverId, EventType.valueOf(eventType),
                 intervalEnum, from, to);

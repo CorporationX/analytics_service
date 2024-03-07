@@ -9,13 +9,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.Optional;
 
 @Slf4j
 @Component
 public class ConvertAnalyticsParam {
 
     public Interval convertInterval(String interval) {
-
         if (interval != null) {
             try {
                 return Interval.valueOf(interval);
@@ -27,16 +27,11 @@ public class ConvertAnalyticsParam {
         } else return null;
     }
 
-    public LocalDateTime convertFromDate(LocalDate date) {
-        if (date != null) {
-            return LocalDateTime.of(date, LocalTime.MIN);
-        } else return null;
+    public Optional<LocalDateTime> convertFromDate(LocalDate date) {
+        return Optional.ofNullable(date).map(id -> LocalDateTime.of(id, LocalTime.MIN));
     }
 
-    public LocalDateTime convertToDate(LocalDate date) {
-
-        if (date != null) {
-            return LocalDateTime.of(date, LocalTime.MAX);
-        } else return null;
+    public Optional<LocalDateTime> convertToDate(LocalDate date) {
+        return Optional.ofNullable(date).map(id -> LocalDateTime.of(id, LocalTime.MAX));
     }
 }

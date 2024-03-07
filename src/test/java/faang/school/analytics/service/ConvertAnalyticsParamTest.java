@@ -47,7 +47,7 @@ class ConvertAnalyticsParamTest {
     @Test
     void testConvertFromDate_whenInputDateNotNull_thenConvertToDataTime() {
         // Act
-        LocalDateTime result = convertAnalyticsParam.convertFromDate(date);
+        LocalDateTime result = convertAnalyticsParam.convertFromDate(date).get();
         // Assert
         assertEquals(result.toLocalDate(), date);
     }
@@ -55,7 +55,7 @@ class ConvertAnalyticsParamTest {
     @Test
     void testConvertFromDate_whenInputDateNull_thenReturnNull() {
         // Act
-        LocalDateTime result = convertAnalyticsParam.convertFromDate(dateNull);
+        LocalDateTime result = convertAnalyticsParam.convertFromDate(dateNull).orElse(null);
         // Assert
         assertEquals(result, null);
     }
@@ -63,7 +63,7 @@ class ConvertAnalyticsParamTest {
     @Test
     void testConvertToDate_whenInputDateNotNull_thenConvertToDataTime() {
         // Act
-        LocalDateTime result = convertAnalyticsParam.convertToDate(date);
+        LocalDateTime result = convertAnalyticsParam.convertToDate(date).get();
         // Assert
         assertEquals(result.toLocalDate(), date);
     }
@@ -71,7 +71,7 @@ class ConvertAnalyticsParamTest {
     @Test
     void testConvertToDate_whenInputDateNull_thenReturnNull() {
         // Act
-        LocalDateTime result = convertAnalyticsParam.convertToDate(dateNull);
+        LocalDateTime result = convertAnalyticsParam.convertToDate(dateNull).orElse(null);
         // Assert
         assertEquals(result, null);
     }

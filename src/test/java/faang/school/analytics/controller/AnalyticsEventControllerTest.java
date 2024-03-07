@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -44,8 +45,8 @@ class AnalyticsEventControllerTest {
         LocalDateTime toConvert = LocalDateTime.now();
 
         when(convertAnalyticsParam.convertInterval(interval)).thenReturn(intervalConvert);
-        when(convertAnalyticsParam.convertFromDate(from)).thenReturn(fromConvert);
-        when(convertAnalyticsParam.convertToDate(to)).thenReturn(toConvert);
+        when(convertAnalyticsParam.convertFromDate(from)).thenReturn(Optional.of(fromConvert));
+        when(convertAnalyticsParam.convertToDate(to)).thenReturn(Optional.of(toConvert));
 
         // Act
         analyticsEventController.getAnalytics(recieverId, event, interval, from, to);
