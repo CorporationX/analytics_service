@@ -1,20 +1,23 @@
 package faang.school.analytics.listener;
 
 import faang.school.analytics.dto.FollowerEvent;
-import faang.school.analytics.service.FollowerEventService;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.service.AnalyticsEventService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FollowerEventListener extends AbstractEventListener<FollowerEvent> {
-    private final FollowerEventService followerEventService;
+    private final AnalyticsEventMapper analyticsEventMapper;
+    private final AnalyticsEventService analyticsEventService;
 
-    public FollowerEventListener(FollowerEventService followerEventService) {
+    public FollowerEventListener(AnalyticsEventMapper analyticsEventMapper, AnalyticsEventService analyticsEventService) {
         super(FollowerEvent.class);
-        this.followerEventService = followerEventService;
+        this.analyticsEventMapper = analyticsEventMapper;
+        this.analyticsEventService = analyticsEventService;
     }
 
     @Override
     protected void processEvent(FollowerEvent event) {
-        followerEventService.save(event);
+        analyticsEventService.saveEvent(analyticsEventMapper.toAnalyticsEvent(event));
     }
 }
