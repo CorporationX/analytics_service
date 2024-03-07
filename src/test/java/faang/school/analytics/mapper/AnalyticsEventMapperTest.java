@@ -5,11 +5,6 @@ import faang.school.analytics.dto.GoalCompletedEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.junit.jupiter.api.Test;
-import faang.school.analytics.dto.GoalCompletedEvent;
-import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
-import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
 
 import java.time.LocalDateTime;
 
@@ -23,7 +18,7 @@ class AnalyticsEventMapperTest {
     void testToDto() {
         // Arrange
         AnalyticsEvent analyticsEvent = AnalyticsEvent.builder()
-                .id(1l)
+                .id(1L)
                 .receivedAt(LocalDateTime.now())
                 .receiverId(10L)
                 .eventType(EventType.POST_VIEW)

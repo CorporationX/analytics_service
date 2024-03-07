@@ -1,8 +1,6 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.model.AnalyticsEvent;
-import org.mapstruct.Mapper;
 import faang.school.analytics.dto.FollowerEvent;
 import faang.school.analytics.dto.GoalCompletedEvent;
 import faang.school.analytics.dto.premium.PremiumEvent;
@@ -20,7 +18,6 @@ public interface AnalyticsEventMapper {
 
     AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
 
-}
     @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.GOAL_COMPLETED)")
     @Mapping(target = "receivedAt", source = "goalCompletedAt")
     @Mapping(target = "receiverId", source = "userId")
