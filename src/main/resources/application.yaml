@@ -24,6 +24,7 @@ spring:
       channel:
         profile-view: profile_view_channel
         recommendation: recommendation_channel
+        follower_channel: follower_channel
 
 server:
   port: 8086

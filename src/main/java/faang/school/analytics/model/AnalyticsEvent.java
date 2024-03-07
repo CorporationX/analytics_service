@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name="analytics_event")
-public class AnalyticsEvent {
+public class  AnalyticsEvent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.RecommendationEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,13 +15,15 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
+
     @Value("${spring.data.redis.host}")
     private String redisHost;
     @Value("${spring.data.redis.port}")
     private int redisPort;
+    @Value("${spring.data.redis.channel.follower_channel}")
+    private String followerEventTopic;
     @Value("${spring.data.redis.channel.recommendation}")
     private String recommendationChannelName;
-
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -48,11 +51,22 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationListener) {
+    MessageListenerAdapter followerListener(FollowerEventListener followerEventListener) {
+        return new MessageListenerAdapter(followerEventListener);
+    }
+
+    @Bean
+    ChannelTopic followerTopic() {
+        return new ChannelTopic(followerEventTopic);
+    }
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationListener, MessageListenerAdapter followerEventListener) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(recommendationListener, recommendationTopic());
+        container.addMessageListener(followerEventListener, followerTopic());
         return container;
     }
 }

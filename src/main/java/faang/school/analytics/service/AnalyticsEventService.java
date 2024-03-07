@@ -1,6 +1,7 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.RecommendationEvent;
+import faang.school.analytics.dto.follower.FollowerEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -21,5 +22,13 @@ public class AnalyticsEventService {
         analyticsEvent.setEventType(EventType.RECOMMENDATION_RECEIVED);
         analyticsEventRepository.save(analyticsEvent);
         log.info(recommendationEvent + " is saved to DB");
+    }
+
+    public void saveFollowerEvent(FollowerEventDto followerEventDto) {
+        AnalyticsEvent followerEvent = analyticsEventMapper.toEntity(followerEventDto);
+        followerEvent.setEventType(EventType.FOLLOWER);
+        log.info("Старт saveAnalyticsEvent: {}", followerEventDto);
+        analyticsEventRepository.save(followerEvent);
+        log.info("Сохранен AnalyticsEvent - {} ", followerEvent);
     }
 }
