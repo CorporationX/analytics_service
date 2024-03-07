@@ -4,6 +4,7 @@ import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.dto.FollowerEvent;
 import faang.school.analytics.dto.GoalCompletedEvent;
+import faang.school.analytics.dto.MentorshipRequestedEvent;
 import faang.school.analytics.dto.premium.PremiumEvent;
 import faang.school.analytics.dto.premium.PremiumPeriod;
 import faang.school.analytics.exception.DataValidationException;
@@ -33,14 +34,20 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "receiverId", source = "followeeId")
     @Mapping(target = "actorId", expression = "java(faang.school.analytics.model.EventType.FOLLOWER.ordinal())")
     @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.FOLLOWER)")
-    @Mapping(target = "receivedAt", source = "timestamp")
+    @Mapping(target = "receivedAt", source = "receivedAt")
     AnalyticsEvent toAnalyticsEvent(FollowerEvent followerEvent);
 
     @Mapping(target = "receiverId", source = "userId")
-    @Mapping(target = "receivedAt", source = "timestamp")
+    @Mapping(target = "receivedAt", source = "receivedAt")
     @Mapping(target = "eventType", expression = "java(getEventType(premiumEvent))")
     @Mapping(target = "actorId", expression = "java(getEventType(premiumEvent).ordinal())")
     AnalyticsEvent toAnalyticsEvent(PremiumEvent premiumEvent);
+
+    @Mapping(target = "receiverId", source = "receiverId")
+    @Mapping(target = "actorId", source = "requesterId")
+    @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.MENTORSHIP_REQUESTED)")
+    @Mapping(target = "receivedAt", source = "receivedAt")
+    AnalyticsEvent toAnalyticsEvent(MentorshipRequestedEvent mentorshipRequestedEvent);
 
     default EventType getEventType(PremiumEvent premiumEvent) {
         if (premiumEvent.getPremiumPeriod() == PremiumPeriod.ONE_MONTH) {

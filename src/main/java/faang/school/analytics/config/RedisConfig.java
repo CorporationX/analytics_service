@@ -4,6 +4,7 @@ import faang.school.analytics.listener.CommentEventListener;
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.PremiumEventListener;
+import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -33,11 +34,14 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.goal_completed_channel.name}")
     private String goalCompletedChannelName;
 
+    @Value("${spring.data.redis.channels.mentorship_topic.name}")
+    private String mentorshipRequestedChannelName;
+
     private final FollowerEventListener followerEventListener;
     private final PremiumEventListener premiumEventListener;
     private final CommentEventListener commentEventListener;
-
     private final GoalCompletedEventListener goalCompletedEventListener;
+    private final MentorshipRequestedEventListener mentorshipRequestedEventListener;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -75,6 +79,11 @@ public class RedisConfig {
     }
 
     @Bean
+    ChannelTopic mentorshipRequestedChannel() {
+        return new ChannelTopic(mentorshipRequestedChannelName);
+    }
+
+    @Bean
     MessageListenerAdapter followerListener() {
         return new MessageListenerAdapter(followerEventListener);
     }
@@ -95,14 +104,20 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter mentorshipRequestedListener() {
+        return new MessageListenerAdapter(mentorshipRequestedEventListener);
+    }
+
+    @Bean
     RedisMessageListenerContainer redisContainer() {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener(), followerChannel());
         container.addMessageListener(premiumListener(), premiumChannel());
-        container.addMessageListener(goalCompletedListener(), goalCompletedChannel());
+        container.addMessageListener(mentorshipRequestedListener(), mentorshipRequestedChannel());
         container.addMessageListener(commentListener(), commentChannel());
+        container.addMessageListener(goalCompletedListener(), goalCompletedChannel());
         return container;
     }
 }
