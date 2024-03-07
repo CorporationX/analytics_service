@@ -1,19 +1,23 @@
 package faang.school.analytics.listener;
 
 import faang.school.analytics.dto.GoalCompletedEvent;
-import faang.school.analytics.service.GoalCompletedEventService;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.service.AnalyticsEventService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GoalCompletedEventListener extends AbstractEventListener<GoalCompletedEvent> {
-    private final GoalCompletedEventService goalCompletedEventService;
-    public GoalCompletedEventListener(GoalCompletedEventService goalCompletedEventService) {
+    private final AnalyticsEventService analyticsEventService;
+    private final AnalyticsEventMapper analyticsEventMapper;
+    public GoalCompletedEventListener(AnalyticsEventService analyticsEventService,
+                                      AnalyticsEventMapper analyticsEventMapper) {
         super(GoalCompletedEvent.class);
-        this.goalCompletedEventService = goalCompletedEventService;
+        this.analyticsEventService = analyticsEventService;
+        this.analyticsEventMapper = analyticsEventMapper;
     }
 
     @Override
     public void processEvent(GoalCompletedEvent event) {
-        goalCompletedEventService.save(event);
+        analyticsEventService.saveEvent(analyticsEventMapper.toAnalyticsEvent(event));
     }
 }

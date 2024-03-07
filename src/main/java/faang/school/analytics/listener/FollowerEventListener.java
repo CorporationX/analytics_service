@@ -18,6 +18,6 @@ public class FollowerEventListener extends AbstractEventListener<FollowerEvent> 
 
     @Override
     protected void processEvent(FollowerEvent event) {
-        analyticsEventService.saveEvent(analyticsEventMapper.toEntity(event));
+        analyticsEventService.saveEvent(analyticsEventMapper.toAnalyticsEvent(event));
     }
 }

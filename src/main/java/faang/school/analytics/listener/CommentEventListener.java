@@ -23,6 +23,6 @@ public class CommentEventListener extends AbstractEventListener<CommentEventDto>
     @Override
     protected void processEvent(CommentEventDto event) {
         log.info("Start processing an incoming event - {}", event);
-        analyticsEventService.saveEvent(analyticsEventMapper.toEntity(event));
+        analyticsEventService.saveEvent(analyticsEventMapper.toAnalyticsEvent(event));
     }
 }

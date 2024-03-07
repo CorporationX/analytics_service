@@ -1,6 +1,7 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.dto.FollowerEvent;
 import faang.school.analytics.dto.GoalCompletedEvent;
 import faang.school.analytics.dto.premium.PremiumEvent;
@@ -21,7 +22,7 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "actorId", source = "authorId")
     @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.POST_COMMENT)")
     @Mapping(target = "receivedAt", source = "createdAt")
-    AnalyticsEvent toEntity(CommentEventDto commentEventDto);
+    AnalyticsEvent toAnalyticsEvent(CommentEventDto commentEventDto);
 
     @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.GOAL_COMPLETED)")
     @Mapping(target = "receivedAt", source = "goalCompletedAt")

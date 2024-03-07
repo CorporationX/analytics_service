@@ -18,6 +18,6 @@ public class PremiumEventListener extends AbstractEventListener<PremiumEvent> {
 
     @Override
     protected void processEvent(PremiumEvent event) {
-        analyticsEventService.saveEvent(analyticsEventMapper.toEntity(event));
+        analyticsEventService.saveEvent(analyticsEventMapper.toAnalyticsEvent(event));
     }
 }
