@@ -26,9 +26,6 @@ class GoalCompletedEventListenerTest {
     private AnalyticsEventRepository analyticsEventRepository;
     @Spy
     private AnalyticsEventMapperImpl analyticsEventMapper;
-    @Captor
-    private ArgumentCaptor<AnalyticsEvent> argumentCaptor;
-
 
 
     @Test
@@ -37,6 +34,6 @@ class GoalCompletedEventListenerTest {
         goalCompletedEventListener.processEvent(goalCompletedEvent);
         verify(analyticsEventMapper, times(1)).toAnalyticsEvent(goalCompletedEvent);
         verify(analyticsEventService, times(1)).
-                saveEvent(AnalyticsEvent.builder().eventType(EventType.GOAL_COMPLETED).build());
+        saveEvent(AnalyticsEvent.builder().eventType(EventType.GOAL_COMPLETED).build());
     }
 }

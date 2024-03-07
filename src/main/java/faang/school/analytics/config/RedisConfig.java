@@ -4,6 +4,7 @@ import faang.school.analytics.listener.CommentEventListener;
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.PremiumEventListener;
+import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -39,7 +40,6 @@ public class RedisConfig {
     private final FollowerEventListener followerEventListener;
     private final PremiumEventListener premiumEventListener;
     private final CommentEventListener commentEventListener;
-
     private final GoalCompletedEventListener goalCompletedEventListener;
     private final MentorshipRequestedEventListener mentorshipRequestedEventListener;
 
@@ -116,6 +116,8 @@ public class RedisConfig {
         container.addMessageListener(followerListener(), followerChannel());
         container.addMessageListener(premiumListener(), premiumChannel());
         container.addMessageListener(mentorshipRequestedListener(), mentorshipRequestedChannel());
+        container.addMessageListener(commentListener(), commentChannel());
+        container.addMessageListener(goalCompletedListener(), goalCompletedChannel());
         return container;
     }
 }
