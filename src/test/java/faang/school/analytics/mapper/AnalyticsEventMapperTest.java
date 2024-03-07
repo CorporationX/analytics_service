@@ -4,6 +4,7 @@ import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.GoalCompletedEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
+import faang.school.analytics.dto.CommentEventDto;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -53,7 +54,7 @@ class AnalyticsEventMapperTest {
                 .createdAt(LocalDateTime.now()).build();
 
         // Act
-        AnalyticsEvent entity = analyticsEventMapper.toEntity(commentEvent);
+        AnalyticsEvent entity = analyticsEventMapper.toAnalyticsEvent(commentEvent);
 
         // Assert
         assertAll(

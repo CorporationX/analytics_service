@@ -3,8 +3,9 @@ package faang.school.analytics.service;
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
+import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,13 +17,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AnalyticsEventServiceTest {
@@ -38,11 +33,6 @@ class AnalyticsEventServiceTest {
     private final EventType event = EventType.POST_COMMENT;
     private final LocalDateTime from = LocalDateTime.now().minusDays(1);
     private final LocalDateTime to = LocalDateTime.now();
-
-    @Mock
-    private AnalyticsEventRepository analyticsEventRepository;
-    @InjectMocks
-    private AnalyticsEventService analyticsEventService;
 
     @Test
     void testSaveEvent() {
