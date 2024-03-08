@@ -1,6 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.MentorshipRequestedEventListener;
+import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.RecommendationEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,10 +16,13 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
+
     @Value("${spring.data.redis.host}")
     private String redisHost;
     @Value("${spring.data.redis.port}")
     private int redisPort;
+    @Value("${spring.data.redis.channel.follower_channel}")
+    private String followerEventTopic;
     @Value("${spring.data.redis.channel.recommendation}")
     private String recommendationChannelName;
     @Value("${spring.data.redis.channel.mentorship-requested}")
@@ -58,14 +62,25 @@ public class RedisConfig {
     ChannelTopic mentorshipRequestedTopic() {
         return new ChannelTopic(mentorshipRequestedChannelName);
     }
+    
+    @Bean
+    MessageListenerAdapter followerListener(FollowerEventListener followerEventListener) {
+        return new MessageListenerAdapter(followerEventListener);
+    }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationListener, MessageListenerAdapter mentorshipRequestedListener) {
+    ChannelTopic followerTopic() {
+        return new ChannelTopic(followerEventTopic);
+    }
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationListener, MessageListenerAdapter followerEventListener, MessageListenerAdapter mentorshipRequestedListener) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(recommendationListener, recommendationTopic());
         container.addMessageListener(mentorshipRequestedListener, mentorshipRequestedTopic());
+        container.addMessageListener(followerEventListener, followerTopic());
         return container;
     }
 }

@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 
 import faang.school.analytics.dto.MentorshipRequestedEvent;
 import faang.school.analytics.dto.RecommendationEvent;
+import faang.school.analytics.dto.follower.FollowerEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -33,6 +34,8 @@ public class AnalyticsEventServiceTest {
     @Captor
     private ArgumentCaptor<AnalyticsEvent> captor;
     LocalDateTime fixedTime = LocalDateTime.of(2024, 2, 22, 20, 6, 30);
+    private FollowerEventDto eventDto;
+  
     @BeforeEach
     void setUp() {
         LocalDateTime fixedTime = LocalDateTime.of(2024, 2, 22, 20, 6, 30);
@@ -48,6 +51,11 @@ public class AnalyticsEventServiceTest {
                 .recommendationId(2L)
                 .receiverId(3L)
                 .createdAt(fixedTime)
+                .build();
+        eventDto = FollowerEventDto.builder()
+                .followeeId(1L)
+                .followerId(2L)
+                .subscriptionTime(LocalDateTime.now())
                 .build();
     }
 
