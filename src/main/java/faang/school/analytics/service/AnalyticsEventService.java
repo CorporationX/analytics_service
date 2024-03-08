@@ -1,5 +1,6 @@
 package faang.school.analytics.service;
 
+import faang.school.analytics.dto.MentorshipRequestedEvent;
 import faang.school.analytics.dto.RecommendationEvent;
 import faang.school.analytics.dto.follower.FollowerEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -17,11 +18,20 @@ public class AnalyticsEventService {
     private final AnalyticsEventMapper analyticsEventMapper;
     private final AnalyticsEventRepository analyticsEventRepository;
 
-    public void saveRecommendationEvent(RecommendationEvent recommendationEvent) {
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(recommendationEvent);
-        analyticsEvent.setEventType(EventType.RECOMMENDATION_RECEIVED);
+    public void saveEvent(EventType eventType, AnalyticsEvent analyticsEvent) {
+        analyticsEvent.setEventType(eventType);
         analyticsEventRepository.save(analyticsEvent);
-        log.info(recommendationEvent + " is saved to DB");
+        log.info(analyticsEvent + " is saved to DB");
+    }
+
+    public void saveRecommendationEvent(RecommendationEvent recommendationEvent) {
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.recomendationEventToAnalyticsEvent(recommendationEvent);
+        saveEvent(EventType.RECOMMENDATION_RECEIVED, analyticsEvent);
+    }
+
+    public void saveMentorshipRequestedEvent(MentorshipRequestedEvent mentorshipRequestedEvent) {
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.mentorshipRequestedEventToAnalyticsEvent(mentorshipRequestedEvent);
+        saveEvent(EventType.MENTORSHIP_REQUESTED, analyticsEvent);
     }
 
     public void saveFollowerEvent(FollowerEventDto followerEventDto) {

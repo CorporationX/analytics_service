@@ -2,6 +2,7 @@ package faang.school.analytics.service;
 
 import static org.mockito.Mockito.*;
 
+import faang.school.analytics.dto.MentorshipRequestedEvent;
 import faang.school.analytics.dto.RecommendationEvent;
 import faang.school.analytics.dto.follower.FollowerEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -32,7 +33,9 @@ public class AnalyticsEventServiceTest {
     private RecommendationEvent recommendationEvent;
     @Captor
     private ArgumentCaptor<AnalyticsEvent> captor;
+    LocalDateTime fixedTime = LocalDateTime.of(2024, 2, 22, 20, 6, 30);
     private FollowerEventDto eventDto;
+  
     @BeforeEach
     void setUp() {
         LocalDateTime fixedTime = LocalDateTime.of(2024, 2, 22, 20, 6, 30);
@@ -58,18 +61,18 @@ public class AnalyticsEventServiceTest {
 
     @Test
     public void testAnalyticsEventIsSaved() {
-        when(analyticsEventMapper.toEntity(recommendationEvent)).thenReturn(analyticsEvent);
+        when(analyticsEventMapper.recomendationEventToAnalyticsEvent(recommendationEvent)).thenReturn(analyticsEvent);
         analyticsEventService.saveRecommendationEvent(recommendationEvent);
         verify(analyticsEventRepository, times(1)).save(captor.capture());
     }
 
     @Test
-    void testWhenSaveAnalyticsEventThenEntityIsMappedAndSaved() {
-        when(analyticsEventMapper.toEntity(any(FollowerEventDto.class))).thenReturn(analyticsEvent);
-        analyticsEventService.saveFollowerEvent(eventDto);
+    public void testMentorshipRequestedIsSaved() {
+        MentorshipRequestedEvent mentorshipRequestedEvent = new MentorshipRequestedEvent(1L, 3L, fixedTime);
 
-        verify(analyticsEventMapper).toEntity(eventDto);
-        verify(analyticsEventRepository).save(captor.capture());
+        when(analyticsEventMapper.mentorshipRequestedEventToAnalyticsEvent(mentorshipRequestedEvent)).thenReturn(analyticsEvent);
+        analyticsEventService.saveMentorshipRequestedEvent(mentorshipRequestedEvent);
+        verify(analyticsEventRepository, times(1)).save(captor.capture());
     }
 
 }

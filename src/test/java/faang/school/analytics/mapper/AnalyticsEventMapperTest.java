@@ -4,6 +4,7 @@ import faang.school.analytics.dto.follower.FollowerEventDto;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import faang.school.analytics.dto.MentorshipRequestedEvent;
 import faang.school.analytics.dto.RecommendationEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,9 +28,17 @@ class AnalyticsEventMapperTest {
     private FollowerEventDto eventDto;
 
     private RecommendationEvent recommendationEvent;
+    LocalDateTime fixedTime = LocalDateTime.of(2024, 2, 22, 20, 6, 30);
 
     @BeforeEach
     void setUp() {
+        analyticsEvent = AnalyticsEvent.builder()
+                .actorId(1L)
+                .receiverId(3L)
+                .actorId(1L)
+                .receivedAt(fixedTime)
+                .build();
+      
         LocalDateTime fixedTime = LocalDateTime.of(
                 2024, Month.FEBRUARY, 20, 12, 0, 0);
 
@@ -64,6 +73,13 @@ class AnalyticsEventMapperTest {
     public void testMapper() {
         assertEquals(recommendationAnaliticsEvent, analyticsEventMapper.toEntity(recommendationEvent));
     }
+  
+    @Test
+    public void testMapperMentorshipRequestedEvent() {
+        MentorshipRequestedEvent mentorshipRequestedEvent = new MentorshipRequestedEvent(1L, 3L, fixedTime);
+        assertEquals(analyticsEvent.getReceiverId(), analyticsEventMapper.mentorshipRequestedEventToAnalyticsEvent(mentorshipRequestedEvent).getReceiverId());
+        assertEquals(analyticsEvent.getActorId(), analyticsEventMapper.mentorshipRequestedEventToAnalyticsEvent(mentorshipRequestedEvent).getActorId());
+    }
 
     @Test
     void testToEntity() {
@@ -71,3 +87,4 @@ class AnalyticsEventMapperTest {
     }
 
 }
+
