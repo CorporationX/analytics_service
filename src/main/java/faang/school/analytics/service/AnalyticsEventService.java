@@ -13,13 +13,12 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
-public class MentorshipRequestedEventService {
+public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventMapper analyticsEventMapper;
 
     public void saveEvent(MentorshipRequestedEventDto eventDto) {
         AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(eventDto);
-        analyticsEvent.setEventType(EventType.MENTORSHIP_REQUEST);
         analyticsEventRepository.save(analyticsEvent);
     }
 
