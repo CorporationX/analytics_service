@@ -15,12 +15,13 @@ import java.util.Locale;
 @RestController
 @RequiredArgsConstructor
 public class PremiumBoughtController {
-    private final AnalyticsEventService premiumBoughtService;
+
+    private final AnalyticsEventService analyticsEventService;
 
     @GetMapping("/analitics/{receiverId}")
     public List<AnalyticsEvent> getAnalytics(@PathVariable long receiverId, @RequestBody String type) {
         EventType eventType = EventType.valueOf(type.toUpperCase(Locale.ROOT));
-        return premiumBoughtService.getAnalytics(receiverId, eventType).toList();
+        return analyticsEventService.getAnalytics(receiverId, eventType);
     }
 
 }

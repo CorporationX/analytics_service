@@ -1,7 +1,7 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.PremiumBoughtEvent;
-import faang.school.analytics.mapper.PremiumBoughtMapperImpl;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
@@ -13,7 +13,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.stream.Stream;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
@@ -23,11 +23,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class PremiumBoughtServiceTest {
     @InjectMocks
-    private AnalyticsEventService premiumBoughtService;
+    private AnalyticsEventService analyticsEventService;
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
     @Spy
-    private PremiumBoughtMapperImpl premiumBoughtMapper;
+    private AnalyticsEventMapper analyticsEventMapper;
 
 
     @Test
@@ -40,9 +40,9 @@ class PremiumBoughtServiceTest {
                 .receivedAt(timeCreated)
                 .build();
 
-        AnalyticsEvent eventEntity = premiumBoughtMapper.toAnalyticsEvent(eventDto);
-        premiumBoughtService.saveEvent(eventDto);
-        verify(analyticsEventRepository, times(1)).save(eventEntity);
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(eventDto);
+        analyticsEventService.saveEvent(analyticsEvent);
+        verify(analyticsEventRepository, times(1)).save(analyticsEvent);
     }
 
     @Test
@@ -53,12 +53,13 @@ class PremiumBoughtServiceTest {
                 .eventType(EventType.PREMIUM_BOUGHT)
                 .receiverId(1L)
                 .build();
-        Stream<AnalyticsEvent> analyticsEventStream = Stream.of(analyticsEvent);
+        List<AnalyticsEvent> analyticsEventStream = List.of(analyticsEvent);
         long id = analyticsEvent.getId();
         EventType eventType = analyticsEvent.getEventType();
-        when(analyticsEventRepository.findByReceiverIdAndEventType(id, eventType)).thenReturn(analyticsEventStream);
-        Stream<AnalyticsEvent> actualAnalyticsEvents = premiumBoughtService.getAnalytics(id, eventType);
+        when(analyticsEventRepository.findByReceiverIdAndEventType(id, eventType)).thenReturn(analyticsEventStream.stream());
+        List<AnalyticsEvent> actualAnalyticsEvents = analyticsEventService.getAnalytics(id, eventType);
         verify(analyticsEventRepository, times(1)).findByReceiverIdAndEventType(id, eventType);
         assertEquals(analyticsEventStream, actualAnalyticsEvents);
     }
+
 }

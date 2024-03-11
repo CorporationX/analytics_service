@@ -23,7 +23,7 @@ spring:
       host: localhost
       channel:
         premium_bought:
-          name: premium_bought
+          name: premium_bought_channel
 
 server:
   port: 8086
