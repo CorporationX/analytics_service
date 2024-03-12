@@ -24,6 +24,7 @@ class AnalyticsEventMapperTest {
     @Spy
     private AnalyticsEventMapper analyticsEventMapper = Mappers.getMapper(AnalyticsEventMapper.class);
     private AnalyticsEvent event;
+    private AnalyticsEvent analyticsEvent;
     private AnalyticsEvent recommendationAnaliticsEvent;
     private FollowerEventDto eventDto;
 
@@ -35,13 +36,9 @@ class AnalyticsEventMapperTest {
         analyticsEvent = AnalyticsEvent.builder()
                 .actorId(1L)
                 .receiverId(3L)
-                .actorId(1L)
                 .receivedAt(fixedTime)
                 .build();
       
-        LocalDateTime fixedTime = LocalDateTime.of(
-                2024, Month.FEBRUARY, 20, 12, 0, 0);
-
         event = AnalyticsEvent.builder()
                 .receiverId(1L)
                 .actorId(2L)
@@ -71,7 +68,7 @@ class AnalyticsEventMapperTest {
 
     @Test
     public void testMapper() {
-        assertEquals(recommendationAnaliticsEvent, analyticsEventMapper.toEntity(recommendationEvent));
+        assertEquals(analyticsEvent, analyticsEventMapper.recomendationEventToAnalyticsEvent(recommendationEvent));
     }
   
     @Test
