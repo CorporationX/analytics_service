@@ -1,9 +1,11 @@
 package faang.school.analytics.mapper;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.follower.FollowerEventDto;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 import faang.school.analytics.dto.MentorshipRequestedEvent;
 import faang.school.analytics.dto.RecommendationEvent;
-import faang.school.analytics.dto.follower.FollowerEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -21,10 +24,9 @@ class AnalyticsEventMapperTest {
     @Spy
     private AnalyticsEventMapper analyticsEventMapper = Mappers.getMapper(AnalyticsEventMapper.class);
     private AnalyticsEvent event;
-    private AnalyticsEventDto analyticsEventDto;
-    private AnalyticsEvent analyticsEvent;
     private AnalyticsEvent recommendationAnaliticsEvent;
-    private FollowerEventDto followerEventDto;
+    private FollowerEventDto eventDto;
+
     private RecommendationEvent recommendationEvent;
     LocalDateTime fixedTime = LocalDateTime.of(2024, 2, 22, 20, 6, 30);
 
@@ -33,16 +35,14 @@ class AnalyticsEventMapperTest {
         analyticsEvent = AnalyticsEvent.builder()
                 .actorId(1L)
                 .receiverId(3L)
+                .actorId(1L)
                 .receivedAt(fixedTime)
                 .build();
+      
+        LocalDateTime fixedTime = LocalDateTime.of(
+                2024, Month.FEBRUARY, 20, 12, 0, 0);
 
         event = AnalyticsEvent.builder()
-                .receiverId(1L)
-                .actorId(2L)
-                .receivedAt(fixedTime)
-                .build();
-
-        analyticsEventDto = AnalyticsEventDto.builder()
                 .receiverId(1L)
                 .actorId(2L)
                 .receivedAt(fixedTime)
@@ -55,7 +55,7 @@ class AnalyticsEventMapperTest {
                 .receivedAt(fixedTime)
                 .build();
 
-        followerEventDto = FollowerEventDto.builder()
+        eventDto = FollowerEventDto.builder()
                 .followeeId(1L)
                 .followerId(2L)
                 .subscriptionTime(fixedTime)
@@ -71,9 +71,9 @@ class AnalyticsEventMapperTest {
 
     @Test
     public void testMapper() {
-        assertEquals(analyticsEvent, analyticsEventMapper.recomendationEventToAnalyticsEvent(recommendationEvent));
+        assertEquals(recommendationAnaliticsEvent, analyticsEventMapper.toEntity(recommendationEvent));
     }
-
+  
     @Test
     public void testMapperMentorshipRequestedEvent() {
         MentorshipRequestedEvent mentorshipRequestedEvent = new MentorshipRequestedEvent(1L, 3L, fixedTime);
@@ -83,12 +83,8 @@ class AnalyticsEventMapperTest {
 
     @Test
     void testToEntity() {
-        assertEquals(event, analyticsEventMapper.toEntity(followerEventDto));
+        assertEquals(event, analyticsEventMapper.toEntity(eventDto));
     }
 
-    @Test
-    void testToAnalyticsDtoSuccessful() {
-        assertEquals(analyticsEventDto, analyticsEventMapper.toAnalyticsDto(event));
-    }
 }
 
