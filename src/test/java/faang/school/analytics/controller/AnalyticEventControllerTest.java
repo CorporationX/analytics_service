@@ -39,6 +39,6 @@ public class AnalyticEventControllerTest {
     void testDelete() {
         analyticsEventController.delete(analyticsEventId);
 
-        verify(analyticsEventService, times(1)).deleteById(analyticsEventId);
+        verify(analyticsEventService, times(1)).deleteEvent(analyticsEventId);
     }
 }

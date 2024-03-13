@@ -1,6 +1,6 @@
 package faang.school.analytics.mapper;
 
-import faang.school.analytics.dto.ProjectViewEvent;
+import faang.school.analytics.dto.ProjectViewEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.junit.jupiter.api.Test;
@@ -11,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ExtendWith(MockitoExtension.class)
-public class ProjectViewEventMapperTest {
-    private final AnalyticsEventMapper<ProjectViewEvent> analyticsEventMapper = new ProjectViewEventMapperImpl();
+public class ProjectViewEventDtoMapperTest {
+    private final AnalyticsEventMapper analyticsEventMapper = new AnalyticsEventMapperImpl();
     private final EventType eventType = EventType.PROJECT_VIEW;
     private final long receiverId = 2L;
     private final long actorId = 3L;
@@ -21,21 +21,15 @@ public class ProjectViewEventMapperTest {
             .receiverId(receiverId)
             .actorId(actorId)
             .build();
-    private final ProjectViewEvent projectViewEvent = ProjectViewEvent.builder()
+    private final ProjectViewEventDto projectViewEventDto = ProjectViewEventDto.builder()
             .projectId(receiverId)
             .ownerId(actorId)
             .build();
 
-    @Test
-    void testToAnalyticsEvent_argIsNull_returnsNull() {
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(null);
-
-        assertNull(analyticsEvent);
-    }
 
     @Test
     void testToAnalyticsEvent_argIsNotNull_returnsAnalyticsEvent() {
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(projectViewEvent);
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(projectViewEventDto);
 
         assertEquals(expectedAnalyticsEvent, analyticsEvent);
     }

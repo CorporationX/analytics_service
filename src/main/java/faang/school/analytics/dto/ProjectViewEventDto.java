@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProjectViewEvent {
+public class ProjectViewEventDto {
     private long projectId;
     private long ownerId;
     private LocalDateTime receivedAt;

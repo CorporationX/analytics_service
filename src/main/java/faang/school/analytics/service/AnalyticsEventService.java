@@ -20,7 +20,6 @@ public class AnalyticsEventService {
     public void saveEvent(AnalyticsEvent event) {
         AnalyticsEvent savedAnalyticsEvent = analyticsEventRepository.save(event);
         log.info("Event successful saved {}", event);
-        return savedAnalyticsEvent;
     }
 
     public void deleteEvent(long id) {

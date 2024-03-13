@@ -31,14 +31,14 @@ public class AnalyticsEventServiceTest {
 
     @Test
     void testSave() {
-        analyticsEventService.save(analyticsEvent);
+        analyticsEventService.saveEvent(analyticsEvent);
 
         verify(analyticsEventRepository, times(1)).save(analyticsEvent);
     }
 
     @Test
     void testDelete() {
-        analyticsEventService.deleteById(analyticsEventId);
+        analyticsEventService.deleteEvent(analyticsEventId);
 
         verify(analyticsEventRepository, times(1)).deleteById(analyticsEventId);
     }
