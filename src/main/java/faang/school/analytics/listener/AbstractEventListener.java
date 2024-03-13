@@ -1,22 +1,42 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.service.AnalyticsEventService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 
-import java.io.IOException;
-
-@RequiredArgsConstructor
+@Slf4j
 public abstract class AbstractEventListener<T> implements MessageListener {
+    @Autowired
+    protected ObjectMapper objectMapper;
+    @Autowired
+    protected AnalyticsEventService analyticsEventService;
+    @Autowired
+    protected AnalyticsEventMapper eventMapper;
+    private final Class<T> type;
 
-    private final ObjectMapper objectMapper;
+    public AbstractEventListener(Class<T> type) {
+        this.type = type;
+    }
 
-    public T getEvent(Message message, Class<T> clazz) {
+    @Override
+    public void onMessage(Message message, byte[] pattern) {
+        T event = deserialize(message.getBody());
+        saveEvent(event);
+        log.info("Event was successful save {}", event);
+    }
+
+    private T deserialize(byte[] body) {
         try {
-            return objectMapper.readValue(message.getBody(), clazz);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't deserialize JSON");
+            return objectMapper.readValue(body, type);
+        } catch (Exception e) {
+            log.error("Json unsuccessful convert to data");
+            throw new RuntimeException(e.getMessage());
         }
     }
+
+    public abstract void saveEvent(T event);
 }

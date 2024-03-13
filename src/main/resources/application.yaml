@@ -22,7 +22,11 @@ spring:
       port: 6379
       host: localhost
       channel:
-        profile-view: profile-view-channel
+        premium_bought:
+          name: premium_bought_channel
+        profile-view: profile_view_channel
+        mentorship_request_channel:
+          name: mentorship_request_channel
         follower_channel: follower-channel
 
 server:
