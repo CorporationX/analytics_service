@@ -3,6 +3,7 @@ package faang.school.analytics.config;
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.PremiumBoughtEventListener;
+import faang.school.analytics.listener.ProjectViewListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +33,9 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.follower_channel")
     private String followerChannel;
+
+    @Value("${spring.data.redis.channel.project_view_channel.name}")
+    String profileViewChannelName;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -81,15 +85,27 @@ public class RedisConfig {
     }
 
     @Bean
+    ChannelTopic profileViewTopic() {
+        return new ChannelTopic(profileViewChannelName);
+    }
+
+    @Bean
+    MessageListenerAdapter projectViewListenerAdapter(ProjectViewListener projectViewListener) {
+        return new MessageListenerAdapter(projectViewListener);
+    }
+
+    @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter premiumBoughtListenerAdapter,
                                                  MessageListenerAdapter mentorshipMessageListenerAdapter,
-                                                 MessageListenerAdapter followEventListenerAdapter) {
+                                                 MessageListenerAdapter followEventListenerAdapter,
+                                                 MessageListenerAdapter projectViewListenerAdapter) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(premiumBoughtListenerAdapter, premiumBoughtTopic());
         container.addMessageListener(mentorshipMessageListenerAdapter, mentorshipRequestTopic());
         container.addMessageListener(followEventListenerAdapter, followEventTopic());
+        container.addMessageListener(projectViewListenerAdapter, profileViewTopic());
         return container;
     }
 }

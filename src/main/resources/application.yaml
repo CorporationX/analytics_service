@@ -28,6 +28,9 @@ spring:
         mentorship_request_channel:
           name: mentorship_request_channel
         follower_channel: follower-channel
+        project_view_channel:
+          name: profile_view_channel
+
 
 server:
   port: 8086
