@@ -10,6 +10,7 @@ import org.springframework.data.redis.connection.MessageListener;
 
 @Slf4j
 public abstract class AbstractEventListener<T> implements MessageListener {
+
     @Autowired
     protected ObjectMapper objectMapper;
     @Autowired

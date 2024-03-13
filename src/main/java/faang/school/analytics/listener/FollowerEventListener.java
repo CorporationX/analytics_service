@@ -13,20 +13,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class FollowerEventListener extends AbstractEventListener<FollowerEventDto> {
 
-    private final AnalyticsEventService analyticsService;
-    private final AnalyticsEventMapper analyticsEventMapper;
+    @Autowired
+    private AnalyticsEventService analyticsService;
 
     @Autowired
-    public FollowerEventListener(ObjectMapper objectMapper, AnalyticsEventService analyticsService, AnalyticsEventMapper analyticsEventMapper) {
-        super(objectMapper);
-        this.analyticsService = analyticsService;
-        this.analyticsEventMapper = analyticsEventMapper;
+    public FollowerEventListener() {
+        super(FollowerEventDto.class);
     }
 
     @Override
-    public void onMessage(Message message, byte[] pattern) {
-        FollowerEventDto event = getEvent(message, FollowerEventDto.class);
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(event);
+    public void saveEvent(FollowerEventDto event) {
+        AnalyticsEvent analyticsEvent = eventMapper.toAnalyticsEvent(event);
         analyticsEvent.setEventType(EventType.FOLLOWER);
         analyticsService.saveEvent(analyticsEvent);
     }

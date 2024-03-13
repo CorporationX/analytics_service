@@ -1,5 +1,6 @@
 package faang.school.analytics.config;
 
+import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.PremiumBoughtEventListener;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,9 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.premium_bought.name}")
     private String premiumBoughtChannelName;
+
+    @Value("${spring.data.redis.channel.follower_channel")
+    private String followerChannel;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -67,13 +71,25 @@ public class RedisConfig {
     }
 
     @Bean
+    public MessageListenerAdapter followEventListenerAdapter(FollowerEventListener followerEventListener) {
+        return new MessageListenerAdapter(followerEventListener);
+    }
+
+    @Bean
+    public ChannelTopic followEventTopic() {
+        return new ChannelTopic(followerChannel);
+    }
+
+    @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter premiumBoughtListenerAdapter,
-                                                 MessageListenerAdapter mentorshipMessageListenerAdapter) {
+                                                 MessageListenerAdapter mentorshipMessageListenerAdapter,
+                                                 MessageListenerAdapter followEventListenerAdapter) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(premiumBoughtListenerAdapter, premiumBoughtTopic());
         container.addMessageListener(mentorshipMessageListenerAdapter, mentorshipRequestTopic());
+        container.addMessageListener(followEventListenerAdapter, followEventTopic());
         return container;
     }
 }
