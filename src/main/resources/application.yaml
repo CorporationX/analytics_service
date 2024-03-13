@@ -24,6 +24,9 @@ spring:
       channel:
         premium_bought:
           name: premium_bought_channel
+        profile-view: profile_view_channel
+        mentorship_request_channel:
+          name: mentorship_request_channel
 
 server:
   port: 8086
