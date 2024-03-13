@@ -1,28 +1,33 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.stream.Stream;
+import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class AnalyticsEventService<T> {
+public class AnalyticsEventService {
+
     private final AnalyticsEventRepository analyticsEventRepository;
-    private final AnalyticsEventMapper<T> analyticsEventMapper;
 
-    public void saveEvent(T eventDto) {
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(eventDto);
-        analyticsEventRepository.save(analyticsEvent);
+    public void saveEvent(AnalyticsEvent event) {
+        analyticsEventRepository.save(event);
+        log.info("Event successful saved {}", event);
     }
 
-    @Transactional
-    public Stream<AnalyticsEvent> getAnalytics(long receiverId, EventType type) {
-        return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, type);
+    public void deleteEvent(long id) {
+        analyticsEventRepository.deleteById(id);
+        log.info("Event successful deleted");
     }
+
+    public List<AnalyticsEvent> getAnalytics(long id, EventType type) {
+        return analyticsEventRepository.findByReceiverIdAndEventType(id, type).toList();
+    }
+
 }

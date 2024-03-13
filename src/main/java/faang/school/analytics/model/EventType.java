@@ -17,6 +17,7 @@ public enum EventType {
     ACHIEVEMENT_RECEIVED,
     PROFILE_APPEARED_IN_SEARCH,
     PROJECT_APPEARED_IN_SEARCH,
+    PREMIUM_BOUGHT,
     MENTORSHIP_REQUEST;
 
     public static EventType of(int type) {
