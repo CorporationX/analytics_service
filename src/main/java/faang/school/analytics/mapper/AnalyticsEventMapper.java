@@ -1,5 +1,6 @@
 package faang.school.analytics.mapper;
 
+import faang.school.analytics.dto.FollowerEventDto;
 import faang.school.analytics.dto.MentorshipRequestedEventDto;
 import faang.school.analytics.dto.PremiumBoughtEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
@@ -16,4 +17,8 @@ public interface AnalyticsEventMapper {
 
     @Mapping(source = "requesterId", target = "actorId")
     AnalyticsEvent toAnalyticsEvent(MentorshipRequestedEventDto event);
+
+    @Mapping(target = "actorId", source = "followerId")
+    @Mapping(target = "receiverId", source = "followeeId")
+    AnalyticsEvent toAnalyticsEvent(FollowerEventDto followerEventDto);
 }
