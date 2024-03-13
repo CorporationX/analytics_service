@@ -20,6 +20,6 @@ public class MentorshipRequestEventController {
     @GetMapping("analytics/{receiverId}")
     public List<AnalyticsEvent> getAnalytics(@PathVariable long receiverId, @RequestBody String type) {
         EventType eventType = EventType.valueOf(type.toUpperCase(Locale.ROOT));
-        return analyticsEventService.getAnalytics(receiverId, eventType).toList();
+        return analyticsEventService.getAnalytics(receiverId, eventType);
     }
 }

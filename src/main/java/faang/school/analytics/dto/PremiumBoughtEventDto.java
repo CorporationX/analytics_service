@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PremiumBoughtEvent {
+public class PremiumBoughtEventDto {
     private long receiverId;
     private int amountPayment;
     private int daysSubscription;

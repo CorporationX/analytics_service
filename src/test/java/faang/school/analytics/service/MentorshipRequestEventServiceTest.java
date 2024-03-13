@@ -1,7 +1,7 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.MentorshipRequestedEventDto;
-import faang.school.analytics.mapper.MentorshipRequestedMapperImpl;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
@@ -13,6 +13,8 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,9 +27,9 @@ public class MentorshipRequestEventServiceTest {
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
     @Spy
-    private MentorshipRequestedMapperImpl mentorshipRequestedMapper;
+    private AnalyticsEventMapper analyticsEventMapper;
     @InjectMocks
-    private AnalyticsEventService<MentorshipRequestedEventDto> analyticsEventService;
+    private AnalyticsEventService analyticsEventService;
 
     @Test
     void successSaveEvent() {
@@ -36,8 +38,8 @@ public class MentorshipRequestEventServiceTest {
                 .receiverId(2L)
                 .receivedAt(LocalDateTime.now())
                 .build();
-        analyticsEventService.saveEvent(eventDto);
-        AnalyticsEvent event = mentorshipRequestedMapper.toAnalyticsEvent(eventDto);
+        AnalyticsEvent event = analyticsEventMapper.toAnalyticsEvent(eventDto);
+        analyticsEventService.saveEvent(event);
         verify(analyticsEventRepository, times(1)).save(event);
     }
 
@@ -49,14 +51,15 @@ public class MentorshipRequestEventServiceTest {
                 .eventType(EventType.MENTORSHIP_REQUEST)
                 .receiverId(1L)
                 .build();
-        Stream<AnalyticsEvent> analyticsEventStream = Stream.of(analyticsEvent);
+        List<AnalyticsEvent> analyticsEvents = List.of(analyticsEvent);
         long id = analyticsEvent.getId();
         EventType eventType = analyticsEvent.getEventType();
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType(id, eventType)).thenReturn(analyticsEventStream);
-        Stream<AnalyticsEvent> actualAnalyticsEvents = analyticsEventService.getAnalytics(id, eventType);
+        when(analyticsEventRepository.findByReceiverIdAndEventType(id, eventType)).thenReturn(analyticsEvents.stream());
+        List<AnalyticsEvent> actualAnalyticsEvents = analyticsEventService.getAnalytics(id, eventType);
 
         verify(analyticsEventRepository, times(1)).findByReceiverIdAndEventType(id, eventType);
-        assertEquals(analyticsEventStream, actualAnalyticsEvents);
+
+        assertEquals(analyticsEvents, actualAnalyticsEvents);
     }
 }

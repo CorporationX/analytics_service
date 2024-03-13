@@ -1,6 +1,7 @@
 package faang.school.analytics.listener;
 
 import faang.school.analytics.dto.MentorshipRequestedEventDto;
+import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,8 @@ public class MentorshipRequestedEventListener extends AbstractEventListener<Ment
 
     @Override
     public void saveEvent(MentorshipRequestedEventDto event) {
-        event.setEventType(EventType.MENTORSHIP_REQUEST);
-        analyticsEventService.saveEvent(event);
+        AnalyticsEvent analyticsEvent = eventMapper.toAnalyticsEvent(event);
+        analyticsEvent.setEventType(EventType.MENTORSHIP_REQUEST);
+        analyticsEventService.saveEvent(analyticsEvent);
     }
 }

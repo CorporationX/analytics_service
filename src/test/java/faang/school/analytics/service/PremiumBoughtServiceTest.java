@@ -1,6 +1,6 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.dto.PremiumBoughtEvent;
+import faang.school.analytics.dto.PremiumBoughtEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -33,7 +33,7 @@ class PremiumBoughtServiceTest {
     @Test
     void successSavedEvent() {
         LocalDateTime timeCreated = LocalDateTime.now();
-        PremiumBoughtEvent eventDto = PremiumBoughtEvent.builder()
+        PremiumBoughtEventDto eventDto = PremiumBoughtEventDto.builder()
                 .receiverId(1L)
                 .amountPayment(10)
                 .daysSubscription(30)
