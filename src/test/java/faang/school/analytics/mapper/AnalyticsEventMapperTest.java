@@ -2,9 +2,11 @@ package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.MentorshipRequestedEvent;
+import faang.school.analytics.dto.PremiumBoughtEvent;
 import faang.school.analytics.dto.RecommendationEvent;
 import faang.school.analytics.dto.follower.FollowerEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -81,9 +83,27 @@ class AnalyticsEventMapperTest {
         assertEquals(analyticsEvent.getActorId(), analyticsEventMapper.mentorshipRequestedEventToAnalyticsEvent(mentorshipRequestedEvent).getActorId());
     }
 
+
     @Test
     void testToEntity() {
         assertEquals(event, analyticsEventMapper.toEntity(followerEventDto));
+    }
+
+    @Test
+    void testToPremiumEntitySuccessful() {
+        PremiumBoughtEvent premiumBoughtEvent = PremiumBoughtEvent.builder()
+                .userId(1L)
+                .price(10)
+                .subscriptionDurationInDays(30)
+                .purchaseDateTime(fixedTime)
+                .build();
+        AnalyticsEvent analyticsEvent = AnalyticsEvent.builder()
+                .receiverId(1)
+                .actorId(1)
+                .receivedAt(fixedTime)
+                .build();
+        assertEquals(analyticsEvent,
+                analyticsEventMapper.toPremiumEntity(premiumBoughtEvent));
     }
 
     @Test

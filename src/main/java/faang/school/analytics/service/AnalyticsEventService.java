@@ -2,6 +2,7 @@ package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.MentorshipRequestedEvent;
+import faang.school.analytics.dto.PremiumBoughtEvent;
 import faang.school.analytics.dto.RecommendationEvent;
 import faang.school.analytics.dto.follower.FollowerEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -46,6 +47,11 @@ public class AnalyticsEventService {
         log.info("Старт saveAnalyticsEvent: {}", followerEventDto);
         analyticsEventRepository.save(followerEvent);
         log.info("Сохранен AnalyticsEvent - {} ", followerEvent);
+    }
+
+    public void savePremiumBoughtEvent(PremiumBoughtEvent premiumBoughtEvent) {
+        AnalyticsEvent premiumEvent = analyticsEventMapper.toPremiumEntity(premiumBoughtEvent);
+        saveEvent(EventType.PREMIUM_SUBSCRIPTION, premiumEvent);
     }
 
     public void saveEvent(AnalyticsEvent event) {

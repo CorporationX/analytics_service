@@ -2,6 +2,7 @@ package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.MentorshipRequestedEvent;
+import faang.school.analytics.dto.PremiumBoughtEvent;
 import faang.school.analytics.dto.RecommendationEvent;
 import faang.school.analytics.dto.follower.FollowerEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -17,6 +18,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -24,6 +27,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,7 +36,7 @@ import static org.mockito.Mockito.when;
 public class AnalyticsEventServiceTest {
     @InjectMocks
     private AnalyticsEventService analyticsEventService;
-    @Mock
+    @Spy
     private AnalyticsEventMapper analyticsEventMapper = Mappers.getMapper(AnalyticsEventMapper.class);
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
@@ -80,6 +84,18 @@ public class AnalyticsEventServiceTest {
         when(analyticsEventMapper.mentorshipRequestedEventToAnalyticsEvent(mentorshipRequestedEvent)).thenReturn(analyticsEvent);
         analyticsEventService.saveMentorshipRequestedEvent(mentorshipRequestedEvent);
         verify(analyticsEventRepository, times(1)).save(captor.capture());
+    }
+
+    @Test
+    public void testSavePremiumBoughtEventSuccessful() {
+        PremiumBoughtEvent premiumBoughtEvent = PremiumBoughtEvent.builder()
+                .userId(1L)
+                .price(10)
+                .subscriptionDurationInDays(30)
+                .purchaseDateTime(fixedTime)
+                .build();
+        analyticsEventService.savePremiumBoughtEvent(premiumBoughtEvent);
+        verify(analyticsEventRepository).save(any(AnalyticsEvent.class));
     }
 
     @Test

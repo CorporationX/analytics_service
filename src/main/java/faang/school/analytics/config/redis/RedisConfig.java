@@ -2,6 +2,7 @@ package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.FollowerEventListener;
+import faang.school.analytics.listener.PremiumBoughtEventListener;
 import faang.school.analytics.listener.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,7 @@ public class RedisConfig {
     private final RecommendationEventListener recommendationEventListener;
     private final MentorshipRequestedEventListener mentorshipRequestedEventListener;
     private final FollowerEventListener followerEventListener;
+    private final PremiumBoughtEventListener premiumBoughtEventListener;
 
     @Value("${spring.data.redis.host}")
     private String redisHost;
@@ -33,6 +35,8 @@ public class RedisConfig {
     private String recommendationChannelName;
     @Value("${spring.data.redis.channel.mentorship-requested}")
     private String mentorshipRequestedChannelName;
+    @Value("${spring.data.redis.channel.premium_bought_channel}")
+    private String premiumBoughtChannel;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -65,6 +69,11 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter premiumBoughtListener(PremiumBoughtEventListener premiumBoughtEventListener) {
+        return new MessageListenerAdapter(premiumBoughtEventListener);
+    }
+
+    @Bean
     ChannelTopic recommendationTopic() {
         return new ChannelTopic(recommendationChannelName);
     }
@@ -80,6 +89,11 @@ public class RedisConfig {
     }
 
     @Bean
+    ChannelTopic premiumBoughtTopic() {
+        return new ChannelTopic(premiumBoughtChannel);
+    }
+
+    @Bean
     RedisMessageListenerContainer redisContainer() {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
@@ -88,6 +102,7 @@ public class RedisConfig {
         container.addMessageListener(recommendationListener(recommendationEventListener), recommendationTopic());
         container.addMessageListener(mentorshipRequestedListener(mentorshipRequestedEventListener), mentorshipRequestedTopic());
         container.addMessageListener(followerListener(followerEventListener), followerTopic());
+        container.addMessageListener(premiumBoughtListener(premiumBoughtEventListener), premiumBoughtTopic());
 
         return container;
     }
