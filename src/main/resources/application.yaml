@@ -32,8 +32,8 @@ spring:
           name: goal_completed_channel
         comment_channel:
           name: comment_channel
-        mentorship_topic:
-          name: mentorship_topic
+        mentorship_requested_channel:
+          name: mentorship_channel
 
 server:
   port: 8086
