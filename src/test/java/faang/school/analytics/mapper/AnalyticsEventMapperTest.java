@@ -1,12 +1,12 @@
 package faang.school.analytics.mapper;
 
-import faang.school.analytics.dto.follower.FollowerEventDto;
-
-import static org.junit.jupiter.api.Assertions.*;
-
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.MentorshipRequestedEvent;
+import faang.school.analytics.dto.PremiumBoughtEvent;
 import faang.school.analytics.dto.RecommendationEvent;
+import faang.school.analytics.dto.follower.FollowerEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +15,6 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -24,9 +23,10 @@ class AnalyticsEventMapperTest {
     @Spy
     private AnalyticsEventMapper analyticsEventMapper = Mappers.getMapper(AnalyticsEventMapper.class);
     private AnalyticsEvent event;
+    private AnalyticsEventDto analyticsEventDto;
+    private AnalyticsEvent analyticsEvent;
     private AnalyticsEvent recommendationAnaliticsEvent;
-    private FollowerEventDto eventDto;
-
+    private FollowerEventDto followerEventDto;
     private RecommendationEvent recommendationEvent;
     LocalDateTime fixedTime = LocalDateTime.of(2024, 2, 22, 20, 6, 30);
 
@@ -35,14 +35,16 @@ class AnalyticsEventMapperTest {
         analyticsEvent = AnalyticsEvent.builder()
                 .actorId(1L)
                 .receiverId(3L)
-                .actorId(1L)
                 .receivedAt(fixedTime)
                 .build();
-      
-        LocalDateTime fixedTime = LocalDateTime.of(
-                2024, Month.FEBRUARY, 20, 12, 0, 0);
 
         event = AnalyticsEvent.builder()
+                .receiverId(1L)
+                .actorId(2L)
+                .receivedAt(fixedTime)
+                .build();
+
+        analyticsEventDto = AnalyticsEventDto.builder()
                 .receiverId(1L)
                 .actorId(2L)
                 .receivedAt(fixedTime)
@@ -55,7 +57,7 @@ class AnalyticsEventMapperTest {
                 .receivedAt(fixedTime)
                 .build();
 
-        eventDto = FollowerEventDto.builder()
+        followerEventDto = FollowerEventDto.builder()
                 .followeeId(1L)
                 .followerId(2L)
                 .subscriptionTime(fixedTime)
@@ -71,9 +73,9 @@ class AnalyticsEventMapperTest {
 
     @Test
     public void testMapper() {
-        assertEquals(recommendationAnaliticsEvent, analyticsEventMapper.toEntity(recommendationEvent));
+        assertEquals(analyticsEvent, analyticsEventMapper.recomendationEventToAnalyticsEvent(recommendationEvent));
     }
-  
+
     @Test
     public void testMapperMentorshipRequestedEvent() {
         MentorshipRequestedEvent mentorshipRequestedEvent = new MentorshipRequestedEvent(1L, 3L, fixedTime);
@@ -81,10 +83,32 @@ class AnalyticsEventMapperTest {
         assertEquals(analyticsEvent.getActorId(), analyticsEventMapper.mentorshipRequestedEventToAnalyticsEvent(mentorshipRequestedEvent).getActorId());
     }
 
+
     @Test
     void testToEntity() {
-        assertEquals(event, analyticsEventMapper.toEntity(eventDto));
+        assertEquals(event, analyticsEventMapper.toEntity(followerEventDto));
     }
 
+    @Test
+    void testToPremiumEntitySuccessful() {
+        PremiumBoughtEvent premiumBoughtEvent = PremiumBoughtEvent.builder()
+                .userId(1L)
+                .price(10)
+                .subscriptionDurationInDays(30)
+                .purchaseDateTime(fixedTime)
+                .build();
+        AnalyticsEvent analyticsEvent = AnalyticsEvent.builder()
+                .receiverId(1)
+                .actorId(1)
+                .receivedAt(fixedTime)
+                .build();
+        assertEquals(analyticsEvent,
+                analyticsEventMapper.toPremiumEntity(premiumBoughtEvent));
+    }
+
+    @Test
+    void testToAnalyticsDtoSuccessful() {
+        assertEquals(analyticsEventDto, analyticsEventMapper.toAnalyticsDto(event));
+    }
 }
 
