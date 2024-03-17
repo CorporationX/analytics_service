@@ -25,8 +25,8 @@ public class RedisConfig {
     private int port;
     @Value("${spring.data.redis.host}")
     private String host;
-    @Value("${spring.data.redis.channel.mentorship_request_channel.name}")
-    private String mentorshipRequestChannelName;
+    @Value("${spring.data.redis.channel.mentorship_offered_channel.name}")
+    private String mentorshipOfferedChannelName;
 
     @Value("${spring.data.redis.channel.premium_bought.name}")
     private String premiumBoughtChannelName;
@@ -59,24 +59,28 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic mentorshipRequestTopic() {
-        return new ChannelTopic(mentorshipRequestChannelName);
-    }
-
-
-    @Bean
     MessageListenerAdapter premiumBoughtListenerAdapter(PremiumBoughtEventListener premiumBoughtEventListener) {
         return new MessageListenerAdapter(premiumBoughtEventListener);
     }
 
     @Bean
-    ChannelTopic premiumBoughtTopic() {
-        return new ChannelTopic(premiumBoughtChannelName);
+    public MessageListenerAdapter followEventListenerAdapter(FollowerEventListener followerEventListener) {
+        return new MessageListenerAdapter(followerEventListener);
     }
 
     @Bean
-    public MessageListenerAdapter followEventListenerAdapter(FollowerEventListener followerEventListener) {
-        return new MessageListenerAdapter(followerEventListener);
+    MessageListenerAdapter projectViewListenerAdapter(ProjectViewListener projectViewListener) {
+        return new MessageListenerAdapter(projectViewListener);
+    }
+
+    @Bean
+    ChannelTopic mentorshipOfferedTopic() {
+        return new ChannelTopic(mentorshipOfferedChannelName);
+    }
+
+    @Bean
+    ChannelTopic premiumBoughtTopic() {
+        return new ChannelTopic(premiumBoughtChannelName);
     }
 
     @Bean
@@ -90,11 +94,6 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter projectViewListenerAdapter(ProjectViewListener projectViewListener) {
-        return new MessageListenerAdapter(projectViewListener);
-    }
-
-    @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter premiumBoughtListenerAdapter,
                                                  MessageListenerAdapter mentorshipMessageListenerAdapter,
                                                  MessageListenerAdapter followEventListenerAdapter,
@@ -103,7 +102,7 @@ public class RedisConfig {
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(premiumBoughtListenerAdapter, premiumBoughtTopic());
-        container.addMessageListener(mentorshipMessageListenerAdapter, mentorshipRequestTopic());
+        container.addMessageListener(mentorshipMessageListenerAdapter, mentorshipOfferedTopic());
         container.addMessageListener(followEventListenerAdapter, followEventTopic());
         container.addMessageListener(projectViewListenerAdapter, profileViewTopic());
         return container;
