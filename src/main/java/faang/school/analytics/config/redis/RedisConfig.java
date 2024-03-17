@@ -24,24 +24,17 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
-    @Autowired
-    private AnalyticsEventService analyticsEventService;
-    @Autowired
-    private AnalyticsEventMapper analyticsEventMapper;
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Value("${spring.data.redis.host}")
     private String host;
     @Value("${spring.data.redis.port}")
     private int port;
-
-    @Value("${redis.topic.name:SearchAppearanceEvent}")
-    private String topicSearchAppearanceEvent;
+    @Value("${redis.topic.name:SearchAppearanceChannel}")
+    private String searchAppearanceChannel;
+    @Autowired
+    private SearchAppearanceEventListener searchAppearanceEventListener;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
-        System.out.println(port);
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
         return new JedisConnectionFactory(config);
     }
@@ -56,28 +49,21 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory,
-                                            MessageListenerAdapter messageListenerAdapter) {
-
+    RedisMessageListenerContainer container(MessageListenerAdapter messageListenerAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(messageListenerAdapter, topic());
+        container.setConnectionFactory(redisConnectionFactory());
+        container.addMessageListener(messageListenerAdapter, searchAppearanceChannel());
 
         return container;
     }
 
     @Bean
     MessageListenerAdapter messageListenerAdapter() {
-        SearchAppearanceEventListener subscriber =
-                new SearchAppearanceEventListener(
-                        analyticsEventService,
-                        analyticsEventMapper,
-                        objectMapper);
-        return new MessageListenerAdapter(subscriber);
+        return new MessageListenerAdapter(searchAppearanceEventListener);
     }
 
     @Bean
-    ChannelTopic topic() {
-        return new ChannelTopic(topicSearchAppearanceEvent);
+    ChannelTopic searchAppearanceChannel() {
+        return new ChannelTopic(searchAppearanceChannel);
     }
 }

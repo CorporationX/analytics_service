@@ -37,4 +37,4 @@ project-service:
 
 redis:
   topic:
-    name: SearchAppearanceEvent
+    name: SearchAppearanceChannel
