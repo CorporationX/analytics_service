@@ -1,4 +1,4 @@
-package faang.school.analytics.dto.premium;
+package faang.school.analytics.dto.event_broker;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,9 +9,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PremiumEvent {
-    private long userId;
-    private long premiumId;
-    private PremiumPeriod premiumPeriod;
+public class FollowerEvent {
+    private long followerId;
+    private long followeeId;
     private LocalDateTime timestamp;
 }

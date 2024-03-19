@@ -1,19 +1,4 @@
 spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: user
-    password: password
-
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
 
@@ -28,6 +13,25 @@ spring:
           name: profile_view_channel
         premium_channel:
           name: premium_channel
+
+  cassandra:
+    contact-points: localhost
+    schema-action: CREATE_IF_NOT_EXISTS
+    request:
+      timeout: 10s
+    connection:
+      connect-timeout: 10s
+      init-query-timeout: 10s
+    local-datacenter: datacenter1
+    keyspace-name: analytics_space
+    port: 9042
+
+async:
+  core: 10
+  max: 20
+  queue_capacity: 50
+  prefix: "AsyncThread-"
+
 server:
   port: 8086
 
