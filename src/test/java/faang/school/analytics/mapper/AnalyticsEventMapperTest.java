@@ -1,6 +1,6 @@
 package faang.school.analytics.mapper;
 
-import faang.school.analytics.event.SearchAppearanceEvent;
+import faang.school.analytics.dto.event.SearchAppearanceEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,13 +22,13 @@ public class AnalyticsEventMapperTest {
 
     @Test
     public void testToAnalyticsEventWhenSearchAppearanceEvent() {
-        SearchAppearanceEvent searchAppearanceEvent = new SearchAppearanceEvent(
+        SearchAppearanceEventDto searchAppearanceEventDto = new SearchAppearanceEventDto(
                 1L,
                 2L,
                 LocalDateTime.now()
         );
 
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(searchAppearanceEvent);
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(searchAppearanceEventDto);
 
         assertNotNull(analyticsEvent,
                 "The result should not be null when the input is not null");

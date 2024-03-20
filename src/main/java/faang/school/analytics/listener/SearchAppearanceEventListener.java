@@ -2,9 +2,10 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.event.SearchAppearanceEvent;
+import faang.school.analytics.dto.event.SearchAppearanceEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class SearchAppearanceEventListener extends AbstractEventListener<SearchAppearanceEvent> {
+public class SearchAppearanceEventListener extends AbstractEventListener<SearchAppearanceEventDto> {
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper analyticsEventMapper;
 
@@ -25,13 +26,14 @@ public class SearchAppearanceEventListener extends AbstractEventListener<SearchA
     }
 
     @Override
-    protected TypeReference<SearchAppearanceEvent> getTypeReference() {
-        return new TypeReference<SearchAppearanceEvent>() {};
+    protected TypeReference<SearchAppearanceEventDto> getTypeReference() {
+        return new TypeReference<SearchAppearanceEventDto>() {};
     }
 
     @Override
-    protected void handleEvent(SearchAppearanceEvent event) {
+    protected void handleEvent(SearchAppearanceEventDto event) {
         AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(event);
+        analyticsEvent.setEventType(EventType.PROFILE_VIEW);
         analyticsEventService.save(analyticsEvent);
     }
 }

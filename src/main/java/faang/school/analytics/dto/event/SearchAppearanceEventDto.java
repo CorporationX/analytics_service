@@ -1,4 +1,4 @@
-package faang.school.analytics.event;
+package faang.school.analytics.dto.event;
 
 import java.time.LocalDateTime;
 
@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
  * @author Alexander Bulgakov
  */
 
-public record SearchAppearanceEvent(
+public record SearchAppearanceEventDto(
         long receiverId,
         long actorId,
         LocalDateTime receivedAt

@@ -1,7 +1,7 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.event.SearchAppearanceEvent;
+import faang.school.analytics.dto.event.SearchAppearanceEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class SearchAppearanceEventListenerTest {
+public class SearchAppearanceEventDtoListenerTest {
 
     @Mock
     private ObjectMapper objectMapper;
@@ -33,12 +33,12 @@ public class SearchAppearanceEventListenerTest {
 
     @Test
     public void testHandleEventWhenSearchAppearanceEventThenSaveAnalyticsEvent() {
-        SearchAppearanceEvent searchAppearanceEvent = new SearchAppearanceEvent(1L, 2L, LocalDateTime.now());
+        SearchAppearanceEventDto searchAppearanceEventDto = new SearchAppearanceEventDto(1L, 2L, LocalDateTime.now());
         AnalyticsEvent analyticsEvent = new AnalyticsEvent();
 
-        when(analyticsEventMapper.toAnalyticsEvent(searchAppearanceEvent)).thenReturn(analyticsEvent);
+        when(analyticsEventMapper.toAnalyticsEvent(searchAppearanceEventDto)).thenReturn(analyticsEvent);
 
-        searchAppearanceEventListener.handleEvent(searchAppearanceEvent);
+        searchAppearanceEventListener.handleEvent(searchAppearanceEventDto);
 
         verify(analyticsEventService).save(analyticsEvent);
     }

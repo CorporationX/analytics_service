@@ -28,7 +28,7 @@ public class RedisConfig {
     private String host;
     @Value("${spring.data.redis.port}")
     private int port;
-    @Value("${redis.topic.name:SearchAppearanceChannel}")
+    @Value("${spring.data.redis.channel.search-appearance-channel}")
     private String searchAppearanceChannel;
     @Autowired
     private SearchAppearanceEventListener searchAppearanceEventListener;

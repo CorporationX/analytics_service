@@ -23,6 +23,7 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+        search-appearance: search-appearance-channel
 
 server:
   port: 8086
@@ -34,7 +35,3 @@ logging:
 project-service:
   host: localhost
   port: 8082
-
-redis:
-  topic:
-    name: SearchAppearanceChannel
