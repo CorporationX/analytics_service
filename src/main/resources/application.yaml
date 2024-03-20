@@ -22,8 +22,16 @@ spring:
       port: 6379
       host: localhost
       channel:
+        premium_bought:
+          name: premium_bought_channel
         profile-view: profile_view_channel
-        search-appearance: search-appearance-channel
+        mentorship_offered_channel:
+          name: mentorship_offered_channel
+        follower_channel: follower-channel
+        project_view_channel:
+          name: profile_view_channel
+        search-appearance:
+          name: search-appearance-channel
 
 server:
   port: 8086
@@ -35,3 +43,7 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+user-service:
+  host: localhost
+  port: 8080
