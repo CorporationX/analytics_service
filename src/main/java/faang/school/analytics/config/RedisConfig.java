@@ -4,7 +4,9 @@ import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.PremiumBoughtEventListener;
 import faang.school.analytics.listener.ProjectViewListener;
+import faang.school.analytics.listener.SearchAppearanceEventListener;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +38,12 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.project_view_channel.name}")
     String profileViewChannelName;
+
+    @Value("${spring.data.redis.channel.search_appearance_channel.name}")
+    private String searchAppearanceChannel;
+
+    @Autowired
+    private SearchAppearanceEventListener searchAppearanceEventListener;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -74,6 +82,11 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter messageListenerAdapter() {
+        return new MessageListenerAdapter(searchAppearanceEventListener);
+    }
+
+    @Bean
     ChannelTopic mentorshipOfferedTopic() {
         return new ChannelTopic(mentorshipOfferedChannelName);
     }
@@ -91,6 +104,11 @@ public class RedisConfig {
     @Bean
     ChannelTopic profileViewTopic() {
         return new ChannelTopic(profileViewChannelName);
+    }
+
+    @Bean
+    ChannelTopic searchAppearanceChannel() {
+        return new ChannelTopic(searchAppearanceChannel);
     }
 
     @Bean

@@ -19,21 +19,17 @@ public class SearchAppearanceEventListener extends AbstractEventListener<SearchA
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper analyticsEventMapper;
 
-    public SearchAppearanceEventListener(ObjectMapper objectMapper, AnalyticsEventService analyticsEventService, AnalyticsEventMapper analyticsEventMapper) {
-        super(objectMapper);
+    public SearchAppearanceEventListener(Class<SearchAppearanceEventDto> type, AnalyticsEventService analyticsEventService, AnalyticsEventMapper analyticsEventMapper) {
+        super(type);
         this.analyticsEventService = analyticsEventService;
         this.analyticsEventMapper = analyticsEventMapper;
     }
 
-    @Override
-    protected TypeReference<SearchAppearanceEventDto> getTypeReference() {
-        return new TypeReference<SearchAppearanceEventDto>() {};
-    }
 
     @Override
-    protected void handleEvent(SearchAppearanceEventDto event) {
+    public void saveEvent(SearchAppearanceEventDto event) {
         AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(event);
         analyticsEvent.setEventType(EventType.PROFILE_VIEW);
-        analyticsEventService.save(analyticsEvent);
+        analyticsEventService.saveEvent(analyticsEvent);
     }
 }

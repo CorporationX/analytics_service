@@ -38,8 +38,6 @@ public class SearchAppearanceEventDtoListenerTest {
 
         when(analyticsEventMapper.toAnalyticsEvent(searchAppearanceEventDto)).thenReturn(analyticsEvent);
 
-        searchAppearanceEventListener.handleEvent(searchAppearanceEventDto);
-
-        verify(analyticsEventService).save(analyticsEvent);
+        verify(analyticsEventService).saveEvent(analyticsEvent);
     }
 }

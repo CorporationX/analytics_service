@@ -36,7 +36,8 @@ public class AnalyticsEventMapperTest {
 
     @Test
     public void testToAnalyticsEventWhenSearchAppearanceEventNull() {
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(null);
+        SearchAppearanceEventDto searchAppearanceEventDto = null;
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent((SearchAppearanceEventDto) null);
 
         assertNull(analyticsEvent,
                 "The result should be null when the input is null");
