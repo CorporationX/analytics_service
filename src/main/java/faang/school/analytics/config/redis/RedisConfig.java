@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.LikeEventListener;
 import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.RecommendationEventListener;
@@ -27,6 +28,8 @@ public class RedisConfig {
     private String recommendationChannelName;
     @Value("${spring.data.redis.channel.mentorship-requested}")
     private String mentorshipRequestedChannelName;
+    @Value("${spring.data.redis.channel.like_channel}")
+    private String likeChannelName;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -54,6 +57,11 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter likeListener(LikeEventListener likeEventListener) {
+        return new MessageListenerAdapter(likeEventListener);
+    }
+
+    @Bean
     ChannelTopic recommendationTopic() {
         return new ChannelTopic(recommendationChannelName);
     }
@@ -61,6 +69,11 @@ public class RedisConfig {
     @Bean
     ChannelTopic mentorshipRequestedTopic() {
         return new ChannelTopic(mentorshipRequestedChannelName);
+    }
+
+    @Bean
+    ChannelTopic likeTopic() {
+        return new ChannelTopic(likeChannelName);
     }
     
     @Bean
