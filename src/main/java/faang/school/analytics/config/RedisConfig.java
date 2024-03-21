@@ -1,5 +1,6 @@
 package faang.school.analytics.config;
 
+import faang.school.analytics.dto.event.SearchAppearanceEventDto;
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.PremiumBoughtEventListener;
@@ -42,8 +43,6 @@ public class RedisConfig {
     @Value("${spring.data.redis.channel.search_appearance_channel.name}")
     private String searchAppearanceChannel;
 
-    @Autowired
-    private SearchAppearanceEventListener searchAppearanceEventListener;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -82,7 +81,7 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter messageListenerAdapter() {
+    MessageListenerAdapter searchAppearanceEventListenerAdapter(SearchAppearanceEventListener searchAppearanceEventListener) {
         return new MessageListenerAdapter(searchAppearanceEventListener);
     }
 
@@ -107,7 +106,7 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic searchAppearanceChannel() {
+    ChannelTopic searchAppearanceEventTopic() {
         return new ChannelTopic(searchAppearanceChannel);
     }
 
@@ -115,7 +114,8 @@ public class RedisConfig {
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter premiumBoughtListenerAdapter,
                                                  MessageListenerAdapter mentorshipMessageListenerAdapter,
                                                  MessageListenerAdapter followEventListenerAdapter,
-                                                 MessageListenerAdapter projectViewListenerAdapter) {
+                                                 MessageListenerAdapter projectViewListenerAdapter,
+                                                 MessageListenerAdapter searchAppearanceEventListenerAdapter) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
@@ -123,6 +123,7 @@ public class RedisConfig {
         container.addMessageListener(mentorshipMessageListenerAdapter, mentorshipOfferedTopic());
         container.addMessageListener(followEventListenerAdapter, followEventTopic());
         container.addMessageListener(projectViewListenerAdapter, profileViewTopic());
+        container.addMessageListener(searchAppearanceEventListenerAdapter, searchAppearanceEventTopic());
         return container;
     }
 }
