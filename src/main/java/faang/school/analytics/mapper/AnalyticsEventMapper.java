@@ -4,6 +4,7 @@ import faang.school.analytics.dto.FollowerEventDto;
 import faang.school.analytics.dto.MentorshipRequestedEventDto;
 import faang.school.analytics.dto.PremiumBoughtEventDto;
 import faang.school.analytics.dto.ProjectViewEventDto;
+import faang.school.analytics.dto.event.SearchAppearanceEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -27,4 +28,6 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "receiverId", source = "projectId")
     @Mapping(target = "actorId", source = "ownerId")
     AnalyticsEvent toAnalyticsEvent(ProjectViewEventDto projectViewEventDto);
+
+    AnalyticsEvent toAnalyticsEvent(SearchAppearanceEventDto event);
 }
