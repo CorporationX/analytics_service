@@ -50,12 +50,10 @@ public class AnalyticsEventService {
 
         Predicate<AnalyticsEvent> eventFilterPredicate = null;
         if (interval == null) {
-            eventFilterPredicate = analyticsEvent ->
-                    analyticsEvent.getReceivedAt().isAfter(from) && analyticsEvent.getReceivedAt().isBefore(to);
+            eventFilterPredicate = analyticsEvent -> isInInterval(from, to, analyticsEvent.getReceivedAt());
         }
         if (interval != null) {
-            eventFilterPredicate = analyticsEvent ->
-                    isInInterval(interval, analyticsEvent);
+            eventFilterPredicate = analyticsEvent -> isInInterval(interval, analyticsEvent.getReceivedAt());
         }
 
         return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
@@ -65,15 +63,18 @@ public class AnalyticsEventService {
                 .toList();
     }
 
-    private boolean isInInterval(Interval interval, AnalyticsEvent analyticsEvent) {
+    private boolean isInInterval(LocalDateTime from, LocalDateTime to, LocalDateTime eventReceivedAt) {
+        return eventReceivedAt.isAfter(from) && eventReceivedAt.isBefore(to);
+    }
+
+    private boolean isInInterval(Interval interval, LocalDateTime eventReceivedAt) {
         LocalDateTime nowTime = LocalDateTime.now();
-        LocalDateTime receivedAt = analyticsEvent.getReceivedAt();
         return switch (interval) {
-            case HOUR -> receivedAt.isAfter(nowTime.minusHours(1));
-            case DAY -> receivedAt.isAfter(nowTime.minusDays(1));
-            case WEEK -> receivedAt.isAfter(nowTime.minusWeeks(1));
-            case MONTH -> receivedAt.isAfter(nowTime.minusMonths(1));
-            case YEAR -> receivedAt.isAfter(nowTime.minusYears(1));
+            case HOUR -> eventReceivedAt.isAfter(nowTime.minusHours(1));
+            case DAY -> eventReceivedAt.isAfter(nowTime.minusDays(1));
+            case WEEK -> eventReceivedAt.isAfter(nowTime.minusWeeks(1));
+            case MONTH -> eventReceivedAt.isAfter(nowTime.minusMonths(1));
+            case YEAR -> eventReceivedAt.isAfter(nowTime.minusYears(1));
         };
     }
 }
