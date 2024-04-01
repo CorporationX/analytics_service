@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.CommentEventListener;
 import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.RecommendationEventListener;
@@ -27,6 +28,8 @@ public class RedisConfig {
     private String recommendationChannelName;
     @Value("${spring.data.redis.channel.mentorship-requested}")
     private String mentorshipRequestedChannelName;
+    @Value("${spring.data.redis.channel.comment}")
+    private String commentChannelName;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -46,6 +49,16 @@ public class RedisConfig {
     @Bean
     MessageListenerAdapter recommendationListener(RecommendationEventListener recommendationEventListener) {
         return new MessageListenerAdapter(recommendationEventListener);
+    }
+
+    @Bean
+    ChannelTopic commentTopic() {
+        return new ChannelTopic(commentChannelName);
+    }
+
+    @Bean
+    MessageListenerAdapter commentListener(CommentEventListener commentEventListener) {
+        return new MessageListenerAdapter(commentEventListener);
     }
 
     @Bean
@@ -74,13 +87,17 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationListener, MessageListenerAdapter followerEventListener, MessageListenerAdapter mentorshipRequestedListener) {
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationListener,
+                                                 MessageListenerAdapter followerListener,
+                                                 MessageListenerAdapter mentorshipRequestedListener,
+                                                 MessageListenerAdapter commentListener) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(recommendationListener, recommendationTopic());
         container.addMessageListener(mentorshipRequestedListener, mentorshipRequestedTopic());
-        container.addMessageListener(followerEventListener, followerTopic());
+        container.addMessageListener(followerListener, followerTopic());
+        container.addMessageListener(commentListener, commentTopic());
         return container;
     }
 }
