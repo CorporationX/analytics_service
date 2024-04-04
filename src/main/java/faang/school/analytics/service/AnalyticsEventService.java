@@ -48,11 +48,10 @@ public class AnalyticsEventService {
                                                 Interval interval,
                                                 LocalDateTime from, LocalDateTime to) {
 
-        Predicate<AnalyticsEvent> eventFilterPredicate = null;
+        Predicate<AnalyticsEvent> eventFilterPredicate;
         if (interval == null) {
             eventFilterPredicate = analyticsEvent -> isInInterval(from, to, analyticsEvent.getReceivedAt());
-        }
-        if (interval != null) {
+        } else {
             eventFilterPredicate = analyticsEvent -> isInInterval(interval, analyticsEvent.getReceivedAt());
         }
 
