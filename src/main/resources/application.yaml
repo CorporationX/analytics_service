@@ -25,12 +25,13 @@ spring:
         premium_bought:
           name: premium_bought_channel
         profile-view: profile_view_channel
-        mentorship_request_channel:
-          name: mentorship_request_channel
+        mentorship_offered_channel:
+          name: mentorship_offered_channel
         follower_channel: follower-channel
         project_view_channel:
           name: profile_view_channel
-
+        search_appearance_channel:
+          name: search_appearance_channel
 
 server:
   port: 8086
