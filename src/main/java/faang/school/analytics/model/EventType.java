@@ -26,4 +26,25 @@ public enum EventType {
         }
         throw new IllegalArgumentException("Unknown event type: " + type);
     }
+
+    public static EventType of(String type) {
+        if (isInteger(type)) {
+            for (EventType eventType : EventType.values()) {
+                if (eventType.ordinal() == Integer.parseInt(type)) {
+                    return eventType;
+                }
+            }
+        } else {
+            for (EventType eventType : EventType.values()) {
+                if (eventType.name().equalsIgnoreCase(type)) {
+                    return eventType;
+                }
+            }
+        }
+        throw new IllegalArgumentException("Unknown event type: " + type);
+    }
+
+    private static boolean isInteger(String type) {
+        return type.matches("\\d+");
+    }
 }
