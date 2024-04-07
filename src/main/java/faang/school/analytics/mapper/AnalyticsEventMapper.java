@@ -1,5 +1,6 @@
 package faang.school.analytics.mapper;
 
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.FollowerEventDto;
 import faang.school.analytics.dto.MentorshipRequestedEventDto;
 import faang.school.analytics.dto.PremiumBoughtEventDto;
@@ -9,6 +10,7 @@ import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
+
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
@@ -28,6 +30,8 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "receiverId", source = "projectId")
     @Mapping(target = "actorId", source = "ownerId")
     AnalyticsEvent toAnalyticsEvent(ProjectViewEventDto projectViewEventDto);
-
+    
     AnalyticsEvent toAnalyticsEvent(SearchAppearanceEventDto event);
+    
+    AnalyticsEventDto toDto (AnalyticsEvent analyticsEvent);
 }

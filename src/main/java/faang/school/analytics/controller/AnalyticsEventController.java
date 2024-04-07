@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AnalyticsEventController {
     private final AnalyticsEventService analyticsEventService;
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public AnalyticsEvent get(@PathVariable long id) {
         return analyticsEventService.getById(id);
     }
