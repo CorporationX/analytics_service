@@ -64,7 +64,19 @@ class AnalyticsServiceTest {
         when(analyticsEventRepository.findByReceiverIdAndEventType(anyLong(), any(EventType.class))).thenReturn(analyticsEvents);
         List<AnalyticsEventDto> expected = getExpectedAnalyticsEvents();
 
-        List<AnalyticsEventDto> actual = analyticsService.getAnalyticsEvents(1L, EventType.FOLLOWER, Interval.DAY);
+        List<AnalyticsEventDto> actual = analyticsService.getAnalytics(1L, EventType.FOLLOWER, Interval.DAY);
+
+        assertEquals(expected, actual);
+        verify(analyticsEventRepository, times(1)).findByReceiverIdAndEventType(anyLong(), any(EventType.class));
+        verify(analyticsEventMapper, times(1)).toDto(anyList());
+    }
+
+    @Test
+    void getAnalyticsEvents2_ValidArgs() {
+        when(analyticsEventRepository.findByReceiverIdAndEventType(anyLong(), any(EventType.class))).thenReturn(analyticsEvents);
+        List<AnalyticsEventDto> expected = getExpectedAnalyticsEvents();
+
+        List<AnalyticsEventDto> actual = analyticsService.getAnalytics(1L, EventType.FOLLOWER, LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(1));
 
         assertEquals(expected, actual);
         verify(analyticsEventRepository, times(1)).findByReceiverIdAndEventType(anyLong(), any(EventType.class));

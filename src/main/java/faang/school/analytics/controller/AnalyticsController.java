@@ -7,6 +7,7 @@ import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsService;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/analytics")
@@ -36,8 +38,8 @@ public class AnalyticsController {
             throw new DataValidationException("Request must have period to analytics get");
         }
         if (interval == null) {
-            return analyticsService.getAnalyticsEvents(receiverId, EventType.of(eventType), from, to);
+            return analyticsService.getAnalytics(receiverId, EventType.of(eventType), from, to);
         }
-        return analyticsService.getAnalyticsEvents(receiverId, EventType.of(eventType), Interval.of(interval));
+        return analyticsService.getAnalytics(receiverId, EventType.of(eventType), Interval.of(interval));
     }
 }

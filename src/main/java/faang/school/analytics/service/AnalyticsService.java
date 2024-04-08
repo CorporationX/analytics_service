@@ -21,7 +21,7 @@ public class AnalyticsService {
     private final AnalyticsEventMapper analyticsEventMapper;
 
     @Transactional(readOnly = true)
-    public List<AnalyticsEventDto> getAnalyticsEvents(long receiverId, EventType eventType, Interval interval) {
+    public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval) {
         List<AnalyticsEvent> analyticsEvents = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
                 .filter(analyticsEvent -> interval.getFrom().isBefore(analyticsEvent.getReceivedAt())
                                           && interval.getTo().isAfter(analyticsEvent.getReceivedAt()))
@@ -30,7 +30,7 @@ public class AnalyticsService {
     }
 
     @Transactional(readOnly = true)
-    public List<AnalyticsEventDto> getAnalyticsEvents(long receiverId, EventType eventType, LocalDateTime from, LocalDateTime to) {
+    public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, LocalDateTime from, LocalDateTime to) {
         List<AnalyticsEvent> analyticsEvents = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
                 .filter(analyticsEvent -> from.isBefore(analyticsEvent.getReceivedAt())
                                           && to.isAfter(analyticsEvent.getReceivedAt()))
