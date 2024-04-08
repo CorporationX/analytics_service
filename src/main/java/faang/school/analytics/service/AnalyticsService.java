@@ -7,12 +7,15 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AnalyticsService {
@@ -25,6 +28,7 @@ public class AnalyticsService {
         List<AnalyticsEvent> analyticsEvents = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
                 .filter(analyticsEvent -> interval.getFrom().isBefore(analyticsEvent.getReceivedAt())
                                           && interval.getTo().isAfter(analyticsEvent.getReceivedAt()))
+                .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .toList();
         return analyticsEventMapper.toDto(analyticsEvents);
     }
@@ -34,7 +38,15 @@ public class AnalyticsService {
         List<AnalyticsEvent> analyticsEvents = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
                 .filter(analyticsEvent -> from.isBefore(analyticsEvent.getReceivedAt())
                                           && to.isAfter(analyticsEvent.getReceivedAt()))
+                .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .toList();
         return analyticsEventMapper.toDto(analyticsEvents);
+    }
+
+    @Transactional
+    public AnalyticsEventDto saveEvent(AnalyticsEventDto analyticsEventDto) {
+        AnalyticsEvent analyticsEvent = analyticsEventRepository.save(analyticsEventMapper.toEntity(analyticsEventDto));
+        log.info("Event saved: {}", analyticsEvent);
+        return analyticsEventMapper.toDto(analyticsEvent);
     }
 }
