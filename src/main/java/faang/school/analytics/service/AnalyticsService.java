@@ -26,8 +26,7 @@ public class AnalyticsService {
     @Transactional(readOnly = true)
     public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval) {
         List<AnalyticsEvent> analyticsEvents = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
-                .filter(analyticsEvent -> interval.getFrom().isBefore(analyticsEvent.getReceivedAt())
-                                          && interval.getTo().isAfter(analyticsEvent.getReceivedAt()))
+                .filter(analyticsEvent -> isBetween(interval.getFrom(), analyticsEvent.getReceivedAt(), interval.getTo()))
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .toList();
         return analyticsEventMapper.toDto(analyticsEvents);
@@ -36,8 +35,7 @@ public class AnalyticsService {
     @Transactional(readOnly = true)
     public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, LocalDateTime from, LocalDateTime to) {
         List<AnalyticsEvent> analyticsEvents = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
-                .filter(analyticsEvent -> from.isBefore(analyticsEvent.getReceivedAt())
-                                          && to.isAfter(analyticsEvent.getReceivedAt()))
+                .filter(analyticsEvent -> isBetween(from, analyticsEvent.getReceivedAt(), to))
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .toList();
         return analyticsEventMapper.toDto(analyticsEvents);
@@ -48,5 +46,9 @@ public class AnalyticsService {
         AnalyticsEvent analyticsEvent = analyticsEventRepository.save(analyticsEventMapper.toEntity(analyticsEventDto));
         log.info("Event saved: {}", analyticsEvent);
         return analyticsEventMapper.toDto(analyticsEvent);
+    }
+
+    private boolean isBetween(LocalDateTime from, LocalDateTime date, LocalDateTime to) {
+        return from.isBefore(date) && to.isAfter(date);
     }
 }

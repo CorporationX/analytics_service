@@ -2,9 +2,9 @@ package faang.school.analytics.controller;
 
 import faang.school.analytics.dto.analytics.AnalyticsEventDto;
 import faang.school.analytics.dto.analytics.Interval;
-import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsService;
+import faang.school.analytics.validation.AnalyticsValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +26,7 @@ import java.util.List;
 public class AnalyticsController {
 
     private final AnalyticsService analyticsService;
+    private final AnalyticsValidator analyticsValidator;
 
     @GetMapping
     public List<AnalyticsEventDto> getAnalyticsEvents(@RequestParam @Positive(message = "receiverId must be positive") long receiverId,
@@ -42,9 +43,7 @@ public class AnalyticsController {
     }
 
     private List<AnalyticsEventDto> getAnalytics(long receiverId, String eventType, String interval, LocalDateTime from, LocalDateTime to) {
-        if (interval == null && (from == null || to == null)) {
-            throw new DataValidationException("Request must have period to analytics get");
-        }
+        analyticsValidator.validateEventHavePeriod(interval, from, to);
         if (interval == null) {
             return analyticsService.getAnalytics(receiverId, EventType.of(eventType), from, to);
         }
