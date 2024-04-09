@@ -16,9 +16,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class RedisMessageSub implements MessageListener {
-
-    private final RedisTemplate<String, String> redisTemplate;
+public class RedisMessageSubscriber implements MessageListener {
 
     @Async
     @Override
@@ -43,6 +41,7 @@ public class RedisMessageSub implements MessageListener {
         } catch (JsonProcessingException e) {
             // Обработать ошибку JSON-парсинга
             e.printStackTrace();
+            log.error("parsing error");
             throw new RuntimeException(e);
         }
     }
