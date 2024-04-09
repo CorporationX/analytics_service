@@ -33,7 +33,6 @@ public class PremiumBoughtEventListener implements MessageListener {
             analyticsEvent.setEventType(EventType.PREMIUM_BOUGHT);
             analyticsEvent.setReceivedAt(LocalDateTime.now());
             analyticsService.saveEvent(analyticsEvent);
-            log.info("Event received: {}", analyticsEvent);
         } catch (IOException e) {
             throw new SerializationException("Failed to deserialize message", e);
         }
