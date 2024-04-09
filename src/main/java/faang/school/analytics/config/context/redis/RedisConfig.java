@@ -1,8 +1,7 @@
 package faang.school.analytics.config.context.redis;
 
-import faang.school.analytics.listener.RedisMessageSubscriber;
+import faang.school.analytics.listener.ProjectViewEventListener;
 import lombok.extern.slf4j.Slf4j;
-import org.reactivestreams.Subscriber;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
@@ -37,7 +36,7 @@ public class RedisConfig {
 
     @Bean
     MessageListenerAdapter messageListener(){
-        return new MessageListenerAdapter(new RedisMessageSubscriber());
+        return new MessageListenerAdapter(new ProjectViewEventListener());
     }
     @Bean
     RedisMessageListenerContainer redisContainer(){
