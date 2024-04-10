@@ -21,7 +21,7 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int port;
 
-    @Value("${spring.data.redis.topics.post-view}")
+    @Value("${spring.data.redis.channel.post-view}")
     private String postViewTopic;
 
     private final PostViewEventListener postViewListener;
