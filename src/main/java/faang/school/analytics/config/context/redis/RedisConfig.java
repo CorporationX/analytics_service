@@ -1,6 +1,7 @@
 package faang.school.analytics.config.context.redis;
 
 import faang.school.analytics.listener.ProjectViewEventListener;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +15,10 @@ import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Slf4j
+@RequiredArgsConstructor
 @Configuration
 public class RedisConfig {
+    private final ProjectViewEventListener projectViewEventListener;
     @Bean
     LettuceConnectionFactory lettuceConnectionFactory(){
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
@@ -36,7 +39,7 @@ public class RedisConfig {
 
     @Bean
     MessageListenerAdapter messageListener(){
-        return new MessageListenerAdapter(new ProjectViewEventListener());
+        return new MessageListenerAdapter(projectViewEventListener);
     }
     @Bean
     RedisMessageListenerContainer redisContainer(){
