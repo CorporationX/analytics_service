@@ -16,7 +16,7 @@ public class AnalyticsService {
     private final AnalyticsEventRepository analyticsEventRepository;
 
     public void savePostViewEvent(PostViewEvent postViewEvent) {
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(postViewEvent);
-        analyticsEventRepository.save(analyticsEvent);
+        AnalyticsEvent savedEvent = analyticsEventRepository.save(analyticsEventMapper.toAnalyticsEvent(postViewEvent));
+        log.info("Event saved: " + savedEvent);
     }
 }

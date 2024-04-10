@@ -22,7 +22,6 @@ public class PostViewEventListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
-            log.info("Message is received: " + message);
             PostViewEvent postViewEvent = objectMapper.readValue(message.getBody(), PostViewEvent.class);
             analyticsService.savePostViewEvent(postViewEvent);
         } catch (IOException e) {
