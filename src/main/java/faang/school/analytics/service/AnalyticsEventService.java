@@ -1,5 +1,6 @@
 package faang.school.analytics.service;
 
+import faang.school.analytics.dto.LikeEvent;
 import faang.school.analytics.dto.MentorshipRequestedEvent;
 import faang.school.analytics.dto.RecommendationEvent;
 import faang.school.analytics.dto.follower.FollowerEventDto;
@@ -40,5 +41,10 @@ public class AnalyticsEventService {
         log.info("Старт saveAnalyticsEvent: {}", followerEventDto);
         analyticsEventRepository.save(followerEvent);
         log.info("Сохранен AnalyticsEvent - {} ", followerEvent);
+    }
+
+    public void saveLikeEvent(LikeEvent likeEventDto){
+        AnalyticsEvent likeEvent = analyticsEventMapper.likeEventToAnalyticsEvent(likeEventDto);
+        saveEvent(EventType.POST_LIKE, likeEvent);
     }
 }
