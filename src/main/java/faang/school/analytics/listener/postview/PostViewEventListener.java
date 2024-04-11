@@ -1,7 +1,9 @@
 package faang.school.analytics.listener.postview;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.event.postview.PostViewEvent;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.service.AnalyticsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +20,14 @@ import java.io.IOException;
 public class PostViewEventListener implements MessageListener {
     private final ObjectMapper objectMapper;
     private final AnalyticsService analyticsService;
+    private final AnalyticsEventMapper analyticsEventMapper;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
             PostViewEvent postViewEvent = objectMapper.readValue(message.getBody(), PostViewEvent.class);
-            analyticsService.savePostViewEvent(postViewEvent);
+            AnalyticsEventDto analyticsEventDto = analyticsEventMapper.toAnalyticsEvent(postViewEvent);
+            analyticsService.saveEvent(analyticsEventDto);
         } catch (IOException e) {
             log.error("IOException was thrown", e);
             throw new SerializationException("Failed to deserialize message", e);

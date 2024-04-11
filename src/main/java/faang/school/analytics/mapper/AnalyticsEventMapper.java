@@ -21,5 +21,5 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "userId", target = "actorId")
     @Mapping(source = "viewedAt", target = "receivedAt")
     @Mapping(target = "eventType", expression = "java(AnalyticsEventMapper.POST_VIEW)")
-    AnalyticsEvent toAnalyticsEvent(PostViewEvent postViewEvent);
+    AnalyticsEventDto toAnalyticsEvent(PostViewEvent postViewEvent);
 }

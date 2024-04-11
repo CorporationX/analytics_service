@@ -1,5 +1,6 @@
 package service;
 
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.event.postview.PostViewEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
@@ -29,7 +30,7 @@ class AnalyticsServiceTest {
     AnalyticsService analyticsService;
 
     private PostViewEvent postViewEvent;
-    private AnalyticsEvent analyticsEvent;
+    private AnalyticsEventDto analyticsEventDto;
 
     @BeforeEach
     void setup() {
@@ -38,7 +39,7 @@ class AnalyticsServiceTest {
                 .authorId(10L)
                 .userId(100L)
                 .build();
-        analyticsEvent = AnalyticsEvent.builder()
+        analyticsEventDto = AnalyticsEventDto.builder()
                 .actorId(postViewEvent.getUserId())
                 .receiverId(postViewEvent.getAuthorId())
                 .receivedAt(postViewEvent.getViewedAt())
@@ -47,11 +48,11 @@ class AnalyticsServiceTest {
 
     @Test
     void savePostViewEvent_PostViewEventMappedToAnalyticsEvent_ThenSavedToDb() {
-        analyticsService.savePostViewEvent(postViewEvent);
+        analyticsService.saveEvent(analyticsEventDto);
 
         assertAll(
                 () -> verify(analyticsEventRepository, times(1)).save(any(AnalyticsEvent.class)),
-                () -> verify(analyticsEventMapper, times(1)).toAnalyticsEvent(any(PostViewEvent.class))
+                () -> verify(analyticsEventMapper, times(1)).toEntity(any(AnalyticsEventDto.class))
         );
     }
 }
