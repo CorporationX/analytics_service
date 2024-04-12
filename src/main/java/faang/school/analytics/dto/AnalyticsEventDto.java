@@ -1,5 +1,6 @@
 package faang.school.analytics.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import faang.school.analytics.model.EventType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,5 +24,6 @@ public class AnalyticsEventDto {
     @Positive(message = "id must be greater than zero")
     private long actorId;
     private EventType eventType;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime receivedAt;
 }
