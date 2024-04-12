@@ -25,11 +25,13 @@ public class ProjectViewEventListener implements MessageListener {
     @Async
     @Override
     public void onMessage(Message message, byte[] pattern) {
+        log.info("InviteEventListener has received a new message from Redis")
         Map<String, String> data;
         try {
             String jsonMessage = new String((byte[]) message.getBody());
             data = new ObjectMapper().readValue(jsonMessage, Map.class);
         } catch (JsonProcessingException e) {
+            log.info("Error parsing JSON message");
             throw new SerializationException("Error parsing JSON message");
         }
 
