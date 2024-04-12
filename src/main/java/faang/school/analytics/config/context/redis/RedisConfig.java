@@ -51,12 +51,12 @@ public class RedisConfig {
     RedisMessageListenerContainer redisContainer() {
         final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
-        container.addMessageListener(messageListener(), topic());
+        container.addMessageListener(messageListener(), postViewTopic());
         return container;
     }
 
     @Bean
-    public ChannelTopic topic() {
+    public ChannelTopic postViewTopic() {
         return new ChannelTopic(channel);
     }
 }

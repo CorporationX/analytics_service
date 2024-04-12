@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -29,8 +30,7 @@ public class ProjectViewEventListener implements MessageListener {
             String jsonMessage = new String((byte[]) message.getBody());
             data = new ObjectMapper().readValue(jsonMessage, Map.class);
         } catch (JsonProcessingException e) {
-            log.error("Error parsing JSON message: {}", e.getMessage());
-            return;
+            throw new SerializationException("Error parsing JSON message");
         }
 
         String userId = (String) data.get("userId");
@@ -39,17 +39,12 @@ public class ProjectViewEventListener implements MessageListener {
 
         log.info("Received ProjectViewEvent: userId={}, projectId={}, timestamp={}", userId, projectId, timestamp);
 
-        try {
-            AnalyticsEventDto eventDto = new AnalyticsEventDto();
-            eventDto.setReceiverId(Long.parseLong(projectId));
-            eventDto.setActorId(Long.parseLong(userId));
-            eventDto.setEventType(EventType.PROJECT_VIEW);
-            eventDto.setReceivedAt(LocalDateTime.parse(timestamp));
 
-            analyticsEventService.saveEvent(eventDto);
-        } catch (Exception e) {
-            log.error("Error processing ProjectViewEvent: {}", e.getMessage());
-            throw e;
-        }
+        AnalyticsEventDto eventDto = new AnalyticsEventDto();
+        eventDto.setReceiverId(Long.parseLong(projectId));
+        eventDto.setActorId(Long.parseLong(userId));
+        eventDto.setEventType(EventType.PROJECT_VIEW);
+        eventDto.setReceivedAt(LocalDateTime.parse(timestamp));
+        analyticsEventService.saveEvent(eventDto);
     }
 }
