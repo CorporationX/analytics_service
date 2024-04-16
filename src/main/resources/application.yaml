@@ -22,7 +22,7 @@ spring:
       port: 6379
       host: localhost
       channel:
-        profile-view: profile_view_channel
+        goal-completed: "goal_completed"
 
 server:
   port: 8086
