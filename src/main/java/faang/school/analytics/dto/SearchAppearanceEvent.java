@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SearchAppearanceEventDto {
+public class SearchAppearanceEvent {
     @NotNull
-    private Long foundUserProfileId;
+    private Long viewedUserId;
     @NotNull
-    private Long searcherUserId;
+    private Long viewerUserId;
     @NotNull
     private LocalDateTime viewingTime;
 }

@@ -1,9 +1,9 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listeners.SearchAppearanceEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,45 +16,46 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
 
     @Value("${spring.data.redis.host}")
-    private String host;
+    private String redisHost;
     @Value("${spring.data.redis.port}")
-    private int port;
-    @Value("${spring.data.redis.channels.profile_search_topic.name}")
-    private String profileSearchTopic;
+    private int redisPort;
+
+    @Value("${spring.data.redis.channels.profile_search_channel.name}")
+    private String profileSearchChannelName;
 
     @Bean
-    public JedisConnectionFactory redisConnectionFactory() {
-        System.out.println(port);
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
-        return new JedisConnectionFactory(config);
+    public JedisConnectionFactory jedisConnectionFactory() {
+        System.out.println(redisPort);
+        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(redisHost, redisPort);
+        return new JedisConnectionFactory(redisConfig);
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
-        return redisTemplate;
+    public RedisTemplate<String, Object> redisTemplate() {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(jedisConnectionFactory());
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
+        return template;
     }
 
     @Bean
-    public RedisMessageListenerContainer redisContainer(RedisConnectionFactory redisConnectionFactory) {
+    public MessageListenerAdapter profileSearchListener(SearchAppearanceEventListener searchAppearanceEventListener) {
+        return new MessageListenerAdapter(profileSearchChannelName);
+    }
+
+    @Bean
+    public ChannelTopic profileSearchTopic() {
+        return new ChannelTopic(profileSearchChannelName);
+    }
+
+    @Bean
+    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter profileSearchListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(redisConnectionFactory);
-        // Добавляем подписку на первый канал
-        container.addMessageListener(messageListenerAdapterProfileSearchTopic(), topic());
-        // Добавляем подписку на последующие каналы (это что бы не забыть =)
+        container.setConnectionFactory(jedisConnectionFactory());
+        // Добавляем слушателя на первый канал
+        container.addMessageListener(profileSearchListener, profileSearchTopic());
+        // Добавляем слушателя сообщений на последующие каналы + не забудь в параметрах указывать MessageListenerAdapter (это что бы не забыть =)
         return container;
-    }
-
-    @Bean
-    public MessageListenerAdapter messageListenerAdapterProfileSearchTopic() {
-        return new MessageListenerAdapter(profileSearchTopic);
-    }
-
-    @Bean
-    public ChannelTopic topic() {
-        return new ChannelTopic(profileSearchTopic);
     }
 }
