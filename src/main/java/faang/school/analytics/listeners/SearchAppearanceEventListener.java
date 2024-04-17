@@ -15,7 +15,7 @@ import java.io.IOException;
 @Slf4j
 public class SearchAppearanceEventListener implements MessageListener {
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
