@@ -1,7 +1,7 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.event.postview.PostViewEvent;
+import faang.school.analytics.dto.PostViewEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.mapstruct.Mapper;
@@ -21,5 +21,5 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "userId", target = "actorId")
     @Mapping(source = "viewedAt", target = "receivedAt")
     @Mapping(target = "eventType", expression = "java(AnalyticsEventMapper.POST_VIEW)")
-    AnalyticsEventDto toAnalyticsEvent(PostViewEvent postViewEvent);
+    AnalyticsEvent toAnalyticsEvent(PostViewEvent postViewEvent);
 }

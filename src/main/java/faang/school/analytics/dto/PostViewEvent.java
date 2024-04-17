@@ -1,4 +1,4 @@
-package faang.school.analytics.event.postview;
+package faang.school.analytics.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

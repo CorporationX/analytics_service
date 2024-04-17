@@ -1,36 +1,26 @@
 package faang.school.analytics.listener.postview;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.event.postview.PostViewEvent;
+import faang.school.analytics.dto.PostViewEvent;
+import faang.school.analytics.listener.AbstractEventListener;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.connection.Message;
-import org.springframework.data.redis.connection.MessageListener;
-import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
-public class PostViewEventListener implements MessageListener {
-    private final ObjectMapper objectMapper;
-    private final AnalyticsService analyticsService;
-    private final AnalyticsEventMapper analyticsEventMapper;
+public class PostViewEventListener extends AbstractEventListener<PostViewEvent> {
+
+    public PostViewEventListener(ObjectMapper objectMapper,
+                                 AnalyticsService analyticsService,
+                                 AnalyticsEventMapper analyticsEventMapper) {
+        super(objectMapper, analyticsService, analyticsEventMapper, PostViewEvent.class);
+    }
 
     @Override
-    public void onMessage(Message message, byte[] pattern) {
-        try {
-            PostViewEvent postViewEvent = objectMapper.readValue(message.getBody(), PostViewEvent.class);
-            AnalyticsEventDto analyticsEventDto = analyticsEventMapper.toAnalyticsEvent(postViewEvent);
-            analyticsService.saveEvent(analyticsEventDto);
-        } catch (IOException e) {
-            log.error("IOException was thrown", e);
-            throw new SerializationException("Failed to deserialize message", e);
-        }
+    protected AnalyticsEvent mapEvent(PostViewEvent event) {
+        return analyticsEventMapper.toAnalyticsEvent(event);
     }
 }

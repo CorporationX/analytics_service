@@ -1,7 +1,5 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AnalyticsService {
-    private final AnalyticsEventMapper analyticsEventMapper;
     private final AnalyticsEventRepository analyticsEventRepository;
 
     @Transactional
-    public void saveEvent(AnalyticsEventDto analyticsEventDto) {
-        AnalyticsEvent savedEvent = analyticsEventRepository.save(analyticsEventMapper.toEntity(analyticsEventDto));
+    public void saveEvent(AnalyticsEvent analyticsEvent) {
+        AnalyticsEvent savedEvent = analyticsEventRepository.save(analyticsEvent);
         log.info("Event saved: {}", savedEvent);
     }
 }

@@ -1,8 +1,6 @@
 package service;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.event.postview.PostViewEvent;
-import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
+import faang.school.analytics.dto.PostViewEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.service.AnalyticsService;
@@ -11,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -22,15 +19,13 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class AnalyticsServiceTest {
 
-    @Spy
-    private AnalyticsEventMapperImpl analyticsEventMapper;
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
     @InjectMocks
     AnalyticsService analyticsService;
 
     private PostViewEvent postViewEvent;
-    private AnalyticsEventDto analyticsEventDto;
+    private AnalyticsEvent analyticsEvent;
 
     @BeforeEach
     void setup() {
@@ -39,7 +34,7 @@ class AnalyticsServiceTest {
                 .authorId(10L)
                 .userId(100L)
                 .build();
-        analyticsEventDto = AnalyticsEventDto.builder()
+        analyticsEvent = AnalyticsEvent.builder()
                 .actorId(postViewEvent.getUserId())
                 .receiverId(postViewEvent.getAuthorId())
                 .receivedAt(postViewEvent.getViewedAt())
@@ -48,11 +43,10 @@ class AnalyticsServiceTest {
 
     @Test
     void savePostViewEvent_PostViewEventMappedToAnalyticsEvent_ThenSavedToDb() {
-        analyticsService.saveEvent(analyticsEventDto);
+        analyticsService.saveEvent(analyticsEvent);
 
         assertAll(
-                () -> verify(analyticsEventRepository, times(1)).save(any(AnalyticsEvent.class)),
-                () -> verify(analyticsEventMapper, times(1)).toEntity(any(AnalyticsEventDto.class))
+                () -> verify(analyticsEventRepository, times(1)).save(any(AnalyticsEvent.class))
         );
     }
 }
