@@ -1,4 +1,4 @@
-package faang.school.analytics.service.listeners;
+package faang.school.analytics.service.listener;
 
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;

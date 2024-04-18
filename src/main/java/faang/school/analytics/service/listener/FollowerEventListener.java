@@ -1,4 +1,4 @@
-package faang.school.analytics.service.listeners;
+package faang.school.analytics.service.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.FollowerEvent;
