@@ -19,7 +19,7 @@ public abstract class AbstractListener<T> implements MessageListener {
     protected final AnalyticsEventMapper analyticsEventMapper;
     private  final AnalyticsEventRepository repository;
 
-    protected T readValue(byte[] json, Class<T> type) {
+    public T readValue(byte[] json, Class<T> type) {
         try {
             return objectMapper.readValue(json, type);
         } catch (IOException e) {
@@ -29,7 +29,7 @@ public abstract class AbstractListener<T> implements MessageListener {
     }
 
     @Transactional
-    protected void save(AnalyticsEvent analyticsEvent) {
+    public void save(AnalyticsEvent analyticsEvent) {
         repository.save(analyticsEvent);
         log.info("The event was successfully saved in the analytics database: {}", analyticsEvent);
     }
