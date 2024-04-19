@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AnalyticsEventDto {
+public class AnalyticsEvent {
     @NotNull
     @Positive(message = "id must be greater than zero")
     private long receiverId;
