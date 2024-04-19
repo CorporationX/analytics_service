@@ -21,7 +21,6 @@ public class RedisConfig {
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
-        System.out.println(port);
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
         return new JedisConnectionFactory(config);
     }
@@ -31,14 +30,14 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic topic() {
+    ChannelTopic profileViewTopic() {
         return new ChannelTopic(profileViewTopic);
     }
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter messageListener) {
+    RedisMessageListenerContainer redisContainer(ProfileViewEventListener profileViewEventListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
-        container.addMessageListener(messageListener, topic());
+        container.addMessageListener(profileViewEventListener, profileViewTopic());
         return container;
     }
 
