@@ -34,3 +34,4 @@ public abstract class AbstractEventListener<T> implements MessageListener {
         }
     }
 }
+
