@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.ProjectViewEvent;
 import faang.school.analytics.listener.AbstractEventListener;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ public class ProjectViewEventListener extends AbstractEventListener<ProjectViewE
     }
 
     @Override
-    protected faang.school.analytics.model.AnalyticsEvent mapEvent(ProjectViewEvent event) {
-        return analyticsEventMapper.toAnalyticsEvent(event);
+    protected AnalyticsEvent mapEvent(ProjectViewEvent event) {
+        return analyticsEventMapper.toAnalyticsProjectEvent(event);
     }
 }
