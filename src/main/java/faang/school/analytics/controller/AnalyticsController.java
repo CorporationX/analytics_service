@@ -2,13 +2,16 @@ package faang.school.analytics.controller;
 
 import faang.school.analytics.dto.analytics.AnalyticsEventDto;
 import faang.school.analytics.dto.analytics.Interval;
-import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsService;
+import faang.school.analytics.validation.AnalyticsValidator;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +26,7 @@ import java.util.List;
 public class AnalyticsController {
 
     private final AnalyticsService analyticsService;
+    private final AnalyticsValidator analyticsValidator;
 
     @GetMapping
     public List<AnalyticsEventDto> getAnalyticsEvents(@RequestParam @Positive(message = "receiverId must be positive") long receiverId,
@@ -33,10 +37,13 @@ public class AnalyticsController {
         return getAnalytics(receiverId, eventType, interval, from, to);
     }
 
+    @PostMapping
+    public AnalyticsEventDto saveEvent(@RequestBody @Valid AnalyticsEventDto analyticsEventDto) {
+        return analyticsService.saveEvent(analyticsEventDto);
+    }
+
     private List<AnalyticsEventDto> getAnalytics(long receiverId, String eventType, String interval, LocalDateTime from, LocalDateTime to) {
-        if (interval == null && (from == null || to == null)) {
-            throw new DataValidationException("Request must have period to analytics get");
-        }
+        analyticsValidator.validateEventHavePeriod(interval, from, to);
         if (interval == null) {
             return analyticsService.getAnalytics(receiverId, EventType.of(eventType), from, to);
         }

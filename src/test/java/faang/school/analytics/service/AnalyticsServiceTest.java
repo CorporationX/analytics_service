@@ -83,6 +83,16 @@ class AnalyticsServiceTest {
         verify(analyticsEventMapper, times(1)).toDto(anyList());
     }
 
+    @Test
+    void saveEvent_ValidArgs() {
+        when(analyticsEventRepository.save(any())).thenReturn(AnalyticsEvent.builder().build());
+
+        analyticsService.saveEvent(AnalyticsEventDto.builder().build());
+
+        verify(analyticsEventRepository, times(1)).save(any(AnalyticsEvent.class));
+        verify(analyticsEventMapper, times(1)).toDto(any(AnalyticsEvent.class));
+    }
+
     private List<AnalyticsEventDto> getExpectedAnalyticsEvents() {
         return List.of(AnalyticsEventDto.builder()
                 .receiverId(1L)

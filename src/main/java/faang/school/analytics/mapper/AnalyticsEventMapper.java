@@ -11,4 +11,8 @@ import java.util.List;
 public interface AnalyticsEventMapper {
 
     List<AnalyticsEventDto> toDto(List<AnalyticsEvent> analyticsEvents);
+
+    AnalyticsEvent toEntity(AnalyticsEventDto analyticsEventDto);
+
+    AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
 }
