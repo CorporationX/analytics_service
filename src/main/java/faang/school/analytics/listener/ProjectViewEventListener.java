@@ -22,7 +22,6 @@ public class ProjectViewEventListener implements MessageListener {
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper analyticsEventMapper;
 
-    @Async
     @Override
     public void onMessage(Message message, byte[] pattern) {
         log.info("InviteEventListener has received a new message from Redis");

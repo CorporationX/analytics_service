@@ -21,10 +21,9 @@ spring:
     redis:
       port: 6379
       host: localhost
-      channels:
-        project_view_channel:
-          name: project_view
-
+      channel:
+        project_view: project_view_channel
+        profile_view: profile_view_channel
 server:
   port: 8086
 

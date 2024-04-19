@@ -24,8 +24,8 @@ public class RedisConfig {
     private String host;
     @Value("${spring.data.redis.port}")
     private int port;
-    @Value("${spring.data.redis.channels.project_view_channel.name}")
-    private String channel;
+    @Value("${spring.data.redis.channel.project_view}")
+    private String projectViewChannel;
 
     @Bean
     JedisConnectionFactory redisConnectionFactory() {
@@ -57,6 +57,6 @@ public class RedisConfig {
 
     @Bean
     public ChannelTopic projectViewTopic() {
-        return new ChannelTopic(channel);
+        return new ChannelTopic(projectViewChannel);
     }
 }
