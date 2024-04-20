@@ -42,10 +42,9 @@ public class AnalyticsService {
     }
 
     @Transactional
-    public AnalyticsEventDto saveEvent(AnalyticsEventDto analyticsEventDto) {
-        AnalyticsEvent analyticsEvent = analyticsEventRepository.save(analyticsEventMapper.toEntity(analyticsEventDto));
-        log.info("Event saved: {}", analyticsEvent);
-        return analyticsEventMapper.toDto(analyticsEvent);
+    public void saveEvent(AnalyticsEvent analyticsEvent) {
+        AnalyticsEvent savedEvent = analyticsEventRepository.save(analyticsEvent);
+        log.info("Event saved: {}", savedEvent);
     }
 
     private boolean isBetween(LocalDateTime from, LocalDateTime date, LocalDateTime to) {
