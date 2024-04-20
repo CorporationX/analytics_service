@@ -18,11 +18,11 @@ class AnalyticsValidatorTest {
 
     @Test
     void validateEventHavePeriod_NullIntervalAndFrom_ThrowsDataValidationException() {
-        assertThrows(DataValidationException.class, () -> analyticsValidator.validateEventHavePeriod(null, null, LocalDateTime.now()));
+        assertThrows(DataValidationException.class, () -> analyticsValidator.validateEventHavePeriod(null, null, LocalDateTime.now().toString()));
     }
 
     @Test
     void validateEventHavePeriod_NullIntervalAndTo_ThrowsDataValidationException() {
-        assertThrows(DataValidationException.class, () -> analyticsValidator.validateEventHavePeriod(null, LocalDateTime.now(), null));
+        assertThrows(DataValidationException.class, () -> analyticsValidator.validateEventHavePeriod(null, LocalDateTime.now().toString(), null));
     }
 }

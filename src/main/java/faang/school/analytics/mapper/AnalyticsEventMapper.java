@@ -1,6 +1,5 @@
 package faang.school.analytics.mapper;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.PostViewEvent;
 import faang.school.analytics.dto.analytics.AnalyticsEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
@@ -15,6 +14,7 @@ import java.util.List;
 public interface AnalyticsEventMapper {
 
     EventType POST_VIEW = EventType.POST_VIEW;
+
     List<AnalyticsEventDto> toDto(List<AnalyticsEvent> analyticsEvents);
 
     AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
