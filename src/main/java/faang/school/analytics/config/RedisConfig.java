@@ -1,4 +1,4 @@
-package faang.school.analytics.config.redis;
+package faang.school.analytics.config;
 
 import faang.school.analytics.listeners.SearchAppearanceEventListener;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class RedisConfig {
     private int port;
 
     @Value("${spring.data.redis.channels.profile_search_channel.name}")
-    private String searchAppearanceChannelName;
+    private String userProfileSearchTopic;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -48,7 +48,7 @@ public class RedisConfig {
 
     @Bean
     public ChannelTopic searchAppearanceTopic() {
-        return new ChannelTopic(searchAppearanceChannelName);
+        return new ChannelTopic(userProfileSearchTopic);
     }
 
     @Bean
