@@ -26,7 +26,7 @@ public class RedisConfig {
     private String searchAppearanceChannelName;
 
     @Bean
-    public JedisConnectionFactory jedisConnectionFactory() {
+    public JedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(host, port);
         log.info("Connections to Redis created on the host: {}, port: {}", host, port);
         return new JedisConnectionFactory(redisConfig);
@@ -35,7 +35,7 @@ public class RedisConfig {
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(jedisConnectionFactory());
+        template.setConnectionFactory(redisConnectionFactory());
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new StringRedisSerializer());
         return template;
@@ -54,7 +54,7 @@ public class RedisConfig {
     @Bean
     public RedisMessageListenerContainer redisContainer(MessageListenerAdapter searchAppearanceAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(jedisConnectionFactory());
+        container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(searchAppearanceAdapter, searchAppearanceTopic());
         return container;
     }
