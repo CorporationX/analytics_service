@@ -23,7 +23,7 @@ public class RedisConfig {
     private int port;
 
     @Value("${spring.data.redis.channels.profile_search_channel.name}")
-    private String profileSearchChannelName;
+    private String searchAppearanceChannelName;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -42,20 +42,20 @@ public class RedisConfig {
     }
 
     @Bean
-    public MessageListenerAdapter profileSearchListener(SearchAppearanceEventListener searchAppearanceEventListener) {
-        return new MessageListenerAdapter(profileSearchChannelName);
+    public MessageListenerAdapter searchAppearanceAdapter(SearchAppearanceEventListener searchAppearanceEventListener) {
+        return new MessageListenerAdapter(searchAppearanceEventListener);
     }
 
     @Bean
-    public ChannelTopic profileSearchTopic() {
-        return new ChannelTopic(profileSearchChannelName);
+    public ChannelTopic searchAppearanceTopic() {
+        return new ChannelTopic(searchAppearanceChannelName);
     }
 
     @Bean
-    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter profileSearchListener) {
+    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter searchAppearanceAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(profileSearchListener, profileSearchTopic());
+        container.addMessageListener(searchAppearanceAdapter, searchAppearanceTopic());
         return container;
     }
 }
