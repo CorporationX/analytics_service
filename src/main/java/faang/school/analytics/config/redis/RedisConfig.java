@@ -1,6 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listeners.SearchAppearanceEventListener;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,20 +14,21 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@Slf4j
 public class RedisConfig {
 
     @Value("${spring.data.redis.host}")
-    private String redisHost;
+    private String host;
     @Value("${spring.data.redis.port}")
-    private int redisPort;
+    private int port;
 
     @Value("${spring.data.redis.channels.profile_search_channel.name}")
     private String profileSearchChannelName;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
-        System.out.println(redisPort);
-        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(redisHost, redisPort);
+        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(host, port);
+        log.info("Connections to Redis created on the host: {}, port: {}", host, port);
         return new JedisConnectionFactory(redisConfig);
     }
 
@@ -53,9 +55,7 @@ public class RedisConfig {
     public RedisMessageListenerContainer redisContainer(MessageListenerAdapter profileSearchListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        // Добавляем слушателя на первый канал
         container.addMessageListener(profileSearchListener, profileSearchTopic());
-        // Добавляем слушателя сообщений на последующие каналы + не забудь в параметрах указывать MessageListenerAdapter (это что бы не забыть =)
         return container;
     }
 }
