@@ -1,6 +1,7 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.PostViewEvent;
+import faang.school.analytics.dto.ProjectViewEvent;
 import faang.school.analytics.dto.analytics.AnalyticsEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -14,6 +15,7 @@ import java.util.List;
 public interface AnalyticsEventMapper {
 
     EventType POST_VIEW = EventType.POST_VIEW;
+    EventType PROJECT_VIEW = EventType.PROJECT_VIEW;
 
     List<AnalyticsEventDto> toDto(List<AnalyticsEvent> analyticsEvents);
 
@@ -25,5 +27,11 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "userId", target = "actorId")
     @Mapping(source = "viewedAt", target = "receivedAt")
     @Mapping(target = "eventType", expression = "java(AnalyticsEventMapper.POST_VIEW)")
-    AnalyticsEvent toAnalyticsEvent(PostViewEvent postViewEvent);
+    AnalyticsEvent toAnalyticsPostEvent(PostViewEvent postViewEvent);
+
+    @Mapping(target = "receiverId", source = "projectId")
+    @Mapping(target = "actorId", source = "userId")
+    @Mapping(target = "receivedAt", source = "timestamp")
+    @Mapping(target = "eventType", expression = "java(AnalyticsEventMapper.PROJECT_VIEW)")
+    AnalyticsEvent toAnalyticsProjectEvent(ProjectViewEvent projectViewEvent);
 }

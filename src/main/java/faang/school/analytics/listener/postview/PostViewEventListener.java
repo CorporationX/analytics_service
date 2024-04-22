@@ -21,6 +21,6 @@ public class PostViewEventListener extends AbstractEventListener<PostViewEvent> 
 
     @Override
     protected AnalyticsEvent mapEvent(PostViewEvent event) {
-        return analyticsEventMapper.toAnalyticsEvent(event);
+        return analyticsEventMapper.toAnalyticsPostEvent(event);
     }
 }
