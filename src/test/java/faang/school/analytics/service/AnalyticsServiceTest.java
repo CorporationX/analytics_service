@@ -2,7 +2,6 @@ package faang.school.analytics.service;
 
 
 import faang.school.analytics.dto.ProjectViewEvent;
-import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.dto.analytics.AnalyticsEventDto;
 import faang.school.analytics.dto.analytics.Interval;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
@@ -15,10 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import java.time.LocalDateTime;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -27,8 +22,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -39,7 +34,7 @@ class AnalyticsServiceTest {
 
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
-  
+
     @Spy
     private AnalyticsEventMapperImpl analyticsEventMapper;
 
@@ -67,9 +62,11 @@ class AnalyticsServiceTest {
                         .receivedAt(LocalDateTime.now().minusDays(2))
                         .build());
     }
-  
-     @Test
+
+    @Test
     void savePostViewEvent_PostViewEventMappedToAnalyticsEvent_ThenSavedToDb() {
+        analyticsEvent = AnalyticsEvent.builder()
+                        .build();
         analyticsService.saveEvent(analyticsEvent);
 
         Mockito.verify(analyticsEventRepository, times(1)).save(any(AnalyticsEvent.class));
