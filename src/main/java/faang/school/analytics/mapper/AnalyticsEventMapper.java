@@ -9,13 +9,15 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 
-public interface AnalyticsEventMapper extends AbstractMapper<AnalyticsEvent, FollowerEvent> {
+public interface AnalyticsEventMapper {
 
-    @Override
-    @Mapping(source = "followerId", target = "actorId")
-    @Mapping(source = "followeeId", target = "receiverId")
+
+    @Mapping(source = "followeeId", target = "actorId")
+    @Mapping(source = "followerId", target = "receiverId")
     @Mapping(source = "subscriptionDateTime", target = "receivedAt")
     @Mapping(target = "eventType", constant = "FOLLOWER")
     AnalyticsEvent toEntity(FollowerEvent dto);
+
+    AnalyticsEvent toEntity(Object dto);
 }
 

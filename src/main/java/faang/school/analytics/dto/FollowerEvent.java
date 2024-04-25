@@ -27,5 +27,4 @@ public class FollowerEvent {
     @NotNull
     private LocalDateTime subscriptionDateTime;
 
-
 }
