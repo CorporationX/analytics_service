@@ -42,7 +42,6 @@ public class FollowEventListenerTest {
     @Test
     public void testOnMessage_success() throws IOException {
 
-
         byte[] pattern = new byte[]{};
 
         when( objectMapper.readValue( message.getBody(), FollowerEvent.class ) ).thenReturn( new FollowerEvent() );

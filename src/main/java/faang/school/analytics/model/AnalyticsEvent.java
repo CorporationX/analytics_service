@@ -33,4 +33,5 @@ public class AnalyticsEvent {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "received_at", nullable = false)
     private LocalDateTime receivedAt;
+
 }

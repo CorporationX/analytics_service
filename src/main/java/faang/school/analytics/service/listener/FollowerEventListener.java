@@ -27,4 +27,5 @@ public class FollowerEventListener extends AbstractListener<FollowerEvent> {
     protected AnalyticsEvent mapToAnalyticsEvent(FollowerEvent event) {
         return analyticsEventMapper.toEntity(event);
     }
+
 }

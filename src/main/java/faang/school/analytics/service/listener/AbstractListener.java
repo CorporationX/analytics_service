@@ -43,6 +43,7 @@ public abstract class AbstractListener<T> implements MessageListener {
     protected abstract AnalyticsEvent mapToAnalyticsEvent(T event);
 
     protected void saveAnalyticsEvent(AnalyticsEvent event) {
+
         analyticsEventService.saveEventToDb(event);
     }
 }
