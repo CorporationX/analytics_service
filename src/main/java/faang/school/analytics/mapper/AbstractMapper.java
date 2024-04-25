@@ -13,3 +13,4 @@ public interface AbstractMapper< E, D> {
     List<D> toDtoList(List<E> entityList);
 
 }
+
