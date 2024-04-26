@@ -31,6 +31,5 @@ public abstract class AbstractListener<T> implements MessageListener {
     @Transactional
     public void save(AnalyticsEvent analyticsEvent) {
         repository.save(analyticsEvent);
-        log.info("The event was successfully saved in the analytics database: {}", analyticsEvent);
     }
 }
