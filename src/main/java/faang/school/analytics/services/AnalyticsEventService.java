@@ -1,6 +1,5 @@
 package faang.school.analytics.services;
 
-import faang.school.analytics.mappers.AbstractAnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
