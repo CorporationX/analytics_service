@@ -5,7 +5,7 @@ import faang.school.analytics.dto.event.SearchAppearanceEvent;
 import faang.school.analytics.listeners.SearchAppearanceEventListener;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.repository.AnalyticsEventRepository;
+import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ public class SearchAppearanceEventListenerTest {
     @Mock
     private AnalyticsEventMapper analyticsEventMapper;
     @Mock
-    private AnalyticsEventRepository analyticsEventRepository;
+    private AnalyticsEventService analyticsEventService;
     @Mock
     private Message message;
     @InjectMocks
@@ -55,7 +55,6 @@ public class SearchAppearanceEventListenerTest {
                 .actorId(2L)
                 .receivedAt(LocalDateTime.now())
                 .build();
-
     }
 
     @Test
@@ -66,16 +65,6 @@ public class SearchAppearanceEventListenerTest {
         listener.readValue(json, SearchAppearanceEvent.class);
 
         verify(objectMapper).readValue(json, searchAppearanceEvent.getClass());
-    }
-
-    @Test
-    @DisplayName("Checking that the object is saved")
-    public void testSave() {
-        when(analyticsEventRepository.save(analyticsEvent)).thenReturn(analyticsEvent);
-
-        listener.save(analyticsEvent);
-
-        verify(analyticsEventRepository, times(1)).save(analyticsEvent);
     }
 
     @Test
