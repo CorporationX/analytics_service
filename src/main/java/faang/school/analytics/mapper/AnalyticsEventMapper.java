@@ -15,6 +15,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
 
+    EventType PREMIUM_BOUGHT = EventType.PREMIUM_BOUGHT;
     EventType POST_VIEW = EventType.POST_VIEW;
     EventType PROJECT_VIEW = EventType.PROJECT_VIEW;
 
@@ -22,11 +23,12 @@ public interface AnalyticsEventMapper {
 
     AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
 
+    AnalyticsEvent toEntity(AnalyticsEventDto analyticsEventDto);
+
     @Mapping(target = "receiverId", source = "userId")
     @Mapping(target = "actorId", source = "userId")
-    AnalyticsEventDto toDto(UserPremiumBoughtEvent userPremiumBoughtEvent);
-
-    AnalyticsEvent toEntity(AnalyticsEventDto analyticsEventDto);
+    @Mapping(target = "eventType", expression = "java(AnalyticsEventMapper.PREMIUM_BOUGHT)")
+    AnalyticsEvent toEntity(UserPremiumBoughtEvent userPremiumBoughtEvent);
 
     @Mapping(source = "authorId", target = "receiverId")
     @Mapping(source = "userId", target = "actorId")
