@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Validated
@@ -32,8 +33,8 @@ public class AnalyticsController {
     public List<AnalyticsEventDto> getAnalyticsEvents(@RequestParam @Positive(message = "receiverId must be positive") long receiverId,
                                                       @RequestParam String eventType,
                                                       @RequestParam(required = false) String interval,
-                                                      @RequestParam(required = false) LocalDateTime from,
-                                                      @RequestParam(required = false) LocalDateTime to) {
+                                                      @RequestParam(required = false) String from,
+                                                      @RequestParam(required = false) String to) {
         return getAnalytics(receiverId, eventType, interval, from, to);
     }
 
@@ -42,10 +43,13 @@ public class AnalyticsController {
         return analyticsService.saveEvent(analyticsEventDto);
     }
 
-    private List<AnalyticsEventDto> getAnalytics(long receiverId, String eventType, String interval, LocalDateTime from, LocalDateTime to) {
+    private List<AnalyticsEventDto> getAnalytics(long receiverId, String eventType, String interval, String from, String to) {
         analyticsValidator.validateEventHavePeriod(interval, from, to);
         if (interval == null) {
-            return analyticsService.getAnalytics(receiverId, EventType.of(eventType), from, to);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
+            LocalDateTime fromDate = LocalDateTime.parse(from, formatter);
+            LocalDateTime toDate = LocalDateTime.parse(to, formatter);
+            return analyticsService.getAnalytics(receiverId, EventType.of(eventType), fromDate, toDate);
         }
         return analyticsService.getAnalytics(receiverId, EventType.of(eventType), Interval.of(interval));
     }

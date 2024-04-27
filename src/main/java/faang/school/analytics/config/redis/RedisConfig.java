@@ -1,6 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.PremiumBoughtEventListener;
+import faang.school.analytics.listener.postview.PostViewEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,15 @@ public class RedisConfig {
     private int port;
 
     private final PremiumBoughtEventListener premiumBoughtEventListener;
+    @Value("${spring.data.redis.channel.post-view}")
+    private String postViewTopic;
+
+    private final PostViewEventListener postViewListener;
+
+    @Bean
+    ChannelTopic postViewTopic() {
+        return new ChannelTopic(postViewTopic);
+    }
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -35,10 +45,16 @@ public class RedisConfig {
     }
 
     @Bean
+    public MessageListenerAdapter postViewListenerAdapter() {
+        return new MessageListenerAdapter(postViewListener);
+    }
+
+    @Bean
     public RedisMessageListenerContainer premiumBoughtMessageListenerContainer() {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(premiumBoughtListenerAdapter(), premiumBoughtTopic());
+        container.addMessageListener(postViewListenerAdapter(), postViewTopic());
         return container;
     }
 
