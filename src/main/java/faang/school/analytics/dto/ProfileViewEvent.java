@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProfileViewEventDto {
+public class ProfileViewEvent {
     @NotNull
     private long observedId;
     @NotNull

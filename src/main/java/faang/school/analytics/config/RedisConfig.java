@@ -1,5 +1,6 @@
 package faang.school.analytics.config;
 
+import faang.school.analytics.listeners.FollowerEventListener;
 import faang.school.analytics.listeners.ProfileViewEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,9 @@ public class RedisConfig {
     private int port;
     @Value("${spring.data.redis.channels.profile_view_channel.name}")
     private String profileViewTopic;
+    @Value("${spring.data.redis.channels.follower_channel.name}")
+    private String eventFollowerTopic;
+
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -28,16 +32,26 @@ public class RedisConfig {
     MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
         return new MessageListenerAdapter(profileViewEventListener);
     }
+    @Bean
+    MessageListenerAdapter followerListener(FollowerEventListener followerEventListener) {
+        return new MessageListenerAdapter(followerEventListener);
+    }
 
     @Bean
     ChannelTopic profileViewTopic() {
         return new ChannelTopic(profileViewTopic);
     }
     @Bean
-    RedisMessageListenerContainer redisContainer(ProfileViewEventListener profileViewEventListener) {
+    ChannelTopic eventFollowerTopic() {
+        return new ChannelTopic(eventFollowerTopic);
+    }
+    @Bean
+    RedisMessageListenerContainer redisContainer(ProfileViewEventListener profileViewEventListener,
+                                                 MessageListenerAdapter followerListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(profileViewEventListener, profileViewTopic());
+        container.addMessageListener(followerListener, eventFollowerTopic());
         return container;
     }
 
