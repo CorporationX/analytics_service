@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProjectViewEventListener extends AbstractEventListener<ProjectViewEvent> {
 
-    public ProjectViewEventListener(ObjectMapper objectMapper, AnalyticsService analyticsService, AnalyticsEventMapper analyticsEventMapper, Class<ProjectViewEvent> eventType) {
-        super(objectMapper, analyticsService, analyticsEventMapper, eventType);
+    public ProjectViewEventListener(ObjectMapper objectMapper, AnalyticsService analyticsService, AnalyticsEventMapper analyticsEventMapper) {
+        super(objectMapper, analyticsService, analyticsEventMapper, ProjectViewEvent.class);
     }
 
     @Override
