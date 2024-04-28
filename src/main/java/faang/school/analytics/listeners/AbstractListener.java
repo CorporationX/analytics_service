@@ -1,8 +1,9 @@
-package faang.school.analytics.service.listener;
+package faang.school.analytics.listeners;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.services.AnalyticsEventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -44,6 +45,6 @@ public abstract class AbstractListener<T> implements MessageListener {
 
     protected void saveAnalyticsEvent(AnalyticsEvent event) {
 
-        analyticsEventService.saveEventToDb(event);
+        analyticsEventService.saveAnalyticsEvent(event);
     }
 }

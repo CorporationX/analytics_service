@@ -1,4 +1,4 @@
-package faang.school.analytics.service.listener;
+package faang.school.analytics.services;
 
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
@@ -7,14 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class AnalyticsEventService {
-
     private final AnalyticsEventRepository analyticsEventRepository;
 
-    public void saveEventToDb(AnalyticsEvent analyticsEvent) {
-        analyticsEventRepository.save( analyticsEvent );
-        log.info( "AnalyticsEvent saved to database!" );
+    public void saveAnalyticsEvent(AnalyticsEvent analyticsEvent){
+        analyticsEventRepository.save(analyticsEvent);
+        log.info("AnalyticsEvent successfully saved");
     }
+
 }

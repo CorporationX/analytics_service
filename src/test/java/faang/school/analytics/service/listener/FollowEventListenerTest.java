@@ -3,8 +3,10 @@ package faang.school.analytics.service.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.FollowerEvent;
+import faang.school.analytics.listeners.FollowerEventListener;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.services.AnalyticsEventService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,7 +50,7 @@ public class FollowEventListenerTest {
         when( analyticsEventMapper.toEntity( new FollowerEvent() ) ).thenReturn( new AnalyticsEvent() );
 
         followerEventListener.onMessage( message, pattern );
-        verify( analyticsEventService ).saveEventToDb( Mockito.any( AnalyticsEvent.class ) );
+        verify( analyticsEventService ).saveAnalyticsEvent( Mockito.any( AnalyticsEvent.class ) );
 
     }
 
