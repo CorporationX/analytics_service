@@ -8,17 +8,16 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentEventDto {
+public class ProfileViewEvent {
     @NotNull
-    private Long postId;
+    private long observedId;
     @NotNull
-    private Long authorId;
+    private long observerId;
     @NotNull
-    private Long commentId;
-    @NotNull
-    private LocalDateTime commentedAt;
+    private LocalDateTime viewedAt;
 }
