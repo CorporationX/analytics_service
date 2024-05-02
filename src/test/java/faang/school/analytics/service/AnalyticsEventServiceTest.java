@@ -33,7 +33,6 @@ public class AnalyticsEventServiceTest {
                 .actorId(2L)
                 .receivedAt(LocalDateTime.now())
                 .build();
-
     }
 
     @Test
@@ -41,7 +40,7 @@ public class AnalyticsEventServiceTest {
     public void testSave() {
         when(repository.save(analyticsEvent)).thenReturn(analyticsEvent);
 
-        service.save(analyticsEvent);
+        service.saveAnalyticsEvent(analyticsEvent);
 
         verify(repository, times(1)).save(analyticsEvent);
     }

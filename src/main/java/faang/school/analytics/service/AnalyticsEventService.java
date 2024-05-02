@@ -12,11 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class AnalyticsEventService {
 
-    private final AnalyticsEventRepository repository;
+    private final AnalyticsEventRepository analyticsEventRepository;
 
     @Transactional
-    public void save(AnalyticsEvent analyticsEvent) {
-        repository.save(analyticsEvent);
+    public void saveAnalyticsEvent(AnalyticsEvent analyticsEvent) {
+        analyticsEventRepository.save(analyticsEvent);
         log.info("The event was successfully saved in the analytics database: {}", analyticsEvent);
     }
 }

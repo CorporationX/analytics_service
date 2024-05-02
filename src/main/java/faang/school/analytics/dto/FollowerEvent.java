@@ -1,7 +1,5 @@
 package faang.school.analytics.dto;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,17 +12,11 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class FollowerEvent {
-
     @NotNull
     private long followerId;
-
     @NotNull
     private long followeeId;
-
-
     @NotNull
     private LocalDateTime subscriptionDateTime;
-
 }
