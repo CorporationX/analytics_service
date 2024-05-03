@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class AnalyticsService {
-    private AnalyticsEventRepository analyticsEventRepository;
+    private final AnalyticsEventRepository analyticsEventRepository;
 
     public void saveEvent(AnalyticsEvent analyticsEvent){
         analyticsEventRepository.save(analyticsEvent);

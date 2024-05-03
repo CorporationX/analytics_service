@@ -17,8 +17,8 @@ import java.io.IOException;
 @Component
 @Slf4j
 public class RecommendationEventListener extends AbstractEventListener<RecommendationEvent> {
-    public RecommendationEventListener(ObjectMapper objectMapper, AnalyticsService analyticsService, AnalyticsEventMapper analyticsEventMapper, Class<RecommendationEvent> type) {
-        super(objectMapper, analyticsService, analyticsEventMapper, type);
+    public RecommendationEventListener(ObjectMapper objectMapper, AnalyticsService analyticsService, AnalyticsEventMapper analyticsEventMapper) {
+        super(objectMapper, analyticsService, analyticsEventMapper, RecommendationEvent.class);
     }
 
     @Override
