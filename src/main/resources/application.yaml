@@ -26,6 +26,8 @@ spring:
           name: profile_view_channel
         follower_channel:
           name: follower_channel
+        profile_search_channel:
+          name: profile_search_channel
 
 server:
   port: 8086

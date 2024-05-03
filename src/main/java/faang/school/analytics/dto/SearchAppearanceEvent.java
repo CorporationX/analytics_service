@@ -8,15 +8,15 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProfileViewEvent {
+@Builder
+public class SearchAppearanceEvent {
     @NotNull
-    private long observedId;
+    private Long viewedUserId;
     @NotNull
-    private long observerId;
+    private Long viewerUserId;
     @NotNull
-    private LocalDateTime viewedAt;
+    private LocalDateTime viewingTime;
 }
