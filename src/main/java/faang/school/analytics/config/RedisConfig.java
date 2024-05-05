@@ -3,6 +3,7 @@ package faang.school.analytics.config;
 
 import faang.school.analytics.listener.RecommendationEventListener;
 import faang.school.analytics.listener.SearchAppearanceEventListener;
+import faang.school.analytics.listener.ProfileViewEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,17 +18,24 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 @RequiredArgsConstructor
 public class RedisConfig {
     private final SearchAppearanceEventListener searchAppearanceEventListener;
-
+    private final ProfileViewEventListener profileViewEventListener;
     private final RecommendationEventListener recommendationEventListener;
+
     @Value("${spring.data.redis.host}")
     private String host;
+
     @Value("${spring.data.redis.port}")
     private int port;
-    @Value("${spring.data.redis.channels.search_appearance_channel.name")
+
+    @Value("${spring.data.redis.channels.search_appearance_channel.name}")
     private String searchAppearanceTopic;
 
     @Value("${spring.data.redis.channels.recommendation.name}")
     private String recommendationChannel;
+
+    @Value("${spring.data.redis.channels.profile-view-channel.name}")
+    private String profileViewChannel;
+
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -41,8 +49,8 @@ public class RedisConfig {
     }
 
     @Bean
-    public ChannelTopic searchAppearanceTopic() {
-        return new ChannelTopic(searchAppearanceTopic);
+    public MessageListenerAdapter profileViewEventListenerAdapter() {
+        return new MessageListenerAdapter(profileViewEventListener);
     }
 
     @Bean
@@ -51,8 +59,18 @@ public class RedisConfig {
     }
 
     @Bean
+    public ChannelTopic searchAppearanceTopic() {
+        return new ChannelTopic(searchAppearanceTopic);
+    }
+
+    @Bean
     public ChannelTopic recommendationTopic() {
         return new ChannelTopic(recommendationChannel);
+    }
+
+    @Bean
+    public ChannelTopic profileViewTopic() {
+        return new ChannelTopic(profileViewChannel);
     }
 
     @Bean
@@ -61,6 +79,7 @@ public class RedisConfig {
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(userSearchMessageListenerAdapter(), searchAppearanceTopic());
         container.addMessageListener(recommendationListener(), recommendationTopic());
+        container.addMessageListener(profileViewEventListenerAdapter(), profileViewTopic());
         return container;
     }
 }

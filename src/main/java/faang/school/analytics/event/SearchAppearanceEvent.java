@@ -1,4 +1,4 @@
-package faang.school.analytics.dto.messagebroker;
+package faang.school.analytics.event;
 
 
 import lombok.AllArgsConstructor;

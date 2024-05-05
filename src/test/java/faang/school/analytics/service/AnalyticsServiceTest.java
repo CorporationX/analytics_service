@@ -3,6 +3,7 @@ package faang.school.analytics.service;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,6 +54,13 @@ public class AnalyticsServiceTest {
 
         assertDoesNotThrow(() -> analyticsEventService.saveEvent(analyticsEvent));
 
+        verify(analyticsEventRepository).save(analyticsEvent);
+    }
+
+    @Test
+    public void test_saveEventAnalytics_Successful(){
+        AnalyticsEvent analyticsEvent = new AnalyticsEvent(1, 1, 5, EventType.PROFILE_VIEW, LocalDateTime.now());
+        Assertions.assertDoesNotThrow(() -> analyticsEventService.saveEvent(analyticsEvent));
         verify(analyticsEventRepository).save(analyticsEvent);
     }
 }
