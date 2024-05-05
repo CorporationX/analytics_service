@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
 
-    public void saveEventAnalytics(AnalyticsEvent analyticsEvent){
+    public void saveEvent(AnalyticsEvent analyticsEvent) {
         analyticsEventRepository.save(analyticsEvent);
-        log.info("AnalyticsEvent сохранен в базу данных");
+        log.info("analytics event save to database");
     }
 }
