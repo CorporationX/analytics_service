@@ -20,9 +20,8 @@ import static org.mockito.Mockito.verify;
 public class AnalyticsServiceTest {
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
-    @InjectMocks
-    private AnalyticsService analyticsService;
     private AnalyticsEvent analyticsEvent;
+    @InjectMocks
     private AnalyticsEventService analyticsEventService;
 
     @BeforeEach
@@ -38,10 +37,10 @@ public class AnalyticsServiceTest {
     public void testSuccessSavedAnalyticEvent() {
         Mockito.when(analyticsEventRepository.save(analyticsEvent)).thenReturn(analyticsEvent);
 
-        analyticsService.saveEvent(analyticsEvent);
+        analyticsEventService.saveEvent(analyticsEvent);
 
         Mockito.verify(analyticsEventRepository, Mockito.times(1)).save(analyticsEvent);
-
+    }
 
     @Test
     public void testSaveEvent() {
@@ -57,3 +56,4 @@ public class AnalyticsServiceTest {
         verify(analyticsEventRepository).save(analyticsEvent);
     }
 }
+
