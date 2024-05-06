@@ -1,6 +1,7 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.FollowerEvent;
+import faang.school.analytics.dto.PremiumBoughtEvent;
 import faang.school.analytics.dto.ProfileViewEvent;
 import faang.school.analytics.dto.SearchAppearanceEvent;
 import faang.school.analytics.model.AnalyticsEvent;
@@ -26,4 +27,9 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "viewerUserId", target = "actorId")
     @Mapping(source = "viewingTime", target = "receivedAt")
     AnalyticsEvent toAnalyticsEvent(SearchAppearanceEvent searchAppearanceEvent);
+
+    @Mapping(source = "userId", target = "actorId")
+    @Mapping(source = "timestamp", target = "receivedAt")
+    @Mapping(target = "eventType", constant = "PREMIUM_BOUGHT")
+    AnalyticsEvent toAnalyticsEvent(PremiumBoughtEvent event);
 }
