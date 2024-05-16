@@ -1,12 +1,10 @@
-package faang.school.analytics.service.listener;
-
+package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.FollowerEvent;
-import faang.school.analytics.listeners.FollowerEventListener;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.services.AnalyticsEventService;
+import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,23 +19,16 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
 @ExtendWith(MockitoExtension.class)
-
 public class FollowEventListenerTest {
     @Mock
     private ObjectMapper objectMapper;
-
     @Mock
     private AnalyticsEventMapper analyticsEventMapper;
-
     @Mock
     private AnalyticsEventService analyticsEventService;
-
-
     @Mock
     private Message message;
-
     @InjectMocks
     private FollowerEventListener followerEventListener;
 
@@ -46,11 +37,11 @@ public class FollowEventListenerTest {
 
         byte[] pattern = new byte[]{};
 
-        when( objectMapper.readValue( message.getBody(), FollowerEvent.class ) ).thenReturn( new FollowerEvent() );
-        when( analyticsEventMapper.toEntity( new FollowerEvent() ) ).thenReturn( new AnalyticsEvent() );
+        when(objectMapper.readValue(message.getBody(), FollowerEvent.class)).thenReturn(new FollowerEvent());
+        when(analyticsEventMapper.toAnalyticsEvent(new FollowerEvent())).thenReturn(new AnalyticsEvent());
 
-        followerEventListener.onMessage( message, pattern );
-        verify( analyticsEventService ).saveAnalyticsEvent( Mockito.any( AnalyticsEvent.class ) );
+        followerEventListener.onMessage(message, pattern);
+        verify(analyticsEventService).saveAnalyticsEvent(Mockito.any(AnalyticsEvent.class));
 
     }
 
@@ -58,14 +49,8 @@ public class FollowEventListenerTest {
     public void testOnMessage_failure() throws IOException {
 
         byte[] pattern = new byte[]{};
-        when( objectMapper.readValue( message.getBody(), FollowerEvent.class ) ).thenThrow( IOException.class );
-        assertThrows( RuntimeException.class, () -> followerEventListener.onMessage( message, pattern ) );
+        when(objectMapper.readValue(message.getBody(), FollowerEvent.class)).thenThrow(IOException.class);
+        assertThrows(RuntimeException.class, () -> followerEventListener.onMessage(message, pattern));
 
     }
 }
-
-
-
-
-
-

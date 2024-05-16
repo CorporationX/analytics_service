@@ -1,9 +1,9 @@
-package faang.school.analytics.listeners;
+package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.services.AnalyticsEventService;
+import faang.school.analytics.service.AnalyticsEventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -19,7 +19,7 @@ public abstract class AbstractListener<T> implements MessageListener {
     private final AnalyticsEventService analyticsEventService;
     protected final AnalyticsEventMapper analyticsEventMapper;
 
-    public AbstractListener(ObjectMapper objectMapper, AnalyticsEventService analyticsEventService, AnalyticsEventMapper analyticsEventMapper) {
+    protected AbstractListener(ObjectMapper objectMapper, AnalyticsEventService analyticsEventService, AnalyticsEventMapper analyticsEventMapper) {
         this.objectMapper = objectMapper;
         this.analyticsEventService = analyticsEventService;
         this.analyticsEventMapper = analyticsEventMapper;
@@ -44,7 +44,6 @@ public abstract class AbstractListener<T> implements MessageListener {
     protected abstract AnalyticsEvent mapToAnalyticsEvent(T event);
 
     protected void saveAnalyticsEvent(AnalyticsEvent event) {
-
         analyticsEventService.saveAnalyticsEvent(event);
     }
 }

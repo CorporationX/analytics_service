@@ -12,17 +12,11 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class FollowerEvent {
-
     @NotNull
     private long followerId;
-
     @NotNull
     private long followeeId;
-
-
     @NotNull
     private LocalDateTime subscriptionDateTime;
-
 }
