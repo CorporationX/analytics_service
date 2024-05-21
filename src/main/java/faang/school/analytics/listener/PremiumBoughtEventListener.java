@@ -14,7 +14,9 @@ import java.io.IOException;
 @Service
 @Slf4j
 public class PremiumBoughtEventListener extends AbstractListener<PremiumBoughtEvent> {
-    public PremiumBoughtEventListener(ObjectMapper objectMapper, AnalyticsEventService analyticsEventService, AnalyticsEventMapper analyticsEventMapper) {
+    public PremiumBoughtEventListener(ObjectMapper objectMapper,
+                                      AnalyticsEventService analyticsEventService,
+                                      AnalyticsEventMapper analyticsEventMapper) {
         super(objectMapper, analyticsEventService, analyticsEventMapper);
     }
 

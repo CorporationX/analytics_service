@@ -1,5 +1,6 @@
 package faang.school.analytics.dto;
 
+import faang.school.analytics.dto.enums.Currency;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

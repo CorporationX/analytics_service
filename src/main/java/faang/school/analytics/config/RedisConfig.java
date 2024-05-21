@@ -45,11 +45,11 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
+    public MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
         return new MessageListenerAdapter(profileViewEventListener);
     }
     @Bean
-    MessageListenerAdapter followerListener(FollowerEventListener followerEventListener) {
+    public MessageListenerAdapter followerListener(FollowerEventListener followerEventListener) {
         return new MessageListenerAdapter(followerEventListener);
 
     }
@@ -58,16 +58,16 @@ public class RedisConfig {
         return new MessageListenerAdapter(searchAppearanceEventListener);
     }
     @Bean
-    MessageListenerAdapter premiumBoughtListener(PremiumBoughtEventListener premiumBoughtEventListener){
+    public MessageListenerAdapter premiumBoughtListener(PremiumBoughtEventListener premiumBoughtEventListener){
         return new MessageListenerAdapter(premiumBoughtEventListener);
     }
 
     @Bean
-    ChannelTopic profileViewTopic() {
+    public ChannelTopic profileViewTopic() {
         return new ChannelTopic(profileViewTopic);
     }
     @Bean
-    ChannelTopic eventFollowerTopic() {
+    public ChannelTopic eventFollowerTopic() {
         return new ChannelTopic(eventFollowerTopic);
     }
     @Bean
@@ -75,7 +75,7 @@ public class RedisConfig {
         return new ChannelTopic(userProfileSearchTopic);
     }
     @Bean
-    ChannelTopic premiumBoughtTopic() {
+    public ChannelTopic premiumBoughtTopic() {
         return new ChannelTopic(premiumBoughtTopic);
     }
 
