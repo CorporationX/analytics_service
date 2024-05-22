@@ -3,9 +3,10 @@ package faang.school.analytics.listeners;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.CommentEvent;
 
+import faang.school.analytics.listener.AbstractListener;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.services.AnalyticsEventService;
+import faang.school.analytics.service.AnalyticsEventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.stereotype.Service;

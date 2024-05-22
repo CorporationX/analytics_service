@@ -1,6 +1,7 @@
 package faang.school.analytics.config;
 
 import faang.school.analytics.listener.FollowerEventListener;
+import faang.school.analytics.listener.PremiumBoughtEventListener;
 import faang.school.analytics.listener.ProfileViewEventListener;
 import faang.school.analytics.listener.SearchAppearanceEventListener;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +27,8 @@ public class RedisConfig {
     private String eventFollowerTopic;
     @Value("${spring.data.redis.channels.profile_search_channel.name}")
     private String userProfileSearchTopic;
+    @Value("${spring.data.redis.channels.premium_bought_channel.name}")
+    private String premiumBoughtTopic;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -42,11 +45,11 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
+    public MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
         return new MessageListenerAdapter(profileViewEventListener);
     }
     @Bean
-    MessageListenerAdapter followerListener(FollowerEventListener followerEventListener) {
+    public MessageListenerAdapter followerListener(FollowerEventListener followerEventListener) {
         return new MessageListenerAdapter(followerEventListener);
 
     }
@@ -54,29 +57,39 @@ public class RedisConfig {
     public MessageListenerAdapter searchAppearanceListener(SearchAppearanceEventListener searchAppearanceEventListener) {
         return new MessageListenerAdapter(searchAppearanceEventListener);
     }
+    @Bean
+    public MessageListenerAdapter premiumBoughtListener(PremiumBoughtEventListener premiumBoughtEventListener){
+        return new MessageListenerAdapter(premiumBoughtEventListener);
+    }
 
     @Bean
-    ChannelTopic profileViewTopic() {
+    public ChannelTopic profileViewTopic() {
         return new ChannelTopic(profileViewTopic);
     }
     @Bean
-    ChannelTopic eventFollowerTopic() {
+    public ChannelTopic eventFollowerTopic() {
         return new ChannelTopic(eventFollowerTopic);
     }
     @Bean
     public ChannelTopic searchAppearanceTopic() {
         return new ChannelTopic(userProfileSearchTopic);
     }
+    @Bean
+    public ChannelTopic premiumBoughtTopic() {
+        return new ChannelTopic(premiumBoughtTopic);
+    }
 
     @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter profileViewListener,
                                                  MessageListenerAdapter followerListener,
-                                                 MessageListenerAdapter searchAppearanceListener) {
+                                                 MessageListenerAdapter searchAppearanceListener,
+                                                 MessageListenerAdapter premiumBoughtListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(profileViewListener, profileViewTopic());
         container.addMessageListener(followerListener, eventFollowerTopic());
         container.addMessageListener(searchAppearanceListener, searchAppearanceTopic());
+        container.addMessageListener(premiumBoughtListener, premiumBoughtTopic());
         return container;
     }
 }
