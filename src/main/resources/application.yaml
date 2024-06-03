@@ -23,6 +23,10 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+      pubsub:
+        topic:
+          goal-complete: goalComplete
+
 
 server:
   port: 8086
