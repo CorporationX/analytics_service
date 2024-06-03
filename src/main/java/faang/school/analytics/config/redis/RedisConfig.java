@@ -1,6 +1,6 @@
 package faang.school.analytics.config.redis;
 
-import faang.school.analytics.consumer.CompletedGoalConsumer;
+import faang.school.analytics.listener.CompletedGoalListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +22,7 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int port;
 
-    private final CompletedGoalConsumer completedGoalConsumer;
+    private final CompletedGoalListener completedGoalListener;
     private final CompletedGoalRedisConfig completedGoalRedisConfig;
 
     @Bean
@@ -38,7 +38,7 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
 
-        MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(completedGoalConsumer);
+        MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(completedGoalListener);
         container.addMessageListener(messageListenerAdapter, completedGoalRedisConfig.completedGoalTopic());
 
         return container;

@@ -8,7 +8,7 @@ import org.springframework.data.redis.listener.ChannelTopic;
 @Configuration
 public class CompletedGoalRedisConfig {
 
-    @Value("${redis.pubsub.topic:goal-complete}")
+    @Value("${spring.data.redis.channel.goal-complete.name}")
     private String topicName;
 
     @Bean

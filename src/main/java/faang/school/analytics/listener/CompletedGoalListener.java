@@ -1,4 +1,4 @@
-package faang.school.analytics.consumer;
+package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CompletedGoalConsumer implements MessageListener {
+public class CompletedGoalListener implements MessageListener {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
