@@ -12,12 +12,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CompletedGoalListener implements MessageListener {
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         String channel = new String(message.getChannel());
         String body = new String(message.getBody());
+        mapper.copy();
         log.info("Received completed goal message from channel: {}, body: {}", channel, body);
     }
 }
