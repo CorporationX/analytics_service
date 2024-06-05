@@ -12,6 +12,5 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "userId", target = "actorId")
     @Mapping(source = "completedAt", target = "receivedAt")
     @Mapping(source = "goalId", target = "receiverId")
-    @Mapping(target = "eventType", defaultValue = "EventType.GOAL_COMPLETED")
     AnalyticsEvent toAnalyticsEvent(GoalCompletedEvent goalCompletedEvent);
 }

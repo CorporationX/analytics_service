@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.event.GoalCompletedEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +24,12 @@ public class GoalCompletedListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         GoalCompletedEvent event = mapper.convertValue(message.getBody(), GoalCompletedEvent.class);
+
         AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(event);
+        analyticsEvent.setEventType(EventType.GOAL_COMPLETED);
+
         analyticsEventRepository.save(analyticsEvent);
+
         log.info("Received completed goal message from channel: {}, body: {}", message.getChannel(), message.getBody());
     }
 }
