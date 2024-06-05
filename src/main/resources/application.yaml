@@ -26,7 +26,7 @@ spring:
           name:
             profile_view_channel
         goal-complete:
-          name: goalComplete
+          name: goal_channel
 
 
 server:
