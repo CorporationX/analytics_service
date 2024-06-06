@@ -23,23 +23,13 @@ public class RedisConfig {
     private int port;
     @Value("${spring.data.redis.host}")
     private String host;
-    @Value("${string.data.redis.chanel.post_view_event.name}")
+    @Value("${spring.data.redis.channel.post_view_event.name}")
     private String postViewEventChanel;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
         return new JedisConnectionFactory(config);
-    }
-
-    @Bean
-    public ChannelTopic postViewEventTopic() {
-        return new ChannelTopic(postViewEventChanel);
-    }
-
-    @Bean
-    public MessageListenerAdapter postListener() {
-        return new MessageListenerAdapter(postViewEventListener);
     }
 
     @Bean
@@ -57,5 +47,15 @@ public class RedisConfig {
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         return redisTemplate;
+    }
+
+    @Bean
+    public ChannelTopic postViewEventTopic() {
+        return new ChannelTopic(postViewEventChanel);
+    }
+
+    @Bean
+    public MessageListenerAdapter postListener() {
+        return new MessageListenerAdapter(postViewEventListener);
     }
 }
