@@ -31,7 +31,7 @@ public class PostViewEventListener implements MessageListener {
             PostViewEvent postViewEvent = objectMapper.readValue(body, PostViewEvent.class);
             AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(postViewEvent);
             analyticsEvent.setEventType(EventType.POST_VIEW);
-            analyticsEventService.saveEvent(analyticsEvent);
+            analyticsEventService.saveEvent(analyticsEventMapper.toDto(analyticsEvent));
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e);
