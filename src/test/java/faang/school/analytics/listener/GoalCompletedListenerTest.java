@@ -1,9 +1,9 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.event.GoalCompletedEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
-import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class GoalCompletedListenerTest {
     private GoalCompletedListener goalCompletedListener;
 
     private GoalCompletedEvent event;
-    private AnalyticsEvent analyticsEvent;
+    private AnalyticsEventDto analyticsEvent;
 
     @BeforeEach
     void setUp() {
@@ -45,7 +45,7 @@ class GoalCompletedListenerTest {
                 .completedAt(LocalDateTime.now())
                 .build();
 
-        analyticsEvent = AnalyticsEvent.builder()
+        analyticsEvent = AnalyticsEventDto.builder()
                 .id(4L)
                 .actorId(1L)
                 .receiverId(1L)
