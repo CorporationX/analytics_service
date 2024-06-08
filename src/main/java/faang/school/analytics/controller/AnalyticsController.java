@@ -7,7 +7,6 @@ import faang.school.analytics.service.AnalyticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,8 +19,8 @@ public class AnalyticsController {
 
     private final AnalyticsService analyticsService;
 
-    @GetMapping("/{receiverId}")
-    public List<AnalyticsEventDto> getAnalytics(@PathVariable long receiverId,
+    @GetMapping
+    public List<AnalyticsEventDto> getAnalytics(@RequestParam long receiverId,
                                                 @RequestParam String eventType,
                                                 @RequestParam(required = false) String interval,
                                                 @RequestParam(required = false)
