@@ -1,8 +1,8 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.event.Event;
+import faang.school.analytics.model.AnalyticsEvent;
 
-public interface AnalyticsService<T extends Event> {
+public interface AnalyticsService {
 
-    void save(T event);
+    void save(AnalyticsEvent event);
 }
