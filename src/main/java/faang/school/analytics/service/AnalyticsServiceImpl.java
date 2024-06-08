@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -38,14 +39,14 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         if (interval != null) {
             LocalDateTime fromDate = Interval.getFromDate(interval);
-            return analyticsEvents
-                    .filter(event -> event.getReceivedAt().isAfter(fromDate))
-                    .map(analyticsEventMapper::toDto)
-                    .toList();
+            analyticsEvents = analyticsEvents.filter(event -> event.getReceivedAt().isAfter(fromDate));
+
+        } else {
+            analyticsEvents = analyticsEvents.filter(event -> event.getReceivedAt().isAfter(from) && event.getReceivedAt().isBefore(to));
         }
 
         return analyticsEvents
-                .filter(event -> event.getReceivedAt().isAfter(from) && event.getReceivedAt().isBefore(to))
+                .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt))
                 .map(analyticsEventMapper::toDto)
                 .toList();
     }
