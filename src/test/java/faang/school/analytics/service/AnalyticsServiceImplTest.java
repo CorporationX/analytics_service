@@ -59,17 +59,12 @@ class AnalyticsServiceImplTest {
 
     @Test
     void save() {
-        when(analyticsEventMapper.toEntity(analyticsEventDto)).thenReturn(analyticsEvent);
         when(analyticsEventRepository.save(analyticsEvent)).thenReturn(analyticsEvent);
-        when(analyticsEventMapper.toDto(analyticsEvent)).thenReturn(analyticsEventDto);
 
-        AnalyticsEventDto actual = analyticsServiceImpl.save(analyticsEventDto);
-        assertEquals(analyticsEventDto, actual);
+        analyticsServiceImpl.save(analyticsEvent);
 
         InOrder inOrder = inOrder(analyticsEventRepository, analyticsEventMapper);
-        inOrder.verify(analyticsEventMapper).toEntity(analyticsEventDto);
         inOrder.verify(analyticsEventRepository).save(analyticsEvent);
-        inOrder.verify(analyticsEventMapper).toDto(analyticsEvent);
     }
 
     @Test

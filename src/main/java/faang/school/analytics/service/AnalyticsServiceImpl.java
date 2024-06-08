@@ -25,10 +25,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
     @Override
     @Transactional
-    public AnalyticsEventDto save(AnalyticsEventDto event) {
-        AnalyticsEvent entity = analyticsEventMapper.toEntity(event);
-        entity = analyticsEventRepository.save(entity);
-        return analyticsEventMapper.toDto(entity);
+    public void save(AnalyticsEvent event) {
+        analyticsEventRepository.save(event);
+        log.info("Saved event: {}", event);
     }
 
     @Override
