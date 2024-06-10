@@ -2,7 +2,7 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.event.GoalCompletedEvent;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.mapper.GoalCompletedEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsService;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 class GoalCompletedListenerTest {
 
     @Mock
-    private AnalyticsEventMapper analyticsEventMapper;
+    private GoalCompletedEventMapper goalCompletedEventMapper;
     @Mock
     private ObjectMapper objectMapper;
     @Mock
@@ -60,12 +60,12 @@ class GoalCompletedListenerTest {
         byte[] pattern = new byte[]{3};
 
         when(objectMapper.readValue(body, GoalCompletedEvent.class)).thenReturn(event);
-        when(analyticsEventMapper.toAnalyticsEvent(event)).thenReturn(analyticsEvent);
+        when(goalCompletedEventMapper.toAnalyticsEvent(event)).thenReturn(analyticsEvent);
 
         goalCompletedListener.onMessage(message, pattern);
 
-        InOrder inOrder = inOrder(analyticsService, analyticsEventMapper);
-        inOrder.verify(analyticsEventMapper).toAnalyticsEvent(event);
+        InOrder inOrder = inOrder(analyticsService, goalCompletedEventMapper);
+        inOrder.verify(goalCompletedEventMapper).toAnalyticsEvent(event);
         inOrder.verify(analyticsService).save(analyticsEvent);
     }
 }
