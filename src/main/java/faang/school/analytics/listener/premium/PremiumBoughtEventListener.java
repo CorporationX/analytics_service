@@ -25,9 +25,6 @@ public class PremiumBoughtEventListener extends AbstractEventListener<PremiumBou
 
     @Override
     public void onMessage(@NonNull Message message, byte[] pattern) {
-        System.out.println();
-        System.out.println(message);
-        System.out.println();
         handleEvent(message, PremiumBoughtEvent.class, event -> {
             AnalyticsEvent analyticsEvent = premiumBoughtEventMapper.toAnalyticsEvent(event);
             analyticsEvent.setEventType(EventType.PREMIUM_BOUGHT_EVENT);
