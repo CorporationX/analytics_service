@@ -25,6 +25,13 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     private final AnalyticsEventMapper analyticsEventMapper;
 
     @Override
+    @Transactional
+    public void save(AnalyticsEvent event) {
+        analyticsEventRepository.save(event);
+        log.info("Saved event: {}", event);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to) {
 
