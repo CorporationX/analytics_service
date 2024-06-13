@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AnalyticsEventService {
 
-    private AnalyticsEventRepository analyticsEventRepository;
+    private final AnalyticsEventRepository analyticsEventRepository;
 
     @Transactional
     public void saveEvent(AnalyticsEvent event) {

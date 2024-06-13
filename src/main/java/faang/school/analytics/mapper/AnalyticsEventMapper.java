@@ -12,5 +12,6 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "postId", target = "receiverId")
     @Mapping(source = "viewerId", target = "actorId")
     @Mapping(target = "eventType", ignore = true)
+    @Mapping(source = "viewTime", target = "receivedAt")
     AnalyticsEvent toEntity(PostViewEvent postViewEvent);
 }
