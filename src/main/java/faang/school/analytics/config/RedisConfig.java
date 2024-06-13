@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -16,8 +15,6 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 @RequiredArgsConstructor
 public class RedisConfig {
 
-    private final MentorshipRequestedEventListener mentorshipRequestedEventListener;
-
     @Value("${spring.data.redis.host}")
     private String host;
     @Value("${spring.data.redis.port}")
@@ -27,19 +24,25 @@ public class RedisConfig {
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
-        System.out.println(port);
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
         return new JedisConnectionFactory(config);
     }
 
     @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory) {
+    public RedisMessageListenerContainer redisMessageListenerContainer(MessageListenerAdapter mentorshipRequestedListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-
-        MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(mentorshipRequestedEventListener);
-        container.addMessageListener(messageListenerAdapter, new ChannelTopic(mentorshipRequestedChannel));
-
+        container.setConnectionFactory(redisConnectionFactory());
+        container.addMessageListener(mentorshipRequestedListener, mentorshipChannelTopic());
         return container;
+    }
+
+    @Bean
+    public MessageListenerAdapter mentorshipRequestedListener(MentorshipRequestedEventListener mentorshipRequestedEventListener) {
+        return new MessageListenerAdapter(mentorshipRequestedEventListener);
+    }
+
+    @Bean
+    public ChannelTopic mentorshipChannelTopic() {
+        return new ChannelTopic(mentorshipRequestedChannel);
     }
 }

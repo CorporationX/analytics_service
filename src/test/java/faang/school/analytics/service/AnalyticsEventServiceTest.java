@@ -1,6 +1,7 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +30,7 @@ class AnalyticsEventServiceTest {
         AnalyticsEvent analyticsEvent = AnalyticsEvent.builder()
                 .actorId(ACTOR_ID)
                 .actorId(RECEIVER_ID)
+                .eventType(EventType.MENTORSHIP_REQUESTED)
                 .build();
         AnalyticsEvent expectedEvent = AnalyticsEvent.builder()
                 .id(EVENT_ID)
