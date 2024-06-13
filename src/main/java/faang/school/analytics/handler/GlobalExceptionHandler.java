@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DeserializeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleNoAccessExceptions(DeserializeException ex, HttpServletRequest request) {
+    public ErrorResponse handleDeserializeException(DeserializeException ex, HttpServletRequest request) {
         log.warn("DeserializeException: ", ex);
         return buildErrorResponse(ex, request);
     }
