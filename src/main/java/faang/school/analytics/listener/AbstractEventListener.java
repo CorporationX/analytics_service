@@ -21,7 +21,7 @@ public abstract class AbstractEventListener<T> implements MessageListener {
         try {
             T event = objectMapper.readValue(message.getBody(), type);
             consumer.accept(event);
-            log.info("Received event message from channel: {}", new String(message.getChannel(), StandardCharsets.UTF_8));
+            log.info("Received event from channel: {}", new String(message.getChannel(), StandardCharsets.UTF_8));
         } catch (IOException e) {
             log.error("Error deserializing JSON to object: ", e);
             throw new DeserializeException("Error deserializing JSON to object: " + e.getMessage());
