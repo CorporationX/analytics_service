@@ -1,6 +1,6 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.AnalyticsEventDto;
+import faang.school.analytics.dto.event.AnalyticsEventDto;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.interval.Interval;
 
