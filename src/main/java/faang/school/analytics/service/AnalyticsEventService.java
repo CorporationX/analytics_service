@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
@@ -45,11 +46,11 @@ public class AnalyticsEventService {
             LocalDateTime receivedAt = event.getReceivedAt();
 
             if (interval != null) {
-                long epochMilli = receivedAt.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                long epochMilli = ZonedDateTime.of(receivedAt, ZoneId.systemDefault()).toInstant().toEpochMilli();
                 return interval.contains(epochMilli);
             }
-            return (from == null || receivedAt.isAfter(from) || receivedAt.isEqual(from)) &&
-                    (to == null || receivedAt.isBefore(to) || receivedAt.isEqual(to));
+
+            return (from == null || !receivedAt.isBefore(from)) && (to == null || !receivedAt.isAfter(to));
         };
     }
 }
