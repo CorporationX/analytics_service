@@ -10,6 +10,4 @@ import org.mapstruct.ReportingPolicy;
         componentModel = MappingConstants.ComponentModel.SPRING)
 public interface AnalyticsEventMapper {
     AnalyticsEvent toEntity(PostViewEvent postViewEvent);
-
-    PostViewEvent toDto(AnalyticsEvent analyticsEvent);
 }

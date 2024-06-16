@@ -38,9 +38,8 @@ public class AnalyticsEventServiceTest {
     @DisplayName("Save event.")
     public void testSaveEvent() {
         when(analyticsEventRepository.save(analyticsEvent)).thenReturn(analyticsEvent2);
-        when(analyticsEventMapper.toEntity(postViewEvent)).thenReturn(analyticsEvent);
 
-        analyticsEventService.saveEvent(postViewEvent);
+        analyticsEventService.saveEvent(analyticsEvent);
 
         verify(analyticsEventRepository).save(analyticsEvent);
     }
