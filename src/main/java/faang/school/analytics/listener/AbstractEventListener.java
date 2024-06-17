@@ -1,6 +1,5 @@
 package faang.school.analytics.listener;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -10,11 +9,13 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 @Slf4j
 @Component
 public abstract class AbstractEventListener<T> implements MessageListener {
     @Autowired
-    private ObjectMapper objectMapper;
+    protected ObjectMapper objectMapper;
     @Autowired
     protected AnalyticsEventMapper analyticsEventMapper;
     @Autowired
@@ -27,14 +28,14 @@ public abstract class AbstractEventListener<T> implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
+        String channel = new String(message.getChannel());
+        String body = new String(message.getBody());
         try {
-            String chanel = new String(message.getChannel());
-            String body = new String(message.getBody());
-            log.info("Received message from channel {}: {}", chanel, body);
+            log.info("Received message from channel {}: {}", channel, body);
             T event = objectMapper.readValue(body, eventType);
             saveEvent(event);
-        } catch (JsonProcessingException e) {
-            log.error("Failed to process message from channel {}: {}", new String(message.getChannel()), new String(message.getBody()), e);
+        } catch (IOException e) {
+            log.error("Failed to process message from channel {}: {}", channel, body, e);
             throw new RuntimeException("Error processing JSON message: " + e.getMessage(), e);
         }
     }
