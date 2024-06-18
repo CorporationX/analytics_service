@@ -12,13 +12,10 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Slf4j
-@Component
 public abstract class AbstractEventListener<T> implements MessageListener {
     @Autowired
     protected ObjectMapper objectMapper;
-    @Autowired
     protected AnalyticsEventMapper analyticsEventMapper;
-    @Autowired
     protected AnalyticsEventService analyticsEventService;
     private final Class<T> eventType;
 

@@ -15,7 +15,8 @@ public class AnalyticsEventService {
 
     @Transactional
     public void saveEvent(AnalyticsEvent analyticsEvent) {
+        log.info("Save event with actor ID: {}, receiver ID: {}, event type: {}",
+                analyticsEvent.getActorId(), analyticsEvent.getReceiverId(), analyticsEvent.getEventType().name());
         analyticsEventRepository.save(analyticsEvent);
-        log.info("Event saved {}", analyticsEvent);
     }
 }

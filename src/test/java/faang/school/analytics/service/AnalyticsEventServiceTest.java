@@ -1,8 +1,8 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.dto.PostViewEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +17,9 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AnalyticsEventServiceTest {
+    private static final Long ACTOR_ID = 1L;
+    private static final Long RECEIVER_ID = 2L;
+    private static final Long EVENT_ID = 1L;
     @InjectMocks
     private AnalyticsEventService analyticsEventService;
     @Mock
@@ -24,20 +27,28 @@ public class AnalyticsEventServiceTest {
     @Mock
     private AnalyticsEventMapper analyticsEventMapper;
     private AnalyticsEvent analyticsEvent;
-    private AnalyticsEvent analyticsEvent2;
-    private PostViewEvent postViewEvent;
+    private AnalyticsEvent expectedEvent;
+
 
     @BeforeEach
     void setUp() {
-        analyticsEvent = new AnalyticsEvent();
-        analyticsEvent2 = new AnalyticsEvent();
-        postViewEvent = new PostViewEvent();
+        analyticsEvent = AnalyticsEvent.builder()
+                .actorId(ACTOR_ID)
+                .actorId(RECEIVER_ID)
+                .eventType(EventType.MENTORSHIP_REQUESTED)
+                .build();
+
+        expectedEvent = AnalyticsEvent.builder()
+                .id(EVENT_ID)
+                .actorId(ACTOR_ID)
+                .actorId(RECEIVER_ID)
+                .build();
     }
 
     @Test
     @DisplayName("Save event.")
-    public void testSaveEvent() {
-        when(analyticsEventRepository.save(analyticsEvent)).thenReturn(analyticsEvent2);
+    public void whenEventSave() {
+        when(analyticsEventRepository.save(analyticsEvent)).thenReturn(expectedEvent);
 
         analyticsEventService.saveEvent(analyticsEvent);
 
