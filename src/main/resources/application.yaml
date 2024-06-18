@@ -1,4 +1,6 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres
@@ -23,6 +25,10 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+        mentorship_requested_channel:
+          name: mentorship_requested_channel
+        post_view_event_channel:
+          name: post_view_event_channel
 
 server:
   port: 8086
