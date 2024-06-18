@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AnalyticsEventService {
-
     private final AnalyticsEventRepository analyticsEventRepository;
 
     @Transactional
