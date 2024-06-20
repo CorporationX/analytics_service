@@ -1,4 +1,4 @@
-package faang.school.analytics;
+package faang.school.analytics.dto.event;
 
 import faang.school.analytics.model.EventType;
 import lombok.AllArgsConstructor;
