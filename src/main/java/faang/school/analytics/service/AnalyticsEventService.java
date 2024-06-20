@@ -1,13 +1,12 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.dto.event.AnalyticsEventDto;
+import faang.school.analytics.AnalyticsEventDto;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.model.interval.Interval;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface AnalyticsEventService {
     AnalyticsEventDto save(AnalyticsEventDto analyticsEventDto);
-    List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to);
+    List<AnalyticsEventDto> getAnalytics(Long receiverId, EventType eventType, String intervalType, Long intervalQuantity, LocalDate from, LocalDate to);
 }

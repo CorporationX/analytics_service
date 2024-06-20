@@ -1,12 +1,13 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.dto.event.AnalyticsEventDto;
+import faang.school.analytics.AnalyticsEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.interval.Interval;
 import faang.school.analytics.model.interval.TypeOfInterval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import faang.school.analytics.util.converter.AnalyticsParametersConverter;
 import faang.school.analytics.validator.AnalyticsEventValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,11 +15,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.*;
 
@@ -26,7 +30,7 @@ import static org.assertj.core.api.Assertions.*;
 class AnalyticsEventServiceImplTest {
     private static final long FIRST_ANALYTICS_EVENT_ID = 1L;
     private static final long SECOND_ANALYTICS_EVENT_ID = 2L;
-    private static final long RECEIVER_ID = 1L;
+    private static final Long RECEIVER_ID = 1L;
     private static final EventType EVENT_TYPE = EventType.PROJECT_INVITE;
     private static final LocalDateTime FROM = LocalDateTime.now().minusMonths(1);
     private static final LocalDateTime TO = LocalDateTime.now();
@@ -37,6 +41,8 @@ class AnalyticsEventServiceImplTest {
     private AnalyticsEventValidator analyticsEventValidator;
     @Mock
     private AnalyticsEventMapper analyticsEventMapper;
+    @Mock
+    private AnalyticsParametersConverter analyticsParametersConverter;
     @InjectMocks
     private AnalyticsEventServiceImpl analyticsEventService;
 
@@ -76,18 +82,25 @@ class AnalyticsEventServiceImplTest {
         Interval interval = new Interval(TypeOfInterval.MONTH, 3);
         when(analyticsEventRepository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE)).thenReturn(
                 Stream.of(firstAnalyticsEvent, secondAnalyticsEvent));
+        when(analyticsParametersConverter.convertInterval(any(), any())).thenReturn(interval);
         when(analyticsEventMapper.toDto(firstAnalyticsEvent)).thenReturn(firstAnalyticsEventDto);
         when(analyticsEventMapper.toDto(secondAnalyticsEvent)).thenReturn(secondAnalyticsEventDto);
-        List<AnalyticsEventDto> actual = analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, interval, FROM, TO);
+        List<AnalyticsEventDto> actual = analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, "MONTH", 3L, null, null);
+        verify(analyticsEventValidator).validateAnalyticsEventParams(interval, null, null);
         assertThat(actual).isEqualTo(List.of(secondAnalyticsEventDto, firstAnalyticsEventDto));
     }
 
     @Test
     public void whenGetAnalyticsAndIntervalIsNullThenGetListFilteredByFromAndTo() {
+        LocalDate from = LocalDate.now().minusMonths(1);
+        LocalDate to = LocalDate.now();
         when(analyticsEventRepository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE)).thenReturn(
                 Stream.of(firstAnalyticsEvent, secondAnalyticsEvent));
+        when(analyticsParametersConverter.convertDateTimeFrom(from)).thenReturn(Optional.of(FROM));
+        when(analyticsParametersConverter.convertDateTimeTo(to)).thenReturn(Optional.of(TO));
         when(analyticsEventMapper.toDto(firstAnalyticsEvent)).thenReturn(firstAnalyticsEventDto);
-        List<AnalyticsEventDto> actual = analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, null, FROM, TO);
+        List<AnalyticsEventDto> actual = analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, null, null, from, to);
+        verify(analyticsEventValidator).validateAnalyticsEventParams(null, FROM, TO);
         assertThat(actual).isEqualTo(List.of(firstAnalyticsEventDto));
     }
 

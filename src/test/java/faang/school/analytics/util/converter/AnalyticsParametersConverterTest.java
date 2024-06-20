@@ -15,7 +15,6 @@ import static org.assertj.core.api.Assertions.*;
 class AnalyticsParametersConverterTest {
     private final AnalyticsParametersConverter converter = new AnalyticsParametersConverter();
     private final LocalDate date = LocalDate.now();
-    private final LocalDate dateNull = null;
 
     @Test
     public void whenConvertIntervalAndAllIsCorrectThenGetInterval() {
@@ -46,7 +45,7 @@ class AnalyticsParametersConverterTest {
 
     @Test
     public void whenConvertFromDateAndInputDateNullThenGetNull() {
-        Optional<LocalDateTime> result = converter.convertDateTimeFrom(dateNull);
+        Optional<LocalDateTime> result = converter.convertDateTimeFrom(null);
         assertThat(result).isEmpty();
     }
 
@@ -58,7 +57,7 @@ class AnalyticsParametersConverterTest {
 
     @Test
     public void whenConvertToDateAndInputDateNullThenGetNull() {
-        Optional<LocalDateTime> result = converter.convertDateTimeTo(dateNull);
+        Optional<LocalDateTime> result = converter.convertDateTimeTo(null);
         assertThat(result).isEmpty();
     }
 }
