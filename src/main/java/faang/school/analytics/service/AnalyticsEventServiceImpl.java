@@ -1,11 +1,12 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.AnalyticsEventDto;
+import faang.school.analytics.dto.event.AnalyticsEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.interval.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+
 import faang.school.analytics.util.converter.AnalyticsParametersConverter;
 import faang.school.analytics.validator.AnalyticsEventValidator;
 import lombok.AllArgsConstructor;
