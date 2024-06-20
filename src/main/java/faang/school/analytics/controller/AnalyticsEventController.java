@@ -1,8 +1,8 @@
 package faang.school.analytics.controller;
-
-import faang.school.analytics.AnalyticsEventDto;
+import faang.school.analytics.dto.event.AnalyticsEventDto;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
+import faang.school.analytics.util.converter.AnalyticsParametersConverter;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class AnalyticsEventController {
     private final AnalyticsEventService analyticsEventService;
-    private final AnalyticsParametersConverter analyticsParametersConverter;
 
 
     @PostMapping("/events")
