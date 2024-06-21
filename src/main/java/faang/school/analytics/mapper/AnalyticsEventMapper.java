@@ -11,7 +11,8 @@ import org.mapstruct.ReportingPolicy;
 public interface AnalyticsEventMapper {
 
     @Mapping(target = "actorId", source = "authorId")
-    @Mapping(target = "eventType", expression = "java(getEventType())")
+    @Mapping(target = "eventType", ignore = true)
     @Mapping(target = "receivedAt", source = "createdAt")
+    @Mapping(target = "receiverId", source = "postId")
     AnalyticsEvent toCommentEntity(CommentEventDto commentEventDto);
 }

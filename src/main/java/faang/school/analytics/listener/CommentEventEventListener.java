@@ -15,7 +15,7 @@ public class CommentEventEventListener extends AbstractEventListener<CommentEven
     @Override
     protected void saveEvent(CommentEventDto event) {
         AnalyticsEvent analyticsEvent = analyticsEventMapper.toCommentEntity(event);
-        analyticsEvent.setEventType(EventType.POST_VIEW);
+        analyticsEvent.setEventType(EventType.POST_COMMENT);
         analyticsEventService.saveEvent(analyticsEvent);
     }
 }
