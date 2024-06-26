@@ -1,10 +1,9 @@
 package faang.school.analytics.listener;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.dto.LikeEvent;
 import faang.school.analytics.dto.PostViewEvent;
 import faang.school.analytics.listner.PostViewEventListener;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -19,11 +18,8 @@ import org.springframework.data.redis.connection.Message;
 import java.io.IOException;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyByte;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 public class PostViewEventListenerTest {
 
@@ -76,8 +72,7 @@ public class PostViewEventListenerTest {
 
         verify(message).getBody();
         verify(objectMapper).readValue(body, PostViewEvent.class);
-        verify(analyticsEventMapper, never()).toEntity(any());
+        verify(analyticsEventMapper, never()).toEntity((LikeEvent) any());
         verify(analyticsEventService, never()).saveEvent(any());
     }
-
 }

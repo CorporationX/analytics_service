@@ -1,8 +1,8 @@
 package faang.school.analytics.config.context;
 
-import faang.school.analytics.listner.PostViewEventListener;
 import faang.school.analytics.listener.CommentEventEventListener;
 import faang.school.analytics.listener.LikeEventListener;
+import faang.school.analytics.listner.PostViewEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,8 +31,6 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
-    @Value("${spring.data.redis.host}")
-    private String redisHost;
     @Bean
     public MessageListenerAdapter likeEventAdapter(LikeEventListener likeEventListener) {
         return new MessageListenerAdapter(likeEventListener);
@@ -49,15 +47,6 @@ public class RedisConfig {
     }
 
     @Bean
-<<<<<<< HEAD
-    public RedisMessageListenerContainer redisMessageListenerContainer(MessageListenerAdapter likeEventAdapter) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(redisConnectionFactory());
-        container.addMessageListener(likeEventAdapter, likeTopic());
-
-        return container;
-    }
-=======
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory());
@@ -98,5 +87,4 @@ public class RedisConfig {
     public ChannelTopic postViewTopic() {
         return new ChannelTopic(postViewChannelName);
     }
->>>>>>> cerberus-master-bc4
 }
