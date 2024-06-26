@@ -23,7 +23,7 @@ public class RedisConfig {
     private int redisPort;
 
     @Bean
-    public MessageListenerAdapter eventListener(LikeEventListener likeEventListener) {
+    public MessageListenerAdapter likeEventAdapter(LikeEventListener likeEventListener) {
         return new MessageListenerAdapter(likeEventListener);
     }
 
@@ -33,20 +33,15 @@ public class RedisConfig {
     }
 
     @Bean
-    public ChannelTopic customTopic() {
-        return new ChannelTopic(likeChannelName);
-    }
-
-    @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory(redisHost, redisPort);
     }
 
     @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(MessageListenerAdapter likeListener) {
+    public RedisMessageListenerContainer redisMessageListenerContainer(MessageListenerAdapter likeEventAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
-        container.addMessageListener(likeListener, likeTopic());
+        container.addMessageListener(likeEventAdapter, likeTopic());
 
         return container;
     }
