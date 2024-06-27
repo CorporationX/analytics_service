@@ -13,7 +13,7 @@ import org.springframework.data.util.Pair;
 @Configuration
 public class ProfileViewEventRedisConfig {
 
-    @Value("${spring.data.redis.channel.profile-view}")
+    @Value("${spring.data.redis.channel.profile-view.name}")
     private String profileViewEventTopic;
 
     @Bean
