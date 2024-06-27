@@ -27,4 +27,5 @@ public enum EventType {
         }
         throw new IllegalArgumentException("Unknown event type: " + type);
     }
+
 }
