@@ -45,8 +45,8 @@ public class RedisConfig {
     @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(
             RedisConnectionFactory connectionFactory,
-            List<Pair<Topic, MessageListenerAdapter>> channelAdapterPairList) {
-
+            List<Pair<Topic, MessageListenerAdapter>> channelAdapterPairList
+    ) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
 
