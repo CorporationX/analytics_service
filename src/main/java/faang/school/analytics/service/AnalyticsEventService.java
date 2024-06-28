@@ -13,7 +13,7 @@ public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
 
     @Transactional
-    public void saveEvent(AnalyticsEvent event) {
-        analyticsEventRepository.save(event);
+    public void saveEvent(AnalyticsEvent analyticsEvent) {
+        analyticsEventRepository.save(analyticsEvent);
     }
 }

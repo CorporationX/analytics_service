@@ -14,17 +14,18 @@ import java.io.IOException;
 @Slf4j
 @Component
 public abstract class AbstractEventListener<T> implements MessageListener {
-    @Autowired
-    protected ObjectMapper objectMapper;
-    @Autowired
-    protected AnalyticsEventService analyticsEventService;
-    @Autowired
-    protected AnalyticsEventMapper analyticsEventMapper;
 
-    private Class<T> eventType;
+    protected final ObjectMapper objectMapper;
+    protected final AnalyticsEventService analyticsEventService;
+    protected final AnalyticsEventMapper analyticsEventMapper;
+    private final Class<T> eventType;
 
-    public AbstractEventListener(Class<T> eventType) {
+    @Autowired
+    public AbstractEventListener(Class<T> eventType, ObjectMapper objectMapper, AnalyticsEventService analyticsEventService, AnalyticsEventMapper analyticsEventMapper) {
         this.eventType = eventType;
+        this.objectMapper = objectMapper;
+        this.analyticsEventService = analyticsEventService;
+        this.analyticsEventMapper = analyticsEventMapper;
     }
 
     @Override
@@ -34,7 +35,7 @@ public abstract class AbstractEventListener<T> implements MessageListener {
             saveEvent(event);
         } catch (IOException e) {
             log.error("Mapping error {}", message);
-            e.printStackTrace();
+            throw new RuntimeException("Mapping error " + message);
         }
     }
 
