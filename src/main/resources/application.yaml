@@ -22,8 +22,12 @@ spring:
       port: 6379
       host: localhost
       channel:
+        premium-bought: premium_bought_channel
         profile-view:
-          name: profile_view_channel
+          name:
+            profile_view_channel
+        goal-complete:
+          name: goal_complete_channel
         like_post:
           name: like_channel
 
