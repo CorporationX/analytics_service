@@ -12,12 +12,12 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LikeListener extends AbstractEventListener<LikeEvent> {
+public class LikeEventListener extends AbstractEventListener<LikeEvent> {
     private final LikeEventMapper mapper;
     private final AnalyticsService analyticsService;
 
     @Autowired
-    public LikeListener(ObjectMapper objectMapper, LikeEventMapper mapper, AnalyticsService analyticsService) {
+    public LikeEventListener(ObjectMapper objectMapper, LikeEventMapper mapper, AnalyticsService analyticsService) {
         super(objectMapper);
         this.mapper = mapper;
         this.analyticsService = analyticsService;

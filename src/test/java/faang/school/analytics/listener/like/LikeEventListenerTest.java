@@ -26,7 +26,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class LikeListenerTest {
+public class LikeEventListenerTest {
     @Mock
     private LikeEventMapper likeEventMapper;
     @Mock
@@ -35,7 +35,7 @@ public class LikeListenerTest {
     private AnalyticsService analyticsService;
 
     @InjectMocks
-    private LikeListener likeListener;
+    private LikeEventListener likeListener;
 
     private LikeEvent event;
     private AnalyticsEvent analyticsEvent;

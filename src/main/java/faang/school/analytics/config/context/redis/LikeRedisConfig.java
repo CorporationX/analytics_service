@@ -1,6 +1,6 @@
 package faang.school.analytics.config.context.redis;
 
-import faang.school.analytics.listener.like.LikeListener;
+import faang.school.analytics.listener.like.LikeEventListener;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +22,7 @@ public class LikeRedisConfig {
     }
 
     @Bean
-    public MessageListenerAdapter likeMessageAdapter(LikeListener listener) {
+    public MessageListenerAdapter likeMessageAdapter(LikeEventListener listener) {
         return new MessageListenerAdapter(listener);
     }
 }
