@@ -3,7 +3,8 @@ package faang.school.analytics.model;
 public enum EventType {
     PROFILE_VIEW,
     PROJECT_VIEW,
-    FOLLOWER,
+    FOLLOW,
+    UNFOLLOW,
     POST_PUBLISHED,
     POST_VIEW,
     POST_LIKE,
