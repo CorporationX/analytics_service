@@ -51,11 +51,11 @@ public class RedisConfig {
 
     @Bean
     public ChannelTopic commentTopic() {
-        return new ChannelTopic(channels.getComments_channel());
+        return new ChannelTopic(channels.getCommentsChannel());
     }
 
     @Data
     private static class Channels {
-        private String comments_channel;
+        private String commentsChannel;
     }
 }
