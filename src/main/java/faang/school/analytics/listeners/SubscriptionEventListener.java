@@ -1,5 +1,6 @@
 package faang.school.analytics.listeners;
 
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,11 +12,11 @@ import faang.school.analytics.model.subscription.SubscriptionEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 
 @Component
-public class SubscribeEventListener extends AbstractEventListener<SubscriptionEvent> {
+public class SubscriptionEventListener extends AbstractEventListener<SubscriptionEvent> {
     private final AnalyticsEventService eventService;
     private final AnalyticsEventMapper mapper;
     
-    public SubscribeEventListener(
+    public SubscriptionEventListener(
         ObjectMapper objectMapper,
         RedisProperties redisProperties,
         AnalyticsEventService eventService,
@@ -38,7 +39,7 @@ public class SubscribeEventListener extends AbstractEventListener<SubscriptionEv
     }
     
     @Override
-    public String getTopic() {
-        return redisProperties.getChannels().getSubscriptionChannel();
+    public ChannelTopic getTopic() {
+        return new ChannelTopic(redisProperties.getChannels().getSubscriptionChannel());
     }
 }

@@ -8,12 +8,13 @@ import org.springframework.data.redis.connection.MessageListener;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import faang.school.analytics.config.redis.RedisProperties;
+import faang.school.analytics.model.subscription.Event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
-public abstract class AbstractEventListener<T> implements TopicProvider, MessageListener {
+public abstract class AbstractEventListener<T extends Event> implements TopicProvider, MessageListener {
     private final ObjectMapper objectMapper;
     protected final RedisProperties redisProperties;
     
