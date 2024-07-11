@@ -2,6 +2,7 @@ package faang.school.analytics.config.context;
 
 import faang.school.analytics.listener.CommentEventEventListener;
 import faang.school.analytics.listener.LikeEventListener;
+import faang.school.analytics.listener.ProjectViewEventListener;
 import faang.school.analytics.listner.PostViewEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,21 +26,14 @@ public class RedisConfig {
     @Value("${spring.data.redis.channel.like-view}")
     private String likeChannelName;
 
+    @Value("${spring.data.redis.channel.project-view-channel}")
+    private String projectViewChanelName;
+
     @Value("${spring.data.redis.host}")
     private String redisHost;
 
     @Value("${spring.data.redis.port}")
     private int redisPort;
-
-    @Bean
-    public MessageListenerAdapter likeEventAdapter(LikeEventListener likeEventListener) {
-        return new MessageListenerAdapter(likeEventListener);
-    }
-
-    @Bean
-    public ChannelTopic likeTopic() {
-        return new ChannelTopic(likeChannelName);
-    }
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
@@ -56,6 +50,16 @@ public class RedisConfig {
     }
 
     @Bean
+    public MessageListenerAdapter likeEventAdapter(LikeEventListener likeEventListener) {
+        return new MessageListenerAdapter(likeEventListener);
+    }
+
+    @Bean
+    public ChannelTopic likeTopic() {
+        return new ChannelTopic(likeChannelName);
+    }
+
+    @Bean
     MessageListenerAdapter commentEventListener(CommentEventEventListener commentEventListener) {
         return new MessageListenerAdapter(commentEventListener);
     }
@@ -66,19 +70,6 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(MessageListenerAdapter postViewListener,
-                                                                       MessageListenerAdapter commentEventListener,
-                                                                       MessageListenerAdapter likeEventAdapter) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(redisConnectionFactory());
-
-        container.addMessageListener(postViewListener, postViewTopic());
-        container.addMessageListener(commentEventListener, commentEventTopic());
-        container.addMessageListener(likeEventAdapter, likeTopic());
-        return container;
-    }
-
-    @Bean
     public MessageListenerAdapter postViewListener(PostViewEventListener postViewEventListener) {
         return new MessageListenerAdapter(postViewEventListener);
     }
@@ -86,5 +77,30 @@ public class RedisConfig {
     @Bean
     public ChannelTopic postViewTopic() {
         return new ChannelTopic(postViewChannelName);
+    }
+
+    @Bean
+    public MessageListenerAdapter projectViewEventListener(ProjectViewEventListener projectViewEventListener) {
+        return new MessageListenerAdapter(projectViewEventListener);
+    }
+
+    @Bean
+    ChannelTopic projectViewTopic() {
+        return new ChannelTopic(projectViewChanelName);
+    }
+
+    @Bean
+    public RedisMessageListenerContainer redisMessageListenerContainer(MessageListenerAdapter postViewListener,
+                                                                       MessageListenerAdapter commentEventListener,
+                                                                       MessageListenerAdapter likeEventAdapter,
+                                                                        MessageListenerAdapter projectViewEventListener) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(redisConnectionFactory());
+
+        container.addMessageListener(postViewListener, postViewTopic());
+        container.addMessageListener(commentEventListener, commentEventTopic());
+        container.addMessageListener(likeEventAdapter, likeTopic());
+        container.addMessageListener(projectViewEventListener, projectViewTopic());
+        return container;
     }
 }
