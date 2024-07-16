@@ -26,6 +26,7 @@ spring:
         post-view-channel: post_view_channel
         comment-event-chanel: comment_event_chanel;
         like-view: like_view_channel
+        follower-channel: follower_channel
 
 server:
   port: 8086
