@@ -103,9 +103,8 @@ public class RedisConfig {
     public RedisMessageListenerContainer redisMessageListenerContainer(MessageListenerAdapter postViewListener,
                                                                        MessageListenerAdapter commentEventListener,
                                                                        MessageListenerAdapter likeEventAdapter,
-                                                                        MessageListenerAdapter projectViewEventListener) {
-                                                                       MessageListenerAdapter likeEventAdapter,
-                                                                       MessageListenerAdapter followerListenerAdapter) {
+                                                                       MessageListenerAdapter projectViewEventListener,
+                                                                       MessageListenerAdapter followerListenerAdapter){
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
 
@@ -115,16 +114,6 @@ public class RedisConfig {
         container.addMessageListener(projectViewEventListener, projectViewTopic());
         container.addMessageListener(followerListenerAdapter, followerTopic());
         return container;
-    }
-
-    @Bean
-    public MessageListenerAdapter postViewListener(PostViewEventListener postViewEventListener) {
-        return new MessageListenerAdapter(postViewEventListener);
-    }
-
-    @Bean
-    public ChannelTopic postViewTopic() {
-        return new ChannelTopic(postViewChannelName);
     }
 
     @Bean
