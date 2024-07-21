@@ -1,6 +1,7 @@
 package faang.school.analytics.config.context;
 
 import faang.school.analytics.listener.CommentEventEventListener;
+import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.LikeEventListener;
 import faang.school.analytics.listener.ProjectViewEventListener;
 import faang.school.analytics.listner.PostViewEventListener;
@@ -23,11 +24,15 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.comment-event-chanel}")
     private String commentEventChannelName;
+
     @Value("${spring.data.redis.channel.like-view}")
     private String likeChannelName;
 
     @Value("${spring.data.redis.channel.project-view-channel}")
     private String projectViewChanelName;
+
+    @Value("${spring.data.redis.channel.follower-channel}")
+    private String followingChannelName;
 
     @Value("${spring.data.redis.host}")
     private String redisHost;
@@ -90,10 +95,16 @@ public class RedisConfig {
     }
 
     @Bean
+    public MessageListenerAdapter followerListenerAdapter(FollowerEventListener followerEventListener) {
+        return new MessageListenerAdapter(followerEventListener);
+    }
+
+    @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(MessageListenerAdapter postViewListener,
                                                                        MessageListenerAdapter commentEventListener,
                                                                        MessageListenerAdapter likeEventAdapter,
-                                                                        MessageListenerAdapter projectViewEventListener) {
+                                                                       MessageListenerAdapter projectViewEventListener,
+                                                                       MessageListenerAdapter followerListenerAdapter){
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
 
@@ -101,6 +112,12 @@ public class RedisConfig {
         container.addMessageListener(commentEventListener, commentEventTopic());
         container.addMessageListener(likeEventAdapter, likeTopic());
         container.addMessageListener(projectViewEventListener, projectViewTopic());
+        container.addMessageListener(followerListenerAdapter, followerTopic());
         return container;
+    }
+
+    @Bean
+    public ChannelTopic followerTopic() {
+        return new ChannelTopic(followingChannelName);
     }
 }
