@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="analytics_event")
+@Table(name = "analytics_event")
 public class AnalyticsEvent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name="receiver_id", nullable = false)
+    @Column(name = "receiver_id", nullable = false)
     private long receiverId;
 
     @Column(name = "actor_id", nullable = false)
@@ -29,6 +29,12 @@ public class AnalyticsEvent {
     @Enumerated(EnumType.STRING)
     @Column(name = "event_type", nullable = false)
     private EventType eventType;
+
+    @Column(name = "post_id", nullable = false)
+    private long postId;
+
+    @Column(name = "comment_id", nullable = false)
+    private Long commentId;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "received_at", nullable = false)

@@ -22,6 +22,8 @@ spring:
       port: 6379
       host: localhost
       channels:
+        comment-event-channel:
+          name: comment_channel
         follower-event-channel:
           name: follower_event
 
