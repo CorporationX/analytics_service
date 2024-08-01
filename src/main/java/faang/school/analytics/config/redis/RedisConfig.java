@@ -1,10 +1,8 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.redis.listener.CommentEventListener;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -17,20 +15,15 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 @Setter
 @Configuration
 @RequiredArgsConstructor
-@ConfigurationProperties(prefix = "spring.data.redis")
 public class RedisConfig {
 
-    private int port;
-
-    private String host;
-
-    private Channels channels;
+    private final RedisProperties redisProperties;
 
     private final CommentEventListener commentEventListener;
 
     @Bean
     RedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisProperties.getHost(), redisProperties.getPort());
         return new JedisConnectionFactory(config);
     }
 
@@ -51,11 +44,6 @@ public class RedisConfig {
 
     @Bean
     public ChannelTopic commentTopic() {
-        return new ChannelTopic(channels.getCommentsChannel());
-    }
-
-    @Data
-    private static class Channels {
-        private String commentsChannel;
+        return new ChannelTopic(redisProperties.getChannels().getCommentsChannel());
     }
 }
