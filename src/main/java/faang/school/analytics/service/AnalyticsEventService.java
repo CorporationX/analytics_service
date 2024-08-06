@@ -46,10 +46,10 @@ public class AnalyticsEventService {
 
         return analyticsEventStream // Criteria API better ?
                 .filter(
-                        analyticsEvent -> !analyticsEvent.getReceivedAt().isAfter(startInclusive)
-                                && !analyticsEvent.getReceivedAt().isBefore(endInclusive)
+                        analyticsEvent -> !startInclusive.isAfter(analyticsEvent.getReceivedAt())
+                                && !endInclusive.isBefore(analyticsEvent.getReceivedAt())
                 )
-                .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt))
+                .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .map(mapper::toDto)
                 .toList();
     }
