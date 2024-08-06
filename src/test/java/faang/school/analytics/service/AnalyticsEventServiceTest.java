@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -54,6 +55,11 @@ public class AnalyticsEventServiceTest {
     public void testSaveEvent() {
         service.saveEvent(event);
         verify(repository, times(1)).save(event);
+    }
+
+    @Test
+    public void testSaveEvent_withNull(){
+        assertThrows(RuntimeException.class , () -> service.saveEvent(null));
     }
 
     @Test

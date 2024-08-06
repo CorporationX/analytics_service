@@ -22,9 +22,10 @@ public class AnalyticsEventService {
     private final AnalyticsEventMapper mapper;
 
     public void saveEvent(AnalyticsEvent event) {
-        if (event != null) {
-            repository.save(event);
+        if (event == null) {
+            throw new RuntimeException("Event can't be empty");
         }
+        repository.save(event);
     }
 
     public List<AnalylticsEventDto> getAnalytics(long receiverId,
