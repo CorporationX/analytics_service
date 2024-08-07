@@ -3,9 +3,13 @@ package faang.school.analytics.dto;
 import faang.school.analytics.model.EventType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@Data
+@Builder
 public class AnalyticsEventDto {
     private Long id;
 
