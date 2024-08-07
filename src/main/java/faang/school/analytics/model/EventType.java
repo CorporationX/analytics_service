@@ -26,4 +26,13 @@ public enum EventType {
         }
         throw new IllegalArgumentException("Unknown event type: " + type);
     }
+
+    public static EventType conversionToEventType(String eventString){
+        try {
+            return EventType.valueOf(eventString.toUpperCase());
+        } catch (IllegalArgumentException e){
+            int ordinal = Integer.parseInt(eventString);
+            return EventType.values()[ordinal];
+        }
+    }
 }
