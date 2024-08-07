@@ -29,16 +29,22 @@ public class AnalyticsEventService {
 
     @Transactional(readOnly = true)
     public List<AnalyticsEventDto> getAnalytics(long receiverId,
-                                                EventType eventType,
-                                                Interval interval,
-                                                LocalDateTime from,
-                                                LocalDateTime to) {
+                                                String eventString,
+                                                String intervalString,
+                                                String fromDateString,
+                                                String toDateString) {
+        EventType eventType = EventType.conversionToEventType(eventString);
+        Interval interval = Interval.conversionToInterval(intervalString);
+
+
         List<AnalyticsEvent> analyticsEvents = analyticsEventRepository
                 .findByReceiverIdAndEventType(receiverId, eventType)
                 .toList();
 
         if (interval == null) {
-            if (from != null && to != null) {
+            if (fromDateString != null && toDateString != null) {
+                LocalDateTime from = LocalDateTime.parse(fromDateString);
+                LocalDateTime to = LocalDateTime.parse(toDateString);
                 return filterByFromAndToAndSort(analyticsEvents, from, to);
             } else {
                 return sortedAllEvent(analyticsEvents);

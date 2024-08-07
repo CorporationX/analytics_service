@@ -6,6 +6,7 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.service.analyticsEvent.AnalyticsEventService;
+import faang.school.analytics.validate.analyticEvent.AnalyticsEventValidate;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AnalyticsEventController {
     private final AnalyticsEventService analyticsEventService;
+    private final AnalyticsEventValidate analyticsEventValidate;
 
     @PostMapping()
     public ResponseEntity<AnalyticsEventDto> saveEvent(@Valid @RequestBody AnalyticsEvent analyticsEvent) {
@@ -41,23 +43,9 @@ public class AnalyticsEventController {
         log.info("Received request with eventString: {}, intervalString: {}, fromDateString: {}, toDateString: {}",
                 eventString, intervalString, fromDateString, toDateString);
 
-        EventType eventType = EventType.conversionToEventType(eventString);
-        Interval interval = Interval.conversionToInterval(intervalString);
-
-        LocalDateTime from = null;
-        LocalDateTime to = null;
-
-        if (interval == null) {
-            if (fromDateString != null && toDateString != null) {
-                from = LocalDateTime.parse(fromDateString);
-                to = LocalDateTime.parse(toDateString);
-            } else {
-                log.error(ExceptionMessages.ARGUMENT_NOT_FOUND);
-                throw new IllegalArgumentException(ExceptionMessages.ARGUMENT_NOT_FOUND);
-            }
-        }
+        analyticsEventValidate.checkOfInputData(intervalString, fromDateString, toDateString);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(analyticsEventService.getAnalytics(receiverId, eventType, interval, from, to));
+                .body(analyticsEventService.getAnalytics(receiverId, eventString, intervalString, fromDateString, toDateString));
     }
 }
