@@ -36,7 +36,6 @@ public class AnalyticsEventService {
         EventType eventType = EventType.conversionToEventType(eventString);
         Interval interval = Interval.conversionToInterval(intervalString);
 
-
         List<AnalyticsEvent> analyticsEvents = analyticsEventRepository
                 .findByReceiverIdAndEventType(receiverId, eventType)
                 .toList();
