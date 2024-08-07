@@ -149,21 +149,20 @@ class AnalyticsEventServiceTest {
     }
 
     @Test
-    @DisplayName("getAnalyticsSortedAllEventAllNull")
-    void testGetAnalyticsSortedAllEventAllNull() {
-        Mockito.when(analyticsEventRepository.findByReceiverIdAndEventType(anyLong(), any(EventType.class)))
-                .thenReturn(analyticsEventList);
+    @DisplayName("getAnalyticsValid")
+    void testGetAnalyticsValid() {
+        Mockito.when(analyticsEventRepository.findByReceiverIdAndEventTypeFromAndTo(
+                        anyLong(), any(EventType.class), any(LocalDateTime.class), any(LocalDateTime.class)))
+                .thenReturn(analyticsEventList.toList());
         Mockito.when(analyticsEventMapper.toListDto(anyList())).thenReturn(analyticsEventDtoList);
 
-
         List<AnalyticsEventDto> analyticsEventDtos = analyticsEventService
-                .getAnalytics(receiverId, eventString, null, null, null);
-        System.out.println(analyticsEventDtos);
+                .getAnalytics(receiverId, eventString, "WEEK", null, null);
 
         assertEquals(expectedList.size(), analyticsEventDtos.size());
-
         Mockito.verify(analyticsEventRepository, Mockito.times(1))
-                .findByReceiverIdAndEventType(anyLong(), any(EventType.class));
+                .findByReceiverIdAndEventTypeFromAndTo(
+                        anyLong(), any(EventType.class), any(LocalDateTime.class), any(LocalDateTime.class));
         Mockito.verify(analyticsEventMapper, Mockito.times(1))
                 .toListDto(anyList());
     }

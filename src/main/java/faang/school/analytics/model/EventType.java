@@ -1,5 +1,9 @@
 package faang.school.analytics.model;
 
+import faang.school.analytics.exception.ExceptionMessages;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public enum EventType {
     PROFILE_VIEW,
     PROJECT_VIEW,
@@ -27,12 +31,17 @@ public enum EventType {
         throw new IllegalArgumentException("Unknown event type: " + type);
     }
 
-    public static EventType conversionToEventType(String eventString){
+    public static EventType conversionToEventType(String eventString) {
         try {
             return EventType.valueOf(eventString.toUpperCase());
-        } catch (IllegalArgumentException e){
-            int ordinal = Integer.parseInt(eventString);
-            return EventType.values()[ordinal];
+        } catch (IllegalArgumentException e) {
+            try {
+                int ordinal = Integer.parseInt(eventString);
+                return EventType.values()[ordinal];
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e2) {
+                log.error(ExceptionMessages.INVALID_INPUT_IS_SUPPLIED, e2);
+                throw new IllegalArgumentException(ExceptionMessages.INVALID_INPUT_IS_SUPPLIED, e2);
+            }
         }
     }
 }

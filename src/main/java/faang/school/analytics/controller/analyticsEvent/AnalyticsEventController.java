@@ -1,13 +1,8 @@
 package faang.school.analytics.controller.analyticsEvent;
 
 import faang.school.analytics.dto.analyticsEvent.AnalyticsEventDto;
-import faang.school.analytics.exception.ExceptionMessages;
-import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
-import faang.school.analytics.model.Interval;
 import faang.school.analytics.service.analyticsEvent.AnalyticsEventService;
 import faang.school.analytics.validate.analyticEvent.AnalyticsEventValidate;
-import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -26,11 +20,6 @@ import java.util.List;
 public class AnalyticsEventController {
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventValidate analyticsEventValidate;
-
-    @PostMapping()
-    public ResponseEntity<AnalyticsEventDto> saveEvent(@Valid @RequestBody AnalyticsEvent analyticsEvent) {
-        return ResponseEntity.status(HttpStatus.OK).body(analyticsEventService.saveEvent(analyticsEvent));
-    }
 
     @GetMapping("/{receiverId}")
     public ResponseEntity<List<AnalyticsEventDto>> getAnalyticsByInterval(

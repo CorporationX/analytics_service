@@ -36,39 +36,35 @@ public class AnalyticsEventService {
         EventType eventType = EventType.conversionToEventType(eventString);
         Interval interval = Interval.conversionToInterval(intervalString);
 
-        List<AnalyticsEvent> analyticsEvents = analyticsEventRepository
-                .findByReceiverIdAndEventType(receiverId, eventType)
-                .toList();
-
         if (interval == null) {
-            if (fromDateString != null && toDateString != null) {
-                LocalDateTime from = LocalDateTime.parse(fromDateString);
-                LocalDateTime to = LocalDateTime.parse(toDateString);
-                return filterByFromAndToAndSort(analyticsEvents, from, to);
-            } else {
-                return sortedAllEvent(analyticsEvents);
-            }
+            LocalDateTime from = LocalDateTime.parse(fromDateString);
+            LocalDateTime to = LocalDateTime.parse(toDateString);
+            return filterByFromAndToAndSort(receiverId, eventType, from, to);
         } else {
-            return filterByIntervalAndSort(analyticsEvents, interval);
+            return filterByIntervalAndSort(receiverId, eventType, interval);
         }
     }
 
-    private List<AnalyticsEventDto> sortedAllEvent(List<AnalyticsEvent> eventStream) {
-        return analyticsEventMapper.toListDto(eventStream.stream()
+    private List<AnalyticsEventDto> sortedAllEvent(long receiverId,
+                                                   EventType eventType) {
+        return analyticsEventMapper.toListDto(analyticsEventRepository
+                .findByReceiverIdAndEventType(receiverId, eventType)
                 .sorted((e1, e2) -> e2.getReceivedAt().compareTo(e1.getReceivedAt()))
                 .toList());
     }
 
-    private List<AnalyticsEventDto> filterByFromAndToAndSort(List<AnalyticsEvent> eventStream,
+    private List<AnalyticsEventDto> filterByFromAndToAndSort(long receiverId,
+                                                             EventType eventType,
                                                              LocalDateTime from,
                                                              LocalDateTime to) {
-        return analyticsEventMapper.toListDto(eventStream.stream()
-                .filter(event -> event.getReceivedAt().isAfter(from) && event.getReceivedAt().isBefore(to))
-                .sorted((e1, e2) -> e2.getReceivedAt().compareTo(e1.getReceivedAt()))
-                .toList());
+        return analyticsEventMapper
+                .toListDto(analyticsEventRepository
+                        .findByReceiverIdAndEventTypeFromAndTo(receiverId, eventType, from, to));
     }
 
-    private List<AnalyticsEventDto> filterByIntervalAndSort(List<AnalyticsEvent> eventStream, Interval interval) {
+    private List<AnalyticsEventDto> filterByIntervalAndSort(long receiverId,
+                                                            EventType eventType,
+                                                            Interval interval) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime start;
         switch (interval) {
@@ -85,11 +81,11 @@ public class AnalyticsEventService {
                 start = now.minusYears(1);
                 break;
             case ALL_TIME:
-                return sortedAllEvent(eventStream);
+                return sortedAllEvent(receiverId, eventType);
             default:
                 log.error(ExceptionMessages.INTERVAL_NOT_FOUND + interval);
                 throw new IllegalArgumentException(ExceptionMessages.INTERVAL_NOT_FOUND + interval);
         }
-        return filterByFromAndToAndSort(eventStream, start, LocalDateTime.now());
+        return filterByFromAndToAndSort(receiverId, eventType, start, LocalDateTime.now());
     }
 }
