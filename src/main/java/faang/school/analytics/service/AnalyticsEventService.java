@@ -23,9 +23,10 @@ public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventMapper analyticsEventMapper;
 
-    public void saveEvent(AnalyticsEvent analyticsEvent) {
+    public AnalyticsEventDto saveEvent(AnalyticsEvent analyticsEvent) {
 
-        analyticsEventRepository.save(analyticsEvent);
+        AnalyticsEvent saveAnalyticsEvent = analyticsEventRepository.save(analyticsEvent);
+        return analyticsEventMapper.toDto(saveAnalyticsEvent);
     }
 
     public List<AnalyticsEventDto> getAnalytics(Long receiverId, EventType eventType, Interval interval,

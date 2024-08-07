@@ -1,21 +1,19 @@
-package faang.school.analytics.redis.config;
+package faang.school.analytics.config.redis;
 
 import faang.school.analytics.redis.lisener.ProfileViewEventListener;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
+@RequiredArgsConstructor
+@Configuration
 public class ProfileViewConfig {
 
     private final ProfileViewEventListener profileViewEventListener;
-
-    @Autowired
-    public ProfileViewConfig(ProfileViewEventListener profileViewEventListener) {
-        this.profileViewEventListener = profileViewEventListener;
-    }
 
     @Bean
     public RedisMessageListenerContainer profileViewEventListenerContainer(RedisConnectionFactory connectionFactory) {

@@ -77,9 +77,6 @@ public class AnalyticsEventServiceTest {
 
     @Test
     void testGetAnalyticsIfAnalyticsEventNotFound() {
-//        long testReceiverId = 1L;
-//        EventType testEventType = EventType.POST_VIEW;
-//        Interval testInterval = Interval.DAY;
         when(analyticsEventRepository
                 .findByReceiverIdAndEventType(testReceiverId, testEventType))
                 .thenReturn(null);
@@ -90,9 +87,7 @@ public class AnalyticsEventServiceTest {
 
     @Test
     void testGetAnalyticsIfIntervalNotNull() {
-//        long testReceiverId = 1L;
-//        EventType testEventType = EventType.POST_VIEW;
-//        Interval testInterval = Interval.MONTH;
+
         List<AnalyticsEvent> testList = prepareListAnalyticsEvent();
         Stream<AnalyticsEvent> testStream = testList.stream();
         AnalyticsEventDto firstDto = new AnalyticsEventDto();
@@ -119,10 +114,7 @@ public class AnalyticsEventServiceTest {
 
     @Test
     void testGetAnalyticsIfIntervalIsNull() {
-//        long testReceiverId = 1L;
-//        EventType testEventType = EventType.POST_VIEW;
-//        LocalDateTime from = fixTime.minusMonths(4);
-//        LocalDateTime to = fixTime.minusMonths(1);
+
         List<AnalyticsEvent> testList = prepareListAnalyticsEvent();
         Stream<AnalyticsEvent> testStream = testList.stream();
         AnalyticsEventDto firstDto = new AnalyticsEventDto();
@@ -143,9 +135,6 @@ public class AnalyticsEventServiceTest {
 
     @Test
     void testGetAnalyticsSuccessful() {
-//        long testReceiverId = 1L;
-//        EventType testEventType = EventType.POST_VIEW;
-//        Interval testInterval = Interval.DAY;
 
         analyticsEventService.getAnalytics(testReceiverId, testEventType, testInterval, LocalDateTime.now(), LocalDateTime.now());
 

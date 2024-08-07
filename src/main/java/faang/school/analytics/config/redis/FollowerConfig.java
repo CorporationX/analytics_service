@@ -1,22 +1,20 @@
-package faang.school.analytics.redis.config;
+package faang.school.analytics.config.redis;
 
 import faang.school.analytics.redis.lisener.FollowerEventListener;
-import faang.school.analytics.redis.lisener.ProfileViewEventListener;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
+@RequiredArgsConstructor
+@Configuration
 public class FollowerConfig {
 
     private final FollowerEventListener followerEventListener;
-
-    @Autowired
-    public FollowerConfig(FollowerEventListener followerEventListener) {
-        this.followerEventListener = followerEventListener;
-    }
 
     @Bean
     public RedisMessageListenerContainer followerEventListenerContainer(RedisConnectionFactory connectionFactory) {
