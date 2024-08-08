@@ -1,7 +1,6 @@
 package faang.school.analytics;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.filters.timeManagment.Interval;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;

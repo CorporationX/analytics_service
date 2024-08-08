@@ -6,7 +6,6 @@ import faang.school.analytics.filters.timeManagment.TimeRange;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.services.AnalyticsEventService;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -63,5 +62,4 @@ public class AnalyticsEventController {
             throw new IllegalArgumentException("Not allowed to specify both intervals");
         }
     }
-
 }
