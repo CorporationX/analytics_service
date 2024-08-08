@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 public final class TestDataFactory {
 
     public static final Long ID = 23L;
+    public static final String INTERVAL = "LAST_YEAR";
+    public static final String EVENT_TYPE = "GOAL_COMPLETED";
+
 
     public static AnalyticsEvent createAnalyticsEvent(){
         return AnalyticsEvent.builder()
@@ -33,11 +36,6 @@ public final class TestDataFactory {
     }
 
     public static Interval createInterval(){
-        var start = LocalDateTime.of(2024, 1, 1, 12, 0);
-        var end = LocalDateTime.of(2024, 12, 6, 12, 0);
-        return Interval.builder()
-                .start(start)
-                .end(end)
-                .build();
+        return Interval.LAST_YEAR;
     }
 }

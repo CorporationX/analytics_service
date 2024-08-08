@@ -66,15 +66,15 @@ class AnalyticsEventServiceTest {
     @Test
     void givenIntervalWhenGetAnalyticsThenReturnAnalyticsEvents() {
         // given - precondition
-        var interval = TestDataFactory.createInterval();
+        var interval = TestDataFactory.INTERVAL;
         long id = TestDataFactory.ID;
-        var eventType = EventType.GOAL_COMPLETED;
-        var start = LocalDateTime.of(2024, 1, 1, 12, 0);
-        var end = LocalDateTime.of(2024, 8, 12, 12, 0);
+        var eventType = TestDataFactory.EVENT_TYPE;
+        var start = LocalDateTime.of(2024, 1, 1, 12, 0).toString();
+        var end = LocalDateTime.of(2024, 8, 12, 12, 0).toString();
         var eventDto = TestDataFactory.createAnalyticsEventDto();
         var event = TestDataFactory.createAnalyticsEvent();
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType(id, eventType))
+        when(analyticsEventRepository.findByReceiverIdAndEventType(id, EventType.GOAL_COMPLETED))
                 .thenReturn(Stream.of(event));
         when(analyticsEventMapper.toDto(any(AnalyticsEvent.class)))
                 .thenReturn(eventDto);
@@ -91,15 +91,15 @@ class AnalyticsEventServiceTest {
     @Test
     void givenNullIntervalWhenGetAnalyticsThenReturnAnalyticsEvents() {
         // given - precondition
-        Interval interval = null;
+        String interval = null;
         long id = TestDataFactory.ID;
-        var eventType = EventType.GOAL_COMPLETED;
-        var start = LocalDateTime.of(2024, 1, 1, 12, 0);
-        var end = LocalDateTime.of(2024, 8, 12, 12, 0);
+        var eventType = TestDataFactory.EVENT_TYPE;
+        var start = LocalDateTime.of(2024, 1, 1, 12, 0).toString();
+        var end = LocalDateTime.of(2024, 8, 12, 12, 0).toString();
         var eventDto = TestDataFactory.createAnalyticsEventDto();
         var event = TestDataFactory.createAnalyticsEvent();
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType(id, eventType))
+        when(analyticsEventRepository.findByReceiverIdAndEventType(id, EventType.GOAL_COMPLETED))
                 .thenReturn(Stream.of(event));
         when(analyticsEventMapper.toDto(any(AnalyticsEvent.class)))
                 .thenReturn(eventDto);
@@ -116,14 +116,14 @@ class AnalyticsEventServiceTest {
     @Test
     void givenStartAndEndDatesWhenNoEventsThenReturnEmptyList() {
         // given - precondition
-        Interval interval = null;
+        String interval = null;
         long id = TestDataFactory.ID;
-        var eventType = EventType.GOAL_COMPLETED;
-        var start = LocalDateTime.of(2024, 1, 1, 12, 0);
-        var end = LocalDateTime.of(2024, 1, 1, 12, 1);
+        var eventType = TestDataFactory.EVENT_TYPE;
+        var start = LocalDateTime.of(2024, 1, 1, 12, 0).toString();
+        var end = LocalDateTime.of(2024, 1, 1, 12, 1).toString();
         var event = TestDataFactory.createAnalyticsEvent();
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType(id, eventType))
+        when(analyticsEventRepository.findByReceiverIdAndEventType(id, EventType.GOAL_COMPLETED))
                 .thenReturn(Stream.of(event));
 
         // when - action
