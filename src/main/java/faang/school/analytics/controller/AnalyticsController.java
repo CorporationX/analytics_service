@@ -16,6 +16,7 @@ import java.util.Optional;
 public class AnalyticsController {
 
     private final AnalyticsEventService analyticsEventService;
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<AnalyticsEventDto> getAnalytics(@RequestParam Long receiverId,
