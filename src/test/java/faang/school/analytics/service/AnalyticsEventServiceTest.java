@@ -22,6 +22,8 @@ import java.util.stream.Stream;
 @ExtendWith(MockitoExtension.class)
 public class AnalyticsEventServiceTest {
     @Mock
+    private AnalyticsEventValidator analyticsEventValidator;
+    @Mock
     private AnalyticsEventRepository analyticsEventRepository;
     @Spy
     private AnalyticsEventMapperImpl analyticsEventMapper;

@@ -19,12 +19,15 @@ import java.util.stream.Stream;
 public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventMapper analyticsEventMapper;
+    private final AnalyticsEventValidator analyticsEventValidator;
 
     public AnalyticsEventDto saveEvent(AnalyticsEvent event) {
+        analyticsEventValidator.validateAnalyticsEvent(event);
         return analyticsEventMapper.toDto(analyticsEventRepository.save(event));
     }
 
     public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to) {
+        analyticsEventValidator.validateParams(receiverId, eventType, interval, from, to);
         Stream<AnalyticsEvent> result = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
         if (interval != null) {
             from = LocalDateTime.now().minus(interval.getTemporalAmount(interval));
