@@ -8,6 +8,7 @@ import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -27,6 +28,7 @@ public class AnalyticsEventService {
         log.info("Saved event: {}", event);
     }
 
+    @Transactional(readOnly = true)
     public List<AnalyticsEventDto> getAnalytics(Long receiverId,
                                                 EventType eventType,
                                                 Interval interval,
