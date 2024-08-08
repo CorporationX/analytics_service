@@ -13,6 +13,4 @@ import java.util.stream.Stream;
 public interface AnalyticsEventRepository extends CrudRepository<AnalyticsEvent, Long> {
 
     Stream<AnalyticsEvent> findByReceiverIdAndEventType(long receiverId, EventType eventType);
-
-    List<AnalyticsEvent> findAllByReceiverIdAndEventTypeAndReceivedAtBetween(long receiverId, EventType eventType, LocalDateTime startDate, LocalDateTime endDate);
 }
