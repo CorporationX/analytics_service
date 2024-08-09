@@ -50,6 +50,9 @@ public class AnalyticsEventService {
     }
 
     private boolean isWithinRange(LocalDateTime dateTime, LocalDateTime from, LocalDateTime to) {
+        if (from == null || to == null){
+            throw new IllegalArgumentException("Date should not be null.");
+        }
         return !dateTime.isBefore(from) && !dateTime.isAfter(to);
     }
 }
