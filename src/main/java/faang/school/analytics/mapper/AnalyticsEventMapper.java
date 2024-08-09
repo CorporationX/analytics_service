@@ -30,7 +30,7 @@ public interface AnalyticsEventMapper {
         try {
             return EventType.valueOf(eventType.toUpperCase());
         } catch (IllegalArgumentException e) {
-            return null;
+            throw new IllegalArgumentException("The value " + eventType + " does not correspond to any valid EventType.", e);
         }
     }
 }

@@ -1,7 +1,6 @@
 package faang.school.analytics.util;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 import static java.time.LocalDateTime.now;
 
@@ -21,25 +20,6 @@ public enum Interval {
         }
         this.start = start;
         this.end = end;
-    }
-
-    public static Interval fromStringOrNumber(Object value) {
-        if (value instanceof String strValue) {
-            return Arrays.stream(values())
-                    .filter(interval -> interval.name().equalsIgnoreCase(strValue))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid interval string: " + strValue));
-        } else if (value instanceof Number) {
-            int numValue = ((Number) value).intValue();
-            var intervals = values();
-            if (numValue >= 0 && numValue < intervals.length) {
-                return intervals[numValue];
-            } else {
-                throw new IllegalArgumentException("Invalid interval number: " + numValue);
-            }
-        } else {
-            throw new IllegalArgumentException("Invalid interval value type: " + value);
-        }
     }
 
     public boolean contains(LocalDateTime dateTime) {
