@@ -23,12 +23,12 @@ public class RedisConfig {
     private int port;
     @Value("${spring.data.redis.host}")
     private String host;
-    @Value("${spring.data.redis.post_view_event_channel.name}")
+    @Value("${spring.data.redis.channel.post_view_event_channel}")
     private String postViewEventChannel;
 
     @Bean
-    public MessageListenerAdapter messageListenerAdapter() {
-        return new MessageListenerAdapter(new RedisMessageSubscriber());
+    public MessageListenerAdapter messageListenerAdapter(RedisMessageSubscriber messageSubscriber) {
+        return new MessageListenerAdapter(messageSubscriber);
     }
 
     @Bean
@@ -38,30 +38,30 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer container() {
+    public RedisMessageListenerContainer container(MessageListenerAdapter messageListenerAdapter, RedisConnectionFactory redisConnectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(redisConnectionFactory());
-        container.addMessageListener(messageListenerAdapter(), new ChannelTopic(""));
+        container.setConnectionFactory(redisConnectionFactory);
+        container.addMessageListener(messageListenerAdapter, new ChannelTopic(postViewEventChannel));
         return container;
     }
 
-    @Bean
-    public MessagePublisher redisPublisher() {
-        return new RedisMessagePublisher(redisTemplate(redisConnectionFactory()), postViewTopic());
-    }
+//    @Bean
+//    public MessagePublisher redisPublisher() {
+//        return new RedisMessagePublisher(redisTemplate(redisConnectionFactory()), postViewTopic());
+//    }
+//
+//    @Bean
+//    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+//        RedisTemplate<String, Object> template = new RedisTemplate<>();
+//        template.setConnectionFactory(factory);
+//        template.setKeySerializer(new StringRedisSerializer());
+//        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+//        return template;
+//    }
 
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(factory);
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-        return template;
-    }
-
-    @Bean
-    public ChannelTopic postViewTopic() {
-        return new ChannelTopic(postViewEventChannel);
-    }
+//    @Bean
+//    public ChannelTopic postViewTopic() {
+//        return new ChannelTopic(postViewEventChannel);
+//    }
 }
 

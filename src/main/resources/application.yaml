@@ -2,8 +2,8 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres
-    username: user
-    password: password
+    username: postgres
+    password: 12345
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -23,6 +23,7 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+        post_view_event_channel: post_view_event_channel
 
 server:
   port: 8086
