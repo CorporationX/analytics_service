@@ -73,7 +73,6 @@ public class AnalyticsEventService {
                             .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt))
                             .toList();
         }
-
         return analyticsEventMapper.toDtoList(filterAnalyticsEvent);
     }
 }
