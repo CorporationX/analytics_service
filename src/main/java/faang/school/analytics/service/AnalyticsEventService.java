@@ -10,8 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 @Service
@@ -29,37 +29,27 @@ public class AnalyticsEventService {
     }
 
     public List<AnalyticsEventDto> getAnalytics(long receiverId,
-                                                String eventType,
-                                                Object interval,
-                                                String from,
-                                                String to) {
-        var eventTypeEnum = EventType.valueOf(eventType);
-        var start = parseDateTime(from);
-        var end = parseDateTime(to);
+                                                EventType eventType,
+                                                Interval interval,
+                                                LocalDateTime from,
+                                                LocalDateTime to) {
 
-        Predicate<AnalyticsEvent> filterPredicate = createFilterPredicate(interval, start, end);
+        Predicate<AnalyticsEvent> filterPredicate = createFilterPredicate(interval, from, to);
 
-        return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventTypeEnum)
+        return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
                 .filter(filterPredicate)
                 .map(analyticsEventMapper::toDto)
+                .filter(Objects::nonNull)
                 .toList();
     }
 
-    private Predicate<AnalyticsEvent> createFilterPredicate(Object interval, LocalDateTime from, LocalDateTime to) {
-        if (interval != null) {
-            var intervalEnum = Interval.fromStringOrNumber(interval);
-            return event -> intervalEnum.contains(event.getReceivedAt());
-        } else {
-            return event -> isWithinRange(event.getReceivedAt(), from, to);
-        }
+    private Predicate<AnalyticsEvent> createFilterPredicate(Interval interval, LocalDateTime from, LocalDateTime to) {
+        return interval != null
+                ? event -> interval.contains(event.getReceivedAt())
+                : event -> isWithinRange(event.getReceivedAt(), from, to);
     }
 
     private boolean isWithinRange(LocalDateTime dateTime, LocalDateTime from, LocalDateTime to) {
         return !dateTime.isBefore(from) && !dateTime.isAfter(to);
-    }
-
-    private LocalDateTime parseDateTime(String dateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        return LocalDateTime.parse(dateTime, formatter);
     }
 }

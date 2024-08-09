@@ -3,9 +3,7 @@ package faang.school.analytics.service;
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
-import faang.school.analytics.util.Interval;
 import faang.school.analytics.util.TestDataFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,9 +11,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
+import static faang.school.analytics.util.TestDataFactory.END_DATE;
+import static faang.school.analytics.util.TestDataFactory.ID;
+import static faang.school.analytics.util.TestDataFactory.START_DATE;
+import static faang.school.analytics.util.TestDataFactory.createAnalyticsEvent;
+import static faang.school.analytics.util.TestDataFactory.createAnalyticsEventDto;
+import static faang.school.analytics.util.TestDataFactory.createEventType;
+import static faang.school.analytics.util.TestDataFactory.createInterval;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -34,8 +38,8 @@ class AnalyticsEventServiceTest {
     @Test
     void givenEventWhenSaveEventThenReturnEvent() {
         // given - precondition
-        var eventDto = TestDataFactory.createAnalyticsEventDto();
-        var event = TestDataFactory.createAnalyticsEvent();
+        var eventDto = createAnalyticsEventDto();
+        var event = createAnalyticsEvent();
 
         when(analyticsEventMapper.toEntity(eventDto))
                 .thenReturn(event);
@@ -66,22 +70,19 @@ class AnalyticsEventServiceTest {
     @Test
     void givenIntervalWhenGetAnalyticsThenReturnAnalyticsEvents() {
         // given - precondition
-        var interval = TestDataFactory.INTERVAL;
-        long id = TestDataFactory.ID;
-        var eventType = TestDataFactory.EVENT_TYPE;
-        var start = LocalDateTime.of(2024, 1, 1, 12, 0).toString();
-        var end = LocalDateTime.of(2024, 8, 12, 12, 0).toString();
-        var eventDto = TestDataFactory.createAnalyticsEventDto();
-        var event = TestDataFactory.createAnalyticsEvent();
+        var interval = createInterval();
+        var eventType = createEventType();
+        var eventDto = createAnalyticsEventDto();
+        var event = createAnalyticsEvent();
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType(id, EventType.GOAL_COMPLETED))
+        when(analyticsEventRepository.findByReceiverIdAndEventType(ID, eventType))
                 .thenReturn(Stream.of(event));
         when(analyticsEventMapper.toDto(any(AnalyticsEvent.class)))
                 .thenReturn(eventDto);
 
         // when - action
         var actualResult = analyticsEventService
-                .getAnalytics(id, eventType, interval, start, end);
+                .getAnalytics(ID, eventType, interval, START_DATE, END_DATE);
 
         // then - verify the output
         assertThat(actualResult).isNotNull();
@@ -91,22 +92,18 @@ class AnalyticsEventServiceTest {
     @Test
     void givenNullIntervalWhenGetAnalyticsThenReturnAnalyticsEvents() {
         // given - precondition
-        String interval = null;
-        long id = TestDataFactory.ID;
-        var eventType = TestDataFactory.EVENT_TYPE;
-        var start = LocalDateTime.of(2024, 1, 1, 12, 0).toString();
-        var end = LocalDateTime.of(2024, 8, 12, 12, 0).toString();
-        var eventDto = TestDataFactory.createAnalyticsEventDto();
-        var event = TestDataFactory.createAnalyticsEvent();
+        var eventType = createEventType();
+        var eventDto = createAnalyticsEventDto();
+        var event = createAnalyticsEvent();
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType(id, EventType.GOAL_COMPLETED))
+        when(analyticsEventRepository.findByReceiverIdAndEventType(ID, eventType))
                 .thenReturn(Stream.of(event));
         when(analyticsEventMapper.toDto(any(AnalyticsEvent.class)))
                 .thenReturn(eventDto);
 
         // when - action
         var actualResult = analyticsEventService
-                .getAnalytics(id, eventType, interval, start, end);
+                .getAnalytics(ID, eventType, null, START_DATE, END_DATE);
 
         // then - verify the output
         assertThat(actualResult).isNotNull();
@@ -116,19 +113,15 @@ class AnalyticsEventServiceTest {
     @Test
     void givenStartAndEndDatesWhenNoEventsThenReturnEmptyList() {
         // given - precondition
-        String interval = null;
-        long id = TestDataFactory.ID;
-        var eventType = TestDataFactory.EVENT_TYPE;
-        var start = LocalDateTime.of(2024, 1, 1, 12, 0).toString();
-        var end = LocalDateTime.of(2024, 1, 1, 12, 1).toString();
-        var event = TestDataFactory.createAnalyticsEvent();
+        var eventType = TestDataFactory.createEventType();
+        var event = createAnalyticsEvent();
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType(id, EventType.GOAL_COMPLETED))
+        when(analyticsEventRepository.findByReceiverIdAndEventType(ID, eventType))
                 .thenReturn(Stream.of(event));
 
         // when - action
         var actualResult = analyticsEventService
-                .getAnalytics(id, eventType, interval, start, end);
+                .getAnalytics(ID, eventType, null, START_DATE, END_DATE);
 
         // then - verify the output
         assertThat(actualResult).isNotNull();
