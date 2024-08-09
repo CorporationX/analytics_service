@@ -8,6 +8,7 @@ import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AnalyticsEventService {
 
     private final AnalyticsEventRepository analyticsEventRepository;
@@ -26,6 +28,7 @@ public class AnalyticsEventService {
     public AnalyticsEventDto saveEvent(AnalyticsEvent analyticsEvent) {
 
         AnalyticsEvent saveAnalyticsEvent = analyticsEventRepository.save(analyticsEvent);
+        log.info("AnalyticsEvent with ID = {} was created", analyticsEvent.getId());
         return analyticsEventMapper.toDto(saveAnalyticsEvent);
     }
 
