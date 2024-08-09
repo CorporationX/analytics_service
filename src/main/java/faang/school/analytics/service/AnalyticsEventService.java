@@ -11,10 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,13 +25,8 @@ public class AnalyticsEventService {
     private final AnalyticsEventMapper analyticsEventMapper;
 
     @Transactional
-    public AnalyticsEvent saveEventEntity(AnalyticsEventDto analyticsEventDto) {
-        return analyticsEventRepository.save(analyticsEventMapper.toEntity(analyticsEventDto));
-    }
-
-    @Transactional
-    public AnalyticsEventDto saveEvent(AnalyticsEventDto analyticsEventDto) {
-        return analyticsEventMapper.toDto(saveEventEntity(analyticsEventDto));
+    public AnalyticsEvent saveEventEntity(AnalyticsEvent analyticsEvent) {
+        return analyticsEventRepository.save(analyticsEvent);
     }
 
     @Transactional(readOnly = true)
@@ -39,60 +35,20 @@ public class AnalyticsEventService {
                                                 Interval interval,
                                                 LocalDateTime from,
                                                 LocalDateTime to) {
-        Stream<AnalyticsEvent> events = getEventByType(receiverId, eventType);
 
-        if (interval == null) {
-            if (to != null && from != null) {
-                return filterAndSortEvents(events, from, to);
-            } else {
-                return getAnalyticsEventDtosAllTime(events);
-            }
-        } else {
-            return processAndSortEventsByInterval(events, interval);
-        }
-    }
+        to = (interval != null || to == null) ? LocalDate.now().minusDays(1).atTime(LocalTime.MAX) : to;
+        from = interval != null ? calculateFromDate(interval, to) : from;
 
-    private List<AnalyticsEventDto> filterAndSortEvents(Stream<AnalyticsEvent> events,
-                                                        LocalDateTime from,
-                                                        LocalDateTime to) {
-        return events.filter(event -> event.getReceivedAt().isAfter(from)
-                        && event.getReceivedAt().isBefore(to.toLocalDate().atTime(LocalTime.MAX)))
-                .sorted((e1, e2) -> e2.getReceivedAt().compareTo(e1.getReceivedAt()))
+        return analyticsEventRepository.findFilteredAndSortedEvents(receiverId, eventType, from, to)
+                .stream()
                 .map(analyticsEventMapper::toDto)
-                .toList();
+                .collect(Collectors.toList());
     }
 
-    private List<AnalyticsEventDto> processAndSortEventsByInterval(Stream<AnalyticsEvent> events,
-                                                                   Interval interval) {
-        LocalDateTime now = LocalDateTime.now();
-        switch (interval) {
-            case DAY -> {
-                return filterAndSortEvents(events, now.minusDays(2L), now.minusDays(1L));
-            }
-            case WEEK -> {
-                return filterAndSortEvents(events, now.minusWeeks(2L), now.minusDays(1L));
-            }
-            case MONTH -> {
-                return filterAndSortEvents(events, now.minusMonths(2L), now.minusDays(1L));
-            }
-            case YEAR -> {
-                return filterAndSortEvents(events, now.minusYears(2L), now.minusDays(1L));
-            }
-            case ALL_TIME -> {
-                return getAnalyticsEventDtosAllTime(events);
-            }
-            default -> throw new IllegalArgumentException("Unknown interval: " + interval);
+    private LocalDateTime calculateFromDate(Interval interval, LocalDateTime to) {
+        if (interval == Interval.ALL_TIME) {
+            return LocalDateTime.MIN;
         }
-    }
-
-    private List<AnalyticsEventDto> getAnalyticsEventDtosAllTime(Stream<AnalyticsEvent> events) {
-        return events.map(analyticsEventMapper::toDto)
-                .sorted((e1, e2) -> e2.getReceivedAt().compareTo(e1.getReceivedAt()))
-                .toList();
-    }
-
-    public Stream<AnalyticsEvent> getEventByType(long receiverId,
-                                                 EventType eventType) {
-        return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
+        return to.minusDays(interval.getValue());
     }
 }
