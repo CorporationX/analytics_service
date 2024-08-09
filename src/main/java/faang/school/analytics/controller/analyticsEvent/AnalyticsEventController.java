@@ -49,7 +49,7 @@ public class AnalyticsEventController {
             return LocalDateTime.parse(date, formatter);
         } catch (DateTimeParseException e) {
             log.error("invalid date format ", e);
-            throw new DateTimeParseException("invalid date format. Try 'dd-MM-yyyy HH:mm:ss'",date,0);
+            throw new DateTimeParseException("invalid date format. Try 'dd-MM-yyyy HH:mm:ss'", date, 0);
         }
     }
 
