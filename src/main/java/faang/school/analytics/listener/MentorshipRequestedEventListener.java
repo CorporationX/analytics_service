@@ -20,11 +20,11 @@ import org.springframework.stereotype.Component;
 public class MentorshipRequestedEventListener implements MessageListener {
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper analyticsEventMapper;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         log.info("Received message: {}", message.getBody());
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
             MentorshipRequestEvent mentorshipRequestEvent = objectMapper.readValue(message.getBody(), MentorshipRequestEvent.class);
             AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(mentorshipRequestEvent);

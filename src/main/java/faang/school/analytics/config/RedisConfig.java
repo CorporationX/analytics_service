@@ -28,11 +28,11 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(List<Pair<MessageListenerAdapter, ChannelTopic>> mentorshipRequestedListener,
+    RedisMessageListenerContainer redisContainer(List<Pair<MessageListenerAdapter, ChannelTopic>> redisEventListener,
                                                  JedisConnectionFactory jedisConnectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory);
-        for (Pair<MessageListenerAdapter, ChannelTopic> messageListenerAdapter : mentorshipRequestedListener) {
+        for (Pair<MessageListenerAdapter, ChannelTopic> messageListenerAdapter : redisEventListener) {
             container.addMessageListener(messageListenerAdapter.getFirst(), messageListenerAdapter.getSecond());
         }
         return container;
