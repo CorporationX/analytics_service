@@ -32,7 +32,7 @@ public class AnalyticsEventController {
                                                       @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")LocalDateTime from,
                                                       @RequestParam(required = false)
                                                       @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")LocalDateTime to
-                                                      ) throws IllegalAccessException {
+                                                      ) {
 
         EventType eventTypeName = EnumConvertor.convert(EventType.class, eventType);
         Interval intervalName = EnumConvertor.convert(Interval.class, interval);
