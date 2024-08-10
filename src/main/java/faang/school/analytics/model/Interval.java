@@ -1,4 +1,4 @@
-package faang.school.analytics.dto;
+package faang.school.analytics.model;
 
 import lombok.RequiredArgsConstructor;
 
