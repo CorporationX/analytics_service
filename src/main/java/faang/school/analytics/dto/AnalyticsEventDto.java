@@ -1,29 +1,27 @@
 package faang.school.analytics.dto;
 
 import faang.school.analytics.model.EventType;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 public class AnalyticsEventDto {
+    private Long id;
 
-    private long id;
+    @NotNull(message = "ReceiverId shouldn't be null")
+    @Positive(message = "ReceiverId should be positive")
+    private Long receiverId;
 
-    @Positive
-    private long receiverId;
+    @NotNull(message = "AuthorId shouldn't be null")
+    @Positive(message = "AuthorId should be positive")
+    private Long actorId;
 
-    @Positive
-    private long actorId;
-
-    @NotBlank
+    @NotNull(message = "EventType shouldn't be null")
     private EventType eventType;
-
     private LocalDateTime receivedAt;
 }
