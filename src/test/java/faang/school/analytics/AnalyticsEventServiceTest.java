@@ -50,7 +50,6 @@ public class AnalyticsEventServiceTest {
 
     @Test
     public void getAnalytics_ShouldReturnFilteredAnalyticsEventDtos() {
-        // Arrange
         long receiverId = 1L;
         LocalDateTime startDateTime = new LocalDateTime(2024, 8, 1, 12, 0);
         LocalDateTime endDateTime = new LocalDateTime(2024, 8, 10, 12, 0);
