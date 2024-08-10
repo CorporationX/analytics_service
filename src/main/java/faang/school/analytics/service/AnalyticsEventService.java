@@ -29,12 +29,15 @@ public class AnalyticsEventService {
         return analyticsEventMapper.analyticsEventToAnalyticsEventDto(analyticsEventRepository.save(event));
     }
 
+    @Transactional(readOnly = true)
     public List<AnalyticsEventDto> getAnalytics(
             long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to) {
-        return analyticsEventMapper.analyticsEventListToAnalyticsEventDtoList(findByReceiverIdAndEventType(receiverId, eventType)
-                .filter(analyticsEvent -> intervalContainsReceivedAt(analyticsEvent.getReceivedAt(), interval, from, to))
-                .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt))
-                .toList());
+        return analyticsEventMapper.analyticsEventListToAnalyticsEventDtoList(
+                findByReceiverIdAndEventType(receiverId, eventType)
+                        .filter(analyticsEvent -> intervalContainsReceivedAt(
+                                analyticsEvent.getReceivedAt(), interval, from, to))
+                        .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt))
+                        .toList());
     }
 
     private Stream<AnalyticsEvent> findByReceiverIdAndEventType(long receiverId, EventType eventType) {
@@ -46,7 +49,12 @@ public class AnalyticsEventService {
         if (interval != null) {
             return interval.contains(receivedAt.toDateTime());
         } else {
-            return from.isAfter(receivedAt) && to.isBefore(receivedAt);
+            if (from != null && to != null) {
+                return from.isAfter(receivedAt) && to.isBefore(receivedAt);
+            } else {
+                log.error("interval is null");
+                throw new IllegalArgumentException("interval is null");
+            }
         }
     }
 }
