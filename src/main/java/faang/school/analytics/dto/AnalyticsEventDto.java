@@ -1,5 +1,6 @@
 package faang.school.analytics.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import faang.school.analytics.model.EventType;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,5 +21,6 @@ public class AnalyticsEventDto {
 
     EventType eventType;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     LocalDateTime receivedAt;
 }
