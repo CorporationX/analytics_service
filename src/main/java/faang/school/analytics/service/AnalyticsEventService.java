@@ -22,7 +22,7 @@ public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventMapper analyticsEventMapper;
 
-
+    @Transactional
     public void saveEvent(AnalyticsEvent event) {
         analyticsEventRepository.save(event);
         log.info("Saved event: {}", event);
@@ -43,8 +43,11 @@ public class AnalyticsEventService {
         }
 
         if (interval == null) {
+            LocalDateTime effectiveFrom = (from == null) ? LocalDateTime.MIN : from;
+            LocalDateTime effectiveTo = (to == null) ? LocalDateTime.MAX : to;
+
             analyticsEvent = analyticsEvent.filter(event ->
-                    event.getReceivedAt().isAfter(from) && event.getReceivedAt().isBefore(to));
+                    event.getReceivedAt().isAfter(effectiveFrom) && event.getReceivedAt().isBefore(effectiveTo));
         } else {
             LocalDateTime fromDate = Interval.getFromDate(interval);
             analyticsEvent = analyticsEvent.filter(event -> event.getReceivedAt().isAfter(fromDate));
