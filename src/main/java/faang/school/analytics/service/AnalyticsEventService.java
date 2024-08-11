@@ -36,4 +36,9 @@ public class AnalyticsEventService {
         }
         return analyticsEventRepository.findAllByReceiverIdAndEventTypeAndReceivedAtIsBetween(receiverId, type, from, to);
     }
+
+    @Transactional
+    public void saveEvent(AnalyticsEvent analyticsEvent) {
+        analyticsEventRepository.save(analyticsEvent);
+    }
 }
