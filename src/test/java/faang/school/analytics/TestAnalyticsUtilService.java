@@ -1,5 +1,6 @@
 package faang.school.analytics;
 
+import faang.school.analytics.exceptions.NotFoundException;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
@@ -10,16 +11,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class TeatAnalyticsUtilService {
+public class TestAnalyticsUtilService {
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
     @InjectMocks
@@ -41,4 +42,12 @@ public class TeatAnalyticsUtilService {
         assertEquals(2, analyticsEvents.count());
     }
 
+    @Test
+    public void testNotFoundEvent(){
+        long receiverId = 1L;
+        EventType eventType = EventType.ACHIEVEMENT_RECEIVED;
+        Stream<AnalyticsEvent> analyticsEvents = Stream.empty();
+        when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)).thenReturn(analyticsEvents);
+        assertThrows(NotFoundException.class, () -> analyticsUtilService.getAnalytics(receiverId, eventType));
+    }
 }
