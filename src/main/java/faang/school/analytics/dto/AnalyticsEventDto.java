@@ -1,7 +1,5 @@
 package faang.school.analytics.dto;
 
-import faang.school.analytics.model.EventType;
-import jdk.jfr.Event;
 import lombok.Builder;
 import lombok.Data;
 
