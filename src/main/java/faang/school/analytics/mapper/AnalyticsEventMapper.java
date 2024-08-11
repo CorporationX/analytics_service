@@ -1,5 +1,6 @@
 package faang.school.analytics.mapper;
 
+import faang.school.analytics.dto.AnalyticEventDto;
 import faang.school.analytics.dtoForRedis.FollowerEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -18,6 +19,9 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "subscribedDateTime", target = "receivedAt")
     @Mapping(source = "followerEventDto", target = "eventType", qualifiedByName = "getEventType")
     AnalyticsEvent toAnalyticEvent(FollowerEventDto followerEventDto);
+
+    AnalyticsEvent toEntity(AnalyticEventDto analyticEventDto);
+    AnalyticEventDto toDto(AnalyticsEvent analyticsEvent);
 
     @Named("getEventType")
     default EventType getEventType(FollowerEventDto followerEventDto) {
