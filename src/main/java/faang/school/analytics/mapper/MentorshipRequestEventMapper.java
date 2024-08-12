@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE)
-public interface AnalyticsEventMapper {
+public interface MentorshipRequestEventMapper {
     @Mapping(source = "requesterId", target = "actorId")
     @Mapping(source = "receiverId", target = "receiverId")
     @Mapping(source = "timestamp", target = "receivedAt")

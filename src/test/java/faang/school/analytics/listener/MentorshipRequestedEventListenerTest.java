@@ -2,12 +2,13 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import faang.school.analytics.dto.analyticsEvent.AnalyticsEventDto;
 import faang.school.analytics.dto.mentorship.MentorshipRequestEvent;
 import faang.school.analytics.exception.DataTransformationException;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.mapper.MentorshipRequestEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.service.AnalyticsEventService;
+import faang.school.analytics.service.analyticsEvent.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,7 @@ class MentorshipRequestedEventListenerTest {
     @Mock
     private AnalyticsEventService analyticsEventService;
     @Mock
-    private AnalyticsEventMapper analyticsEventMapper;
+    private MentorshipRequestEventMapper mentorshipRequestEventMapper;
     @Mock
     private ObjectMapper objectMapper;
     @InjectMocks
@@ -59,7 +60,6 @@ class MentorshipRequestedEventListenerTest {
                 .eventType(EventType.MENTORSHIP_RECEIVED)
                 .receivedAt(localDateTime)
                 .build();
-
     }
 
     @Test
@@ -78,7 +78,7 @@ class MentorshipRequestedEventListenerTest {
     void testToEntityValid() throws IOException {
         Mockito.when(objectMapper.readValue(Mockito.any(byte[].class), Mockito.eq(MentorshipRequestEvent.class)))
                 .thenReturn(mentorshipRequestEvent);
-        Mockito.when(analyticsEventMapper.toEntity(Mockito.any(MentorshipRequestEvent.class)))
+        Mockito.when(mentorshipRequestEventMapper.toEntity(Mockito.any(MentorshipRequestEvent.class)))
                 .thenReturn(analyticsEvent);
 
         byte[] mockMessageBody = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsBytes(mentorshipRequestEvent);
@@ -88,7 +88,7 @@ class MentorshipRequestedEventListenerTest {
 
         Mockito.verify(objectMapper, Mockito.times(1))
                 .readValue(Mockito.any(byte[].class), Mockito.eq(MentorshipRequestEvent.class));
-        Mockito.verify(analyticsEventMapper, Mockito.times(1))
+        Mockito.verify(mentorshipRequestEventMapper, Mockito.times(1))
                 .toEntity(Mockito.any(MentorshipRequestEvent.class));
     }
 
@@ -97,9 +97,10 @@ class MentorshipRequestedEventListenerTest {
     void testSaveValid() throws IOException {
         Mockito.when(objectMapper.readValue(Mockito.any(byte[].class), Mockito.eq(MentorshipRequestEvent.class)))
                 .thenReturn(mentorshipRequestEvent);
-        Mockito.when(analyticsEventMapper.toEntity(Mockito.any(MentorshipRequestEvent.class)))
+        Mockito.when(mentorshipRequestEventMapper.toEntity(Mockito.any(MentorshipRequestEvent.class)))
                 .thenReturn(analyticsEvent);
-        Mockito.doNothing().when(analyticsEventService).save(analyticsEvent);
+        Mockito.when(analyticsEventService.saveEvent(Mockito.any(AnalyticsEvent.class)))
+                .thenReturn(new AnalyticsEventDto());
 
         byte[] mockMessageBody = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsBytes(mentorshipRequestEvent);
         Mockito.when(message.getBody()).thenReturn(mockMessageBody);
@@ -108,8 +109,8 @@ class MentorshipRequestedEventListenerTest {
 
         Mockito.verify(objectMapper, Mockito.times(1))
                 .readValue(Mockito.any(byte[].class), Mockito.eq(MentorshipRequestEvent.class));
-        Mockito.verify(analyticsEventMapper, Mockito.times(1))
+        Mockito.verify(mentorshipRequestEventMapper, Mockito.times(1))
                 .toEntity(Mockito.any(MentorshipRequestEvent.class));
-        Mockito.verify(analyticsEventService, Mockito.times(1)).save(Mockito.any(AnalyticsEvent.class));
+        Mockito.verify(analyticsEventService, Mockito.times(1)).saveEvent(Mockito.any(AnalyticsEvent.class));
     }
 }
