@@ -1,10 +1,13 @@
 package faang.school.analytics.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.Arrays;
 
 @AllArgsConstructor
+@Getter
 public enum Interval {
 
     DAY(1),
@@ -14,13 +17,24 @@ public enum Interval {
 
     private final int days;
 
-    public int getDaysByInterval(Interval interval) {
+    public static Interval getInterval(String interval) {
 
-        Interval intervalExist = Arrays.stream(Interval.values())
-                .filter(position -> position.equals(interval))
+        if (interval == null) {
+            return null;
+        }
+
+        if (NumberUtils.isDigits(interval)) {
+            return getIntervalByDays(Integer.parseInt(interval));
+        }
+
+        return Interval.valueOf(interval.toUpperCase());
+    }
+
+    public static Interval getIntervalByDays(int numberOfInterval) {
+        return Arrays.stream(Interval.values())
+                .filter(intervalEnum -> intervalEnum.getDays() == numberOfInterval)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Unknown interval: " + interval));
+                .orElseThrow(() -> new IllegalArgumentException("Unknown interval: " + numberOfInterval));
 
-        return intervalExist.days;
     }
 }

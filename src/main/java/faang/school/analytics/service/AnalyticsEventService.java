@@ -51,7 +51,6 @@ public class AnalyticsEventService {
     }
 
     private boolean filterByIntervalDays(Interval interval, LocalDateTime dateTime) {
-        int daysByInterval = interval.getDaysByInterval(interval);
-        return dateTime.isAfter(LocalDateTime.now().minusDays(daysByInterval));
+        return dateTime.isAfter(LocalDateTime.now().minusDays(interval.getDays()));
     }
 }
