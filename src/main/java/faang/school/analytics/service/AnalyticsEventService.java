@@ -46,7 +46,7 @@ public class AnalyticsEventService {
         if (interval != null) {
             return interval.contains(receivedAt.toDateTime());
         } else {
-            if (from != null && to == null) {
+            if (from != null && to != null) {
                 return from.isAfter(receivedAt) && to.isBefore(receivedAt);
             } else {
                 log.error("interval is null");
