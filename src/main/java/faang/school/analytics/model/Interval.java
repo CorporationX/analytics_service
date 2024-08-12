@@ -13,8 +13,8 @@ public enum Interval {
     MONTH,
     YEAR;
 
-    public TemporalAmount getTemporalAmount() {
-        switch (this) {
+    public TemporalAmount getTemporalAmount(Interval interval) {
+        switch (interval) {
             case SECOND -> {
                 return Duration.ofSeconds(1);
             }
