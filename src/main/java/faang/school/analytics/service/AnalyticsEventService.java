@@ -30,8 +30,8 @@ public class AnalyticsEventService {
                                                 Interval interval,
                                                 LocalDateTime from,
                                                 LocalDateTime to) {
-
-        return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
+        List<AnalyticsEvent> events = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType).toList();
+        return events.stream()
                 .filter((event) -> interval != null
                         ? interval.includes(event.getReceivedAt())
                         : !event.getReceivedAt().isBefore(from) && !event.getReceivedAt().isAfter(to))
