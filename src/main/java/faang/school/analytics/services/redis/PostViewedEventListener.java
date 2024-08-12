@@ -1,22 +1,38 @@
 package faang.school.analytics.services.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.events.PostViewEvent;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.model.EventType;
+import faang.school.analytics.services.AnalyticsEventService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
-@Service
+@Component
+@RequiredArgsConstructor
+@Slf4j
 public class PostViewedEventListener implements MessageListener {
-    public static List<String> messgeList = new ArrayList<>();
+    private final ObjectMapper objectMapper;
+    private final AnalyticsEventService analyticsEventService;
+    private final AnalyticsEventMapper analyticsEventMapper;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.readValue(message, PostViewEvent.class);
-        messgeList.add(message.toString());
+        try {
+            PostViewEvent postViewEvent = objectMapper.readValue(message.getBody(), PostViewEvent.class);
+            AnalyticsEventDto dto = analyticsEventMapper.toDto(postViewEvent);
+            dto.setEventType(EventType.POST_VIEW);
+            analyticsEventService.saveEvent(analyticsEventMapper.toEntity(dto));
+            log.info("post view event {} was saved successfully", postViewEvent.getPostId());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

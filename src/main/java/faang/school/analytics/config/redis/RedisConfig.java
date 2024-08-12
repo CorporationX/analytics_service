@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
@@ -16,29 +15,29 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 @RequiredArgsConstructor
 public class RedisConfig {
 
-    @Value("${spring.data.redis.port}")
-    private int port;
-    @Value("${spring.data.redis.host}")
-    private String host;
     @Value("${spring.data.redis.channel.post_view_event_channel}")
     private String postViewEventChannel;
 
     @Bean
-    public MessageListenerAdapter messageListenerAdapter(PostViewedEventListener messageSubscriber) {
-        return new MessageListenerAdapter(messageSubscriber);
+    public MessageListenerAdapter messageListenerAdapter(PostViewedEventListener postViewedEventListener) {
+        return new MessageListenerAdapter(postViewedEventListener);
     }
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(host, port);
-        return new JedisConnectionFactory(redisStandaloneConfiguration);
+        return new JedisConnectionFactory();
     }
 
     @Bean
-    public RedisMessageListenerContainer container(MessageListenerAdapter messageListenerAdapter, RedisConnectionFactory redisConnectionFactory) {
+    ChannelTopic postViewChannel() {
+        return new ChannelTopic(postViewEventChannel);
+    }
+
+    @Bean
+    public RedisMessageListenerContainer container(MessageListenerAdapter messageListenerAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(redisConnectionFactory);
-        container.addMessageListener(messageListenerAdapter, new ChannelTopic(postViewEventChannel));
+        container.setConnectionFactory(redisConnectionFactory());
+        container.addMessageListener(messageListenerAdapter, postViewChannel());
         return container;
     }
 }
