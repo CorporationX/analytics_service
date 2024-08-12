@@ -4,5 +4,9 @@ public enum Interval {
     HOURLY,
     DAILY,
     WEEKLY,
-    MONTHLY
+    MONTHLY;
+
+    public static Interval fromString(String value){
+        return Interval.valueOf(value.toUpperCase());
+    }
 }

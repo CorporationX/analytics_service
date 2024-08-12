@@ -26,4 +26,8 @@ public enum EventType {
         }
         throw new IllegalArgumentException("Unknown event type: " + type);
     }
+
+    public static EventType fromString(String value){
+        return EventType.valueOf(value.toUpperCase());
+    }
 }
