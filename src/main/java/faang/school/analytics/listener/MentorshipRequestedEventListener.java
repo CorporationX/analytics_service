@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class MentorshipRequestedEventListener implements MessageListener {
-    private final AnalyticsEventService analyticsEventService;
+//    private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper analyticsEventMapper;
     private final ObjectMapper objectMapper;
 
@@ -29,7 +29,7 @@ public class MentorshipRequestedEventListener implements MessageListener {
             MentorshipRequestEvent mentorshipRequestEvent = objectMapper.readValue(message.getBody(), MentorshipRequestEvent.class);
             AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(mentorshipRequestEvent);
             analyticsEvent.setEventType(EventType.MENTORSHIP_RECEIVED);
-            analyticsEventService.save(analyticsEvent);
+//            analyticsEventService.save(analyticsEvent);
         } catch (Exception e) {
             log.error(ExceptionMessages.INVALID_TRANSFORMATION, e);
             throw new DataTransformationException(ExceptionMessages.INVALID_TRANSFORMATION, e);
