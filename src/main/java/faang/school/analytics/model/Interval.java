@@ -19,7 +19,7 @@ public enum Interval {
 
     public static Interval getInterval(String interval) {
 
-        if (interval == null) {
+        if (interval.isBlank()) {
             return null;
         }
 
