@@ -31,11 +31,6 @@ public class AnalyticsRequestParams {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         startDate.ifPresent(value -> this.startDate = LocalDateTime.parse(value, formatter));
         endDate.ifPresent(value -> this.endDate = LocalDateTime.parse(value, formatter));
-
-        validateDates();
-        if(this.startDate != null && this.endDate != null) {
-            validStartAndEndDates(this.startDate, this.endDate);
-        }
     }
 
     private EventType parseEventType(String eventType) {
@@ -55,17 +50,4 @@ public class AnalyticsRequestParams {
             return Interval.fromString(interval);
         }
     }
-
-    private void validateDates() {
-        if (interval == null && (startDate == null || endDate == null)) {
-            throw new IllegalArgumentException("Either interval or both startDate and endDate must be provided!");
-        }
-    }
-
-    private void validStartAndEndDates(LocalDateTime startDate, LocalDateTime endDate) {
-        if(endDate.isBefore(startDate)) {
-            throw new IllegalArgumentException("End date cannot be earlier than start date!");
-        }
-    }
-
 }
