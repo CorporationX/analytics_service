@@ -34,16 +34,14 @@ public class AnalyticsEventService {
                                                 LocalDateTime from,
                                                 LocalDateTime to) {
 
-        Predicate<AnalyticsEvent> filterPredicate = createFilterPredicate(interval, from, to);
-
         return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
-                .filter(filterPredicate)
+                .filter(intervalOrRangeFilter(interval, from, to))
                 .map(analyticsEventMapper::toDto)
                 .filter(Objects::nonNull)
                 .toList();
     }
 
-    private Predicate<AnalyticsEvent> createFilterPredicate(Interval interval, LocalDateTime from, LocalDateTime to) {
+    private Predicate<AnalyticsEvent> intervalOrRangeFilter(Interval interval, LocalDateTime from, LocalDateTime to) {
         return interval != null
                 ? event -> interval.contains(event.getReceivedAt())
                 : event -> isWithinRange(event.getReceivedAt(), from, to);
