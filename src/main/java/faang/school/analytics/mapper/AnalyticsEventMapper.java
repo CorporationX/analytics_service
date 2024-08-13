@@ -14,5 +14,6 @@ public interface AnalyticsEventMapper {
 
     @Mapping(source = "commentId", target = "receiverId")
     @Mapping(source = "authorId", target = "actorId")
+    @Mapping(source = "sendAt", target = "receivedAt")
     AnalyticsEvent commentEventToAnalyticsEvent(CommentEvent commentEvent);
 }
