@@ -2,6 +2,7 @@ package faang.school.analytics.config.redis;
 
 import faang.school.analytics.redis.lisener.CommentEventListener;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -13,6 +14,9 @@ public class CommentEventConfig {
 
     private final CommentEventListener commentEventListener;
 
+    @Value("${spring.data.redis.channel.post_comment_channel}")
+    private String channelTopic;
+
     @Bean
     public MessageListenerAdapter commentEventListenerAdapter() {
         return new MessageListenerAdapter(commentEventListener);
@@ -20,6 +24,6 @@ public class CommentEventConfig {
 
     @Bean
     public ChannelTopic commentTopic() {
-        return new ChannelTopic("post_comment_channel");
+        return new ChannelTopic(channelTopic);
     }
 }

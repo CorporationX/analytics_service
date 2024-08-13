@@ -8,12 +8,14 @@ import faang.school.analytics.model.CommentEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class CommentEventListener implements MessageListener {
 
     private final AnalyticsEventMapper analyticsEventMapper;
@@ -26,10 +28,11 @@ public class CommentEventListener implements MessageListener {
         String body = new String(message.getBody());
         System.out.println("Received message from channel " + channel + ": " + body);
 
-        CommentEvent commentEvent = new CommentEvent();
+        CommentEvent commentEvent;
         try {
             commentEvent = objectMapper.readValue(body, CommentEvent.class);
         } catch (JsonProcessingException e) {
+            log.error("There was an exception during conversion String to CommentEvent.class");
             throw new RuntimeException(e);
         }
         AnalyticsEvent analyticsEvent = analyticsEventMapper.commentEventToAnalyticsEvent(commentEvent);
