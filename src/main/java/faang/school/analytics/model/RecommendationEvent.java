@@ -1,7 +1,10 @@
 package faang.school.analytics.model;
 
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
+@Data
 public class RecommendationEvent {
 
     private Long id;
