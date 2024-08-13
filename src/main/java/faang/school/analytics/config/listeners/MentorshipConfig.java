@@ -22,10 +22,6 @@ public class MentorshipConfig {
     @Bean
     Pair<MessageListenerAdapter, ChannelTopic> mentorshipRequested(
             @Qualifier("mentorshipRequestedListener") MessageListenerAdapter mentorshipRequestedListener) {
-        return Pair.of(mentorshipRequestedListener, mentorshipRequestedTopic());
-    }
-
-    ChannelTopic mentorshipRequestedTopic() {
-        return new ChannelTopic(mentorshipRequestedChannel);
+        return Pair.of(mentorshipRequestedListener, new ChannelTopic(mentorshipRequestedChannel));
     }
 }
