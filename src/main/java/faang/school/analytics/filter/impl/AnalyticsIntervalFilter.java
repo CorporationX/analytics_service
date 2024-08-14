@@ -16,7 +16,7 @@ public class AnalyticsIntervalFilter implements AnalyticsFilter {
     }
 
     @Override
-    public boolean test(AnalyticsEvent event, AnalyticsFilterDto dto) {
+    public boolean action(AnalyticsEvent event, AnalyticsFilterDto dto) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime date = event.getReceivedAt();
         Interval interval = dto.getInterval();

@@ -7,5 +7,5 @@ public interface AnalyticsFilter {
 
     boolean isApplicable(AnalyticsFilterDto dto);
 
-    boolean test(AnalyticsEvent event, AnalyticsFilterDto dto);
+    boolean action(AnalyticsEvent event, AnalyticsFilterDto dto);
 }

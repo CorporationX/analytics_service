@@ -15,7 +15,7 @@ public class AnalyticsDateRangeFilter implements AnalyticsFilter {
     }
 
     @Override
-    public boolean test(AnalyticsEvent event, AnalyticsFilterDto dto) {
+    public boolean action(AnalyticsEvent event, AnalyticsFilterDto dto) {
         LocalDateTime time = event.getReceivedAt();
         return time.isAfter(dto.getFrom()) && time.isBefore(dto.getTo());
     }

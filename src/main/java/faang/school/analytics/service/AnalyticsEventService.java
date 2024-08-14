@@ -34,7 +34,7 @@ public class AnalyticsEventService {
                 .orElseThrow(() -> new IllegalArgumentException("No applicable filter found"));
 
         return repository.findByReceiverIdAndEventType(filters.getReceiverId(), filters.getEventType())
-                .filter(event -> actualFilter.test(event, filters))
+                .filter(event -> actualFilter.action(event, filters))
                 .map(mapper::toDto)
                 .toList();
     }
