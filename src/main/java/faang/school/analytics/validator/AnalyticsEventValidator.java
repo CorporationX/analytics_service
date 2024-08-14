@@ -1,4 +1,4 @@
-package faang.school.analytics.service;
+package faang.school.analytics.validator;
 
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -33,6 +33,11 @@ public class AnalyticsEventValidator {
         }
         if (interval == null && (from == null || to == null)) {
             throw new IllegalArgumentException("Interval and time frames can't be null at same time");
+        }
+        if(from != null && to != null) {
+            if(to.isBefore(from)) {
+                throw new IllegalArgumentException("End date cannot be earlier than start date!");
+            }
         }
     }
 }

@@ -37,8 +37,26 @@ public enum Interval {
                 return Period.ofYears(1);
             }
             default -> {
-                throw new IllegalArgumentException("Unknown interval " + interval);
+                throw new IllegalArgumentException("Unknown interval " + this);
             }
         }
+    }
+
+    public static Interval fromString(String value) {
+        for (Interval interval : Interval.values()) {
+            if (interval.name().equalsIgnoreCase(value)) {
+                return interval;
+            }
+        }
+        throw new IllegalArgumentException("Unknown interval type: " + value);
+    }
+
+    public static Interval of(int type) {
+        for (Interval interval : Interval.values()) {
+            if (interval.ordinal() == type) {
+                return interval;
+            }
+        }
+        throw new IllegalArgumentException("Unknown interval type: " + type);
     }
 }
