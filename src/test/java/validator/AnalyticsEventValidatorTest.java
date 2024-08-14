@@ -1,6 +1,7 @@
 package validator;
 
 import faang.school.analytics.validator.AnalyticsEventValidator;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,8 @@ public class AnalyticsEventValidatorTest {
     private final AnalyticsEventValidator validator = new AnalyticsEventValidator();
 
     @Test
-    public void testValidate_IntervalNull_FromNull_ToNull_ThrowsAssertionError() {
+    @DisplayName("Test validate when interval and from/to are null")
+    public void testValidateWithIntervalAndFromToNull() {
         String interval = null;
         LocalDateTime from = null;
         LocalDateTime to = null;
@@ -22,7 +24,8 @@ public class AnalyticsEventValidatorTest {
     }
 
     @Test
-    public void testValidate_IntervalNull_FromNotNull_ToNotNull_DoesNotThrowAssertionError() {
+    @DisplayName("Test validate when interval is null and from/to are not null")
+    public void testValidateWithIntervalNullAndFromToNotNull() {
         String interval = null;
         LocalDateTime from = LocalDateTime.now();
         LocalDateTime to = LocalDateTime.now();
@@ -31,7 +34,8 @@ public class AnalyticsEventValidatorTest {
     }
 
     @Test
-    public void testValidate_IntervalNotNull_FromNull_ToNull_DoesNotThrowAssertionError() {
+    @DisplayName("Test validate when interval is not null and from/to are null")
+    public void testValidateWithIntervalNotNullAndFromToNull() {
         String interval = "DAY";
         LocalDateTime from = null;
         LocalDateTime to = null;
