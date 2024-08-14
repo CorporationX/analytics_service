@@ -7,7 +7,6 @@ import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
-import faang.school.analytics.validator.AnalyticsEventValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -29,9 +28,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class AnalyticsServiceTest {
 
-    @Mock
-    private AnalyticsEventValidator analyticsEventValidator;
-
     private AnalyticsEventMapperImpl analyticsEventMapperImpl;
 
     @Mock
@@ -43,7 +39,7 @@ class AnalyticsServiceTest {
     private AnalyticsEventDto analyticsEventDto;
     private AnalyticsEvent analyticsEvent;
     private long receiverId;
-    private EventType eventType;
+    private int eventType;
     private List<AnalyticsEvent> analyticsEventsAll;
 
     private String intervalStr;
@@ -56,7 +52,7 @@ class AnalyticsServiceTest {
         fromStr = LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         toStr = LocalDateTime.now().plusDays(1).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         intervalStr = "DAY";
-        eventType = EventType.FOLLOWER;
+        eventType = 1;
         analyticsEventsAll = List.of(
                 AnalyticsEvent.builder()
                         .id(1L)
@@ -74,7 +70,6 @@ class AnalyticsServiceTest {
         AnalyticsEventIntervalFilter analyticsEventIntervalFilter = new AnalyticsEventIntervalFilter();
         AnalyticsEventPeriodFilter analyticsEventPeriodFilter = new AnalyticsEventPeriodFilter();
         analyticsService = AnalyticsService.builder()
-                .analyticsEventValidator(analyticsEventValidator)
                 .analyticsEventMapper(analyticsEventMapperImpl)
                 .analyticsEventRepository(analyticsEventRepository)
                 .analyticsEventIntervalFilter(analyticsEventIntervalFilter)
@@ -96,28 +91,24 @@ class AnalyticsServiceTest {
         @Test
         @DisplayName("testing getAnalytics method with interval filter")
         void testGetAnalyticsWithIntervalFilter() {
-            when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType))
+            when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, EventType.of(eventType)))
                     .thenReturn(analyticsEventsAll.stream());
             List<AnalyticsEventDto> analyticsEvents =
                     analyticsService.getAnalytics(receiverId, eventType, intervalStr, null, null);
             assertEquals(1, analyticsEvents.size());
             assertEquals(analyticsEventMapperImpl.toDto(analyticsEventsAll.get(0)), analyticsEvents.get(0));
-            verify(analyticsEventValidator, times(1))
-                    .validateTimeBoundsPresence(intervalStr, null, null);
         }
 
         @Test
         @DisplayName("testing getAnalytics method with time bounds filter")
         void testGetAnalyticsWithTimeBoundsFilter() {
-            when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType))
+            when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, EventType.of(eventType)))
                     .thenReturn(analyticsEventsAll.stream());
             List<AnalyticsEventDto> analyticsEvents =
                     analyticsService.getAnalytics(receiverId, eventType,
                             null, fromStr, toStr);
             assertEquals(1, analyticsEvents.size());
             assertEquals(analyticsEventMapperImpl.toDto(analyticsEventsAll.get(0)), analyticsEvents.get(0));
-            verify(analyticsEventValidator, times(1))
-                    .validateTimeBoundsPresence(null, fromStr, toStr);
         }
     }
 }

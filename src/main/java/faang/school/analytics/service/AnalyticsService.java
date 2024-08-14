@@ -8,7 +8,6 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
-import faang.school.analytics.validator.AnalyticsEventValidator;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ import java.util.stream.Stream;
 @Builder
 public class AnalyticsService {
 
-    private final AnalyticsEventValidator analyticsEventValidator;
     private final AnalyticsEventMapper analyticsEventMapper;
     private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventIntervalFilter analyticsEventIntervalFilter;
@@ -34,9 +32,9 @@ public class AnalyticsService {
         analyticsEventRepository.save(eventToSave);
     }
 
-    public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType,
+    public List<AnalyticsEventDto> getAnalytics(long receiverId, int eventTypeOrdinal,
                                                 String intervalStr, String fromStr, String toStr) {
-        analyticsEventValidator.validateTimeBoundsPresence(intervalStr, fromStr, toStr);
+        EventType eventType = EventType.of(eventTypeOrdinal);
         Stream<AnalyticsEvent> analyticsEventStream = analyticsEventRepository
                 .findByReceiverIdAndEventType(receiverId, eventType);
         analyticsEventStream = filterAnalyticsByTimeBounds(analyticsEventStream, intervalStr, fromStr, toStr);
