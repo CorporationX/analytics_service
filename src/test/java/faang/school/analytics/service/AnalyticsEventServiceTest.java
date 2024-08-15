@@ -21,6 +21,7 @@ import static faang.school.analytics.util.TestDataFactory.createAnalyticsEventDt
 import static faang.school.analytics.util.TestDataFactory.createEventType;
 import static faang.school.analytics.util.TestDataFactory.createInterval;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -126,5 +127,22 @@ class AnalyticsEventServiceTest {
         // then - verify the output
         assertThat(actualResult).isNotNull();
         assertThat(actualResult).isEmpty();
+    }
+
+    @Test
+    void givenOnlyStartDateWhenGetAnalyticsThenThrowException() {
+        // given - precondition
+        var eventType = TestDataFactory.createEventType();
+        var event = createAnalyticsEvent();
+
+        when(analyticsEventRepository.findByReceiverIdAndEventType(ID, eventType))
+                .thenReturn(Stream.of(event));
+
+        // when - action and
+        // then - verify the output
+        assertThatThrownBy(() -> analyticsEventService
+                .getAnalytics(ID, eventType, null, START_DATE, null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Date should not be null");
     }
 }
