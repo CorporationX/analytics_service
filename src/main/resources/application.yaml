@@ -23,6 +23,7 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+        project-view: project_view_channel
         mentorship-requested: mentorship_requested_channel
 
 server:
