@@ -23,6 +23,8 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+      topic:
+        like: like_event
 
 server:
   port: 8086
