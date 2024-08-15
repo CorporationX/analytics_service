@@ -26,7 +26,7 @@ public class CommentEventListener implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         String channel = new String(message.getChannel());
         String body = new String(message.getBody());
-        System.out.println("Received message from channel " + channel + ": " + body);
+        log.info("Received message from channel {}: {}", channel, body);
 
         CommentEvent commentEvent;
         try {
