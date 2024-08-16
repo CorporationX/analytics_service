@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -19,6 +20,9 @@ public class AnalyticsEvent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(name = "event_id", nullable = false)
+    private UUID eventId;
 
     @Column(name="receiver_id", nullable = false)
     private long receiverId;
