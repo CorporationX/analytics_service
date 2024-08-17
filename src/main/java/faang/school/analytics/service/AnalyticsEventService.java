@@ -21,8 +21,9 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Slf4j
 public class AnalyticsEventService {
+
     private final AnalyticsEventRepository analyticsEventRepository;
-    private final AnalyticsEventMapper analyticsEventMapper;
+    private final AnalyticsEventMapper mapper;
 
     @Transactional
     public void saveEvent(AnalyticsEvent event) {
@@ -61,4 +62,5 @@ public class AnalyticsEventService {
         log.info("Returning {} analytics event(s)", result.size());
         return result;
     }
+
 }
