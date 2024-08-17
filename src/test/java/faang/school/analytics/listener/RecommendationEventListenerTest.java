@@ -2,13 +2,13 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import faang.school.analytics.dto.analyticsEvent.AnalyticsEventDto;
-import faang.school.analytics.exception.DataTransformationException;
+import faang.school.analytics.dto.analytics.AnalyticsEventDto;
+import faang.school.analytics.exception.event.DataTransformationException;
 import faang.school.analytics.mapper.analyticsEvent.RecommendationEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.RecommendationEvent;
-import faang.school.analytics.service.analyticsEvent.AnalyticsEventService;
+import faang.school.analytics.service.analytics.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
