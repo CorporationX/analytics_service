@@ -1,44 +1,41 @@
 package faang.school.analytics.config.redis;
 
-import faang.school.analytics.services.redis.PostViewedEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.util.Pair;
+
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfig {
 
-    @Value("${spring.data.redis.channel.post_view_event_channel}")
-    private String postViewEventChannel;
+    @Value("${spring.data.redis.host}")
+    private String hostName;
+
+    @Value("${spring.data.redis.port}")
+    private int port;
 
     @Bean
-    public MessageListenerAdapter messageListenerAdapter(PostViewedEventListener postViewedEventListener) {
-        return new MessageListenerAdapter(postViewedEventListener);
+    public JedisConnectionFactory jedisConnectionFactory() {
+        RedisStandaloneConfiguration redisStandaloneConfiguration
+                = new RedisStandaloneConfiguration(hostName, port);
+        return new JedisConnectionFactory(redisStandaloneConfiguration);
     }
 
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        return new JedisConnectionFactory();
-    }
-
-    @Bean
-    ChannelTopic postViewChannel() {
-        return new ChannelTopic(postViewEventChannel);
-    }
-
-    @Bean
-    public RedisMessageListenerContainer container(MessageListenerAdapter messageListenerAdapter) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(redisConnectionFactory());
-        container.addMessageListener(messageListenerAdapter, postViewChannel());
+    public RedisMessageListenerContainer redisContainer(List<Pair<MessageListenerAdapter, ChannelTopic>> listenerChannelPairs) {
+        RedisMessageListenerContainer container
+                = new RedisMessageListenerContainer();
+        container.setConnectionFactory(jedisConnectionFactory());
+        listenerChannelPairs.forEach(pair -> container.addMessageListener(pair.getFirst(), pair.getSecond()));
         return container;
     }
 }
-

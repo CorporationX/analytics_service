@@ -24,6 +24,8 @@ spring:
       channel:
         profile-view: profile_view_channel
         post_view_event_channel: post_view_channel
+        post_comment_channel: post_comment_channel
+        like_topic: like_topic
 
     time_format: yyyy-MM-dd HH:mm:ss
 server:
@@ -32,6 +34,7 @@ server:
 logging:
   level:
     root: info
+    faang.school.analytics: debug
 
 project-service:
   host: localhost
