@@ -39,8 +39,6 @@ public class AnalyticsEventServiceTest {
     @Spy
     private AnalyticsEventMapperImpl analyticsEventMapper;
 
-    @Mock
-    private AnalyticsEventMapper analyticsEventMapper;
 
     @Mock
     private AnalyticsEventServiceValidator analyticsEventServiceValidator;
@@ -106,19 +104,12 @@ public class AnalyticsEventServiceTest {
         when(message.toString()).thenReturn(messageContent);
 
         AnalyticsEvent analyticsEvent = new AnalyticsEvent();
-        when(analyticsEventMapper.likeEventToAnalyticsEvent(any(LikeEvent.class))).thenReturn(analyticsEvent);
-
+        analyticsEvent.setReceiverId(123L);
+        analyticsEvent.setActorId(789L);
+        analyticsEvent.setReceivedAt(LocalDateTime.parse("2024-08-16T12:00:00"));
+        analyticsEvent.setEventType(EventType.of(5));
         analyticsEventService.saveLikeEvent(message);
 
-        ArgumentCaptor<LikeEvent> likeEventCaptor = ArgumentCaptor.forClass(LikeEvent.class);
-        verify(analyticsEventMapper).likeEventToAnalyticsEvent(likeEventCaptor.capture());
-
-        LikeEvent capturedLikeEvent = likeEventCaptor.getValue();
-
-        assertEquals(123L, capturedLikeEvent.getPostId());
-        assertEquals(456L, capturedLikeEvent.getAuthorId());
-        assertEquals(789L, capturedLikeEvent.getUserId());
-        assertEquals(LocalDateTime.parse("2024-08-16T12:00:00"), capturedLikeEvent.getTimestamp());
 
         verify(analyticsEventRepository).save(analyticsEvent);
     }

@@ -3,13 +3,13 @@ package faang.school.analytics.service;
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
 import faang.school.analytics.param.AnalyticsRequestParams;
 import faang.school.analytics.model.LikeEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.validator.AnalyticsEventValidator;
 import lombok.RequiredArgsConstructor;
 import faang.school.analytics.validator.AnalyticsEventServiceValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.stereotype.Service;
 
@@ -54,13 +54,12 @@ public class AnalyticsEventService {
 
         String[] data = message.toString().split(",");
 
-        LikeEvent likeEvent = new LikeEvent();
-        likeEvent.setPostId(Long.parseLong(data[0]));
-        likeEvent.setAuthorId(Long.parseLong(data[1]));
-        likeEvent.setUserId(Long.parseLong(data[2]));
-        likeEvent.setTimestamp(LocalDateTime.parse(data[3]));
+        AnalyticsEvent analyticsEvent = new AnalyticsEvent();
+        analyticsEvent.setReceiverId(Long.parseLong(data[0]));
+        analyticsEvent.setActorId(Long.parseLong(data[2]));
+        analyticsEvent.setReceivedAt(LocalDateTime.parse(data[3]));
+        analyticsEvent.setEventType(EventType.of(5));
 
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.likeEventToAnalyticsEvent(likeEvent);
         analyticsEventRepository.save(analyticsEvent);
     }
 }
