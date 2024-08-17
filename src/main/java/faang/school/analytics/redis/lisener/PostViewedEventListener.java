@@ -1,11 +1,11 @@
-package faang.school.analytics.services.redis;
+package faang.school.analytics.redis.lisener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.events.PostViewEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.services.AnalyticsEventService;
+import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;

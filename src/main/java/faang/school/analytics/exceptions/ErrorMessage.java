@@ -1,10 +1,18 @@
 package faang.school.analytics.exceptions;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-@RequiredArgsConstructor
-@Getter
-public enum ErrorMessage {
-    NOT_FOUND("Analytic event was not found for receiverId");
-    private final String message;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
+
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class ErrorMessage {
+
+    LocalDateTime timestamp;
+
+    String message;
+
+    String causeMessage;
 }

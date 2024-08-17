@@ -1,7 +1,7 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.event.PostLikeEvent;
+import faang.school.analytics.events.PostLikeEvent;
 import faang.school.analytics.events.PostViewEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.CommentEvent;

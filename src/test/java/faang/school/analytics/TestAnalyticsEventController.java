@@ -2,7 +2,7 @@ package faang.school.analytics;
 
 import faang.school.analytics.controller.AnalyticsEventController;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.services.AnalyticsEventService;
+import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,9 +10,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)

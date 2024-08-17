@@ -5,7 +5,7 @@ import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.filters.timeManagment.TimeRange;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.Interval;
-import faang.school.analytics.services.AnalyticsEventService;
+import faang.school.analytics.service.AnalyticsEventService;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -58,5 +58,4 @@ public class AnalyticsEventController {
             throw new IllegalArgumentException("Not allowed to specify both intervals");
         }
     }
-
 }
