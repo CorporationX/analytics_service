@@ -13,7 +13,6 @@ public class FollowerEvent {
     private Long followerId;
     @NotNull
     private Long followeeId;
-    private String projectId;
     @NotNull
     private LocalDateTime followTime;
 }
