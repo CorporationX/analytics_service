@@ -1,6 +1,6 @@
 package faang.school.analytics.config.redis.recommendation;
 
-import faang.school.analytics.listener.RecommendationEventListener;
+import faang.school.analytics.messaging.listener.recommendation.RecommendationEventListener;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
