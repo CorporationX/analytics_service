@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 @ExtendWith(MockitoExtension.class)
-public class FollowEventListenerTest {
+public class FollowerEventListenerTest {
     @Mock
     private AnalyticsEventMapper analyticsEventMapper;
     @Mock
