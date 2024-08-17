@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.MentorshipRequestListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,16 +34,16 @@ public class RedisListenerConfig {
     }
 
     @Bean
-    public MessageListenerAdapter mentorshipRequestListener() {
-        return new MessageListenerAdapter();
+    public MessageListenerAdapter mentorshipRequestListenerAdapter(MentorshipRequestListener mentorshipRequestListener) {
+        return new MessageListenerAdapter(mentorshipRequestListener);
     }
 
     @Bean
-    public RedisMessageListenerContainer messageListenerContainer(MessageListenerAdapter mentorshipRequestListener,
+    public RedisMessageListenerContainer messageListenerContainer(MessageListenerAdapter mentorshipRequestListenerAdapter,
                                                                   ChannelTopic mentorshipRequestChannel) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(mentorshipRequestListener, mentorshipRequestChannel);
+        container.addMessageListener(mentorshipRequestListenerAdapter, mentorshipRequestChannel);
         return container;
     }
 }
