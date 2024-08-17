@@ -1,6 +1,5 @@
-package faang.school.analytics.config.context;
+package faang.school.analytics.config.context.redis;
 
-import faang.school.analytics.subscruber.GoalEventSubscriber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +9,9 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.util.Pair;
+
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -19,32 +21,21 @@ public class RedisConfig {
     private String host;
     @Value("${spring.data.redis.port}")
     private int port;
-    @Value("${spring.data.redis.goal_channel.name}")
-    private String goalTopicChannel;
 
     @Bean
-    public JedisConnectionFactory jedisConnectionFactory(){
-        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(host,port);
+    public JedisConnectionFactory jedisConnectionFactory() {
+        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(host, port);
         return new JedisConnectionFactory(redisConfig);
     }
 
     @Bean
-    ChannelTopic goalTopic() {
-        return new ChannelTopic(goalTopicChannel);
-    }
-
-    @Bean
-    MessageListenerAdapter goalEventListener(GoalEventSubscriber goalEventSubscriber){
-        return new MessageListenerAdapter(goalEventSubscriber);
-    }
-    @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(JedisConnectionFactory jedisConnectionFactory,
-                                                                       MessageListenerAdapter goalEventListener) {
+    RedisMessageListenerContainer redisContainer(List<Pair<MessageListenerAdapter, ChannelTopic>> redisEventListener,
+                                                 JedisConnectionFactory jedisConnectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory);
-        container.addMessageListener(goalEventListener, goalTopic());
+        for (Pair<MessageListenerAdapter, ChannelTopic> messageListenerAdapter : redisEventListener) {
+            container.addMessageListener(messageListenerAdapter.getFirst(), messageListenerAdapter.getSecond());
+        }
         return container;
     }
-
-
 }
