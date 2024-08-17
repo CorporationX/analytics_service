@@ -1,6 +1,6 @@
 package faang.school.analytics.config.converter;
 
-import faang.school.analytics.model.Interval;
+import faang.school.analytics.service.Interval;
 import org.springframework.core.convert.converter.Converter;
 
 public class StringToIntervalConverter implements Converter<String, Interval> {

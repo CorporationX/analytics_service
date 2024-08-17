@@ -1,7 +1,6 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.model.Interval;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -37,8 +36,8 @@ public class AnalyticsEventService {
 
         if (interval != null) {
             LocalDateTime now = LocalDateTime.now();
-            from = interval.getFrom(now);
-            to = interval.getTo(now);
+            from = Interval.getFromDate(interval);
+            to = now;
         }
 
         final LocalDateTime startInclusive = from;

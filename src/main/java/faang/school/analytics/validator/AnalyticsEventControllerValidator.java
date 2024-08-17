@@ -1,6 +1,6 @@
 package faang.school.analytics.validator;
 
-import faang.school.analytics.model.Interval;
+import faang.school.analytics.service.Interval;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
