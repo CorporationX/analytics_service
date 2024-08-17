@@ -13,14 +13,18 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AnalyticsEventDto {
-    long id;
+    private Long id;
 
-    long receiverId;
+    @NotNull(message = "ReceiverId shouldn't be null")
+    @Positive(message = "ReceiverId should be positive")
+    private Long receiverId;
 
-    long actorId;
+    @NotNull(message = "AuthorId shouldn't be null")
+    @Positive(message = "AuthorId should be positive")
+    private Long actorId;
 
-    EventType eventType;
-
+    @NotNull(message = "EventType shouldn't be null")
+    private EventType eventType;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    LocalDateTime receivedAt;
+    private LocalDateTime receivedAt;
 }
