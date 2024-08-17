@@ -1,7 +1,6 @@
 package faang.school.analytics.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.client.UserServiceClient;
 import faang.school.analytics.model.AnalyticsEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.connection.Message;
