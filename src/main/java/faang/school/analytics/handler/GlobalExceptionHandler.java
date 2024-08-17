@@ -1,5 +1,7 @@
 package faang.school.analytics.handler;
 
+import faang.school.analytics.exception.ErrorResponse;
+import faang.school.analytics.exception.NotFoundException;
 import faang.school.analytics.exception.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionFailedException;
@@ -24,5 +26,19 @@ public class GlobalExceptionHandler {
                 .message(e.getMessage())
                 .causeMessage(e.getCause().getMessage())
                 .build();
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNotFoundException(NotFoundException e) {
+        log.error("NotFoundException", e);
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleRuntimeException(RuntimeException e) {
+        log.error("RuntimeException", e);
+        return new ErrorResponse(e.getMessage());
     }
 }
