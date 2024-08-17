@@ -1,4 +1,4 @@
-package faang.school.analytics.mapper.analyticsEvent;
+package faang.school.analytics.mapper.analytics;
 
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.RecommendationEvent;

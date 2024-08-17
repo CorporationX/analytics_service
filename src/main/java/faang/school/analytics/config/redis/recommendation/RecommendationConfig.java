@@ -1,4 +1,4 @@
-package faang.school.analytics.config.redis.mentorship;
+package faang.school.analytics.config.redis.recommendation;
 
 import faang.school.analytics.listener.RecommendationEventListener;
 import org.springframework.beans.factory.annotation.Qualifier;

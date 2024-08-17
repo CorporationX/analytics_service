@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import faang.school.analytics.dto.analytics.AnalyticsEventDto;
 import faang.school.analytics.exception.event.DataTransformationException;
-import faang.school.analytics.mapper.analyticsEvent.RecommendationEventMapper;
+import faang.school.analytics.mapper.analytics.RecommendationEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.RecommendationEvent;

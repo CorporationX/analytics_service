@@ -3,7 +3,7 @@ package faang.school.analytics.listener;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.exception.event.DataTransformationException;
 import faang.school.analytics.exception.ExceptionMessages;
-import faang.school.analytics.mapper.analyticsEvent.RecommendationEventMapper;
+import faang.school.analytics.mapper.analytics.RecommendationEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.RecommendationEvent;
