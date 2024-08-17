@@ -23,7 +23,7 @@ public class LikeListenerConfig {
     }
 
     @Bean
-    public Pair<MessageListenerAdapter, ChannelTopic> listenerChannelPair(
+    public Pair<MessageListenerAdapter, ChannelTopic> likeListenerChannelPair(
             @Qualifier("likeListener") MessageListenerAdapter adapter,
             @Qualifier("likeTopic") ChannelTopic channelTopic) {
 

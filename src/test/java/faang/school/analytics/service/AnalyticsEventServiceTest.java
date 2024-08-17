@@ -1,113 +1,142 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import faang.school.analytics.service.AnalyticsEventService;
+import faang.school.analytics.service.Interval;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class AnalyticsEventServiceTest {
-
+public class AnalyticsEventServiceTest {
+    @Mock
+    private AnalyticsEventRepository analyticsEventRepository;
+    @Mock
+    private AnalyticsEventMapper analyticsEventMapper;
     @InjectMocks
     private AnalyticsEventService analyticsEventService;
 
-    @Mock
-    private AnalyticsEventRepository analyticsEventRepository;
+    private AnalyticsEvent event;
+    private AnalyticsEvent secondEvent;
+    private AnalyticsEventDto eventDto;
+    private AnalyticsEventDto secondEventDto;
+    private final EventType eventType = EventType.GOAL_COMPLETED;
+    private final long receiverId = 1L;
+    private Interval interval;
+    private LocalDateTime from;
+    private LocalDateTime to;
+    LocalDateTime testTime = LocalDateTime.of(2024, Month.AUGUST, 15, 12, 15);
 
-    @Spy
-    private AnalyticsEventMapperImpl mapper;
+    @BeforeEach
+    void setUp() {
+        interval = Interval.WEEK;
+        from = testTime.minusWeeks(1);
+        to = testTime.plusWeeks(4);
+
+        event = AnalyticsEvent.builder()
+                .id(1L)
+                .receiverId(receiverId)
+                .actorId(1L)
+                .eventType(eventType)
+                .receivedAt(from.plusWeeks(1))
+                .build();
+
+        secondEvent = AnalyticsEvent.builder()
+                .id(3L)
+                .receiverId(receiverId)
+                .actorId(3L)
+                .eventType(eventType)
+                .receivedAt(from.plusDays(3))
+                .build();
+
+        eventDto = AnalyticsEventDto.builder()
+                .id(1L)
+                .receiverId(receiverId)
+                .actorId(1L)
+                .eventType(eventType)
+                .receivedAt(from.plusWeeks(1))
+                .build();
+
+        secondEventDto = AnalyticsEventDto.builder()
+                .id(3L)
+                .receiverId(4L)
+                .actorId(3L)
+                .eventType(eventType)
+                .receivedAt(from.plusDays(3))
+                .build();
+    }
 
     @Test
     void testSaveEvent() {
-        AnalyticsEvent analyticsEvent = AnalyticsEvent.builder()
-                .id(123)
-                .build();
+        when(analyticsEventRepository.save(event)).thenReturn(event);
 
-        analyticsEventService.saveEvent(analyticsEvent);
-
-        verify(analyticsEventRepository, times(1)).save(analyticsEvent);
+        analyticsEventService.saveEvent(event);
     }
 
-    @Test
-    void testGetAnalytics_intervalNotNull() {
-        long receiverId = 1L;
-        EventType eventType = EventType.FOLLOWER;
-        Interval interval = Interval.WEEK;
+    @Nested
+    @DisplayName("Method: testGetAnalytics")
+    class whenGetAnalytics {
+        @Test
+        void testGetAnalyticsWithNotFoundEvent() {
+            when(analyticsEventRepository.findByReceiverIdAndEventTypeAndReceivedAtBetween(receiverId, eventType, from, to))
+                    .thenReturn(null);
 
-        AnalyticsEvent includedEvent1 = AnalyticsEvent.builder()
-                .id(11L)
-                .receivedAt(LocalDateTime.now().minusDays(1))
-                .build();
-        AnalyticsEvent includedEvent2 = AnalyticsEvent.builder()
-                .id(12L)
-                .receivedAt(LocalDateTime.now())
-                .build();
-        AnalyticsEvent excludedEventByDate = AnalyticsEvent.builder()
-                .id(13L)
-                .receivedAt(LocalDateTime.now().minusDays(7))
-                .build();
-        Stream<AnalyticsEvent> preparedStream = Stream.of(includedEvent1, includedEvent2, excludedEventByDate);
+            List<AnalyticsEventDto> result = analyticsEventService.getAnalytics(receiverId, eventType, null, from, to);
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType))
-                .thenReturn(preparedStream);
+            Assertions.assertTrue(result.isEmpty());
+            verifyNoMoreInteractions(analyticsEventRepository, analyticsEventMapper);
+        }
 
-        List<AnalyticsEventDto> result =
-                analyticsEventService.getAnalytics(receiverId, eventType, interval, null, null);
+        @Test
+        void testGetAnalyticsWhenIntervalIsNull() {
+            when(analyticsEventRepository.findByReceiverIdAndEventTypeAndReceivedAtBetween(receiverId, eventType, from, to))
+                    .thenReturn(Stream.of(event));
+            when(analyticsEventMapper.toDto(event)).thenReturn(eventDto);
 
-        assertEquals(2, result.size());
-        assertEquals(includedEvent2.getId(), result.get(0).getId()); // testing order
-        assertEquals(includedEvent1.getId(), result.get(1).getId());
-        verify(analyticsEventRepository, times(1))
-                .findByReceiverIdAndEventType(receiverId, eventType);
-    }
+            List<AnalyticsEventDto> result = analyticsEventService.getAnalytics(receiverId, eventType, null, from, to);
 
-    @Test
-    void testGetAnalytics_intervalNullFromAndToNotNull() {
-        long receiverId = 1L;
-        EventType eventType = EventType.FOLLOWER;
-        LocalDateTime from = LocalDateTime.now().minusDays(6);
-        LocalDateTime to = LocalDateTime.now();
+            Assertions.assertEquals(1, result.size());
+            Assertions.assertEquals(result, List.of(eventDto));
+        }
 
-        AnalyticsEvent includedEvent1 = AnalyticsEvent.builder()
-                .id(11L)
-                .receivedAt(LocalDateTime.now().minusDays(1))
-                .build();
-        AnalyticsEvent includedEvent2 = AnalyticsEvent.builder()
-                .id(12L)
-                .receivedAt(to)
-                .build();
-        AnalyticsEvent excludedEventByDate = AnalyticsEvent.builder()
-                .id(13L)
-                .receivedAt(LocalDateTime.now().minusDays(7))
-                .build();
-        Stream<AnalyticsEvent> preparedStream = Stream.of(includedEvent1, includedEvent2, excludedEventByDate);
+        @Test
+        void testGetAnalyticsWhenIntervalNotNull() {
+            when(analyticsEventRepository.findByReceiverIdAndEventTypeAndReceivedAtBetween(
+                    eq(receiverId), eq(eventType), any(LocalDateTime.class), any(LocalDateTime.class)))
+                    .thenReturn(Stream.of(event, secondEvent));
+            when(analyticsEventMapper.toDto(event)).thenReturn(eventDto);
+            when(analyticsEventMapper.toDto(secondEvent)).thenReturn(secondEventDto);
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType))
-                .thenReturn(preparedStream);
+            List<AnalyticsEventDto> result = analyticsEventService.getAnalytics(receiverId, eventType, interval, from, to);
 
-        List<AnalyticsEventDto> result =
-                analyticsEventService.getAnalytics(receiverId, eventType, null, from, to);
-
-        assertEquals(2, result.size());
-        assertEquals(includedEvent2.getId(), result.get(0).getId()); // testing order
-        assertEquals(includedEvent1.getId(), result.get(1).getId());
-        verify(analyticsEventRepository, times(1))
-                .findByReceiverIdAndEventType(receiverId, eventType);
+            Assertions.assertEquals(2, result.size());
+            InOrder inOrder = inOrder(analyticsEventRepository, analyticsEventMapper);
+            inOrder.verify(analyticsEventRepository).findByReceiverIdAndEventTypeAndReceivedAtBetween(
+                    eq(receiverId), eq(eventType), any(LocalDateTime.class), any(LocalDateTime.class));
+            inOrder.verify(analyticsEventMapper).toDto(secondEvent);
+            inOrder.verify(analyticsEventMapper).toDto(event);
+        }
     }
 }

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -56,7 +55,7 @@ public class AnalyticsEventService {
 
         List<AnalyticsEventDto> result = analyticsEventStream
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt))
-                .map(analyticsEventMapper::toDto)
+                .map(mapper::toDto)
                 .toList();
 
         log.info("Returning {} analytics event(s)", result.size());

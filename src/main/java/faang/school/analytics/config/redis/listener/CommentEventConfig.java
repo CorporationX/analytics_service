@@ -1,4 +1,4 @@
-package faang.school.analytics.config.redis;
+package faang.school.analytics.config.redis.listener;
 
 import faang.school.analytics.redis.lisener.CommentEventListener;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class CommentEventConfig {
     }
 
     @Bean
-    public Pair<MessageListenerAdapter, ChannelTopic> listenerChannelPair(
+    public Pair<MessageListenerAdapter, ChannelTopic> commentListenerChannelPair(
             @Qualifier("commentEventListenerAdapter") MessageListenerAdapter adapter,
             @Qualifier("commentTopic") ChannelTopic channelTopic) {
         return Pair.of(adapter, channelTopic);
