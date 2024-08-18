@@ -14,7 +14,7 @@ import org.springframework.data.util.Pair;
 @Configuration
 public class CommentEventConfig {
 
-    @Value("${spring.data.redis.channel.post_comment_channel}")
+    @Value("${spring.data.redis.channel.post_comment}")
     private String channelTopic;
 
     @Bean
