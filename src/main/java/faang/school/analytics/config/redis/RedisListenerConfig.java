@@ -10,8 +10,6 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
-import java.awt.event.ContainerListener;
-
 @Configuration
 public class RedisListenerConfig {
     @Value("${spring.data.redis.host}")
