@@ -3,9 +3,7 @@ package faang.school.analytics.listener;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.mapper.GenericEventMapper;
-import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.type.SerializationException;
@@ -14,7 +12,6 @@ import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor

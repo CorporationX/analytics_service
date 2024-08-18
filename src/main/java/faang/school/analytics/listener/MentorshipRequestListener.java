@@ -2,7 +2,6 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.event.MentorshipRequestEvent;
-import faang.school.analytics.mapper.GenericEventMapper;
 import faang.school.analytics.mapper.MentorshipRequestMapper;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.springframework.beans.factory.annotation.Autowired;
