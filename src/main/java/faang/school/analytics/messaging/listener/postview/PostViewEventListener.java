@@ -1,13 +1,13 @@
-package faang.school.analytics.listener;
+package faang.school.analytics.messaging.listener.postview;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.postview.PostViewEventDto;
-import faang.school.analytics.exception.DataTransformationException;
+import faang.school.analytics.exception.event.DataTransformationException;
 import faang.school.analytics.exception.ExceptionMessages;
-import faang.school.analytics.mapper.PostViewEventMapper;
+import faang.school.analytics.mapper.postview.PostViewEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.service.analyticsEvent.AnalyticsEventService;
+import faang.school.analytics.service.analytics.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;

@@ -1,4 +1,4 @@
-package faang.school.analytics.mapper;
+package faang.school.analytics.mapper.postview;
 
 import faang.school.analytics.dto.postview.PostViewEventDto;
 import faang.school.analytics.model.AnalyticsEvent;

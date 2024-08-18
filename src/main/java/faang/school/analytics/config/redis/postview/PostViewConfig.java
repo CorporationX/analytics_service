@@ -1,6 +1,6 @@
-package faang.school.analytics.config.listeners;
+package faang.school.analytics.config.redis.postview;
 
-import faang.school.analytics.listener.PostViewEventListener;
+import faang.school.analytics.messaging.listener.postview.PostViewEventListener;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
