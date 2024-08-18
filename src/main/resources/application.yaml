@@ -24,7 +24,7 @@ spring:
       channel:
         profile-view: profile_view_channel
         post_comment: post_comment_channel
-
+        like_topic: like_topic
 
 server:
   port: 8086
@@ -32,6 +32,7 @@ server:
 logging:
   level:
     root: info
+    faang.school.analytics: debug
 
 project-service:
   host: localhost

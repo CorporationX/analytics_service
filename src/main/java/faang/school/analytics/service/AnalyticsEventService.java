@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -21,8 +20,9 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Slf4j
 public class AnalyticsEventService {
+
     private final AnalyticsEventRepository analyticsEventRepository;
-    private final AnalyticsEventMapper analyticsEventMapper;
+    private final AnalyticsEventMapper mapper;
 
     @Transactional
     public void saveEvent(AnalyticsEvent event) {
@@ -55,10 +55,11 @@ public class AnalyticsEventService {
 
         List<AnalyticsEventDto> result = analyticsEventStream
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt))
-                .map(analyticsEventMapper::toDto)
+                .map(mapper::toDto)
                 .toList();
 
         log.info("Returning {} analytics event(s)", result.size());
         return result;
     }
+
 }
