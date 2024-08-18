@@ -7,12 +7,12 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
-import org.springframework.data.redis.connection.MessageListener;
-import org.springframework.stereotype.Service;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
 @Slf4j
-@Service
-public class FollowerEventListener extends AbstractEventListener<FollowerEventDto> implements MessageListener {
+@Component
+public class FollowerEventListener extends AbstractEventListener<FollowerEventDto> {
 
     private final FollowerEventMapper followerEventMapper;
 
@@ -22,8 +22,8 @@ public class FollowerEventListener extends AbstractEventListener<FollowerEventDt
     }
 
     @Override
-    public void onMessage(Message message, byte[] pattern) {
-        super.handleEvent(FollowerEventDto.class, message);
+    public void onMessage(@NonNull Message message, byte[] pattern) {
+        handleEvent(FollowerEventDto.class, message);
     }
 
     @Override

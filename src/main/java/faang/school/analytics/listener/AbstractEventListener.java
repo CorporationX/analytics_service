@@ -6,12 +6,13 @@ import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
+import org.springframework.data.redis.connection.MessageListener;
 
 import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
-public abstract class AbstractEventListener<T> {
+public abstract class AbstractEventListener<T> implements MessageListener {
 
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
