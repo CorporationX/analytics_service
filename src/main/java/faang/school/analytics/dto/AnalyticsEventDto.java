@@ -28,5 +28,6 @@ public class AnalyticsEventDto {
     @NotNull(message = "EventType shouldn't be null")
     private EventType eventType;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @NotNull
     private LocalDateTime receivedAt;
 }

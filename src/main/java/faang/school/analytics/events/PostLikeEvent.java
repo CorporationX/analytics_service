@@ -1,4 +1,4 @@
-package faang.school.analytics.event;
+package faang.school.analytics.events;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;

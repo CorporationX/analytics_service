@@ -1,4 +1,4 @@
-package faang.school.analytics.handler;
+package faang.school.analytics.exceptions;
 
 import lombok.AccessLevel;
 import lombok.Builder;
