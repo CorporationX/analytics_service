@@ -1,7 +1,9 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.event.LikeEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
+import faang.school.analytics.mapper.LikeEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
@@ -36,6 +38,8 @@ public class AnalyticsEventServiceTest {
     @Spy
     private AnalyticsEventMapperImpl analyticsEventMapper;
 
+    @Spy
+    private LikeEventMapperImpl likeEventMapper;
 
     @Mock
     private AnalyticsEventServiceValidator analyticsEventServiceValidator;
@@ -96,17 +100,15 @@ public class AnalyticsEventServiceTest {
 
     @Test
     void saveLikeEventTest() {
-        String messageContent = "123,456,789,2024-08-16T12:00:00";
-        Message message = mock(Message.class);
-        when(message.toString()).thenReturn(messageContent);
+        LikeEvent likeEvent = new LikeEvent();
+        likeEvent.setPostId(123L);
+        likeEvent.setUserId(789L);
+        likeEvent.setReceivedAt(LocalDateTime.parse("2024-08-16T12:00:00"));
+        likeEvent.setEventType(EventType.of(5));
 
-        AnalyticsEvent analyticsEvent = new AnalyticsEvent();
-        analyticsEvent.setReceiverId(123L);
-        analyticsEvent.setActorId(789L);
-        analyticsEvent.setReceivedAt(LocalDateTime.parse("2024-08-16T12:00:00"));
-        analyticsEvent.setEventType(EventType.of(5));
-        //analyticsEventService.saveLikeEvent(message);
+        AnalyticsEvent analyticsEvent = likeEventMapper.toEntity(likeEvent);
 
+        analyticsEventService.saveLikeEvent(likeEvent);
 
         verify(analyticsEventRepository).save(analyticsEvent);
     }
