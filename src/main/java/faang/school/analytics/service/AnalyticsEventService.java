@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -23,16 +24,16 @@ public class AnalyticsEventService {
 
     @Transactional
     public void saveLikeAnalytics(Message message){
-        LikeEvent likeEvent = getEventType(message, LikeEvent.class);
-        if (likeEvent != null) {
-            AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEventFromLikeEvent(likeEvent);
+        AnalyticsEvent analyticsEvent = getEventType(message, LikeEvent.class, analyticsEventMapper::toAnalyticsEventFromLikeEvent);
+        if (analyticsEvent != null) {
             analyticsEventRepository.save(analyticsEvent);
         }
     }
 
-    private <T> T getEventType(Message message, Class<T> eventType) {
+    private <T> AnalyticsEvent getEventType(Message message, Class<T> eventType, Function<T, AnalyticsEvent> mapper) {
         try {
-            return objectMapper.readValue(message.getBody(), eventType);
+            T event = objectMapper.readValue(message.getBody(), eventType);
+            return mapper.apply(event);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
