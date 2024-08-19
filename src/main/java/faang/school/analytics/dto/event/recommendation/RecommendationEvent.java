@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RecommendationEvent {
-    private final UUID eventId = UUID.randomUUID();
+    private UUID eventId;
     private long recommendationId;
     private long authorId;
     private long receiverId;
