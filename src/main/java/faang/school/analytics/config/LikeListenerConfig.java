@@ -22,7 +22,7 @@ public class LikeListenerConfig {
     public RedisMessageListenerContainer redisContainer(MessageListenerAdapter messageListenerAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory);
-        container.addMessageListener(messageListenerAdapter, nameTopic());
+        container.addMessageListener(messageListenerAdapter, likeTopicName());
         return container;
     }
 
@@ -32,7 +32,7 @@ public class LikeListenerConfig {
     }
 
     @Bean
-    public ChannelTopic nameTopic() {
+    public ChannelTopic likeTopicName() {
         return new ChannelTopic(likeTopic);
     }
 }

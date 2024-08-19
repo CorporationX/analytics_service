@@ -23,10 +23,16 @@ public class AnalyticsEventService {
 
     @Transactional
     public void saveLikeAnalytics(Message message){
-        try {
-            LikeEvent likeEvent = objectMapper.readValue(message.getBody(), LikeEvent.class);
+        LikeEvent likeEvent = getEventType(message, LikeEvent.class);
+        if (likeEvent != null) {
             AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEventFromLikeEvent(likeEvent);
             analyticsEventRepository.save(analyticsEvent);
+        }
+    }
+
+    private <T> T getEventType(Message message, Class<T> eventType) {
+        try {
+            return objectMapper.readValue(message.getBody(), eventType);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
