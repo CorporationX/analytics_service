@@ -2,18 +2,15 @@ package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
-import faang.school.analytics.model.LikeEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.validator.AnalyticsEventValidator;
 import org.junit.jupiter.api.Assertions;
 import faang.school.analytics.validator.AnalyticsEventServiceValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;

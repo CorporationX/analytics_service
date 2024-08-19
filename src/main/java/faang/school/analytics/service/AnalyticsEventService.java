@@ -1,13 +1,15 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.event.LikeEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.mapper.LikeEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.param.AnalyticsRequestParams;
-import faang.school.analytics.model.LikeEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.validator.AnalyticsEventValidator;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import faang.school.analytics.validator.AnalyticsEventServiceValidator;
 import org.springframework.data.redis.connection.Message;
@@ -26,7 +28,7 @@ public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventMapper analyticsEventMapper;
     private final AnalyticsEventValidator analyticsEventValidator;
-    private final AnalyticsEventServiceValidator analyticsEventServiceValidator;
+    private final LikeEventMapper likeEventMapper;
 
     public AnalyticsEventDto saveEvent(AnalyticsEvent event) {
         analyticsEventValidator.validateAnalyticsEvent(event);
@@ -49,17 +51,8 @@ public class AnalyticsEventService {
                 .collect(Collectors.toList());
     }
 
-    public void saveLikeEvent(Message message) {
-        analyticsEventServiceValidator.validateMessage(message);
-
-        String[] data = message.toString().split(",");
-
-        AnalyticsEvent analyticsEvent = new AnalyticsEvent();
-        analyticsEvent.setReceiverId(Long.parseLong(data[0]));
-        analyticsEvent.setActorId(Long.parseLong(data[2]));
-        analyticsEvent.setReceivedAt(LocalDateTime.parse(data[3]));
-        analyticsEvent.setEventType(EventType.of(5));
-
+    public void saveLikeEvent(@NotNull LikeEvent likeEvent) {
+        AnalyticsEvent analyticsEvent = likeEventMapper.toEntity(likeEvent);
         analyticsEventRepository.save(analyticsEvent);
     }
 }

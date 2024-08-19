@@ -1,6 +1,6 @@
 package faang.school.analytics.like;
 
-import faang.school.analytics.redis.LikeEventListener;
+import faang.school.analytics.listener.LikeEventListener;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
