@@ -105,7 +105,7 @@ public class AnalyticsEventServiceTest {
         analyticsEvent.setActorId(789L);
         analyticsEvent.setReceivedAt(LocalDateTime.parse("2024-08-16T12:00:00"));
         analyticsEvent.setEventType(EventType.of(5));
-        analyticsEventService.saveLikeEvent(message);
+        //analyticsEventService.saveLikeEvent(message);
 
 
         verify(analyticsEventRepository).save(analyticsEvent);

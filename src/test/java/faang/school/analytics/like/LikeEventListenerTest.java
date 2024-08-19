@@ -1,5 +1,7 @@
 package faang.school.analytics.like;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.event.LikeEvent;
 import faang.school.analytics.listener.LikeEventListener;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.Test;
@@ -9,7 +11,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.Message;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -20,23 +26,35 @@ class LikeEventListenerTest {
     private AnalyticsEventService analyticsEventService;
 
     @Mock
-    private Message message;
+    private ObjectMapper objectMapper;
 
     @InjectMocks
     private LikeEventListener likeEventListener;
 
     @Test
-    void onMessageTest(){
-        String messageContent = "Test message";
-        when(message.toString()).thenReturn(messageContent);
-
-        LikeEventListener.messageList.clear();
+    void onMessageTest() throws IOException {
+        LikeEvent likeEvent = new LikeEvent();
+        Message message = mock(Message.class);
+        byte[] messageBody = "{\"postId\":123,\"authorId\":456,\"userId\":789,\"receivedAt\":\"2024-08-16T12:00:00\"}".getBytes();
+        when(message.getBody()).thenReturn(messageBody);
+        when(objectMapper.readValue(messageBody, LikeEvent.class)).thenReturn(likeEvent);
 
         likeEventListener.onMessage(message, null);
 
-        assertEquals(1, LikeEventListener.messageList.size());
-        assertEquals(messageContent, LikeEventListener.messageList.get(0));
+        verify(objectMapper, times(1)).readValue(messageBody, LikeEvent.class);
+        verify(analyticsEventService, times(1)).saveLikeEvent(likeEvent);
+    }
 
-        verify(analyticsEventService, times(1)).saveLikeEvent(message);
+    @Test
+    void onMessageShouldThrowException() throws Exception {
+        Message message = mock(Message.class);
+        byte[] messageBody = "{\"invalid\":\"json\"}".getBytes();
+        when(message.getBody()).thenReturn(messageBody);
+        when(objectMapper.readValue(messageBody, LikeEvent.class)).thenThrow(new IOException("Invalid JSON"));
+
+        assertThrows(RuntimeException.class, () -> likeEventListener.onMessage(message, null));
+
+        verify(objectMapper, times(1)).readValue(messageBody, LikeEvent.class);
+        verify(analyticsEventService, never()).saveLikeEvent(any(LikeEvent.class));
     }
 }
