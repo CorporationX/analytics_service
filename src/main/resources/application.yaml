@@ -23,6 +23,8 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+      goal_channel:
+        name: goal_channel
 
 server:
   port: 8086
