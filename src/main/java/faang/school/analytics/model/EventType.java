@@ -26,4 +26,14 @@ public enum EventType {
         }
         throw new IllegalArgumentException("Unknown event type: " + type);
     }
+
+    public static EventType of(String type) {
+        for (EventType eventType : EventType.values()) {
+            if (eventType.name().equalsIgnoreCase(type)) {
+                return eventType;
+            }
+        }
+
+        throw new IllegalArgumentException("Unknown event type: " + type);
+    }
 }
