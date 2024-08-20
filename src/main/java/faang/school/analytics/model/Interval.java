@@ -14,7 +14,7 @@ public enum Interval {
 
     private final int days;
 
-    public int getDaysByInterval(Interval interval) {
+    public static int getDaysByInterval(Interval interval) {
 
         Interval intervalExist = Arrays.stream(Interval.values())
                 .filter(position -> position.equals(interval))

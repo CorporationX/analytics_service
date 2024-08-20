@@ -1,9 +1,9 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticEventDto;
+import faang.school.analytics.dto.AnalyticInfoDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Stream;
+
+import static faang.school.analytics.model.Interval.getDaysByInterval;
 
 @Service
 @RequiredArgsConstructor
@@ -28,30 +29,24 @@ public class AnalyticsEventService {
     }
 
     @Transactional(readOnly = true)
-    public List<AnalyticEventDto> getAnalytics(long receiverId,
-                                               EventType eventType,
-                                               Interval interval,
-                                               LocalDateTime from,
-                                               LocalDateTime to) {
+    public List<AnalyticEventDto> getAnalytics(AnalyticInfoDto analyticInfoDto) {
 
-        Stream<AnalyticsEvent> streamByReceiverIdAndEventType =
-                analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
+        Interval interval = analyticInfoDto.getInterval();
+        LocalDateTime from = analyticInfoDto.getFrom();
+        LocalDateTime to = analyticInfoDto.getTo();
 
-        return streamByReceiverIdAndEventType
-                .filter(analyticsEvent -> interval == null ?
-                        filterBetweenDate(from, to, analyticsEvent.getReceivedAt()) :
-                        filterByIntervalDays(interval, analyticsEvent.getReceivedAt()))
+        List<AnalyticsEvent> analyticsEvents = interval == null ?
+                analyticsEventRepository.getBetweenDate(from, to) :
+                analyticsEventRepository.getByDays(getCurrentDateTimeMinusIntervalDays(interval));
+
+        return analyticsEvents.stream()
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .map(analyticsEventMapper::toDto)
                 .toList();
     }
 
-    private boolean filterBetweenDate(LocalDateTime from, LocalDateTime to, LocalDateTime dateTime) {
-        return dateTime.isAfter(from) && dateTime.isBefore(to);
-    }
-
-    private boolean filterByIntervalDays(Interval interval, LocalDateTime dateTime) {
-        int daysByInterval = interval.getDaysByInterval(interval);
-        return dateTime.isAfter(LocalDateTime.now().minusDays(daysByInterval));
+    private LocalDateTime getCurrentDateTimeMinusIntervalDays(Interval interval) {
+        int daysByInterval = getDaysByInterval(interval);
+        return LocalDateTime.now().minusDays(daysByInterval);
     }
 }
