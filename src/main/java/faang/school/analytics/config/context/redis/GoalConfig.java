@@ -24,7 +24,7 @@ public class GoalConfig {
     }
 
     @Bean
-    Pair<MessageListenerAdapter, ChannelTopic> followerRequester(MessageListenerAdapter goalEventListener) {
-        return Pair.of(goalEventListener, goalTopic());
+    Pair<MessageListenerAdapter, ChannelTopic> followerRequester(MessageListenerAdapter followerEventListener) {
+        return Pair.of(followerEventListener, goalTopic());
     }
 }

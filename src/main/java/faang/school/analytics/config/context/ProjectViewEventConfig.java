@@ -1,22 +1,20 @@
 package faang.school.analytics.config.context;
 
-
 import faang.school.analytics.listener.ProjectMessageConsumer;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.util.Pair;
-import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
-@Component
+@Configuration
 public class ProjectViewEventConfig {
 
-    @Value("${spring.data.redis.channel.project-view}")
+    @Value("${spring.data.redis.project-view}")
     private String redisChannelProjectView;
 
+    @Bean
     public ChannelTopic topic() {
         return new ChannelTopic(redisChannelProjectView);
     }
