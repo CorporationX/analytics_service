@@ -14,13 +14,15 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class AnalyticsEventService {
+
     private final AnalyticsEventRepository analyticsEventRepository;
-    private final AnalyticsEventMapper analyticsEventMapper;
+    private final AnalyticsEventMapper mapper;
 
     @Transactional
     public void saveEvent(AnalyticsEvent event) {
@@ -35,30 +37,29 @@ public class AnalyticsEventService {
                                                 LocalDateTime from,
                                                 LocalDateTime to) {
 
-        var analyticsEvent = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
+        Stream<AnalyticsEvent> analyticsEventStream;
 
-        if (analyticsEvent == null) {
+        if (interval == null) {
+             analyticsEventStream = analyticsEventRepository.findByReceiverIdAndEventTypeAndReceivedAtBetween(
+                    receiverId, eventType, from, to);
+        } else {
+            LocalDateTime fromDate = Interval.getFromDate(interval);
+            LocalDateTime toDate = LocalDateTime.now();
+             analyticsEventStream = analyticsEventRepository.findByReceiverIdAndEventTypeAndReceivedAtBetween(
+                    receiverId, eventType, fromDate, toDate);
+
+        } if (analyticsEventStream == null) {
             log.error("No events found for receiver: {}, eventType: {}", receiverId, eventType);
             return Collections.emptyList();
         }
 
-        if (interval == null) {
-            LocalDateTime effectiveFrom = (from == null) ? LocalDateTime.MIN : from;
-            LocalDateTime effectiveTo = (to == null) ? LocalDateTime.MAX : to;
-
-            analyticsEvent = analyticsEvent.filter(event ->
-                    event.getReceivedAt().isAfter(effectiveFrom) && event.getReceivedAt().isBefore(effectiveTo));
-        } else {
-            LocalDateTime fromDate = Interval.getFromDate(interval);
-            analyticsEvent = analyticsEvent.filter(event -> event.getReceivedAt().isAfter(fromDate));
-        }
-
-        List<AnalyticsEventDto> result = analyticsEvent
+        List<AnalyticsEventDto> result = analyticsEventStream
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt))
-                .map(analyticsEventMapper::toDto)
+                .map(mapper::toDto)
                 .toList();
 
         log.info("Returning {} analytics event(s)", result.size());
         return result;
     }
+
 }
