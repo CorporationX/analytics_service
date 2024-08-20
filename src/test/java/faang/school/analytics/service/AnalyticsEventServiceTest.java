@@ -1,6 +1,7 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticEventDto;
+import faang.school.analytics.dto.AnalyticInfoDto;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -55,6 +56,7 @@ public class AnalyticsEventServiceTest {
     private Stream<AnalyticsEvent> analyticsEventsStream;
     private List<AnalyticEventDto> analyticsEventDtosList;
     private LocalDateTime currentDateTime;
+    private AnalyticInfoDto analyticInfoDto;
 
     @BeforeEach
     public void setup() {
@@ -66,6 +68,14 @@ public class AnalyticsEventServiceTest {
         interval = Interval.WEEK;
         from = currentDateTime.minusDays(8);
         to = currentDateTime;
+
+        analyticInfoDto = AnalyticInfoDto.builder()
+                .receiverId(receiverId)
+                .eventType(eventTypeUserFollower)
+                .interval(interval)
+                .from(from)
+                .to(to)
+                .build();
 
         AnalyticsEvent firstAnalyticEvent = AnalyticsEvent.builder()
                 .id(1L)
@@ -111,7 +121,7 @@ public class AnalyticsEventServiceTest {
                 .thenReturn(analyticsEventsStream);
 
         List<AnalyticEventDto> actualAnalyticEventDto =
-                analyticsEventService.getAnalytics(receiverId, eventTypeUserFollower, interval, from, to);
+                analyticsEventService.getAnalytics(analyticInfoDto);
 
         assertEquals(analyticsEventDtosList, actualAnalyticEventDto);
     }
@@ -123,8 +133,10 @@ public class AnalyticsEventServiceTest {
         when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventTypeUserFollower))
                 .thenReturn(analyticsEventsStream);
 
+        analyticInfoDto.setInterval(null);
+
         List<AnalyticEventDto> actualAnalyticEventDto =
-                analyticsEventService.getAnalytics(receiverId, eventTypeUserFollower, null, from, to);
+                analyticsEventService.getAnalytics(analyticInfoDto);
 
         assertEquals(analyticsEventDtosList, actualAnalyticEventDto);
     }

@@ -1,5 +1,10 @@
 package faang.school.analytics.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import faang.school.analytics.dto.AnalyticInfoDto;
+import faang.school.analytics.model.EventType;
+import faang.school.analytics.model.Interval;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 
@@ -11,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -34,6 +40,9 @@ public class AnalyticsEventControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Container
     public static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:13-alpine")
@@ -62,14 +71,23 @@ public class AnalyticsEventControllerTest {
 
         long receiverId = 1;
         String eventType = "USER_FOLLOWER";
-        String interval = null;
         LocalDateTime from = LocalDateTime.of(2024, 1, 1, 0, 0);
         LocalDateTime to = LocalDateTime.of(2024, 1, 7, 0, 0);
+
+        AnalyticInfoDto analyticInfoDto = AnalyticInfoDto.builder()
+                .receiverId(receiverId)
+                .eventType(EventType.USER_FOLLOWER)
+                .interval(null)
+                .from(from)
+                .to(to)
+                .build();
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("x-user-id", "1");
 
-        mockMvc.perform(get("/analytics?receiverId={receiverId}&eventType={eventType}&interval={interval}&from={from}&to={to}", receiverId, eventType, interval, from, to)
+        mockMvc.perform(post("/analytics")
+                        .content(objectMapper.writeValueAsString(analyticInfoDto))
+                        .contentType(MediaType.APPLICATION_JSON)
                         .headers(headers))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(3))
@@ -98,14 +116,23 @@ public class AnalyticsEventControllerTest {
 
         long receiverId = 1;
         String eventType = "POST_LIKE";
-        String interval = "DAY";
         LocalDateTime from = LocalDateTime.of(2024, 1, 1, 0, 0);
         LocalDateTime to = LocalDateTime.of(2024, 1, 7, 0, 0);
+
+        AnalyticInfoDto analyticInfoDto = AnalyticInfoDto.builder()
+                .receiverId(receiverId)
+                .eventType(EventType.POST_LIKE)
+                .interval(Interval.DAY)
+                .from(from)
+                .to(to)
+                .build();
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("x-user-id", "1");
 
-        mockMvc.perform(get("/analytics?receiverId={receiverId}&eventType={eventType}&interval={interval}&from={from}&to={to}", receiverId, eventType, interval, from, to)
+        mockMvc.perform(post("/analytics")
+                        .content(objectMapper.writeValueAsString(analyticInfoDto))
+                        .contentType(MediaType.APPLICATION_JSON)
                         .headers(headers))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))

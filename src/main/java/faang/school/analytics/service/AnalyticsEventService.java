@@ -1,6 +1,7 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticEventDto;
+import faang.school.analytics.dto.AnalyticInfoDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -28,11 +29,13 @@ public class AnalyticsEventService {
     }
 
     @Transactional(readOnly = true)
-    public List<AnalyticEventDto> getAnalytics(long receiverId,
-                                               EventType eventType,
-                                               Interval interval,
-                                               LocalDateTime from,
-                                               LocalDateTime to) {
+    public List<AnalyticEventDto> getAnalytics(AnalyticInfoDto analyticInfoDto) {
+
+        long receiverId = analyticInfoDto.getReceiverId();
+        EventType eventType = analyticInfoDto.getEventType();
+        Interval interval = analyticInfoDto.getInterval();
+        LocalDateTime from = analyticInfoDto.getFrom();
+        LocalDateTime to = analyticInfoDto.getTo();
 
         Stream<AnalyticsEvent> streamByReceiverIdAndEventType =
                 analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
