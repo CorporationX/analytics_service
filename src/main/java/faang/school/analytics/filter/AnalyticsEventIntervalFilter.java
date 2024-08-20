@@ -1,11 +1,12 @@
 package faang.school.analytics.filter;
 
 import faang.school.analytics.dto.AnalyticsEventFilterDto;
+import faang.school.analytics.dto.Interval;
 import faang.school.analytics.model.AnalyticsEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 @Component
@@ -20,14 +21,14 @@ public class AnalyticsEventIntervalFilter implements AnalyticsEventFilter {
     public Stream<AnalyticsEvent> apply(Stream<AnalyticsEvent> analyticsEvents, AnalyticsEventFilterDto filterDto) {
         if (filterDto.getInterval() != null) {
             return analyticsEvents.filter(analyticsEvent ->
-                    filterDto.getInterval().contains(analyticsEvent.getReceivedAt().toDateTime()));
+                    Interval.parse(filterDto.getInterval()).contains(analyticsEvent.getReceivedAt()));
         } else {
             LocalDateTime to = filterDto.getTo();
             LocalDateTime from = filterDto.getFrom();
 
             if (from != null && to != null) {
                 return analyticsEvents.filter(analyticsEvent ->
-                        from.isAfter(analyticsEvent.getReceivedAt()) && to.isBefore(analyticsEvent.getReceivedAt()));
+                        to.isAfter(analyticsEvent.getReceivedAt()) && from.isBefore(analyticsEvent.getReceivedAt()));
             } else {
                 log.error("interval is null");
                 throw new IllegalArgumentException("interval is null");

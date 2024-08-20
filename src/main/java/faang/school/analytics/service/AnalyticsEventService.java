@@ -25,10 +25,10 @@ public class AnalyticsEventService {
 
     @Transactional
     public AnalyticsEventDto saveEvent(AnalyticsEvent event) {
-
         return analyticsEventMapper.analyticsEventToAnalyticsEventDto(analyticsEventRepository.save(event));
     }
 
+    @Transactional(readOnly = true)
     public List<AnalyticsEventDto> getAnalytics(AnalyticsEventFilterDto filterDto) {
         Stream<AnalyticsEvent> analyticsEvents = findByReceiverIdAndEventType(
                 filterDto.getReceiverId(), filterDto.getEventType());
@@ -41,6 +41,6 @@ public class AnalyticsEventService {
     }
 
     private Stream<AnalyticsEvent> findByReceiverIdAndEventType(long receiverId, EventType eventType) {
-        return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
+        return analyticsEventRepository.findByReceiverIdAndEventTypeOrderByReceiverIdDesc(receiverId, eventType);
     }
 }
