@@ -25,7 +25,8 @@ spring:
         profile-view: profile_view_channel
         project-view: project_view_channel
         mentorship-requested: mentorship_requested_channel
-        post_view: post_view_channel
+        recommendation: recommendation_event_channel
+        post_view: post_channel
 
 server:
   port: 8086
