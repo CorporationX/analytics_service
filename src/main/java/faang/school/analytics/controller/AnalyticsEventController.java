@@ -18,9 +18,4 @@ public class AnalyticsEventController {
     public List<AnalyticsEventDto> getAnalytics(@RequestBody AnalyticsEventFilterDto analyticsEventFilterDto) {
         return analyticsEventService.getAnalytics(analyticsEventFilterDto);
     }
-
-    @PostMapping("/analytics")
-    public void save(@RequestBody AnalyticsEvent analyticsEvent){
-        analyticsEventService.saveEvent(analyticsEvent);
-    }
 }
