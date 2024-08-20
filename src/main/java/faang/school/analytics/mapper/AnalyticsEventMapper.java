@@ -4,6 +4,7 @@ import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.events.PostLikeEvent;
 import faang.school.analytics.events.PostViewEvent;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.RecommendationEvent;
 import faang.school.analytics.model.CommentEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -30,4 +31,5 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "createdAt", target = "receivedAt")
     AnalyticsEvent toAnalyticsEvent(PostLikeEvent postLikeEvent);
 
+    AnalyticsEvent toAnalyticsEvent(RecommendationEvent recommendationEvent);
 }
