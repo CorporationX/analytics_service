@@ -25,7 +25,7 @@ public class AnalyticsEventMapperTest {
         analyticsEvent = AnalyticsEvent.builder().id(0L).actorId(1L).receiverId(2L).eventType(EventType.FOLLOWER)
                 .receivedAt(LocalDateTime.of(2024,8, 17, 0, 0)).build();
         followerEvent = FollowerEvent.builder().followerId(1L).followeeId(2L).
-                followTime(LocalDateTime.of(2024,8, 17, 0, 0)).build();
+                subscriptionTime(LocalDateTime.of(2024,8, 17, 0, 0)).build();
     }
 
     @Test

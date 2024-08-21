@@ -1,7 +1,6 @@
 package faang.school.analytics.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.client.UserServiceClient;
 import faang.school.analytics.dto.FollowerEvent;
 import faang.school.analytics.dto.UserDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -24,8 +23,6 @@ public class FollowerEventListenerTest {
     @Mock
     private AnalyticsEventMapper analyticsEventMapper;
     @Mock
-    private UserServiceClient userServiceClient;
-    @Mock
     private ObjectMapper objectMapper;
     @Mock
     private AnalyticsEventService analyticsEventService;
@@ -43,7 +40,7 @@ public class FollowerEventListenerTest {
     @BeforeEach
     public void setUp() {
         followerEvent = FollowerEvent.builder().followerId(1L).followeeId(2L).
-                followTime(LocalDateTime.of(2024,8, 17, 0, 0)).build();
+                subscriptionTime(LocalDateTime.of(2024,8, 17, 0, 0)).build();
         analyticsEvent = AnalyticsEvent.builder().id(0L).actorId(1L).receiverId(2L).eventType(EventType.FOLLOWER)
                 .receivedAt(LocalDateTime.of(2024,8, 17, 0, 0)).build();
         follower = new UserDto(1L, "Andrey", "example@mail.ru");
@@ -55,13 +52,9 @@ public class FollowerEventListenerTest {
     public void onMessageTest() throws IOException {
         Mockito.doNothing().when(analyticsEventService).save(analyticsEvent);
         Mockito.when(analyticsEventMapper.toEntity(followerEvent)).thenReturn(analyticsEvent);
-        Mockito.when(userServiceClient.getUser(1L)).thenReturn(follower);
-        Mockito.when(userServiceClient.getUser(2L)).thenReturn(followee);
         Mockito.when(objectMapper.readValue(message.getBody(), FollowerEvent.class)).thenReturn(followerEvent);
         followEventListener.onMessage(message, pattern);
         Mockito.verify(analyticsEventService).save(analyticsEvent);
-        Mockito.verify(userServiceClient).getUser(1L);
-        Mockito.verify(userServiceClient).getUser(2L);
         Mockito.verify(objectMapper).readValue(message.getBody(), FollowerEvent.class);
     }
 }

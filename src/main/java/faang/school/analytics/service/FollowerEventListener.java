@@ -1,7 +1,6 @@
 package faang.school.analytics.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.client.UserServiceClient;
 import faang.school.analytics.dto.FollowerEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
@@ -15,8 +14,9 @@ public class FollowerEventListener extends AbstractListener<FollowerEvent> {
 
     private final AnalyticsEventMapper analyticsEventMapper;
 
-    public FollowerEventListener(ObjectMapper objectMapper, UserServiceClient userServiceClient,
-                                 AnalyticsEventService analyticsEventService, AnalyticsEventMapper analyticsEventMapper) {
+    public FollowerEventListener(ObjectMapper objectMapper,
+                                 AnalyticsEventService analyticsEventService,
+                                 AnalyticsEventMapper analyticsEventMapper) {
         super(objectMapper, analyticsEventService);
         this.analyticsEventMapper = analyticsEventMapper;
     }
