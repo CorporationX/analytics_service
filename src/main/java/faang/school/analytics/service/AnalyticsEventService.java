@@ -14,7 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Stream;
+
+import static faang.school.analytics.model.Interval.getDaysByInterval;
 
 @Service
 @RequiredArgsConstructor
@@ -37,23 +38,18 @@ public class AnalyticsEventService {
         LocalDateTime from = analyticInfoDto.getFrom();
         LocalDateTime to = analyticInfoDto.getTo();
 
-        Stream<AnalyticsEvent> streamByReceiverIdAndEventType =
-                analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
+        List<AnalyticsEvent> analyticsEvents = interval == null ?
+                analyticsEventRepository.getBetweenDate(from, to) :
+                analyticsEventRepository.getByDays(getCurrentDateTimeMinusIntervalDays(interval));
 
-        return streamByReceiverIdAndEventType
-                .filter(analyticsEvent -> interval == null ?
-                        filterBetweenDate(from, to, analyticsEvent.getReceivedAt()) :
-                        filterByIntervalDays(interval, analyticsEvent.getReceivedAt()))
+        return analyticsEvents.stream()
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .map(analyticsEventMapper::toDto)
                 .toList();
     }
 
-    private boolean filterBetweenDate(LocalDateTime from, LocalDateTime to, LocalDateTime dateTime) {
-        return dateTime.isAfter(from) && dateTime.isBefore(to);
-    }
-
-    private boolean filterByIntervalDays(Interval interval, LocalDateTime dateTime) {
-        return dateTime.isAfter(LocalDateTime.now().minusDays(interval.getDays()));
+    private LocalDateTime getCurrentDateTimeMinusIntervalDays(Interval interval) {
+        int daysByInterval = getDaysByInterval(interval);
+        return LocalDateTime.now().minusDays(daysByInterval);
     }
 }

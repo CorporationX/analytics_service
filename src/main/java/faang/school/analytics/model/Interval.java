@@ -17,24 +17,13 @@ public enum Interval {
 
     private final int days;
 
-    public static Interval getInterval(String interval) {
+    public static int getDaysByInterval(Interval interval) {
 
-        if (interval.isBlank()) {
-            return null;
-        }
-
-        if (NumberUtils.isDigits(interval)) {
-            return getIntervalByDays(Integer.parseInt(interval));
-        }
-
-        return Interval.valueOf(interval.toUpperCase());
-    }
-
-    public static Interval getIntervalByDays(int numberOfInterval) {
-        return Arrays.stream(Interval.values())
-                .filter(intervalEnum -> intervalEnum.getDays() == numberOfInterval)
+        Interval intervalExist = Arrays.stream(Interval.values())
+                .filter(position -> position.equals(interval))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Unknown interval: " + numberOfInterval));
+                .orElseThrow(() -> new IllegalArgumentException("Unknown interval: " + interval));
 
+        return intervalExist.days;
     }
 }

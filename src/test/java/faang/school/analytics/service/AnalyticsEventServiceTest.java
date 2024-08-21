@@ -18,9 +18,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -53,7 +53,7 @@ public class AnalyticsEventServiceTest {
     private Interval interval;
     private LocalDateTime from;
     private LocalDateTime to;
-    private Stream<AnalyticsEvent> analyticsEventsStream;
+    private List<AnalyticsEvent> analyticsEvents;
     private List<AnalyticEventDto> analyticsEventDtosList;
     private LocalDateTime currentDateTime;
     private AnalyticInfoDto analyticInfoDto;
@@ -74,8 +74,7 @@ public class AnalyticsEventServiceTest {
                 .eventType(eventTypeUserFollower)
                 .interval(interval)
                 .from(from)
-                .to(to)
-                .build();
+                .to(to).build();
 
         AnalyticsEvent firstAnalyticEvent = AnalyticsEvent.builder()
                 .id(1L)
@@ -93,7 +92,7 @@ public class AnalyticsEventServiceTest {
                 .receivedAt(currentDateTime.minusDays(1))
                 .build();
 
-        analyticsEventsStream = Stream.of(firstAnalyticEvent, secondAnalyticEvent, thirdAnalyticEvent);
+        analyticsEvents = List.of(firstAnalyticEvent, secondAnalyticEvent, thirdAnalyticEvent);
 
         AnalyticEventDto firstAnalyticEventDto = AnalyticEventDto.builder()
                 .id(1L)
@@ -117,8 +116,8 @@ public class AnalyticsEventServiceTest {
     @DisplayName("Get analytics events by interval")
     public void testGetAnalyticsEventsByInterval() {
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventTypeUserFollower))
-                .thenReturn(analyticsEventsStream);
+        when(analyticsEventRepository.getByDays(any(LocalDateTime.class)))
+                .thenReturn(analyticsEvents);
 
         List<AnalyticEventDto> actualAnalyticEventDto =
                 analyticsEventService.getAnalytics(analyticInfoDto);
@@ -130,11 +129,10 @@ public class AnalyticsEventServiceTest {
     @DisplayName("Get analytics events by interval null")
     public void testGetAnalyticsEventsByIntervalNull() {
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventTypeUserFollower))
-                .thenReturn(analyticsEventsStream);
+        when(analyticsEventRepository.getBetweenDate(analyticInfoDto.getFrom(), analyticInfoDto.getTo()))
+                .thenReturn(analyticsEvents);
 
         analyticInfoDto.setInterval(null);
-
         List<AnalyticEventDto> actualAnalyticEventDto =
                 analyticsEventService.getAnalytics(analyticInfoDto);
 
