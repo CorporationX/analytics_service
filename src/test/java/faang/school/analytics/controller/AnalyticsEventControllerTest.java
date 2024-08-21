@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import faang.school.analytics.dto.AnalyticInfoDto;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
+import lombok.Cleanup;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 
@@ -45,7 +46,7 @@ public class AnalyticsEventControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Container
-    public static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:13-alpine")
+    public static final PostgreSQLContainer<?> postgreSQLContainer =  new PostgreSQLContainer<>("postgres:13-alpine")
             .withDatabaseName("testdb")
             .withUsername("test")
             .withPassword("test")
@@ -90,22 +91,22 @@ public class AnalyticsEventControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .headers(headers))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(3))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(4))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].eventType").value(eventType))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].receivedAt").value("2024-01-03T00:00:00"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].actorId").value(4))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].receiverId").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].receivedAt").value("2024-01-07T00:00:00"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].actorId").value(3))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].receiverId").value(2))
 
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].actorId").value(3))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].actorId").value(4))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].receiverId").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].eventType").value(eventType))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].receivedAt").value("2024-01-02T00:00:00"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].receivedAt").value("2024-01-03T00:00:00"))
 
 
-                .andExpect(MockMvcResultMatchers.jsonPath("$[2].actorId").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].actorId").value(3))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[2].receiverId").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[2].eventType").value(eventType))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[2].receivedAt").value("2024-01-01T00:01:00"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].receivedAt").value("2024-01-02T00:00:00"))
 
                 .andExpect(status().isOk());
     }

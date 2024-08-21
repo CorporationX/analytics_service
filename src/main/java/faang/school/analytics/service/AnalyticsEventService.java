@@ -43,6 +43,7 @@ public class AnalyticsEventService {
                 analyticsEventRepository.getByDays(getCurrentDateTimeMinusIntervalDays(interval));
 
         return analyticsEvents.stream()
+                .filter(analyticsEvent -> analyticsEvent.getEventType().equals(eventType))
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .map(analyticsEventMapper::toDto)
                 .toList();
