@@ -1,11 +1,28 @@
 package faang.school.analytics.listener;
 
-import org.springframework.data.redis.connection.Message;
-import org.springframework.data.redis.connection.MessageListener;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.dto.ProjectViewEvent;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.service.AnalyticsEventService;
+import org.springframework.stereotype.Component;
 
-public class ProjectViewEventListener implements MessageListener {
+@Component
+public class ProjectViewEventListener extends RedisMessageListener<ProjectViewEvent> {
+    private final AnalyticsEventService analyticsEventService;
+    private final AnalyticsEventMapper analyticsEventMapper;
+
+    public ProjectViewEventListener(ObjectMapper objectMapper, AnalyticsEventService analyticsEventService, AnalyticsEventMapper analyticsEventMapper) {
+        super(objectMapper);
+        this.analyticsEventService = analyticsEventService;
+        this.analyticsEventMapper = analyticsEventMapper;
+    }
+
+    public void saveEvent(ProjectViewEvent projectViewEvent) {
+        analyticsEventService.saveEvent(analyticsEventMapper.projectViewEventToAnalyticsEvent(projectViewEvent));
+    }
+
     @Override
-    public void onMessage(Message message, byte[] pattern) {
-
+    protected Class<ProjectViewEvent> getEventType() {
+        return ProjectViewEvent.class;
     }
 }

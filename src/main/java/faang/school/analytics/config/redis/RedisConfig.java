@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.ProjectViewEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,17 +45,18 @@ public class RedisConfig {
         return new ChannelTopic(projectView);
     }
 
-    public MessageListenerAdapter projectViewListenerAdapter() {
-        re
+    @Bean
+    public MessageListenerAdapter projectViewListenerAdapter(ProjectViewEventListener projectViewEventListener) {
+        return new MessageListenerAdapter(projectViewEventListener);
     }
 
     @Bean
     RedisMessageListenerContainer redisContainer(RedisConnectionFactory connectionFactory,
-                                                 ProfilePicEventListener profilePicEventListener) {
+                                                 ProjectViewEventListener projectViewEventListener) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(profilePictureListener(profilePicEventListener), projectViewTopic());
+        container.addMessageListener(projectViewListenerAdapter(projectViewEventListener), projectViewTopic());
 
         return container;
     }
