@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
 public interface AnalyticsEventMapper {
     @Mapping(source = "followerId", target = "actorId")
     @Mapping(source = "followeeId", target = "receiverId")
-    @Mapping(source = "followTime", target = "receivedAt")
+    @Mapping(source = "subscriptionTime", target = "receivedAt")
     @Mapping(target = "eventType", constant = "FOLLOWER")
     AnalyticsEvent toEntity(FollowerEvent dto);
 }

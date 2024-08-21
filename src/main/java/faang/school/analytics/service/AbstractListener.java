@@ -7,13 +7,14 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 @RequiredArgsConstructor
 public abstract class AbstractListener<T> implements MessageListener {
     protected final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
 
-    protected abstract T handleEvent(Message message) throws IOException;
+    protected abstract T handleEvent(Message message) throws IOException, ExecutionException, InterruptedException;
     protected abstract AnalyticsEvent mapToAnalyticsEvent(T event);
 
     @Override
@@ -21,7 +22,7 @@ public abstract class AbstractListener<T> implements MessageListener {
         T event;
         try {
             event = handleEvent(message);
-        } catch (IOException e) {
+        } catch (IOException | ExecutionException | InterruptedException e) {
             throw new RuntimeException(e + "couldn't deserialize message");
         }
         AnalyticsEvent analyticsEvent = mapToAnalyticsEvent(event);

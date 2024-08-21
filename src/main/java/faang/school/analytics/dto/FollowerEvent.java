@@ -1,12 +1,16 @@
 package faang.school.analytics.dto;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class FollowerEvent {
     @NotNull
@@ -14,5 +18,5 @@ public class FollowerEvent {
     @NotNull
     private Long followeeId;
     @NotNull
-    private LocalDateTime followTime;
+    private LocalDateTime subscriptionTime;
 }
