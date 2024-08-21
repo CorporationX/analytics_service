@@ -1,10 +1,13 @@
 package faang.school.analytics.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.Arrays;
 
 @AllArgsConstructor
+@Getter
 public enum Interval {
 
     DAY(1),

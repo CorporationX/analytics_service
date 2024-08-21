@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  data:
+    redis:
+      host: ${spring.data.redis.host}
+      port: ${spring.data.redis.port}
+      channel:
+        profileView: profile_view_channel
+        followerView: follower_view_channel
+
+
+project-service:
+  host: localhost
+  port: 8082

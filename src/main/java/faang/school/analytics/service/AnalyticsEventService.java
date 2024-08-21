@@ -4,6 +4,7 @@ import faang.school.analytics.dto.AnalyticEventDto;
 import faang.school.analytics.dto.AnalyticInfoDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,8 @@ public class AnalyticsEventService {
     @Transactional(readOnly = true)
     public List<AnalyticEventDto> getAnalytics(AnalyticInfoDto analyticInfoDto) {
 
+        long receiverId = analyticInfoDto.getReceiverId();
+        EventType eventType = analyticInfoDto.getEventType();
         Interval interval = analyticInfoDto.getInterval();
         LocalDateTime from = analyticInfoDto.getFrom();
         LocalDateTime to = analyticInfoDto.getTo();
@@ -40,6 +43,7 @@ public class AnalyticsEventService {
                 analyticsEventRepository.getByDays(getCurrentDateTimeMinusIntervalDays(interval));
 
         return analyticsEvents.stream()
+                .filter(analyticsEvent -> analyticsEvent.getEventType().equals(eventType))
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .map(analyticsEventMapper::toDto)
                 .toList();
