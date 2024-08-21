@@ -93,6 +93,11 @@ public enum Interval {
         public LocalDateTime getStartTime() {
             return LocalDateTime.now().minusDays(1).truncatedTo(ChronoUnit.DAYS);
         }
+
+        @Override
+        public LocalDateTime getEndTime() {
+            return LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
+        }
     },
     THIS_WEEK {
         @Override
@@ -104,6 +109,11 @@ public enum Interval {
         @Override
         public LocalDateTime getStartTime() {
             return LocalDateTime.now().minusWeeks(1).with(java.time.DayOfWeek.MONDAY).truncatedTo(ChronoUnit.DAYS);
+        }
+
+        @Override
+        public LocalDateTime getEndTime() {
+            return LocalDateTime.now().with(java.time.DayOfWeek.MONDAY).truncatedTo(ChronoUnit.DAYS);
         }
     },
     THIS_MONTH {
@@ -117,6 +127,11 @@ public enum Interval {
         public LocalDateTime getStartTime() {
             return LocalDateTime.now().minusMonths(1).withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS);
         }
+
+        @Override
+        public LocalDateTime getEndTime() {
+            return LocalDateTime.now().withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS);
+        }
     },
     THIS_YEAR {
         @Override
@@ -128,6 +143,11 @@ public enum Interval {
         @Override
         public LocalDateTime getStartTime() {
             return LocalDateTime.now().minusYears(1).withDayOfYear(1).truncatedTo(ChronoUnit.DAYS);
+        }
+
+        @Override
+        public LocalDateTime getEndTime() {
+            return LocalDateTime.now().withDayOfYear(1).truncatedTo(ChronoUnit.DAYS);
         }
     };
 
