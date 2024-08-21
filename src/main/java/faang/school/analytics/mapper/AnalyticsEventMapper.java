@@ -5,6 +5,7 @@ import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.Mapper;
 
 
+
 @Mapper(componentModel = "spring", unmappedTargetPolicy = org.mapstruct.ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
     AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);

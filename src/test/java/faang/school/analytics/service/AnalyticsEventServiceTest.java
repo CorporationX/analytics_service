@@ -1,13 +1,16 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.event.LikeEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
+import faang.school.analytics.mapper.LikeEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.validator.AnalyticsEventValidator;
 import org.junit.jupiter.api.Assertions;
+import faang.school.analytics.validator.AnalyticsEventServiceValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,12 +18,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.redis.connection.Message;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class AnalyticsEventServiceTest {
@@ -30,6 +37,13 @@ public class AnalyticsEventServiceTest {
     private AnalyticsEventRepository analyticsEventRepository;
     @Spy
     private AnalyticsEventMapperImpl analyticsEventMapper;
+
+    @Spy
+    private LikeEventMapperImpl likeEventMapper;
+
+    @Mock
+    private AnalyticsEventServiceValidator analyticsEventServiceValidator;
+
     @InjectMocks
     private AnalyticsEventService analyticsEventService;
     long receiverId = 1L;
@@ -81,5 +95,21 @@ public class AnalyticsEventServiceTest {
 
         Assertions.assertEquals(result, expected);
         Assertions.assertEquals(expected.size(), result.size());
+    }
+
+
+    @Test
+    void saveLikeEventTest() {
+        LikeEvent likeEvent = new LikeEvent();
+        likeEvent.setPostId(123L);
+        likeEvent.setUserId(789L);
+        likeEvent.setReceivedAt(LocalDateTime.parse("2024-08-16T12:00:00"));
+        likeEvent.setEventType(EventType.of(5));
+
+        AnalyticsEvent analyticsEvent = likeEventMapper.toEntity(likeEvent);
+
+        analyticsEventService.saveLikeEvent(likeEvent);
+
+        verify(analyticsEventRepository).save(analyticsEvent);
     }
 }
