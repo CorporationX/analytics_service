@@ -5,8 +5,8 @@ import faang.school.analytics.dto.ProfileViewEvent;
 import faang.school.analytics.mapper.ProfileViewEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.repository.AnalyticsEventRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import faang.school.analytics.service.AnalyticsEventService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
@@ -14,21 +14,15 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class RedisMessageSubscriber implements MessageListener {
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private AnalyticsEventRepository analyticsEventRepository;
-    @Autowired
-    private ProfileViewEventMapper profileViewEventMapper;
+    private final ObjectMapper objectMapper;
+    private final ProfileViewEventMapper profileViewEventMapper;
+    private final AnalyticsEventService analyticsEventService;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        String channel = new String(message.getChannel());
         String body = new String(message.getBody());
-        body = body.replace("\\\"", "\"").replace("\"{", "{").replace("}\"", "}");
 
         ProfileViewEvent profileViewEvent;
         try {
@@ -37,10 +31,8 @@ public class RedisMessageSubscriber implements MessageListener {
             throw new RuntimeException(e);
         }
 
-        System.out.println("Received message from channel " + channel + ": " + profileViewEvent.toString());
-
         AnalyticsEvent analyticsEvent = profileViewEventMapper.toAnalyticsEvent(profileViewEvent);
         analyticsEvent.setEventType(EventType.PROFILE_VIEW);
-        analyticsEventRepository.save(analyticsEvent);
+        analyticsEventService.saveAnalyticsEvent(analyticsEvent);
     }
 }
