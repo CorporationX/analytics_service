@@ -1,29 +1,4 @@
 package faang.school.analytics.config;
-//
-//import faang.school.analytics.listener.RedisMessageSubscriber;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-//import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
-//
-//@Configuration
-//@RequiredArgsConstructor
-//public class RedisListenerConfig {
-//    @Bean
-//    MessageListenerAdapter messageListener() {
-//        return new MessageListenerAdapter(new RedisMessageSubscriber());
-//    }
-//
-//    @Bean
-//    RedisMessageListenerContainer redisContainer() {
-//        RedisMessageListenerContainer container
-//                = new RedisMessageListenerContainer();
-//        container.setConnectionFactory(jedisConnectionFactory());
-//        container.addMessageListener(messageListener(), topic());
-//        return container;
-//    }
-//}
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
