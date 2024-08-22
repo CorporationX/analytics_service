@@ -1,8 +1,9 @@
 package faang.school.analytics.filter;
 
 import faang.school.analytics.dto.AnalyticsEventFilterDto;
-import faang.school.analytics.dto.Interval;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.Interval;
+import faang.school.analytics.util.EnumConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -18,21 +19,24 @@ public class AnalyticsEventIntervalFilter implements AnalyticsEventFilter {
     }
 
     @Override
-    public Stream<AnalyticsEvent> apply(Stream<AnalyticsEvent> analyticsEvents, AnalyticsEventFilterDto filterDto) {
-        if (filterDto.getInterval() != null) {
-            return analyticsEvents.filter(analyticsEvent ->
-                    Interval.parse(filterDto.getInterval()).contains(analyticsEvent.getReceivedAt()));
-        } else {
-            LocalDateTime to = filterDto.getTo();
-            LocalDateTime from = filterDto.getFrom();
+    public Stream<AnalyticsEvent> filter(Stream<AnalyticsEvent> analyticsEvents,
+                                         AnalyticsEventFilterDto analyticsEventFilterDto) {
+        if(!isApplicable(analyticsEventFilterDto)){
+            String errMessage = "There should be present interval or time bounds";
+            log.error(errMessage);
+            throw new IllegalArgumentException(errMessage);
+        }
 
-            if (from != null && to != null) {
-                return analyticsEvents.filter(analyticsEvent ->
-                        to.isAfter(analyticsEvent.getReceivedAt()) && from.isBefore(analyticsEvent.getReceivedAt()));
-            } else {
-                log.error("interval is null");
-                throw new IllegalArgumentException("interval is null");
-            }
+        Interval interval = EnumConverter.fromValue(Interval.class, analyticsEventFilterDto.getInterval());
+        LocalDateTime from = analyticsEventFilterDto.getFrom();
+        LocalDateTime to = analyticsEventFilterDto.getTo();
+
+        if(interval != null){
+            return analyticsEvents.filter(analyticsEvent -> analyticsEvent.getReceivedAt()
+                    .plus(interval.getPeriod()).isAfter(LocalDateTime.now()));
+        } else {
+            return analyticsEvents.filter(analyticsEvent ->
+                    to.isAfter(analyticsEvent.getReceivedAt()) && from.isBefore(analyticsEvent.getReceivedAt()));
         }
     }
 }

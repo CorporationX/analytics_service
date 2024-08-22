@@ -10,5 +10,5 @@ import java.util.stream.Stream;
 public interface AnalyticsEventFilter {
     boolean isApplicable(AnalyticsEventFilterDto filterDto);
 
-    Stream<AnalyticsEvent> apply(Stream<AnalyticsEvent> analyticsEvents, AnalyticsEventFilterDto filterDto);
+    Stream<AnalyticsEvent> filter(Stream<AnalyticsEvent> analyticsEvents, AnalyticsEventFilterDto filterDto);
 }
