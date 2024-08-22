@@ -1,17 +1,15 @@
 package faang.school.analytics.validator;
 
-import lombok.extern.slf4j.Slf4j;
+import faang.school.analytics.exception.IllegalModelException;
 import org.springframework.stereotype.Component;
 
-@Component
-@Slf4j
-public class AnalyticsEventValidator {
+import java.time.LocalDateTime;
 
-    public void validateTimeBoundsPresence(String intervalStr, String fromStr, String toStr) {
-        if (intervalStr == null && (fromStr == null || toStr == null)) {
-            String errMessage = "There should be filtering Start and End or filtering Interval";
-            log.error(errMessage);
-            throw new IllegalArgumentException(errMessage);
+@Component
+public class AnalyticsEventValidator {
+    public void validatePresenceOfIntervalOrDateRange(String interval, LocalDateTime from, LocalDateTime to) {
+        if (interval == null && (from == null || to == null)) {
+            throw new IllegalModelException("Either 'interval' must be provided, or both 'from' and 'to' must be specified.");
         }
     }
 }

@@ -1,38 +1,59 @@
 package faang.school.analytics.validator;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
+import faang.school.analytics.exception.IllegalModelException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.time.LocalDateTime;
 
-class AnalyticsEventValidatorTest {
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-    private AnalyticsEventValidator analyticsEventValidator;
+public class AnalyticsEventValidatorTest {
 
-    @BeforeEach
-    public void setUp() {
-        analyticsEventValidator = new AnalyticsEventValidator();
+    private final AnalyticsEventValidator validator = new AnalyticsEventValidator();
+
+    @Test
+    public void testValidatePresenceOfIntervalOrDateRage_WithInternal() {
+        String interval = "WEEK";
+        LocalDateTime from = null;
+        LocalDateTime to = null;
+
+        assertDoesNotThrow(() -> validator.validatePresenceOfIntervalOrDateRange(interval, from, to));
     }
 
     @Test
-    @DisplayName("testing validate time bounds presence with all null values")
-    void testValidateTimeBoundsPresenceWithAllNullValues() {
-        assertThrows(IllegalArgumentException.class,
-                () -> analyticsEventValidator.validateTimeBoundsPresence(null, null, null));
+    public void testValidatePresenceOfIntervalOrDateRange_WithDateRange() {
+        String interval = null;
+        LocalDateTime from = LocalDateTime.now();
+        LocalDateTime to = LocalDateTime.now();
+
+        assertDoesNotThrow(() -> validator.validatePresenceOfIntervalOrDateRange(interval, from, to));
     }
 
     @Test
-    @DisplayName("testing validate time bounds presence with interval null value")
-    void testValidateTimeBoundsPresenceWithIntervalNullValue() {
-        assertDoesNotThrow(() -> analyticsEventValidator
-                .validateTimeBoundsPresence(null, "from", "to"));
+    public void testValidatePresenceOfIntervalOrDateRange_WithMissingIntervalAndDateRange_ShouldThrowException() {
+        String interval = null;
+        LocalDateTime from = null;
+        LocalDateTime to = null;
+
+        assertThrows(IllegalModelException.class, () -> validator.validatePresenceOfIntervalOrDateRange(interval, from, to));
     }
 
     @Test
-    @DisplayName("testing validate time bounds presence with from and to null values")
-    void testValidateTimeBoundsPresenceWithFromAndToNullValues() {
-        assertDoesNotThrow(() -> analyticsEventValidator
-                .validateTimeBoundsPresence("interval", null, null));
+    public void testValidatePresenceOfIntervalOrDateRange_WithOnlyFromDate_ShouldThrowException() {
+        String interval = null;
+        LocalDateTime from = LocalDateTime.now();
+        LocalDateTime to = null;
+
+        assertThrows(IllegalModelException.class, () -> validator.validatePresenceOfIntervalOrDateRange(interval, from, to));
+    }
+
+    @Test
+    public void testValidatePresenceOfIntervalOrDateRange_WithOnlyToDate_ShouldThrowException() {
+        String interval = null;
+        LocalDateTime from = null;
+        LocalDateTime to = LocalDateTime.now();
+
+        assertThrows(IllegalModelException.class, () -> validator.validatePresenceOfIntervalOrDateRange(interval, from, to));
     }
 }
