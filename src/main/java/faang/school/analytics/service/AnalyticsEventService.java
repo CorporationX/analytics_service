@@ -1,53 +1,45 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.filter.AnalyticsEventIntervalFilter;
-import faang.school.analytics.filter.AnalyticsEventPeriodFilter;
+import faang.school.analytics.dto.AnalyticsEventFilterDto;
+import faang.school.analytics.filter.AnalyticsEventFilter;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @Builder
 public class AnalyticsEventService {
-
-    private final AnalyticsEventMapper analyticsEventMapper;
     private final AnalyticsEventRepository analyticsEventRepository;
-    private final AnalyticsEventIntervalFilter analyticsEventIntervalFilter;
-    private final AnalyticsEventPeriodFilter analyticsEventPeriodFilter;
+    private final AnalyticsEventMapper analyticsEventMapper;
+    private final List<AnalyticsEventFilter> analyticsEventFilters;
 
+    @Transactional
     public void saveEvent(AnalyticsEventDto analyticsEventDto) {
-        AnalyticsEvent eventToSave = analyticsEventMapper.toEntity(analyticsEventDto);
-        analyticsEventRepository.save(eventToSave);
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(analyticsEventDto);
+        analyticsEventRepository.save(analyticsEvent);
     }
 
-    public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType,
-                                                Interval interval, LocalDateTime from, LocalDateTime to) {
-        Stream<AnalyticsEvent> analyticsEventStream = analyticsEventRepository
-                .findByReceiverIdAndEventType(receiverId, eventType);
-        analyticsEventStream = filterByTimeBounds(analyticsEventStream, interval, from, to);
-        return analyticsEventStream.sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt))
-                .map(analyticsEventMapper::toDto)
-                .toList();
-    }
+    @Transactional(readOnly = true)
+    public List<AnalyticsEventDto> getAnalytics(AnalyticsEventFilterDto filterDto) {
+        Stream<AnalyticsEvent> analyticsEvents = analyticsEventRepository
+                .findByReceiverIdAndEventTypeOrderByReceiverIdDesc(filterDto.getReceiverId(), filterDto.getEventType());
 
-    private Stream<AnalyticsEvent> filterByTimeBounds(Stream<AnalyticsEvent> analyticsEventStream,
-                                                      Interval interval, LocalDateTime from, LocalDateTime to) {
-        if (interval != null) {
-            return analyticsEventIntervalFilter.filter(analyticsEventStream, interval);
-        } else {
-            return analyticsEventPeriodFilter.filter(analyticsEventStream, from, to);
+        for (AnalyticsEventFilter analyticsEventFilter : analyticsEventFilters) {
+            analyticsEvents = analyticsEventFilter.filter(analyticsEvents, filterDto);
         }
+
+        return analyticsEvents.map(analyticsEventMapper::toDto).toList();
     }
 }
