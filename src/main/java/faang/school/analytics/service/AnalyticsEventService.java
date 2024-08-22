@@ -5,7 +5,6 @@ import faang.school.analytics.dto.AnalyticsEventFilterDto;
 import faang.school.analytics.filter.AnalyticsEventFilter;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;

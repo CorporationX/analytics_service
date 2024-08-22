@@ -11,6 +11,4 @@ public interface AnalyticsEventMapper {
     AnalyticsEvent toEntity(AnalyticsEventDto analyticsEventDto);
 
     AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
-
-    AnalyticsEventDto analyticsEventToAnalyticsEventDto(AnalyticsEvent analyticsEvent);
 }
