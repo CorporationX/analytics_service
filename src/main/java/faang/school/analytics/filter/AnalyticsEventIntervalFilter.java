@@ -12,7 +12,7 @@ public class AnalyticsEventIntervalFilter {
 
     public Stream<AnalyticsEvent> filter(Stream<AnalyticsEvent> analyticsEventStream, Interval interval) {
         return analyticsEventStream.filter(analyticsEvent -> analyticsEvent.getReceivedAt()
-                .plus(interval.getTimeInterval())
+                .plus(interval.getPeriod())
                 .isAfter(LocalDateTime.now()));
     }
 }
