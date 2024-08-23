@@ -2,6 +2,7 @@ package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.CommentEvent;
+import faang.school.analytics.util.TestDataFactory;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -15,18 +16,8 @@ class CommentEventMapperTest {
     @Test
     void shouldMapCommentEventToAnalyticsEventDtoCorrectly() {
         // given
-        var commentEvent = CommentEvent.builder()
-                .commentId(12L)
-                .receiverId(23L)
-                .authorId(34L)
-                .createdAt(LocalDateTime.MIN)
-                .build();
-        var expectedResult = AnalyticsEventDto.builder()
-                .receiverId(23L)
-                .actorId(34L)
-                .eventType("post_comment")
-                .receivedAt(LocalDateTime.MIN)
-                .build();
+        var commentEvent = TestDataFactory.createCommentEvent();
+        var expectedResult = TestDataFactory.createAnalyticsEventDtoWithPostCommentEventType();
 
         // when
         var actualResult = mapper.toAnalyticsEventDto(commentEvent);

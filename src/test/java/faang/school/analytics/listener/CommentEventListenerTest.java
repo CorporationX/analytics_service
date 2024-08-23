@@ -1,10 +1,10 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.CommentEvent;
 import faang.school.analytics.mapper.CommentEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
+import faang.school.analytics.util.TestDataFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,9 +13,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.Message;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CommentEventListenerTest {
@@ -33,20 +37,12 @@ class CommentEventListenerTest {
     @Test
     void onMessage() throws IOException {
         // given - precondition
-        CommentEvent commentEvent = CommentEvent.builder()
-                .commentId(12L)
-                .receiverId(23L)
-                .authorId(34L)
-                .createdAt(LocalDateTime.MIN)
-                .build();
-        AnalyticsEventDto analyticsEventDto = AnalyticsEventDto.builder()
-                .receiverId(23L)
-                .actorId(34L)
-                .eventType("post_comment")
-                .receivedAt(LocalDateTime.MIN)
-                .build();
+        var commentEvent = TestDataFactory.createCommentEvent();
+        var analyticsEventDto = TestDataFactory.createAnalyticsEventDtoWithPostCommentEventType();
+        byte[] messageBody = new byte[]{1, 2, 3};
 
-        when(objectMapper.readValue(any(byte[].class), eq(CommentEvent.class)))
+        when(message.getBody()).thenReturn(messageBody);
+        when(objectMapper.readValue(messageBody, CommentEvent.class))
                 .thenReturn(commentEvent);
         when(commentEventMapper.toAnalyticsEventDto(commentEvent))
                 .thenReturn(analyticsEventDto);
@@ -61,6 +57,6 @@ class CommentEventListenerTest {
                 .toAnalyticsEventDto(commentEvent);
         verify(analyticsEventService, times(1))
                 .saveEvent(analyticsEventDto);
-        verifyNoInteractions(objectMapper, commentEventMapper, analyticsEventService);
+        verifyNoMoreInteractions(objectMapper, commentEventMapper, analyticsEventService);
     }
 }
