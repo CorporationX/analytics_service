@@ -1,11 +1,11 @@
 package faang.school.analytics.config;
 
-import faang.school.analytics.listener.RedisMessageConsumer;
-import io.lettuce.core.dynamic.RedisCommandFactory;
+import faang.school.analytics.listener.AbstractEventListener;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
@@ -13,15 +13,32 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 @Configuration
 @AllArgsConstructor
 public class RedisConfiguration {
-    private final RedisMessageConsumer redisMessageConsumer;
+    private final RedisProperties redisProperties;
+    private final AbstractEventListener<?> mentorshipRequestsEventListener;
 
     @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
+    public JedisConnectionFactory redisConnectionFactory() {
+        RedisStandaloneConfiguration config =
+                new RedisStandaloneConfiguration(redisProperties.getHost(), redisProperties.getPort());
+        return new JedisConnectionFactory(config);
+    }
 
-        MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(redisMessageConsumer);
-        container.addMessageListener(messageListenerAdapter, new ChannelTopic("your-topic"));
+    @Bean
+    public ChannelTopic mentorshipRequestsTopic() {
+        return new ChannelTopic(redisProperties.getChannel().getMentorshipRequests());
+    }
+
+    @Bean
+    public MessageListenerAdapter mentorshipRequestsListener() {
+        return new MessageListenerAdapter(mentorshipRequestsEventListener);
+    }
+
+    @Bean
+    public RedisMessageListenerContainer redisMessageListenerContainer() {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(redisConnectionFactory());
+
+        container.addMessageListener(mentorshipRequestsListener(), mentorshipRequestsTopic());
 
         return container;
     }
