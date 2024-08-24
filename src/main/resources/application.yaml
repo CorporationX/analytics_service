@@ -22,7 +22,8 @@ spring:
       port: 6379
       host: localhost
       channel:
-        profileView: profile_view_channel
+        profile-view: profile_view_channel
+        like: like_channel
         mentorshipRequests: mentorship_requests
 
 server:
