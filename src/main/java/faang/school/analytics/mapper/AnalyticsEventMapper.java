@@ -23,5 +23,5 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "projectId", target = "actorId")
     @Mapping(source = "eventTime", target = "receivedAt")
     @Mapping(constant = "PROJECT_VIEW", target = "eventType")
-    AnalyticsEvent projectViewEventToAnalyticsEvent(ProjectViewEvent projectViewEvent);
+    AnalyticsEvent toAnalyticsEvent(ProjectViewEvent projectViewEvent);
 }

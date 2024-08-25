@@ -5,28 +5,29 @@ import faang.school.analytics.dto.ProjectViewEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.connection.Message;
+import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 @Component
-public class ProjectMessageConsumer extends RedisAbstractMessageListener<ProjectViewEvent> {
+public class ProjectMessageListener extends RedisAbstractMessageListener<ProjectViewEvent> implements MessageListener {
 
-    public ProjectMessageConsumer(ObjectMapper objectMapper,
+    private final Class<ProjectViewEvent> eventClass;
+
+    public ProjectMessageListener(ObjectMapper objectMapper,
                                   AnalyticsEventMapper analyticsEventMapper,
                                   AnalyticsEventService analyticsEventService) {
         super(objectMapper, analyticsEventMapper, analyticsEventService);
+        this.eventClass = ProjectViewEvent.class;
     }
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        try {
-            ProjectViewEvent projectViewEvent = objectMapper.readValue(message.getBody(), ProjectViewEvent.class);
-            AnalyticsEvent analyticsEvent = analyticsEventMapper.projectViewEventToAnalyticsEvent(projectViewEvent);
-            analyticsEventService.saveEventEntity(analyticsEvent);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        ProjectViewEvent projectViewEvent = handleEvent(eventClass, message);
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(projectViewEvent);
+        analyticsEventService.saveEventEntity(analyticsEvent);
     }
 }

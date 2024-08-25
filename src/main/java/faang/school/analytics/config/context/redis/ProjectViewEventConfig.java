@@ -1,6 +1,6 @@
-package faang.school.analytics.config.context;
+package faang.school.analytics.config.context.redis;
 
-import faang.school.analytics.listener.ProjectMessageConsumer;
+import faang.school.analytics.listener.ProjectMessageListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,17 +15,17 @@ public class ProjectViewEventConfig {
     private String redisChannelProjectView;
 
     @Bean
-    public ChannelTopic topic() {
+    public ChannelTopic projectViewTopic() {
         return new ChannelTopic(redisChannelProjectView);
     }
 
     @Bean
-    MessageListenerAdapter projectEventListener(ProjectMessageConsumer projectMessageConsumer) {
+    MessageListenerAdapter projectEventListener(ProjectMessageListener projectMessageConsumer) {
         return new MessageListenerAdapter(projectMessageConsumer);
     }
 
     @Bean
     Pair<MessageListenerAdapter, ChannelTopic> projectRequester(MessageListenerAdapter projectEventListener) {
-        return Pair.of(projectEventListener, topic());
+        return Pair.of(projectEventListener, projectViewTopic());
     }
 }
