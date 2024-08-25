@@ -2,6 +2,7 @@ package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.AnalyticEventDto;
 import faang.school.analytics.dtoForRedis.FollowerEventDto;
+import faang.school.analytics.event.MentorshipRequestEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.mapstruct.Mapper;
@@ -19,6 +20,11 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "subscribedDateTime", target = "receivedAt")
     @Mapping(source = "followerEventDto", target = "eventType", qualifiedByName = "getEventType")
     AnalyticsEvent toAnalyticEvent(FollowerEventDto followerEventDto);
+
+    @Mapping(target = "eventType", constant = "MENTORSHIP_REQUESTED")
+    @Mapping(target = "actorId", source = "requesterId")
+    @Mapping(target = "receivedAt", source = "requestedAt")
+    AnalyticsEvent toAnalyticsEvent(MentorshipRequestEvent event);
 
     AnalyticsEvent toEntity(AnalyticEventDto analyticEventDto);
     AnalyticEventDto toDto(AnalyticsEvent analyticsEvent);

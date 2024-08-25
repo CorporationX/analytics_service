@@ -11,6 +11,7 @@ spring:
       channel:
         profileView: profile_view_channel
         followerView: follower_view_channel
+        mentorshipRequest: mentorship_request_channel
 
 
 project-service:

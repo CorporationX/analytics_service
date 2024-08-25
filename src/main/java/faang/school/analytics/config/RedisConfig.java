@@ -26,7 +26,7 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
-    @Value("${spring.data.redis.channel.mentorship-request}")
+    @Value("${spring.data.redis.channel.mentorshipRequest}")
     private String mentorshipRequestTopicName;
 
     @Value("${spring.data.redis.channel.profileView}")
@@ -63,11 +63,11 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer() {
+    public RedisMessageListenerContainer redisMessageListenerContainer(MentorshipRequestEventListener mentorshipRequestListener) {
         RedisMessageListenerContainer redisMessageListenerContainer = new RedisMessageListenerContainer();
         redisMessageListenerContainer.setConnectionFactory(redisConnectionFactory());
         redisMessageListenerContainer.addMessageListener(messageListener(), followerViewTopic());
-        redisMessageListenerContainer.addMessageListener(mentorshipRequestEventListener, mentorshipRequestTopic());
+        redisMessageListenerContainer.addMessageListener(mentorshipRequestListener, mentorshipRequestTopic());
 
         return redisMessageListenerContainer;
     }

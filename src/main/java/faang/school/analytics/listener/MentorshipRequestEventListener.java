@@ -22,7 +22,7 @@ public class MentorshipRequestEventListener extends AbstractEventListener<Mentor
     @Override
     public void onMessage(Message message, byte[] pattern) {
         AnalyticsEvent analyticsEvent = handleMessage(message);
-        analyticsEventService.saveEvent(analyticsEvent);
+        analyticsEventService.save(analyticsEvent);
     }
 
     @Override
