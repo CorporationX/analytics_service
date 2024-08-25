@@ -1,5 +1,6 @@
 package faang.school.analytics.config;
 
+import faang.school.analytics.listener.MentorshipRequestEventListener;
 import faang.school.analytics.redisListener.EventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
+    @Value("${spring.data.redis.channel.mentorship-request}")
+    private String mentorshipRequestTopicName;
+
     @Value("${spring.data.redis.channel.profileView}")
     private String profileViewTopicName;
 
@@ -34,6 +38,11 @@ public class RedisConfig {
     @Bean
     public MessageListenerAdapter messageListener() {
         return new MessageListenerAdapter(followerEventListener);
+    }
+
+    @Bean
+    public MessageListenerAdapter mentorshipRequestListener(MentorshipRequestEventListener mentorshipRequestEventListener) {
+        return new MessageListenerAdapter(mentorshipRequestEventListener);
     }
 
     @Bean
@@ -49,10 +58,16 @@ public class RedisConfig {
     }
 
     @Bean
+    public ChannelTopic mentorshipRequestTopic() {
+        return new ChannelTopic(mentorshipRequestTopicName);
+    }
+
+    @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer() {
         RedisMessageListenerContainer redisMessageListenerContainer = new RedisMessageListenerContainer();
         redisMessageListenerContainer.setConnectionFactory(redisConnectionFactory());
         redisMessageListenerContainer.addMessageListener(messageListener(), followerViewTopic());
+        redisMessageListenerContainer.addMessageListener(mentorshipRequestEventListener, mentorshipRequestTopic());
 
         return redisMessageListenerContainer;
     }

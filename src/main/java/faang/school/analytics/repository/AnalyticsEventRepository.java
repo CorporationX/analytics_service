@@ -20,4 +20,5 @@ public interface AnalyticsEventRepository extends JpaRepository<AnalyticsEvent, 
 
     @Query("SELECT ae FROM AnalyticsEvent ae WHERE ae.receivedAt >= :from")
     List<AnalyticsEvent> getByDays(LocalDateTime from);
+    Stream<AnalyticsEvent> findByReceiverIdAndEventTypeOrderByReceiverIdDesc(long receiverId, EventType eventType);
 }
