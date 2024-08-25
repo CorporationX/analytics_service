@@ -5,10 +5,12 @@ import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
 public abstract class AbstractEventListener<T> {
 
@@ -22,6 +24,8 @@ public abstract class AbstractEventListener<T> {
             T event = objectMapper.readValue(message.getBody(), classType);
             return toAnalyticsEvent(event);
         } catch (IOException e) {
+            String errMessage = "Could not read JSON: %s".formatted(message);
+            log.error(errMessage, e);
             throw new RuntimeException(e);
         }
     }
