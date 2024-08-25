@@ -1,30 +1,43 @@
 package faang.school.analytics.mapper;
 
+import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.event.MentorshipRequestEvent;
 import faang.school.analytics.dto.LikeEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
 
-    default LikeEvent toLikeEvent(AnalyticsEvent analyticsEvent) {
-        return LikeEvent.builder()
-                .postId(analyticsEvent.getId())
-                .userId(analyticsEvent.getReceiverId())
-                .authorLikeId(analyticsEvent.getActorId())
-                .localDateTime(analyticsEvent.getReceivedAt())
-                .build();
-    }
+    AnalyticsEvent toEntity(AnalyticsEventDto analyticsEventDto);
 
-    default AnalyticsEvent toAnalyticsEventFromLikeEvent(LikeEvent likeEvent) {
-        return  AnalyticsEvent.builder()
-                .id(likeEvent.getPostId())
-                .receiverId(likeEvent.getUserId())
-                .actorId(likeEvent.getAuthorLikeId())
-                .eventType(EventType.POST_LIKE)
-                .receivedAt(likeEvent.getLocalDateTime())
-                .build();
-    }
+    AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
+
+    @Mapping(target = "eventType", constant = "MENTORSHIP_REQUESTED")
+    @Mapping(target = "actorId", source = "requesterId")
+    @Mapping(target = "receivedAt", source = "requestedAt")
+    AnalyticsEvent toAnalyticsEvent(MentorshipRequestEvent event);
+
+
+//    default LikeEvent toLikeEvent(AnalyticsEvent analyticsEvent) {
+//        return LikeEvent.builder()
+//                .postId(analyticsEvent.getId())
+//                .userId(analyticsEvent.getReceiverId())
+//                .authorLikeId(analyticsEvent.getActorId())
+//                .localDateTime(analyticsEvent.getReceivedAt())
+//                .build();
+//    }
+//
+//    default AnalyticsEvent toAnalyticsEventFromLikeEvent(LikeEvent likeEvent) {
+//        return  AnalyticsEvent.builder()
+//                .id(likeEvent.getPostId())
+//                .receiverId(likeEvent.getUserId())
+//                .actorId(likeEvent.getAuthorLikeId())
+//                .eventType(EventType.POST_LIKE)
+//                .receivedAt(likeEvent.getLocalDateTime())
+//                .build();
+//    }
 }
