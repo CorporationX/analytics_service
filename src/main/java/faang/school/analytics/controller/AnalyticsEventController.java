@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/analytics/")
 @RequiredArgsConstructor
+@RequestMapping("/analytics/")
 public class AnalyticsEventController {
 
     private final AnalyticsEventService analyticsEventService;

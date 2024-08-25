@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 @Service
 @RequiredArgsConstructor
 public class AnalyticsEventService {
-
     private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventValidator analyticsEventValidator;
 
