@@ -1,4 +1,4 @@
-package faang.school.analytics.config.context.redis;
+package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.GoalEventListener;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,12 +19,12 @@ public class GoalConfig {
     }
 
     @Bean
-    MessageListenerAdapter followerEventListener(GoalEventListener goalEventListener) {
+    MessageListenerAdapter goalEventListener(GoalEventListener goalEventListener) {
         return new MessageListenerAdapter(goalEventListener);
     }
 
     @Bean
-    Pair<MessageListenerAdapter, ChannelTopic> followerRequester(MessageListenerAdapter goalEventListener) {
+    Pair<MessageListenerAdapter, ChannelTopic> goalRequester(MessageListenerAdapter goalEventListener) {
         return Pair.of(goalEventListener, goalTopic());
     }
 }
