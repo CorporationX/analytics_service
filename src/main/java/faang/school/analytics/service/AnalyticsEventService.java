@@ -25,8 +25,7 @@ public class AnalyticsEventService {
     private final List<AnalyticsEventFilter> analyticsEventFilters;
 
     @Transactional
-    public void saveEvent(AnalyticsEventDto analyticsEventDto) {
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(analyticsEventDto);
+    public void saveEvent(AnalyticsEvent analyticsEvent) {
         analyticsEventRepository.save(analyticsEvent);
     }
 

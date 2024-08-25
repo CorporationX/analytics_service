@@ -63,8 +63,7 @@ class AnalyticsEventServiceTest {
     @Test
     @DisplayName("testing saveEvent method execution")
     void testSaveEvent() {
-        when(analyticsEventMapper.toEntity(analyticsEventDto)).thenReturn(analyticsEvent);
-        analyticsEventService.saveEvent(analyticsEventDto);
+        analyticsEventService.saveEvent(analyticsEvent);
         verify(analyticsEventRepository, times(1)).save(analyticsEvent);
     }
 
