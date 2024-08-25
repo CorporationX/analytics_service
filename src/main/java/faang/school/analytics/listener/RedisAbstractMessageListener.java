@@ -24,7 +24,7 @@ public abstract class RedisAbstractMessageListener<T> implements MessageListener
     public void onMessage(@NonNull Message message, byte[] pattern) {
         try {
             T t = objectMapper.readValue(message.getBody(), clazz);
-            analyticsEventService.saveEventEntity(map(t));
+            analyticsEventService.saveEvent(map(t));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

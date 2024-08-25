@@ -1,4 +1,4 @@
-package faang.school.analytics.config.context;
+package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.FollowerEventListener;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,12 +21,12 @@ public class FollowerEventConfig {
 
 
     @Bean
-    public MessageListenerAdapter followerMessageListener(FollowerEventListener followerEventListener) {
+    public MessageListenerAdapter followerEventAdapter(FollowerEventListener followerEventListener) {
         return new MessageListenerAdapter(followerEventListener);
     }
 
     @Bean
-    Pair<MessageListenerAdapter, ChannelTopic> followerRequester(MessageListenerAdapter followerMessageListener) {
-        return Pair.of(followerMessageListener, followerTopic());
+    Pair<MessageListenerAdapter, ChannelTopic> followerRequester(MessageListenerAdapter followerEventAdapter) {
+        return Pair.of(followerEventAdapter, followerTopic());
     }
 }

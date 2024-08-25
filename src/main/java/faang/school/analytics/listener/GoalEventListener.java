@@ -15,7 +15,6 @@ public class GoalEventListener extends RedisAbstractMessageListener<GoalComplete
         super(mapper, analyticsEventService, objectMapper, GoalCompletedEvent.class);
     }
 
-
     @Override
     AnalyticsEvent map(GoalCompletedEvent goalCompletedEvent) {
         return mapper.toAnalyticsEvent(goalCompletedEvent);

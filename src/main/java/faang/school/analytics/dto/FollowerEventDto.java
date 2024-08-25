@@ -10,6 +10,5 @@ import java.time.LocalDateTime;
 public class FollowerEventDto extends AbstractEventDto {
     private long followerId;
     private long followeeId;
-    private String eventType;
     private LocalDateTime eventTime;
 }

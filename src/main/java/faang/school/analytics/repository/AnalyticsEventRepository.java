@@ -11,8 +11,6 @@ import java.util.stream.Stream;
 @Repository
 public interface AnalyticsEventRepository extends JpaRepository<AnalyticsEvent, Long> {
 
-    Stream<AnalyticsEvent> findByReceiverIdAndEventType(long receiverId, EventType eventType);
-
     Stream<AnalyticsEvent> findAllByReceiverIdAndEventTypeAndReceivedAtIsBetween(
             long receiverId, EventType eventType, LocalDateTime from, LocalDateTime to);
 }
