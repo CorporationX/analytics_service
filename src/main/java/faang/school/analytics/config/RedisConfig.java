@@ -1,7 +1,8 @@
-package faang.school.analytics.config.context.redisConfig;
+package faang.school.analytics.config;
 
 import faang.school.analytics.redisListener.EventListener;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -13,10 +14,22 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 @Configuration
 @RequiredArgsConstructor
-public class RedisConfiguration {
+public class RedisConfig {
 
-    private final RedisProperties redisProperties;
     private final EventListener<?> followerEventListener;
+
+
+    @Value("${spring.data.redis.host}")
+    private String redisHost;
+
+    @Value("${spring.data.redis.port}")
+    private int redisPort;
+
+    @Value("${spring.data.redis.channel.profileView}")
+    private String profileViewTopicName;
+
+    @Value("${spring.data.redis.channel.followerView}")
+    private String followerViewTopicName;
 
     @Bean
     public MessageListenerAdapter messageListener() {
@@ -26,13 +39,13 @@ public class RedisConfiguration {
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration standaloneConfig =
-                new RedisStandaloneConfiguration(redisProperties.getHost(), redisProperties.getPort());
+                new RedisStandaloneConfiguration(redisHost, redisPort);
         return new JedisConnectionFactory(standaloneConfig);
     }
 
     @Bean(name = "followerViewTopic")
     public ChannelTopic followerViewTopic() {
-        return new ChannelTopic(redisProperties.getChannel().getFollowerView());
+        return new ChannelTopic(followerViewTopicName);
     }
 
     @Bean
