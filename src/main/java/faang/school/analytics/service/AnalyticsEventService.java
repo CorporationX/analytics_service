@@ -2,6 +2,7 @@ package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.AnalyticsEventFilterDto;
+import faang.school.analytics.exception.MapperReadValueException;
 import faang.school.analytics.filter.AnalyticsEventFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.LikeEvent;
@@ -23,7 +24,6 @@ import java.util.function.Function;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@RequiredArgsConstructor
 @Builder
 public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
@@ -49,22 +49,21 @@ public class AnalyticsEventService {
     }
 
 
-//
-//    @Transactional
-//    public void saveLikeAnalytics(Message message){
-//        AnalyticsEvent analyticsEvent = getEventType(message, LikeEvent.class, analyticsEventMapper::toAnalyticsEventFromLikeEvent);
-//        if (analyticsEvent != null) {
-//            analyticsEventRepository.save(analyticsEvent);
-//        }
-//    }
-//
-//    private <T> AnalyticsEvent getEventType(Message message, Class<T> eventType, Function<T, AnalyticsEvent> mapper) {
-//        try {
-//            T event = objectMapper.readValue(message.getBody(), eventType);
-//            return mapper.apply(event);
-//        } catch (IOException e) {
-//            log.error(e.getMessage(), e);
-//            throw new RuntimeException(e);
-//        }
-//    }
+    @Transactional
+    public void saveLikeAnalytics(Message message){
+        AnalyticsEvent analyticsEvent = getEventType(message, LikeEvent.class, analyticsEventMapper::toAnalyticsEventFromLikeEvent);
+        if (analyticsEvent != null) {
+            analyticsEventRepository.save(analyticsEvent);
+        }
+    }
+
+    private <T> AnalyticsEvent getEventType(Message message, Class<T> eventType, Function<T, AnalyticsEvent> mapper) {
+        try {
+            T event = objectMapper.readValue(message.getBody(), eventType);
+            return mapper.apply(event);
+        } catch (IOException e) {
+            log.error("Error readValue: {}", eventType, e);
+            throw new MapperReadValueException(e.getMessage());
+        }
+    }
 }

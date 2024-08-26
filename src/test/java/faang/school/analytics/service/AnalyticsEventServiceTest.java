@@ -67,6 +67,7 @@ class AnalyticsEventServiceTest {
                 .analyticsEventMapper(analyticsEventMapper)
                 .analyticsEventRepository(analyticsEventRepository)
                 .analyticsEventFilters(List.of(analyticsEventIntervalFilter))
+                .objectMapper(objectMapper)
                 .build();
     }
 
@@ -98,6 +99,7 @@ class AnalyticsEventServiceTest {
         assertIterableEquals(List.of(analyticsEventDto), analyticsEvents);
     }
 
+    @DisplayName("testing saveLikeAnalytics method")
     @Test
     public void testSaveLikeAnalytics() throws IOException {
         Message message = mock(Message.class);

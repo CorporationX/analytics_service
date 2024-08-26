@@ -4,7 +4,6 @@ import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.event.MentorshipRequestEvent;
 import faang.school.analytics.dto.LikeEvent;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -21,23 +20,16 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "receivedAt", source = "requestedAt")
     AnalyticsEvent toAnalyticsEvent(MentorshipRequestEvent event);
 
+    @Mapping(source = "id", target = "postId")
+    @Mapping(source = "receiverId", target = "userId")
+    @Mapping(source = "actorId", target = "authorLikeId")
+    @Mapping(source = "receivedAt", target = "localDateTime")
+    LikeEvent toLikeEvent(AnalyticsEvent analyticsEvent);
 
-//    default LikeEvent toLikeEvent(AnalyticsEvent analyticsEvent) {
-//        return LikeEvent.builder()
-//                .postId(analyticsEvent.getId())
-//                .userId(analyticsEvent.getReceiverId())
-//                .authorLikeId(analyticsEvent.getActorId())
-//                .localDateTime(analyticsEvent.getReceivedAt())
-//                .build();
-//    }
-//
-//    default AnalyticsEvent toAnalyticsEventFromLikeEvent(LikeEvent likeEvent) {
-//        return  AnalyticsEvent.builder()
-//                .id(likeEvent.getPostId())
-//                .receiverId(likeEvent.getUserId())
-//                .actorId(likeEvent.getAuthorLikeId())
-//                .eventType(EventType.POST_LIKE)
-//                .receivedAt(likeEvent.getLocalDateTime())
-//                .build();
-//    }
+    @Mapping(source = "postId", target = "id")
+    @Mapping(source = "userId", target = "receiverId")
+    @Mapping(source = "authorLikeId", target = "actorId")
+    @Mapping(target = "eventType", constant = "POST_LIKE")
+    @Mapping(source = "localDateTime", target = "receivedAt")
+    AnalyticsEvent toAnalyticsEventFromLikeEvent(LikeEvent likeEvent);
 }
