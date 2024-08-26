@@ -3,7 +3,7 @@ package faang.school.analytics.model;
 public enum EventType {
     PROFILE_VIEW,
     PROJECT_VIEW,
-    FOLLOWER,
+    USER_FOLLOWER,
     POST_PUBLISHED,
     POST_VIEW,
     POST_LIKE,
@@ -12,6 +12,7 @@ public enum EventType {
     RECOMMENDATION_RECEIVED,
     ADDED_TO_FAVOURITES,
     PROJECT_INVITE,
+    PROJECT_FOLLOWER,
     TASK_COMPLETED,
     GOAL_COMPLETED,
     ACHIEVEMENT_RECEIVED,
@@ -22,6 +23,15 @@ public enum EventType {
     public static EventType of(int type) {
         for (EventType eventType : EventType.values()) {
             if (eventType.ordinal() == type) {
+                return eventType;
+            }
+        }
+        throw new IllegalArgumentException("Unknown event type: " + type);
+    }
+
+    public static EventType of(String type) {
+        for (EventType eventType : EventType.values()) {
+            if (eventType.name().equalsIgnoreCase(type)) {
                 return eventType;
             }
         }

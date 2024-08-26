@@ -2,20 +2,28 @@ package faang.school.analytics.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apache.commons.lang3.math.NumberUtils;
 
-import java.time.Period;
+import java.util.Arrays;
 
-
-@Getter
 @AllArgsConstructor
+@Getter
 public enum Interval {
-    DAY(Period.ofDays(1)),
-    WEEK(Period.ofWeeks(1)),
-    MONTH(Period.ofMonths(1)),
-    QUARTER(Period.ofMonths(3)),
-    HALF_YEAR(Period.ofMonths(6)),
-    THREE_QUARTER(Period.ofMonths(9)),
-    YEAR(Period.ofYears(1));
 
-    private final Period period;
+    DAY(1),
+    WEEK(7),
+    MONTH(30),
+    YEAR(365);
+
+    private final int days;
+
+    public static int getDaysByInterval(Interval interval) {
+
+        Interval intervalExist = Arrays.stream(Interval.values())
+                .filter(position -> position.equals(interval))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Unknown interval: " + interval));
+
+        return intervalExist.days;
+    }
 }

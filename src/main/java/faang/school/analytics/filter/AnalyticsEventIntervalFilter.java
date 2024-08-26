@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.stream.Stream;
 
 @Component
@@ -33,7 +34,7 @@ public class AnalyticsEventIntervalFilter implements AnalyticsEventFilter {
 
         if(interval != null){
             return analyticsEvents.filter(analyticsEvent -> analyticsEvent.getReceivedAt()
-                    .plus(interval.getPeriod()).isAfter(LocalDateTime.now()));
+                    .plusDays(interval.getDays()).isAfter(LocalDateTime.now()));
         } else {
             return analyticsEvents.filter(analyticsEvent ->
                     to.isAfter(analyticsEvent.getReceivedAt()) && from.isBefore(analyticsEvent.getReceivedAt()));

@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(IllegalModelException.class)
+
+    @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleIllegalModelException(IllegalModelException e) {
+    public ErrorResponse handleIllegalArgumentException(IllegalArgumentException e) {
         return new ErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 }
