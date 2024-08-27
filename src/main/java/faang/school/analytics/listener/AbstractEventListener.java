@@ -1,31 +1,28 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@Component
+@Slf4j
 @RequiredArgsConstructor
-public abstract class RedisAbstractMessageListener<T> implements MessageListener {
-    protected final AnalyticsEventMapper mapper;
-    private final AnalyticsEventService analyticsEventService;
-    private final ObjectMapper objectMapper;
-    private final Class<T> clazz;
+public abstract class AbstractEventListener<T> implements MessageListener {
 
-    @Override
-    public void onMessage(@NonNull Message message, byte[] pattern) {
+    private final ObjectMapper objectMapper;
+    private final AnalyticsEventService analyticsEventService;
+
+    protected void handleEvent(Class<T> clazz, Message message) {
         try {
-            T t = objectMapper.readValue(message.getBody(), clazz);
-            analyticsEventService.saveEvent(map(t));
+            T event = objectMapper.readValue(message.getBody(), clazz);
+            analyticsEventService.saveEvent(map(event));
         } catch (IOException e) {
+            log.error("Failed to deserialize follower event", e);
             throw new RuntimeException(e);
         }
     }

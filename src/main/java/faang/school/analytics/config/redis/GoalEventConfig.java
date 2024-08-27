@@ -9,8 +9,8 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.util.Pair;
 
 @Configuration
-public class GoalConfig {
-    @Value("${spring.data.redis.goal_channel.name}")
+public class GoalEventConfig {
+    @Value("${spring.data.redis.channel.goal}")
     private String goalTopic;
 
     @Bean
@@ -19,12 +19,12 @@ public class GoalConfig {
     }
 
     @Bean
-    MessageListenerAdapter goalEventListener(GoalEventListener goalEventListener) {
+    MessageListenerAdapter goalEventAdapter(GoalEventListener goalEventListener) {
         return new MessageListenerAdapter(goalEventListener);
     }
 
     @Bean
-    Pair<MessageListenerAdapter, ChannelTopic> goalRequester(MessageListenerAdapter goalEventListener) {
-        return Pair.of(goalEventListener, goalTopic());
+    Pair<MessageListenerAdapter, ChannelTopic> goalRequester(MessageListenerAdapter goalEventAdapter) {
+        return Pair.of(goalEventAdapter, goalTopic());
     }
 }
