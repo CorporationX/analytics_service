@@ -1,7 +1,7 @@
 package faang.school.analytics.config;
 
-import faang.school.analytics.listener.AbstractEventListener;
 import faang.school.analytics.listener.LikeEventListener;
+import faang.school.analytics.listener.MentorshipRequestsEventListener;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 @AllArgsConstructor
 public class RedisConfiguration {
     private final RedisProperties redisProperties;
-    private final AbstractEventListener<?> mentorshipRequestsEventListener;
+    private final MentorshipRequestsEventListener mentorshipRequestsEventListener;
     private final LikeEventListener likeEventListener;
 
     @Bean
