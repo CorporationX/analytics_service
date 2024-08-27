@@ -15,7 +15,6 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 @AllArgsConstructor
 public class RedisConfiguration {
     private final RedisProperties redisProperties;
-    private final MentorshipRequestsEventListener mentorshipRequestsEventListener;
     private final LikeEventListener likeEventListener;
 
     @Bean
@@ -31,16 +30,18 @@ public class RedisConfiguration {
     }
 
     @Bean
-    public MessageListenerAdapter mentorshipRequestsListener() {
+    public MessageListenerAdapter mentorshipRequestsListener(
+            MentorshipRequestsEventListener mentorshipRequestsEventListener) {
         return new MessageListenerAdapter(mentorshipRequestsEventListener);
     }
 
     @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer() {
+    public RedisMessageListenerContainer redisMessageListenerContainer(
+            MessageListenerAdapter mentorshipRequestsListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
 
-        container.addMessageListener(mentorshipRequestsListener(), mentorshipRequestsTopic());
+        container.addMessageListener(mentorshipRequestsListener, mentorshipRequestsTopic());
         container.addMessageListener(likeListener(likeEventListener), likeTopic());
 
         return container;
