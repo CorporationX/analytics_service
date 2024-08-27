@@ -22,13 +22,13 @@ public interface AnalyticsEventMapper {
 
     @Mapping(source = "id", target = "postId")
     @Mapping(source = "receiverId", target = "userId")
-    @Mapping(source = "actorId", target = "authorLikeId")
+    @Mapping(source = "actorId", target = "authorPostId")
     @Mapping(source = "receivedAt", target = "localDateTime")
     LikeEvent toLikeEvent(AnalyticsEvent analyticsEvent);
 
     @Mapping(source = "postId", target = "id")
     @Mapping(source = "userId", target = "receiverId")
-    @Mapping(source = "authorLikeId", target = "actorId")
+    @Mapping(source = "authorPostId", target = "actorId")
     @Mapping(target = "eventType", constant = "POST_LIKE")
     @Mapping(source = "localDateTime", target = "receivedAt")
     AnalyticsEvent toAnalyticsEventFromLikeEvent(LikeEvent likeEvent);

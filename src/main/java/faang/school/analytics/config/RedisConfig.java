@@ -2,6 +2,7 @@ package faang.school.analytics.config;
 
 import faang.school.analytics.event.LikeEventListener;
 import faang.school.analytics.listener.MentorshipRequestEventListener;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -65,8 +66,9 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter mentorshipRequestEventListener,
-                                                        MessageListenerAdapter likeChannelListener) {
+    public RedisMessageListenerContainer redisContainer(
+            @Qualifier("mentorshipRequestListener")MessageListenerAdapter mentorshipRequestEventListener,
+            @Qualifier("likeChannelListener") MessageListenerAdapter likeChannelListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(mentorshipRequestEventListener, mentorshipRequestTopic());

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class LikeEvent {
   private long postId;
-  private long authorLikeId;
+  private long authorPostId;
   private long userId;
   private LocalDateTime localDateTime;
 }
