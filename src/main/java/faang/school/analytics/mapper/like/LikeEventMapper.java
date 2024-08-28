@@ -11,5 +11,6 @@ public interface LikeEventMapper {
 
     @Mapping(target = "receiverId", source = "postId")
     @Mapping(target = "actorId", source = "authorId")
+    @Mapping(target = "receivedAt", source = "timeStamp")
     AnalyticsEvent toAnalyticsEventEntity(LikeEvent likeEvent);
 }

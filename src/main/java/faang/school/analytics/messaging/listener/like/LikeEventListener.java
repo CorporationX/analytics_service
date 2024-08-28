@@ -10,8 +10,6 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 @Component
 public class LikeEventListener extends AbstractEventListener<LikeEvent> implements MessageListener {
 
@@ -29,7 +27,6 @@ public class LikeEventListener extends AbstractEventListener<LikeEvent> implemen
         handleEvent(message, LikeEvent.class, (likeEvent -> {
             var analyticsEvent = likeEventMapper.toAnalyticsEventEntity(likeEvent);
             analyticsEvent.setEventType(EventType.POST_LIKE);
-            analyticsEvent.setReceivedAt(LocalDateTime.now());
             persistAnalyticsData(analyticsEvent);
         }));
     }
