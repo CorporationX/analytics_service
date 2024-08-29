@@ -12,7 +12,7 @@ import org.springframework.data.util.Pair;
 @Configuration
 public class CommentConfig {
 
-  @Value("${spring.data.redis.channel.comment.name}")
+  @Value("${spring.data.redis.channel.comment-chanel}")
   private String commentChannel;
 
   @Bean
