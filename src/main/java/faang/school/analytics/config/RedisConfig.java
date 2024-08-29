@@ -1,12 +1,9 @@
 package faang.school.analytics.config;
 
 import faang.school.analytics.event.LikeEventListener;
-import faang.school.analytics.event.LikeEventListener;
 import faang.school.analytics.listener.MentorshipRequestEventListener;
 import faang.school.analytics.redisListener.EventListener;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +37,7 @@ public class RedisConfig {
     @Value("${spring.data.redis.channel.followerView}")
     private String followerViewTopicName;
 
-    @Value("${spring.data.redis.channel.like}")
+    @Value("${spring.data.redis.channel.like_post_analytics}")
     private String likeTopic;
 
     @Bean
@@ -50,14 +47,14 @@ public class RedisConfig {
         return new JedisConnectionFactory(redisConfig);
     }
 
-//    @Bean
-//    public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jedisConnectionFactory) {
-//        RedisTemplate<String, Object> template = new RedisTemplate<>();
-//        template.setConnectionFactory(jedisConnectionFactory);
-//        template.setKeySerializer(new StringRedisSerializer());
-//        template.setValueSerializer(new StringRedisSerializer());
-//        return template;
-//    }
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jedisConnectionFactory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(jedisConnectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
+        return template;
+    }
 
     @Bean
     public MessageListenerAdapter messageListener() {
@@ -97,23 +94,14 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(MentorshipRequestEventListener mentorshipRequestListener) {
+    public RedisMessageListenerContainer redisMessageListenerContainer(MentorshipRequestEventListener mentorshipRequestListener,
+                                                                       LikeEventListener likeEventListener) {
         RedisMessageListenerContainer redisMessageListenerContainer = new RedisMessageListenerContainer();
         redisMessageListenerContainer.setConnectionFactory(redisConnectionFactory());
         redisMessageListenerContainer.addMessageListener(messageListener(), followerViewTopic());
         redisMessageListenerContainer.addMessageListener(mentorshipRequestListener, mentorshipRequestTopic());
+        redisMessageListenerContainer.addMessageListener(likeChannelListener(likeEventListener), likeTopicChannel());
 
         return redisMessageListenerContainer;
     }
-
-//    @Bean
-//    public RedisMessageListenerContainer redisContainer(
-//            @Qualifier("mentorshipRequestListener")MessageListenerAdapter mentorshipRequestEventListener,
-//            @Qualifier("likeChannelListener") MessageListenerAdapter likeChannelListener) {
-//        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-//        container.setConnectionFactory(jedisConnectionFactory());
-//        container.addMessageListener(mentorshipRequestEventListener, mentorshipRequestTopic());
-//        container.addMessageListener(likeChannelListener, likeTopicChannel());
-//        return container;
-//    }
 }

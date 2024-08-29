@@ -3,12 +3,8 @@ package faang.school.analytics.service;
 import faang.school.analytics.dto.AnalyticEventDto;
 import faang.school.analytics.dto.AnalyticInfoDto;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
-import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.dto.AnalyticsEventFilterDto;
-import faang.school.analytics.filter.AnalyticsEventIntervalFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.LikeEvent;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
@@ -25,11 +21,8 @@ import org.springframework.data.redis.connection.Message;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Stream;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,9 +40,6 @@ public class AnalyticsEventServiceTest {
     private AnalyticsEventMapperImpl analyticsEventMapper;
 
     @Mock
-    private AnalyticsEventIntervalFilter analyticsEventIntervalFilter;
-
-    @Mock
     private ObjectMapper objectMapper;
 
     @InjectMocks
@@ -65,112 +55,69 @@ public class AnalyticsEventServiceTest {
         verify(analyticsEventRepository, times(1)).save(analyticsEvent);
     }
 
-    private AnalyticsEvent analyticsEvent;
-    private AnalyticsEventDto analyticsEventDto;
-    private Stream<AnalyticsEvent> analyticsEventStream;
     private long receiverId;
-    private EventType eventType;
-    private AnalyticsEventFilterDto analyticsEventFilterDto;
+    private EventType eventTypeUserFollower;
+    private Interval interval;
+    private LocalDateTime from;
+    private LocalDateTime to;
+    private List<AnalyticsEvent> analyticsEvents;
+    private List<AnalyticEventDto> analyticsEventDtosList;
+    private LocalDateTime currentDateTime;
+    private AnalyticInfoDto analyticInfoDto;
 
-        @BeforeEach
-        public void setup() {
+    @BeforeEach
+    public void setup() {
 
-            currentDateTime = LocalDateTime.now();
+        currentDateTime = LocalDateTime.now();
 
-            receiverId = 1L;
-            eventType = EventType.FOLLOWER;
-            eventTypeUserFollower = EventType.USER_FOLLOWER;
-            interval = Interval.WEEK;
-            from = currentDateTime.minusDays(8);
-            to = currentDateTime;
+        receiverId = 1L;
+        eventTypeUserFollower = EventType.USER_FOLLOWER;
+        interval = Interval.WEEK;
+        from = currentDateTime.minusDays(8);
+        to = currentDateTime;
 
-            analyticInfoDto = AnalyticInfoDto.builder()
-                    .receiverId(receiverId)
-                    .eventType(eventTypeUserFollower)
-                    .interval(interval)
-                    .from(from)
-                    .to(to).build();
+        analyticInfoDto = AnalyticInfoDto.builder()
+                .receiverId(receiverId)
+                .eventType(eventTypeUserFollower)
+                .interval(interval)
+                .from(from)
+                .to(to).build();
 
-            AnalyticsEvent firstAnalyticEvent = AnalyticsEvent.builder()
-                    .id(1L)
-                    .eventType(eventTypeUserFollower)
-                    .receivedAt(currentDateTime.minusMinutes(1))
-                    .build();
-            AnalyticsEvent secondAnalyticEvent = AnalyticsEvent.builder()
-                    .id(2L)
-                    .eventType(eventTypeUserFollower)
-                    .receivedAt(currentDateTime.minusDays(3))
-                    .build();
-            AnalyticsEvent thirdAnalyticEvent = AnalyticsEvent.builder()
-                    .id(3L)
-                    .eventType(eventTypeUserFollower)
-                    .receivedAt(currentDateTime.minusDays(1))
-                    .build();
+        AnalyticsEvent firstAnalyticEvent = AnalyticsEvent.builder()
+                .id(1L)
+                .eventType(eventTypeUserFollower)
+                .receivedAt(currentDateTime.minusMinutes(1))
+                .build();
+        AnalyticsEvent secondAnalyticEvent = AnalyticsEvent.builder()
+                .id(2L)
+                .eventType(eventTypeUserFollower)
+                .receivedAt(currentDateTime.minusDays(3))
+                .build();
+        AnalyticsEvent thirdAnalyticEvent = AnalyticsEvent.builder()
+                .id(3L)
+                .eventType(eventTypeUserFollower)
+                .receivedAt(currentDateTime.minusDays(1))
+                .build();
 
-            analyticsEvents = List.of(firstAnalyticEvent, secondAnalyticEvent, thirdAnalyticEvent);
+        analyticsEvents = List.of(firstAnalyticEvent, secondAnalyticEvent, thirdAnalyticEvent);
 
-            AnalyticEventDto firstAnalyticEventDto = AnalyticEventDto.builder()
-                    .id(1L)
-                    .eventType(eventTypeUserFollower)
-                    .receivedAt(currentDateTime.minusMinutes(1))
-                    .build();
-            AnalyticEventDto secondAnalyticEventDto = AnalyticEventDto.builder()
-                    .id(2L)
-                    .eventType(eventTypeUserFollower)
-                    .receivedAt(currentDateTime.minusDays(3))
-                    .build();
-            AnalyticEventDto thirdAnalyticEventDto = AnalyticEventDto.builder()
-                    .id(3L)
-                    .eventType(eventTypeUserFollower)
-                    .receivedAt(currentDateTime.minusDays(1))
-                    .build();
-            analyticsEventDtosList = List.of(firstAnalyticEventDto, thirdAnalyticEventDto, secondAnalyticEventDto);
-
-//            analyticsEvent = AnalyticsEvent.builder().build();
-//            analyticsEventStream = Stream.of(analyticsEvent);
-//            analyticsEventDto = AnalyticsEventDto.builder().build();
-//            analyticsEventFilterDto = AnalyticsEventFilterDto
-//                    .builder()
-//                    .receiverId(receiverId)
-//                    .eventType(eventType)
-//                    .build();
-//
-//            analyticsEventService = AnalyticsEventService.builder()
-//                    .analyticsEventMapper(analyticsEventMapper)
-//                    .analyticsEventRepository(analyticsEventRepository)
-//                    .analyticsEventFilters(List.of(analyticsEventIntervalFilter))
-//                    .objectMapper(objectMapper)
-//                    .build();
-
-        }
-
-//    @Test
-//    @DisplayName("testing saveEvent method execution")
-//    void testSaveEvent() {
-//        analyticsEventService.saveEvent(analyticsEvent);
-//        verify(analyticsEventRepository, times(1)).save(analyticsEvent);
-//    }
-//
-//    @Test
-//    @DisplayName("testing getAnalytics method with interval filter")
-//    void testGetAnalyticsWithIntervalFilter() {
-//        when(analyticsEventRepository.findByReceiverIdAndEventTypeOrderByReceiverIdDesc(receiverId, eventType))
-//                .thenReturn(analyticsEventStream);
-//        when(analyticsEventIntervalFilter.filter(analyticsEventStream, analyticsEventFilterDto))
-//                .thenReturn(analyticsEventStream);
-//        when(analyticsEventMapper.toDto(analyticsEvent)).thenReturn(analyticsEventDto);
-//
-//        List<AnalyticsEventDto> analyticsEvents =
-//                analyticsEventService.getAnalytics(analyticsEventFilterDto);
-//
-//        verify(analyticsEventRepository, times(1))
-//                .findByReceiverIdAndEventTypeOrderByReceiverIdDesc(receiverId, eventType);
-//        verify(analyticsEventIntervalFilter, times(1))
-//                .filter(analyticsEventStream, analyticsEventFilterDto);
-//        verify(analyticsEventMapper, times(1)).toDto(analyticsEvent);
-//        assertNotNull(analyticsEvents);
-//        assertIterableEquals(List.of(analyticsEventDto), analyticsEvents);
-//    }
+        AnalyticEventDto firstAnalyticEventDto = AnalyticEventDto.builder()
+                .id(1L)
+                .eventType(eventTypeUserFollower)
+                .receivedAt(currentDateTime.minusMinutes(1))
+                .build();
+        AnalyticEventDto secondAnalyticEventDto = AnalyticEventDto.builder()
+                .id(2L)
+                .eventType(eventTypeUserFollower)
+                .receivedAt(currentDateTime.minusDays(3))
+                .build();
+        AnalyticEventDto thirdAnalyticEventDto = AnalyticEventDto.builder()
+                .id(3L)
+                .eventType(eventTypeUserFollower)
+                .receivedAt(currentDateTime.minusDays(1))
+                .build();
+        analyticsEventDtosList = List.of(firstAnalyticEventDto, thirdAnalyticEventDto, secondAnalyticEventDto);
+    }
 
     @Test
     @DisplayName("Get analytics events by interval")
@@ -199,18 +146,18 @@ public class AnalyticsEventServiceTest {
         assertEquals(analyticsEventDtosList, actualAnalyticEventDto);
     }
 
-        @DisplayName("testing saveLikeAnalytics method")
-        @Test
-        public void testSaveLikeAnalytics() throws IOException {
-            Message message = mock(Message.class);
-            AnalyticsEvent analyticsEvent = new AnalyticsEvent();
-            LikeEvent likeEvent = new LikeEvent();
+    @DisplayName("testing saveLikeAnalytics method")
+    @Test
+    public void testSaveLikeAnalytics() throws IOException {
+        Message message = mock(Message.class);
+        AnalyticsEvent analyticsEvent = new AnalyticsEvent();
+        LikeEvent likeEvent = new LikeEvent();
 
-            when(objectMapper.readValue(message.getBody(), LikeEvent.class)).thenReturn(likeEvent);
-            when(analyticsEventMapper.toAnalyticsEventFromLikeEvent(likeEvent)).thenReturn(analyticsEvent);
+        when(objectMapper.readValue(message.getBody(), LikeEvent.class)).thenReturn(likeEvent);
+        when(analyticsEventMapper.toAnalyticsEventFromLikeEvent(likeEvent)).thenReturn(analyticsEvent);
 
-            analyticsEventService.saveLikeAnalytics(message);
+        analyticsEventService.saveLikeAnalytics(message);
 
-            verify(analyticsEventRepository, times(1)).save(analyticsEvent);
-        }
+        verify(analyticsEventRepository, times(1)).save(analyticsEvent);
+    }
 }

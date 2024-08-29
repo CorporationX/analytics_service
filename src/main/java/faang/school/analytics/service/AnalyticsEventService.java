@@ -2,10 +2,7 @@ package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticEventDto;
 import faang.school.analytics.dto.AnalyticInfoDto;
-import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.dto.AnalyticsEventFilterDto;
 import faang.school.analytics.exception.MapperReadValueException;
-import faang.school.analytics.filter.AnalyticsEventFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.LikeEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -13,6 +10,7 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -24,7 +22,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import static faang.school.analytics.model.Interval.getDaysByInterval;
-import java.util.stream.Stream;
 import java.io.IOException;
 import java.util.function.Function;
 
@@ -36,7 +33,6 @@ public class AnalyticsEventService {
 
     private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventMapper analyticsEventMapper;
-    private final List<AnalyticsEventFilter> analyticsEventFilters;
     private final ObjectMapper objectMapper;
 
     @Transactional
