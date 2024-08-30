@@ -5,8 +5,7 @@ import faang.school.analytics.listener.MentorshipRequestsEventListener;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
@@ -18,10 +17,8 @@ public class RedisConfiguration {
     private final LikeEventListener likeEventListener;
 
     @Bean
-    public JedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration config =
-                new RedisStandaloneConfiguration(redisProperties.getHost(), redisProperties.getPort());
-        return new JedisConnectionFactory(config);
+    public LettuceConnectionFactory connectionFactory() {
+        return new LettuceConnectionFactory(redisProperties.getHost(), redisProperties.getPort());
     }
 
     @Bean
@@ -39,7 +36,7 @@ public class RedisConfiguration {
     public RedisMessageListenerContainer redisMessageListenerContainer(
             MessageListenerAdapter mentorshipRequestsListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(redisConnectionFactory());
+        container.setConnectionFactory(connectionFactory());
 
         container.addMessageListener(mentorshipRequestsListener, mentorshipRequestsTopic());
         container.addMessageListener(likeListener(likeEventListener), likeTopic());
