@@ -20,7 +20,7 @@ public class RedisConfig {
     @Value("${spring.data.redis.host}")
     private String host;
     @Value("${spring.data.redis.port}")
-    private  int port;
+    private int port;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -29,16 +29,16 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter commentListener(CommentEventListener listener){
+    public MessageListenerAdapter commentListener(CommentEventListener listener){
         return new MessageListenerAdapter(listener);
     }
     @Bean
-    ChannelTopic commentTopic(){
+    public ChannelTopic commentTopic(){
         return new ChannelTopic(commentChannelName);
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter commentListener,
+    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter commentListener,
                                                  RedisConnectionFactory redisConnectionFactory){
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory);
