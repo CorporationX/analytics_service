@@ -3,6 +3,7 @@ package faang.school.analytics.mapper;
 import faang.school.analytics.dto.AnalyticEventDto;
 import faang.school.analytics.dtoForRedis.FollowerEventDto;
 import faang.school.analytics.event.MentorshipRequestEvent;
+import faang.school.analytics.dto.LikeEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.mapstruct.Mapper;
@@ -43,4 +44,17 @@ public interface AnalyticsEventMapper {
             return followerEventDto.getVisitedId();
         }
     }
+
+    @Mapping(source = "id", target = "postId")
+    @Mapping(source = "receiverId", target = "userId")
+    @Mapping(source = "actorId", target = "authorPostId")
+    @Mapping(source = "receivedAt", target = "localDateTime")
+    LikeEvent toLikeEvent(AnalyticsEvent analyticsEvent);
+
+    @Mapping(source = "postId", target = "id")
+    @Mapping(source = "userId", target = "receiverId")
+    @Mapping(source = "authorPostId", target = "actorId")
+    @Mapping(target = "eventType", constant = "POST_LIKE")
+    @Mapping(source = "localDateTime", target = "receivedAt")
+    AnalyticsEvent toAnalyticsEventFromLikeEvent(LikeEvent likeEvent);
 }

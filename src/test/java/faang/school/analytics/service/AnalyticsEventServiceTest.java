@@ -3,6 +3,8 @@ package faang.school.analytics.service;
 import faang.school.analytics.dto.AnalyticEventDto;
 import faang.school.analytics.dto.AnalyticInfoDto;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.dto.LikeEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
@@ -15,10 +17,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.redis.connection.Message;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.io.IOException;
 
+import static org.mockito.Mockito.mock;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -34,6 +39,9 @@ public class AnalyticsEventServiceTest {
     @Spy
     private AnalyticsEventMapperImpl analyticsEventMapper;
 
+    @Mock
+    private ObjectMapper objectMapper;
+
     @InjectMocks
     private AnalyticsEventService analyticsEventService;
 
@@ -46,7 +54,6 @@ public class AnalyticsEventServiceTest {
 
         verify(analyticsEventRepository, times(1)).save(analyticsEvent);
     }
-
 
     private long receiverId;
     private EventType eventTypeUserFollower;
@@ -137,5 +144,20 @@ public class AnalyticsEventServiceTest {
                 analyticsEventService.getAnalytics(analyticInfoDto);
 
         assertEquals(analyticsEventDtosList, actualAnalyticEventDto);
+    }
+
+    @DisplayName("testing saveLikeAnalytics method")
+    @Test
+    public void testSaveLikeAnalytics() throws IOException {
+        Message message = mock(Message.class);
+        AnalyticsEvent analyticsEvent = new AnalyticsEvent();
+        LikeEvent likeEvent = new LikeEvent();
+
+        when(objectMapper.readValue(message.getBody(), LikeEvent.class)).thenReturn(likeEvent);
+        when(analyticsEventMapper.toAnalyticsEventFromLikeEvent(likeEvent)).thenReturn(analyticsEvent);
+
+        analyticsEventService.saveLikeAnalytics(message);
+
+        verify(analyticsEventRepository, times(1)).save(analyticsEvent);
     }
 }
