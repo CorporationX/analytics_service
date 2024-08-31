@@ -1,6 +1,6 @@
 package faang.school.analytics.controller;
 
-import faang.school.analytics.dto.AnalylticsEventDto;
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.AnalyticsFilterDto;
 import faang.school.analytics.service.AnalyticsEventService;
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ public class AnalyticsEventController {
 
     @GetMapping("/list")
     public ResponseEntity<?> getAnalytics(@Valid @RequestBody AnalyticsFilterDto filters) {
-        List<AnalylticsEventDto> events = service.getAnalytics(filters);
+        List<AnalyticsEventDto> events = service.getAnalytics(filters);
         return new ResponseEntity<>(events, HttpStatus.OK);
     }
 }

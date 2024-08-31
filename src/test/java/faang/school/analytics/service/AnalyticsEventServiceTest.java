@@ -1,6 +1,6 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.dto.AnalylticsEventDto;
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.AnalyticsFilterDto;
 import faang.school.analytics.filter.AnalyticsFilter;
 import faang.school.analytics.filter.impl.AnalyticsDateRangeFilter;
@@ -70,11 +70,11 @@ public class AnalyticsEventServiceTest {
     public void testGetAnalytics_withHourlyInterval() {
         filterDto.setInterval(Interval.HOURLY);
         List<AnalyticsEvent> eventList = getIntervalList();
-        AnalylticsEventDto expectedEventDto = mapper.toDto(eventList.get(0));
+        AnalyticsEventDto expectedEventDto = mapper.toDto(eventList.get(0));
         when(repository.findByReceiverIdAndEventType(anyLong(), any(EventType.class)))
                 .thenReturn(eventList.stream());
 
-        List<AnalylticsEventDto> result = service.getAnalytics(filterDto);
+        List<AnalyticsEventDto> result = service.getAnalytics(filterDto);
 
         Assertions.assertEquals(1, result.size());
         Assertions.assertEquals(expectedEventDto, result.get(0));
@@ -85,11 +85,11 @@ public class AnalyticsEventServiceTest {
         filterDto.setFrom(LocalDateTime.now().minusHours(1));
         filterDto.setTo(LocalDateTime.now().plusHours(1));
         List<AnalyticsEvent> eventList = getIntervalList();
-        AnalylticsEventDto expectedEventDto = mapper.toDto(eventList.get(0));
+        AnalyticsEventDto expectedEventDto = mapper.toDto(eventList.get(0));
         when(repository.findByReceiverIdAndEventType(anyLong(), any(EventType.class)))
                 .thenReturn(eventList.stream());
 
-        List<AnalylticsEventDto> result = service.getAnalytics(filterDto);
+        List<AnalyticsEventDto> result = service.getAnalytics(filterDto);
 
         Assertions.assertEquals(1, result.size());
         Assertions.assertEquals(expectedEventDto, result.get(0));
