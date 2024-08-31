@@ -30,7 +30,7 @@ public class AnalyticsEventMapperTest {
     }
 
     @Test
-    public void test_toDto() {
+    public void testToDto() {
         Assertions.assertEquals(analyticsEventDto, analyticsEventMapper.toDto(analyticsEvent));
     }
 

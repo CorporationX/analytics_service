@@ -39,7 +39,7 @@ public class LikeEventListenerTest {
     private AnalyticsEvent analyticsEvent;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws IOException{
         LocalDateTime eventAt = LocalDateTime.now();
         likeEvent = LikeEvent.builder()
                 .postId(1L)
@@ -55,6 +55,9 @@ public class LikeEventListenerTest {
                 .eventType(EventType.POST_LIKE)
                 .receivedAt(eventAt)
                 .build();
+
+        byte[] mockMessageBody = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsBytes(likeEvent);
+        Mockito.when(message.getBody()).thenReturn(mockMessageBody);
     }
 
     @Test
@@ -62,8 +65,6 @@ public class LikeEventListenerTest {
     public void testReadValueException() throws IOException {
         Mockito.when(objectMapper.readValue(Mockito.any(byte[].class), Mockito.eq(LikeEvent.class)))
                 .thenThrow(new IOException());
-        byte[] mockMessageBody = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsBytes(likeEvent);
-        Mockito.when(message.getBody()).thenReturn(mockMessageBody);
 
         assertThrows(RuntimeException.class, () ->
                 likeEventListener.onMessage(message, pattern));
@@ -76,9 +77,6 @@ public class LikeEventListenerTest {
                 .thenReturn(likeEvent);
         Mockito.when(analyticsEventMapper.toEntity(Mockito.any(LikeEvent.class)))
                 .thenReturn(analyticsEvent);
-
-        byte[] mockMessageBody = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsBytes(likeEvent);
-        Mockito.when(message.getBody()).thenReturn(mockMessageBody);
 
         likeEventListener.onMessage(message, pattern);
 
@@ -95,9 +93,6 @@ public class LikeEventListenerTest {
                 .thenReturn(likeEvent);
         Mockito.when(analyticsEventMapper.toEntity(Mockito.any(LikeEvent.class)))
                 .thenReturn(analyticsEvent);
-
-        byte[] mockMessageBody = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsBytes(likeEvent);
-        Mockito.when(message.getBody()).thenReturn(mockMessageBody);
 
         likeEventListener.onMessage(message, pattern);
 

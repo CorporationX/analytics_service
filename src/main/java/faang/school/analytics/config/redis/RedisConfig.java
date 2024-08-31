@@ -1,4 +1,4 @@
-package faang.school.analytics.redis;
+package faang.school.analytics.config.redis;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -31,9 +31,9 @@ public class RedisConfig {
 
     @Bean
     public RedisMessageListenerContainer redisContainer(List<Pair<MessageListenerAdapter, ChannelTopic>> redisEventListener,
-                                                        LettuceConnectionFactory connectionFactory) {
+                                                        LettuceConnectionFactory redisConnectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
+        container.setConnectionFactory(redisConnectionFactory);
         for (Pair<MessageListenerAdapter, ChannelTopic> messageAdapterTopic : redisEventListener) {
             container.addMessageListener(messageAdapterTopic.getFirst(), messageAdapterTopic.getSecond());
         }
@@ -46,6 +46,7 @@ public class RedisConfig {
         template.setConnectionFactory(connectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
         return template;
     }
 }

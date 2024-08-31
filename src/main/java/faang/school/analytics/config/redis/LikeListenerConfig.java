@@ -1,4 +1,4 @@
-package faang.school.analytics.redis;
+package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.LikeEventListener;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.data.util.Pair;
 @RequiredArgsConstructor
 public class LikeListenerConfig {
 
-    @Value("${spring.data.redis.channel.like_event_channel.name}")
+    @Value("${spring.data.redis.channel.like_event_channel}")
     private String likeEventChannel;
 
     @Bean
