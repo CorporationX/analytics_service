@@ -8,9 +8,13 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
+  
     @Mapping(source = "followerId", target = "actorId")
     @Mapping(source = "followeeId", target = "receiverId")
     @Mapping(source = "subscriptionTime", target = "receivedAt")
     @Mapping(target = "eventType", constant = "FOLLOWER")
     AnalyticsEvent toEntity(FollowerEvent dto);
+  
+    AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
+
 }
