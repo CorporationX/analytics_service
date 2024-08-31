@@ -1,4 +1,4 @@
-package faang.school.analytics.subscruber;
+package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.event.GoalCompletedEvent;
@@ -14,7 +14,6 @@ public class GoalEventListener extends RedisAbstractMessageListener<GoalComplete
                              ObjectMapper objectMapper) {
         super(mapper, analyticsEventService, objectMapper, GoalCompletedEvent.class);
     }
-
 
     @Override
     AnalyticsEvent map(GoalCompletedEvent goalCompletedEvent) {
