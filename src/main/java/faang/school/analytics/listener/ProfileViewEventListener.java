@@ -2,6 +2,7 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.ProfileViewEvent;
+import faang.school.analytics.exception.EntityDeserializeException;
 import faang.school.analytics.mapper.ProfileViewEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -15,7 +16,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-public class RedisMessageSubscriber implements MessageListener {
+public class ProfileViewEventListener implements MessageListener {
     private final ObjectMapper objectMapper;
     private final ProfileViewEventMapper profileViewEventMapper;
     private final AnalyticsEventService analyticsEventService;
@@ -28,11 +29,11 @@ public class RedisMessageSubscriber implements MessageListener {
         try {
             profileViewEvent = objectMapper.readValue(body, ProfileViewEvent.class);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new EntityDeserializeException(ProfileViewEvent.class, body, e);
         }
 
         AnalyticsEvent analyticsEvent = profileViewEventMapper.toAnalyticsEvent(profileViewEvent);
         analyticsEvent.setEventType(EventType.PROFILE_VIEW);
-        analyticsEventService.saveAnalyticsEvent(analyticsEvent);
+        analyticsEventService.save(analyticsEvent);
     }
 }

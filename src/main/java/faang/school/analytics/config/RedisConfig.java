@@ -5,8 +5,7 @@ import faang.school.analytics.listener.MentorshipRequestEventListener;
 import faang.school.analytics.redisListener.EventListener;
 import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.listener.RedisMessageSubscriber;
-import org.springframework.beans.factory.annotation.Autowired;
+import faang.school.analytics.listener.ProfileViewEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,16 +23,12 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
 
     private final EventListener<?> followerEventListener;
-    private final ObjectMapper objectMapper;
 
     @Value("${spring.data.redis.host}")
     private String redisHost;
 
     @Value("${spring.data.redis.port}")
     private int redisPort;
-
-    @Value("${spring.data.redis.topic.userView}")
-    private String userView;
 
     @Value("${spring.data.redis.channel.mentorshipRequest}")
     private String mentorshipRequestTopicName;
@@ -44,15 +39,8 @@ public class RedisConfig {
     @Value("${spring.data.redis.channel.followerView}")
     private String followerViewTopicName;
 
-    @Value("${spring.data.redis.channel.like_post_analytics}")
+    @Value("${spring.data.redis.channel.likePostAnalytics}")
     private String likeTopic;
-
-    @Bean
-    public JedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration redisConfig =
-                new RedisStandaloneConfiguration(redisHost, redisPort);
-        return new JedisConnectionFactory(redisConfig);
-    }
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jedisConnectionFactory) {
@@ -64,7 +52,7 @@ public class RedisConfig {
     }
 
     @Bean
-    public MessageListenerAdapter messageListener() {
+    public MessageListenerAdapter FollowerEventListener() {
         return new MessageListenerAdapter(followerEventListener);
     }
 
@@ -74,13 +62,13 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
+    public JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration standaloneConfig =
                 new RedisStandaloneConfiguration(redisHost, redisPort);
         return new JedisConnectionFactory(standaloneConfig);
     }
 
-    @Bean(name = "followerViewTopic")
+    @Bean
     public ChannelTopic followerViewTopic() {
         return new ChannelTopic(followerViewTopicName);
     }
@@ -102,24 +90,25 @@ public class RedisConfig {
 
     @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(MentorshipRequestEventListener mentorshipRequestListener,
-                                                                       LikeEventListener likeEventListener, MessageListenerAdapter messageListener) {
+                                                                       LikeEventListener likeEventListener,
+                                                                       ProfileViewEventListener profileViewEventListener) {
         RedisMessageListenerContainer redisMessageListenerContainer = new RedisMessageListenerContainer();
-        redisMessageListenerContainer.setConnectionFactory(redisConnectionFactory());
-        redisMessageListenerContainer.addMessageListener(messageListener(), followerViewTopic());
+        redisMessageListenerContainer.setConnectionFactory(jedisConnectionFactory());
+        redisMessageListenerContainer.addMessageListener(FollowerEventListener(), followerViewTopic());
         redisMessageListenerContainer.addMessageListener(mentorshipRequestListener, mentorshipRequestTopic());
         redisMessageListenerContainer.addMessageListener(likeChannelListener(likeEventListener), likeTopicChannel());
-        redisMessageListenerContainer.addMessageListener(messageListener, userViewTopic());
+        redisMessageListenerContainer.addMessageListener(profileViewListener(profileViewEventListener), profileViewTopic());
 
         return redisMessageListenerContainer;
     }
 
     @Bean
-    MessageListenerAdapter messageListener(RedisMessageSubscriber redisMessageSubscriber) {
-        return new MessageListenerAdapter(redisMessageSubscriber);
+    public MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
+        return new MessageListenerAdapter(profileViewEventListener);
     }
 
     @Bean
-    ChannelTopic userViewTopic() {
-        return new ChannelTopic(userView);
+    public ChannelTopic profileViewTopic() {
+        return new ChannelTopic(profileViewTopicName);
     }
 }

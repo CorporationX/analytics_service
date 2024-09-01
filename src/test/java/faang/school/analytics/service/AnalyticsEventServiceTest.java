@@ -31,7 +31,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension .class)
-public class AnalyticsEventServiceTest {
+class AnalyticsEventServiceTest {
     @InjectMocks
     private AnalyticsEventService analyticsEventService;
     @Mock
@@ -44,19 +44,6 @@ public class AnalyticsEventServiceTest {
 
     @Mock
     private ObjectMapper objectMapper;
-
-    @InjectMocks
-    private AnalyticsEventService analyticsEventService;
-
-    @Test
-    @DisplayName("Save Analytics Event")
-    public void testSaveAnalyticsEvent() {
-        AnalyticsEvent analyticsEvent = new AnalyticsEvent();
-
-        analyticsEventService.save(analyticsEvent);
-
-        verify(analyticsEventRepository, times(1)).save(analyticsEvent);
-    }
 
     private long receiverId;
     private EventType eventTypeUserFollower;
@@ -138,7 +125,7 @@ public class AnalyticsEventServiceTest {
 
     @Test
     void testSaveAnalyticsEvent() {
-        analyticsEventService.saveAnalyticsEvent(analyticsEvent);
+        analyticsEventService.save(analyticsEvent);
         verify(analyticsEventRepository, times(1)).save(analyticsEvent);
     }
 
@@ -167,6 +154,6 @@ public class AnalyticsEventServiceTest {
         when(analyticsEventMapper.toAnalyticsEventFromLikeEvent(likeEvent)).thenReturn(analyticsEvent);
 
         analyticsEventService.saveLikeAnalytics(message);
-
+    }
 
 }
