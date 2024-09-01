@@ -24,7 +24,10 @@ spring:
       topic:
         userView: user_view
       channel:
-        profile-view: profile_view_channel
+        profileView: profile_view_channel
+        followerView: follower_view_channel
+        mentorshipRequest: mentorship_request_channel
+        like_post_analytics: like_event
 
 server:
   port: 8086
