@@ -28,6 +28,7 @@ spring:
         comment-chanel: comment_chanel
         recommendation: recommendation_event_channel
         post_view: post_channel
+        like: like_channel
 
 server:
   port: 8086
