@@ -1,6 +1,7 @@
 package faang.school.analytics.util;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.CommentEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import lombok.experimental.UtilityClass;
@@ -21,7 +22,7 @@ public final class TestDataFactory {
                 .receiverId(34L)
                 .actorId(45L)
                 .eventType(EventType.GOAL_COMPLETED)
-                .receivedAt(LocalDateTime.now().minusHours(8))
+                .receivedAt(LocalDateTime.of(2024, 2, 1, 12, 0))
                 .build();
     }
 
@@ -31,14 +32,30 @@ public final class TestDataFactory {
                 .receiverId(34L)
                 .actorId(45L)
                 .eventType("goal_completed")
-                .receivedAt(LocalDateTime.now())
+                .receivedAt(LocalDateTime.of(2024, 2, 1, 12, 0))
                 .build();
     }
-
     public static Interval createInterval(){
         return Interval.LAST_YEAR;
     }
     public static EventType createEventType(){
         return EventType.GOAL_COMPLETED;
+    }
+
+    public static CommentEvent createCommentEvent(){
+        return CommentEvent.builder()
+                .commentId(23L)
+                .receiverId(34L)
+                .authorId(45L)
+                .createdAt(LocalDateTime.of(2024, 2, 1, 12, 0))
+                .build();
+    }
+    public static AnalyticsEventDto createAnalyticsEventDtoWithPostCommentEventType(){
+        return AnalyticsEventDto.builder()
+                .receiverId(34L)
+                .actorId(45L)
+                .eventType("post_comment")
+                .receivedAt(LocalDateTime.of(2024, 2, 1, 12, 0))
+                .build();
     }
 }
