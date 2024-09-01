@@ -16,6 +16,7 @@ public class RedisProperties {
     static class Channel{
         private String profileView;
         private String like;
+        private String follow;
         private String mentorshipRequests;
     }
 }

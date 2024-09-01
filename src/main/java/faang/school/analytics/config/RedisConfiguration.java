@@ -15,6 +15,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 public class RedisConfiguration {
     private final RedisProperties redisProperties;
     private final LikeEventListener likeEventListener;
+//    private final FollowerEventListener followerEventListener;
 
     @Bean
     public LettuceConnectionFactory connectionFactory() {
@@ -40,6 +41,7 @@ public class RedisConfiguration {
 
         container.addMessageListener(mentorshipRequestsListener, mentorshipRequestsTopic());
         container.addMessageListener(likeListener(likeEventListener), likeTopic());
+//        container.addMessageListener(followerListener(followerEventListener), followerTopic());
 
         return container;
     }
@@ -52,5 +54,15 @@ public class RedisConfiguration {
     @Bean
     MessageListenerAdapter likeListener(LikeEventListener likeEventListener){
         return new MessageListenerAdapter(likeEventListener);
+    }
+
+//    @Bean
+//    MessageListenerAdapter followerListener(FollowerEventListener followerEventListener) {
+//        return new MessageListenerAdapter(followerEventListener);
+//    }
+
+    @Bean
+    ChannelTopic followerTopic() {
+        return new ChannelTopic(redisProperties.getChannel().getFollow());
     }
 }

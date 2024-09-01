@@ -24,6 +24,7 @@ spring:
       channel:
         profile-view: profile_view_channel
         like: like_channel
+        follow: follow_channel
         mentorshipRequests: mentorship_requests
 
 server:
@@ -36,3 +37,7 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+user-service:
+  host: localhost
+  port: 8080
