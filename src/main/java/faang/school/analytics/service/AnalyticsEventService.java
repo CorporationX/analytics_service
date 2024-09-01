@@ -1,5 +1,9 @@
 package faang.school.analytics.service;
 
+import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.repository.AnalyticsEventRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.event.LikeEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -33,6 +37,10 @@ public class AnalyticsEventService {
     public AnalyticsEventDto saveEvent(AnalyticsEvent event) {
         analyticsEventValidator.validateAnalyticsEvent(event);
         return analyticsEventMapper.toDto(analyticsEventRepository.save(event));
+    }
+  
+    public void save(AnalyticsEvent analyticsEvent) {
+        analyticsEventRepository.save(analyticsEvent);
     }
 
     public List<AnalyticsEventDto> getAnalytics(long receiverId, String eventType, Optional<String> interval, Optional<String> startDate, Optional<String> endDate) {
