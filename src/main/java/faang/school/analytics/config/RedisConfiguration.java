@@ -1,5 +1,6 @@
 package faang.school.analytics.config;
 
+import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.LikeEventListener;
 import faang.school.analytics.listener.MentorshipRequestsEventListener;
 import lombok.AllArgsConstructor;
@@ -14,8 +15,6 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 @AllArgsConstructor
 public class RedisConfiguration {
     private final RedisProperties redisProperties;
-    private final LikeEventListener likeEventListener;
-//    private final FollowerEventListener followerEventListener;
 
     @Bean
     public LettuceConnectionFactory connectionFactory() {
@@ -35,13 +34,15 @@ public class RedisConfiguration {
 
     @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(
-            MessageListenerAdapter mentorshipRequestsListener) {
+            MessageListenerAdapter mentorshipRequestsListener,
+            MessageListenerAdapter likeListener,
+            MessageListenerAdapter followerListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory());
 
         container.addMessageListener(mentorshipRequestsListener, mentorshipRequestsTopic());
-        container.addMessageListener(likeListener(likeEventListener), likeTopic());
-//        container.addMessageListener(followerListener(followerEventListener), followerTopic());
+        container.addMessageListener(likeListener, likeTopic());
+        container.addMessageListener(followerListener, followerTopic());
 
         return container;
     }
@@ -56,10 +57,10 @@ public class RedisConfiguration {
         return new MessageListenerAdapter(likeEventListener);
     }
 
-//    @Bean
-//    MessageListenerAdapter followerListener(FollowerEventListener followerEventListener) {
-//        return new MessageListenerAdapter(followerEventListener);
-//    }
+    @Bean
+    MessageListenerAdapter followerListener(FollowerEventListener followerEventListener) {
+        return new MessageListenerAdapter(followerEventListener);
+    }
 
     @Bean
     ChannelTopic followerTopic() {
