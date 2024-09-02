@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
 @Setter
 public class AnalyticsEventDto {
     private Long id;
-    private long receiverId;
-    private long actorId;
+    private Long receiverId;
+    private Long actorId;
     private EventType eventType;
     private LocalDateTime receivedAt;
 }
