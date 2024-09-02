@@ -1,12 +1,11 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.config.context.UserContext;
-import faang.school.analytics.dto.event.AnalyticsEventDto;
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.event.AnalyticsFilterDto;
 import faang.school.analytics.dto.event.SortField;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.repository.filter.AnalyticsFilterRepository;
@@ -15,9 +14,7 @@ import faang.school.analytics.validator.analyticsEvent.AnalyticsEventValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
@@ -30,7 +27,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

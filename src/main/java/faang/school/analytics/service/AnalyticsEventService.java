@@ -1,10 +1,10 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.config.context.UserContext;
-import faang.school.analytics.dto.event.AnalyticsEventDto;
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.event.AnalyticsFilterDto;
 import faang.school.analytics.dto.event.SortField;
-import faang.school.analytics.exception.DataValidationException;
+import faang.school.analytics.exception.handler.DataValidationException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
