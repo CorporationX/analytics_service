@@ -51,12 +51,12 @@ public class AnalyticsEventServiceTest {
     AnalyticsEvent event1 = AnalyticsEvent.builder()
             .eventType(eventType)
             .receiverId(receiverId)
-            .receivedAt(LocalDateTime.now())
+            .receivedAt(LocalDateTime.now().minusMinutes(10))
             .build();
     AnalyticsEvent event2 = AnalyticsEvent.builder()
             .eventType(eventType)
             .receiverId(receiverId)
-            .receivedAt(LocalDateTime.now().minusHours(1))
+            .receivedAt(LocalDateTime.now().minusHours(2))
             .build();
 
     @Test

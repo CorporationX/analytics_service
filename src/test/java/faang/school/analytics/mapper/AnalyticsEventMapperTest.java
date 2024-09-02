@@ -1,6 +1,6 @@
 package faang.school.analytics.mapper;
 
-import faang.school.analytics.dto.FollowerEvent;
+import faang.school.analytics.dto.publishable.FollowerEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.junit.Assert;
