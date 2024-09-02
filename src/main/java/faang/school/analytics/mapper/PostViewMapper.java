@@ -1,15 +1,16 @@
 package faang.school.analytics.mapper;
 
-import faang.school.analytics.dto.event.AnalyticsEventDto;
+
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.event.PostViewEvent;
+import faang.school.analytics.event.MentorshipRequestEvent;
 import faang.school.analytics.model.EventType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public interface PostViewMapper extends AbstractMapper<PostViewEvent> {
+public interface PostViewMapper extends GenericEventMapper<PostViewEvent, AnalyticsEventDto> {
 
-    @Override
     @Mapping(source = "authorId", target = "receiverId")
     @Mapping(source = "userId", target = "actorId")
     @Mapping(target = "eventType", expression = "java(this.mapEventType())")
