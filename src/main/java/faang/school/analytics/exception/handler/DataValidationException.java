@@ -1,4 +1,4 @@
-package faang.school.analytics.exception;
+package faang.school.analytics.exception.handler;
 
 public class DataValidationException extends RuntimeException {
 
