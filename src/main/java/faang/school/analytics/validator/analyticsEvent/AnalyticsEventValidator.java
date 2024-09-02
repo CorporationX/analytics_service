@@ -1,6 +1,6 @@
 package faang.school.analytics.validator.analyticsEvent;
 
-import faang.school.analytics.exception.DataValidationException;
+import faang.school.analytics.exception.handler.DataValidationException;
 import faang.school.analytics.model.Interval;
 import org.springframework.stereotype.Component;
 
