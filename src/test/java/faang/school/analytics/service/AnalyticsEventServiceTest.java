@@ -30,30 +30,20 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-public class AnalyticsEventServiceTest {
-
+@ExtendWith(MockitoExtension .class)
+class AnalyticsEventServiceTest {
+    @InjectMocks
+    private AnalyticsEventService analyticsEventService;
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
+
+    private AnalyticsEvent analyticsEvent;
 
     @Spy
     private AnalyticsEventMapperImpl analyticsEventMapper;
 
     @Mock
     private ObjectMapper objectMapper;
-
-    @InjectMocks
-    private AnalyticsEventService analyticsEventService;
-
-    @Test
-    @DisplayName("Save Analytics Event")
-    public void testSaveAnalyticsEvent() {
-        AnalyticsEvent analyticsEvent = new AnalyticsEvent();
-
-        analyticsEventService.save(analyticsEvent);
-
-        verify(analyticsEventRepository, times(1)).save(analyticsEvent);
-    }
 
     private long receiverId;
     private EventType eventTypeUserFollower;
@@ -66,7 +56,8 @@ public class AnalyticsEventServiceTest {
     private AnalyticInfoDto analyticInfoDto;
 
     @BeforeEach
-    public void setup() {
+    public void setUp(){
+        analyticsEvent = new AnalyticsEvent();
 
         currentDateTime = LocalDateTime.now();
 
@@ -133,6 +124,12 @@ public class AnalyticsEventServiceTest {
     }
 
     @Test
+    void testSaveAnalyticsEvent() {
+        analyticsEventService.save(analyticsEvent);
+        verify(analyticsEventRepository, times(1)).save(analyticsEvent);
+    }
+
+    @Test
     @DisplayName("Get analytics events by interval null")
     public void testGetAnalyticsEventsByIntervalNull() {
 
@@ -157,7 +154,6 @@ public class AnalyticsEventServiceTest {
         when(analyticsEventMapper.toAnalyticsEventFromLikeEvent(likeEvent)).thenReturn(analyticsEvent);
 
         analyticsEventService.saveLikeAnalytics(message);
-
-        verify(analyticsEventRepository, times(1)).save(analyticsEvent);
     }
+
 }

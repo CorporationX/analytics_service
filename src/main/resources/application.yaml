@@ -25,7 +25,7 @@ spring:
         profileView: profile_view_channel
         followerView: follower_view_channel
         mentorshipRequest: mentorship_request_channel
-        like_post_analytics: like_event
+        likePostAnalytics: like_event
 
 server:
   port: 8086

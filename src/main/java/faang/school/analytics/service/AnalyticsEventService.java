@@ -1,10 +1,10 @@
 package faang.school.analytics.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.AnalyticEventDto;
 import faang.school.analytics.dto.AnalyticInfoDto;
-import faang.school.analytics.exception.MapperReadValueException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.LikeEvent;
+import faang.school.analytics.exception.MapperReadValueException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -17,13 +17,13 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
 import static faang.school.analytics.model.Interval.getDaysByInterval;
-import java.io.IOException;
-import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
