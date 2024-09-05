@@ -2,7 +2,7 @@ package faang.school.analytics.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import faang.school.analytics.dto.AnalylticsEventDto;
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.AnalyticsFilterDto;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
@@ -37,7 +37,7 @@ public class AnalyticsEventControllerTest {
 
     @InjectMocks
     private AnalyticsEventController analyticsController;
-    private List<AnalylticsEventDto> testList;
+    private List<AnalyticsEventDto> testList;
 
     @BeforeEach
     public void setUp() {
@@ -72,7 +72,7 @@ public class AnalyticsEventControllerTest {
         filter.setEventType(EventType.PROJECT_VIEW);
         filter.setInterval(Interval.DAILY);
 
-        AnalylticsEventDto firstUser = new AnalylticsEventDto();
+        AnalyticsEventDto firstUser = new AnalyticsEventDto();
         firstUser.setReceiverId(1L);
         firstUser.setEventType(EventType.PROJECT_VIEW);
         testList = List.of(firstUser);
@@ -95,7 +95,7 @@ public class AnalyticsEventControllerTest {
         filter.setFrom(LocalDateTime.now().minusHours(1));
         filter.setTo(LocalDateTime.now().plusHours(2));
 
-        AnalylticsEventDto firstUser = new AnalylticsEventDto();
+        AnalyticsEventDto firstUser = new AnalyticsEventDto();
         firstUser.setReceiverId(1L);
         firstUser.setEventType(EventType.PROJECT_VIEW);
         testList = List.of(firstUser);

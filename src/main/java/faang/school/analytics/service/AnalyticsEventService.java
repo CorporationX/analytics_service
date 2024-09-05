@@ -1,6 +1,6 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.dto.AnalylticsEventDto;
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.AnalyticsFilterDto;
 import faang.school.analytics.filter.AnalyticsFilter;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -26,7 +26,7 @@ public class AnalyticsEventService {
         repository.save(event);
     }
 
-    public List<AnalylticsEventDto> getAnalytics(AnalyticsFilterDto filters) {
+    public List<AnalyticsEventDto> getAnalytics(AnalyticsFilterDto filters) {
         AnalyticsFilter actualFilter = analyticsFilters
                 .stream()
                 .filter(filter -> filter.isApplicable(filters))

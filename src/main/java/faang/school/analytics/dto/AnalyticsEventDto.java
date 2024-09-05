@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AnalylticsEventDto {
+public class AnalyticsEventDto {
     private long id;
     private long receiverId;
     private long actorId;
