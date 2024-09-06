@@ -1,5 +1,8 @@
 package faang.school.analytics.model;
 
+import lombok.Data;
+
+
 public enum EventType {
     PROFILE_VIEW,
     PROJECT_VIEW,
@@ -16,7 +19,8 @@ public enum EventType {
     GOAL_COMPLETED,
     ACHIEVEMENT_RECEIVED,
     PROFILE_APPEARED_IN_SEARCH,
-    PROJECT_APPEARED_IN_SEARCH;
+    PROJECT_APPEARED_IN_SEARCH,
+    MENTORSHIP_REQUEST;
 
     public static EventType of(int type) {
         for (EventType eventType : EventType.values()) {
@@ -24,6 +28,16 @@ public enum EventType {
                 return eventType;
             }
         }
+        throw new IllegalArgumentException("Unknown event type: " + type);
+    }
+
+    public static EventType of(String type) {
+        for (EventType eventType : EventType.values()) {
+            if (eventType.name().equalsIgnoreCase(type)) {
+                return eventType;
+            }
+        }
+
         throw new IllegalArgumentException("Unknown event type: " + type);
     }
 }
