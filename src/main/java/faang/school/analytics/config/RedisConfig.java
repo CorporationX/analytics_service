@@ -3,6 +3,7 @@ package faang.school.analytics.config;
 import faang.school.analytics.event.LikeEventListener;
 import faang.school.analytics.listener.MentorshipRequestEventListener;
 import faang.school.analytics.redisListener.EventListener;
+import faang.school.analytics.listener.CommentEventListener;
 import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.listener.ProfileViewEventListener;
@@ -26,9 +27,11 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.host}")
     private String redisHost;
-
     @Value("${spring.data.redis.port}")
     private int redisPort;
+
+    @Value("${spring.data.redis.channel.commentСhannel}")
+    private String commentEventNameTopic;
 
     @Value("${spring.data.redis.channel.mentorshipRequest}")
     private String mentorshipRequestTopicName;
@@ -41,6 +44,8 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.likePostAnalytics}")
     private String likeTopic;
+
+    private final CommentEventListener commentEventListener;
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jedisConnectionFactory) {
@@ -79,6 +84,15 @@ public class RedisConfig {
     }
 
     @Bean
+    public ChannelTopic commentEventTopic() {
+        return new ChannelTopic(commentEventNameTopic);
+    }
+
+    public MessageListenerAdapter commentEventListenerAdapter() {
+        return new MessageListenerAdapter(commentEventListener);
+    }
+
+    @Bean
     public MessageListenerAdapter likeChannelListener(LikeEventListener likeEventListener) {
         return new MessageListenerAdapter(likeEventListener);
     }
@@ -98,6 +112,7 @@ public class RedisConfig {
         redisMessageListenerContainer.addMessageListener(mentorshipRequestListener, mentorshipRequestTopic());
         redisMessageListenerContainer.addMessageListener(likeChannelListener(likeEventListener), likeTopicChannel());
         redisMessageListenerContainer.addMessageListener(profileViewListener(profileViewEventListener), profileViewTopic());
+        redisMessageListenerContainer.addMessageListener(commentEventListenerAdapter(), commentEventTopic());
 
         return redisMessageListenerContainer;
     }
