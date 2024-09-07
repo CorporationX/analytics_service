@@ -30,7 +30,7 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
-    @Value("${spring.data.redis.channel.commentChannel}")
+    @Value("${spring.data.redis.channel.commentСhannel}")
     private String commentEventNameTopic;
 
     @Value("${spring.data.redis.channel.mentorshipRequest}")
@@ -46,6 +46,7 @@ public class RedisConfig {
     private String likeTopic;
 
     private final CommentEventListener commentEventListener;
+
     @Bean
     public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jedisConnectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
@@ -81,6 +82,7 @@ public class RedisConfig {
     public ChannelTopic mentorshipRequestTopic() {
         return new ChannelTopic(mentorshipRequestTopicName);
     }
+
     @Bean
     public ChannelTopic commentEventTopic() {
         return new ChannelTopic(commentEventNameTopic);

@@ -28,7 +28,7 @@ public class CommentEventListener implements MessageListener {
             CommentEvent commentEvent = mapper.readValue(message.getBody(), CommentEvent.class);
             AnalyticsEvent analyticsEvent = analyticEventMapper.toEntity(commentEvent);
             analyticsEvent.setEventType(EventType.POST_COMMENT);
-            analyticEventService.saveAnalyticsEvent(analyticsEvent);
+            analyticEventService.save(analyticsEvent);
         } catch (IOException e) {
             String msg = "Exception occurred while parsing comment: " + e.getMessage();
             log.error(msg);
