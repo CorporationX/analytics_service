@@ -1,7 +1,8 @@
-package faang.school.analytics.config;
+package faang.school.analytics.config.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.listener.AbstractEventListener;
+import faang.school.analytics.listener.LikeEventListener;
 import faang.school.analytics.listener.PremiumBoughtEventListener;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -42,5 +43,15 @@ public class RedisListenerConfig {
             @Value("${spring.data.redis.channel.premium-bought}") String channelName,
             AnalyticsEventMapper mapper) {
         return new PremiumBoughtEventListener(objectMapper, messageSource, channelName, service, mapper);
+    }
+
+    @Bean
+    public LikeEventListener likeEventListener(
+            ObjectMapper objectMapper,
+            MessageSource messageSource,
+            AnalyticsEventService service,
+            @Value("${spring.data.redis.channel.like_event_channel}") String channelName,
+            AnalyticsEventMapper mapper) {
+        return new LikeEventListener(objectMapper, messageSource, channelName, service, mapper);
     }
 }

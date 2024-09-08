@@ -5,6 +5,7 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.data.redis.connection.Message;
 
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.function.Function;
 
+@Slf4j
 @RequiredArgsConstructor
 public abstract class AbstractEventListener<T> {
     private static final String CODE_MESSAGE_ERROR = "message.error.readValueException";
@@ -27,6 +29,7 @@ public abstract class AbstractEventListener<T> {
             AnalyticsEvent analyticsEvent = function.apply(event);
             service.saveEvent(analyticsEvent);
         } catch (IOException e) {
+            log.error(e.getMessage());
             throw new RuntimeException(
                     messageSource.getMessage(CODE_MESSAGE_ERROR, null, Locale.getDefault()));
         }
