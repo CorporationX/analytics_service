@@ -2,6 +2,7 @@ package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.event.GoalCompletedEvent;
+import faang.school.analytics.dto.ProjectViewEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,4 +18,10 @@ public interface AnalyticsEventMapper {
     @Mapping(constant = "GOAL_COMPLETED", target = "eventType")
     @Mapping(source = "eventTime", target = "receivedAt")
     AnalyticsEvent toAnalyticsEvent(GoalCompletedEvent event);
+
+    @Mapping(source = "userId", target = "receiverId")
+    @Mapping(source = "projectId", target = "actorId")
+    @Mapping(source = "eventTime", target = "receivedAt")
+    @Mapping(constant = "PROJECT_VIEW", target = "eventType")
+    AnalyticsEvent toAnalyticsEvent(ProjectViewEvent projectViewEvent);
 }

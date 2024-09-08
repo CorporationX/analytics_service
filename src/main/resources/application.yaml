@@ -25,6 +25,7 @@ spring:
         profile-view: profile_view_channel
         follower: follower_channel
         goal: goal_channel
+        project-view: project_view_channel
 
 server:
   port: 8086
