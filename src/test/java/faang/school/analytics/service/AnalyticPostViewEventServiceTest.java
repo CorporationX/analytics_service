@@ -13,7 +13,9 @@ import org.mockito.MockitoAnnotations;
 import java.time.LocalDateTime;
 
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class AnalyticPostViewEventServiceTest {
 
@@ -31,7 +33,6 @@ class AnalyticPostViewEventServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Инициализация моков
         MockitoAnnotations.openMocks(this);
 
         postViewEventDto = new PostViewEventDto();
@@ -44,25 +45,20 @@ class AnalyticPostViewEventServiceTest {
         analyticsEventDto.setEventType(EventType.POST_VIEW);
         analyticsEventDto.setReceivedAt(LocalDateTime.now());
 
-        // Настраиваем поведение маппера
         when(postViewEventMapper.toEntity(postViewEventDto)).thenReturn(analyticsEventDto);
     }
 
     @Test
     void savePostViewEvent_callsMapperAndSaveEvent() {
-        // Вызов тестируемого метода
         analyticPostViewEventService.savePostViewEvent(postViewEventDto);
 
-        // Проверка, что маппер был вызван
         verify(postViewEventMapper, times(1)).toEntity(postViewEventDto);
 
-        // Проверка, что событие было сохранено через AnalyticsEventService
         verify(analyticsEventService, times(1)).saveEvent(analyticsEventDto);
     }
 
     @Test
     void savePostViewEvent_shouldSetReceivedAt() {
-        // Вызов метода
         analyticPostViewEventService.savePostViewEvent(postViewEventDto);
 
         assertNotNull(analyticsEventDto.getReceivedAt());
