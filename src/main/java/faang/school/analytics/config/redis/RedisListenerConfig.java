@@ -1,6 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.MentorshipRequestListener;
+import faang.school.analytics.listener.PostViewEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +17,10 @@ public class RedisListenerConfig {
     private String host;
     @Value("${spring.data.redis.port}")
     private int port;
-
     @Value("${spring.data.redis.channel.mentorship-request}")
     private String mentorshipRequestTopic;
+    @Value("${spring.data.redis.channel.post-view}")
+    private String postViewTopic;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -27,8 +29,13 @@ public class RedisListenerConfig {
     }
 
     @Bean
-    ChannelTopic mentorshipRequestChannel() {
+    public ChannelTopic mentorshipRequestChannel() {
         return new ChannelTopic(mentorshipRequestTopic);
+    }
+
+    @Bean
+    public ChannelTopic postViewChannel() {
+        return new ChannelTopic(postViewTopic);
     }
 
     @Bean
@@ -37,11 +44,23 @@ public class RedisListenerConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer messageListenerContainer(MessageListenerAdapter mentorshipRequestListenerAdapter,
-                                                                  ChannelTopic mentorshipRequestChannel) {
+    public MessageListenerAdapter postViewEventListenerAdapter(PostViewEventListener postViewEventListener) {
+        return new MessageListenerAdapter(postViewEventListener);
+    }
+
+    @Bean
+    public RedisMessageListenerContainer messageListenerContainer(
+            MessageListenerAdapter mentorshipRequestListenerAdapter,
+            MessageListenerAdapter postViewEventListenerAdapter,
+            ChannelTopic mentorshipRequestChannel,
+            ChannelTopic postViewChannel) {
+
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
+
         container.addMessageListener(mentorshipRequestListenerAdapter, mentorshipRequestChannel);
+        container.addMessageListener(postViewEventListenerAdapter, postViewChannel);
+
         return container;
     }
 }
