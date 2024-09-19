@@ -24,6 +24,9 @@ spring:
       channel:
         profile-view: profile_view_channel
         mentorship-request : mentorship_request_channel
+        create-comment: create_comment_channel
+        post-view: post_view_channel
+
 
 server:
   port: 8086
