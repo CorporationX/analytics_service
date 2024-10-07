@@ -23,6 +23,8 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+      topics:
+        comment_event_topic: commentEventQueue
 
 server:
   port: 8086
