@@ -1,7 +1,6 @@
 package faang.school.analytics.subscriber;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import faang.school.analytics.dto.CommentEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -22,13 +21,14 @@ import java.io.ObjectInputStream;
 public class CommentEventListener implements MessageListener {
     private final AnalyticsEventRepository repository;
     private final AnalyticsEventMapper mapper;
+
     @Override
     public void onMessage(Message message, byte[] pattern) {
         CommentEvent commentEvent;
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         try {
-            String json = (String) new ObjectInputStream(new ByteArrayInputStream(message.getBody())) .readObject();
+            String json = (String) new ObjectInputStream(new ByteArrayInputStream(message.getBody())).readObject();
             commentEvent = objectMapper.readValue(json, CommentEvent.class);
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);

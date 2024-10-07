@@ -4,7 +4,6 @@ import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.subscriber.CommentEventListener;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,14 +19,17 @@ public class RedisPubSubConfig {
     @Value("${spring.data.redis.topics.comment_event_topic}")
     private String topic;
     private final AnalyticsEventRepository analyticsEventRepository;
+
     @Bean
     ChannelTopic commentEventTopic() {
         return new ChannelTopic(topic);
     }
+
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
         return new JedisConnectionFactory();
     }
+
     @Bean
     MessageListenerAdapter messageListener() {
         return new MessageListenerAdapter(new CommentEventListener(analyticsEventRepository, Mappers.getMapper(AnalyticsEventMapper.class)));
