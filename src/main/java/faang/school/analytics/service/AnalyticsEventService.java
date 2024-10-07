@@ -19,4 +19,5 @@ public class AnalyticsEventService {
         analyticsEventRepository.save(analyticsEvent);
         log.info("The event was successfully saved in the analytics database: {}", analyticsEvent);
     }
+
 }

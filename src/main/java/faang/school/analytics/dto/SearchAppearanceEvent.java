@@ -1,22 +1,22 @@
 package faang.school.analytics.dto;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
-@NoArgsConstructor
+@Setter
+@Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class SearchAppearanceEvent {
+
     @NotNull
     private Long viewedUserId;
     @NotNull
     private Long viewerUserId;
     @NotNull
     private LocalDateTime viewingTime;
+
 }

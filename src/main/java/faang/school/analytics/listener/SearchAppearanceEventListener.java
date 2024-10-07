@@ -14,9 +14,10 @@ import java.io.IOException;
 @Component
 @Slf4j
 public class SearchAppearanceEventListener extends AbstractListener<SearchAppearanceEvent> {
-    protected SearchAppearanceEventListener(ObjectMapper objectMapper,
-                                            AnalyticsEventService analyticsEventService,
-                                            AnalyticsEventMapper analyticsEventMapper) {
+
+    public SearchAppearanceEventListener(ObjectMapper objectMapper,
+                                         AnalyticsEventService analyticsEventService,
+                                         AnalyticsEventMapper analyticsEventMapper) {
         super(objectMapper, analyticsEventService, analyticsEventMapper);
     }
 
@@ -29,4 +30,5 @@ public class SearchAppearanceEventListener extends AbstractListener<SearchAppear
     protected AnalyticsEvent mapToAnalyticsEvent(SearchAppearanceEvent event) {
         return analyticsEventMapper.toAnalyticsEvent(event);
     }
+
 }

@@ -1,20 +1,19 @@
 package faang.school.analytics.dto;
 
-import faang.school.analytics.dto.enums.Currency;
+import faang.school.analytics.model.enums.Currency;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
-@Builder
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class PremiumBoughtEvent {
+
     @NotNull
     Long userId;
     @NotNull
@@ -25,4 +24,5 @@ public class PremiumBoughtEvent {
     int days;
     @NotNull
     LocalDateTime timestamp;
+
 }

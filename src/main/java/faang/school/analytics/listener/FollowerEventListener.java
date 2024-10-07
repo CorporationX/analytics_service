@@ -13,7 +13,9 @@ import java.io.IOException;
 @Component
 public class FollowerEventListener extends AbstractListener<FollowerEvent> {
 
-    public FollowerEventListener(ObjectMapper objectMapper, AnalyticsEventService analyticsEventService, AnalyticsEventMapper analyticsEventMapper) {
+    public FollowerEventListener(ObjectMapper objectMapper,
+                                 AnalyticsEventService analyticsEventService,
+                                 AnalyticsEventMapper analyticsEventMapper) {
         super(objectMapper, analyticsEventService, analyticsEventMapper);
     }
 

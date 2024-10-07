@@ -1,20 +1,17 @@
-package faang.school.analytics.listeners;
+package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.CommentEvent;
-
-import faang.school.analytics.listener.AbstractListener;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-
-@Service
+@Component
 @Slf4j
 public class CommentEventListener extends AbstractListener<CommentEvent> {
 
@@ -23,7 +20,6 @@ public class CommentEventListener extends AbstractListener<CommentEvent> {
                                 AnalyticsEventService analyticsEventService) {
         super(objectMapper, analyticsEventService, analyticsEventMapper);
     }
-
 
     @Override
     protected CommentEvent listenEvent(Message message) throws IOException {
@@ -34,6 +30,5 @@ public class CommentEventListener extends AbstractListener<CommentEvent> {
     protected AnalyticsEvent mapToAnalyticsEvent(CommentEvent event) {
         return analyticsEventMapper.entityToAnalyticsEvent(event);
     }
-
 
 }
