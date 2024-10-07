@@ -16,6 +16,7 @@ import org.springframework.data.redis.connection.Message;
 import java.io.IOException;
 
 import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,7 +39,7 @@ public class FollowEventListenerTest {
         byte[] pattern = new byte[]{};
 
         when(objectMapper.readValue(message.getBody(), FollowerEvent.class)).thenReturn(new FollowerEvent());
-        when(analyticsEventMapper.toAnalyticsEvent(new FollowerEvent())).thenReturn(new AnalyticsEvent());
+        when(analyticsEventMapper.toAnalyticsEvent(any(FollowerEvent.class))).thenReturn(new AnalyticsEvent());
 
         followerEventListener.onMessage(message, pattern);
         verify(analyticsEventService).saveAnalyticsEvent(Mockito.any(AnalyticsEvent.class));

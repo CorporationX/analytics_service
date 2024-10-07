@@ -5,7 +5,6 @@ import faang.school.analytics.exception.MessageProcessingException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
-import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;

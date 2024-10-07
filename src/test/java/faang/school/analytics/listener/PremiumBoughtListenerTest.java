@@ -16,6 +16,7 @@ import org.springframework.data.redis.connection.Message;
 import java.io.IOException;
 
 import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,7 +38,7 @@ public class PremiumBoughtListenerTest {
         byte[] pattern = new byte[]{};
 
         when(objectMapper.readValue(message.getBody(), PremiumBoughtEvent.class)).thenReturn(new PremiumBoughtEvent());
-        when(analyticsEventMapper.toAnalyticsEvent(new PremiumBoughtEvent())).thenReturn(new AnalyticsEvent());
+        when(analyticsEventMapper.toAnalyticsEvent(any(PremiumBoughtEvent.class))).thenReturn(new AnalyticsEvent());
 
         premiumBoughtEventListener.onMessage(message, pattern);
         verify(analyticsEventService).saveAnalyticsEvent(Mockito.any(AnalyticsEvent.class));

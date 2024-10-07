@@ -18,6 +18,7 @@ import org.springframework.data.redis.connection.Message;
 
 import java.io.IOException;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,7 +42,7 @@ public class SearchAppearanceEventListenerTest {
         byte[] pattern = new byte[]{};
 
         when(objectMapper.readValue(message.getBody(), SearchAppearanceEvent.class)).thenReturn(new SearchAppearanceEvent());
-        when(analyticsEventMapper.toAnalyticsEvent(new SearchAppearanceEvent())).thenReturn(new AnalyticsEvent());
+        when(analyticsEventMapper.toAnalyticsEvent(any(SearchAppearanceEvent.class))).thenReturn(new AnalyticsEvent());
 
         listener.onMessage(message, pattern);
         verify(analyticsEventService).saveAnalyticsEvent(Mockito.any(AnalyticsEvent.class));
