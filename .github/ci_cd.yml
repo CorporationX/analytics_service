@@ -2,10 +2,12 @@ name: CI/CD for analytics_service
 
 on:
   push:
-    branches: hydra_master_stream6
+    #branches: hydra_master_stream6
+    branches: feature-BJS2-29112
 
   pull_request:
-    branches: hydra_master_stream6
+    #branches: hydra_master_stream6
+    branches: feature-BJS2-29112
 
 jobs:
   test:
