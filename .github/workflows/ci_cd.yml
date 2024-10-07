@@ -11,8 +11,7 @@ on:
 
 jobs:
   test:
-    name: Run tests and check code style
-    runs-on: ubuntu_latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
