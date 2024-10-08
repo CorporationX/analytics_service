@@ -8,7 +8,6 @@ import faang.school.analytics.mapper.analytics_event.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
-import faang.school.analytics.service.analytics_event.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,8 +32,8 @@ public class AnalyticsEventServiceTest {
     private static final LocalDateTime SOME_TIME_AGO =
             LocalDateTime.of(2024, 10, 8, 13, 10, 10);
     private static final String INTERVAL = "2 months";
-    private static final LocalDateTime FROM_DATE = LocalDateTime.of(2024,10,7,13,15);
-    private static final LocalDateTime TO_DATE = LocalDateTime.of(2024,10,8,13,15);
+    private static final LocalDateTime FROM_DATE = LocalDateTime.of(2024, 10, 7, 13, 15);
+    private static final LocalDateTime TO_DATE = LocalDateTime.of(2024, 10, 8, 13, 15);
 
     @InjectMocks
     private AnalyticsEventService analyticsEventService;
@@ -107,7 +106,7 @@ public class AnalyticsEventServiceTest {
     @Test
     @DisplayName("Find events in DB specified by parameters passed in when interval is null" +
             " and from and to dates are present then return list of eventDtos by time")
-    public void whenEventGetDtoPassedWithFromToDatesFindEventsDescribedInItThenReturnEventDtoListSortedByTime(){
+    public void whenEventGetDtoPassedWithFromToDatesFindEventsDescribedInItThenReturnEventDtoListSortedByTime() {
         analyticsEventGetDto.setInterval(null);
         when(userContext.getUserId()).thenReturn(RECEIVER_ID_ONE);
         when(analyticsEventRepository
@@ -120,15 +119,16 @@ public class AnalyticsEventServiceTest {
         assertEquals(1, resultList.size());
         assertEquals(event.getEventType(), resultList.get(0).getEventType());
     }
+
     @Test
     @DisplayName("If Interval and from and to dates are null then throw exception")
-    public void whenEventGetDtoIntervalAndFromToDatesAreNullThenThrowException(){
+    public void whenEventGetDtoIntervalAndFromToDatesAreNullThenThrowException() {
         analyticsEventGetDto.setInterval(null);
         analyticsEventGetDto.setTo(null);
         analyticsEventGetDto.setFrom(null);
         when(userContext.getUserId()).thenReturn(RECEIVER_ID_ONE);
 
-        assertThrows(IntervalsNotValidException.class,() ->
+        assertThrows(IntervalsNotValidException.class, () ->
                 analyticsEventService.getAnalytics(analyticsEventGetDto));
 
     }

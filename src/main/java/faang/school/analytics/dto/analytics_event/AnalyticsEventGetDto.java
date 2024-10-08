@@ -1,15 +1,13 @@
 package faang.school.analytics.dto.analytics_event;
 
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.model.Interval;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @NotNull(message = "This object cannot be null!")
 @Schema(description = "This object required to get analytics of our service by /analytics GetMapping")
 public class AnalyticsEventGetDto {

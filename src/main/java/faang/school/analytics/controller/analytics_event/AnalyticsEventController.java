@@ -2,8 +2,6 @@ package faang.school.analytics.controller.analytics_event;
 
 import faang.school.analytics.dto.analytics_event.AnalyticsEventDto;
 import faang.school.analytics.dto.analytics_event.AnalyticsEventGetDto;
-import faang.school.analytics.model.EventType;
-import faang.school.analytics.model.Interval;
 import faang.school.analytics.service.analytics_event.AnalyticsEventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -32,7 +29,7 @@ public class AnalyticsEventController {
             description = "Returns list of Analytics Events " +
                     "provided by required in body receiverId, eventType and various time")
     @GetMapping
-    public List<AnalyticsEventDto> getAnalytics(@Valid @RequestBody AnalyticsEventGetDto analyticsEventGetDto){
+    public List<AnalyticsEventDto> getAnalytics(@Valid @RequestBody AnalyticsEventGetDto analyticsEventGetDto) {
         return analyticsEventService.getAnalytics(analyticsEventGetDto);
     }
 }
