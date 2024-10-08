@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://192.168.43.78:5432/postgres
     username: user
     password: password
 
@@ -23,6 +23,10 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+        search-appearance: search_appearance_channel
+        recommendation: recommendation_channel
+        like: like_channel
+        ad-bought: ad_bought
 
 server:
   port: 8086
