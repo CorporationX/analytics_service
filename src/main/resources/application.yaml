@@ -34,3 +34,7 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+app:
+  user-redis-config:
+    profile_view_event_topic: profileViewEvent
