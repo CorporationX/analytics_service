@@ -20,7 +20,7 @@ spring:
   data:
     redis:
       port: 6379
-      host: 192.168.43.78
+      host: localhost
       channel:
         profile-view: profile_view_channel
         search-appearance: search_appearance_channel

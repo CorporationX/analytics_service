@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 public class SearchAppearanceEvent {
     private final EventType eventType = EventType.PROFILE_APPEARED_IN_SEARCH;
-    private Long userId;
+    private Long receiverId;
     private Long actorId;
     private LocalDateTime receivedAt;
 }
