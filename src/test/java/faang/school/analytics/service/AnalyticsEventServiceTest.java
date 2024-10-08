@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -28,8 +27,7 @@ public class AnalyticsEventServiceTest {
     @InjectMocks
     private AnalyticsEventService analyticsEventService;
 
-
-
+    
     @BeforeEach
     public void init() {
         analyticsEventService.init();
@@ -60,7 +58,7 @@ public class AnalyticsEventServiceTest {
         analyticsEventService.getAnalyticsByInterval(resId, type, interval);
 
         verify(analyticsEventRepository, times(1))
-                .findEventsByTime(eq(resId), eq(type), any(LocalDateTime.class), any(LocalDateTime.class));
+                .findByReceiverIdAndEventType(resId, type);
     }
 
     @Test
@@ -73,6 +71,6 @@ public class AnalyticsEventServiceTest {
         analyticsEventService.getAnalyticsBetweenDates(resId, type, start, end);
 
         verify(analyticsEventRepository, times(1))
-                .findEventsByTime(resId, type, start, end);
+                .findByReceiverIdAndEventType(resId, type);
     }
 }
