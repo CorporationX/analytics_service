@@ -33,6 +33,6 @@ public class AnalyticsEvent {
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "received_at")
+    @Column(name = "received_at", nullable = false)
     private LocalDateTime receivedAt;
 }

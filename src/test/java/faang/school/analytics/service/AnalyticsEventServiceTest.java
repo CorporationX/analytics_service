@@ -27,7 +27,7 @@ public class AnalyticsEventServiceTest {
     @InjectMocks
     private AnalyticsEventService analyticsEventService;
 
-    
+
     @BeforeEach
     public void init() {
         analyticsEventService.init();
