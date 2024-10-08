@@ -124,7 +124,6 @@ public class AnalyticsEventServiceTest {
     @DisplayName("If Interval and from and to dates are null then throw exception")
     public void whenEventGetDtoIntervalAndFromToDatesAreNullThenThrowException() {
         analyticsEventGetDto.setInterval(null);
-        analyticsEventGetDto.setTo(null);
         analyticsEventGetDto.setFrom(null);
         when(userContext.getUserId()).thenReturn(RECEIVER_ID_ONE);
 

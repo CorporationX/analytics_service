@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/analytics")
-@Validated
 @Tag(name = "Analytics Controller",
         description = "Gives capability to get various analytics from other services")
 public class AnalyticsEventController {

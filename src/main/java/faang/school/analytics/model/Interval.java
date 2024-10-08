@@ -14,6 +14,9 @@ public enum Interval {
 
     public static LocalDateTime startDate(String input) {
         String[] parts = input.split(" ");
+        if(parts.length < 2){
+            return null;
+        }
         int quantity = Integer.parseInt(parts[0]);
         String unit = parts[1].toUpperCase();
 

@@ -30,9 +30,7 @@ public class AnalyticsEventService {
     public AnalyticsEventDto saveEvent(AnalyticsEvent analyticsEvent) {
         log.debug("Saving event in DB with id {} and event type {}", analyticsEvent.getId(),
                 analyticsEvent.getEventType());
-        AnalyticsEventDto savedDto = analyticsEventMapper.toDto(analyticsEventRepository.save(analyticsEvent));
-        log.debug("Successfully saved event!");
-        return savedDto;
+        return analyticsEventMapper.toDto(analyticsEventRepository.save(analyticsEvent));
     }
 
     @Transactional
@@ -48,9 +46,10 @@ public class AnalyticsEventService {
                     .sorted((e1, e2) -> e2.getReceivedAt().compareTo(e1.getReceivedAt()))
                     .map(analyticsEventMapper::toDto)
                     .toList();
-        } else if (analyticsEventGetDto.getFrom() != null && analyticsEventGetDto.getTo() != null) {
+        } else if (analyticsEventGetDto.getFrom() != null) {
             LocalDateTime from = analyticsEventGetDto.getFrom();
-            LocalDateTime to = analyticsEventGetDto.getTo();
+            LocalDateTime to = 
+                    analyticsEventGetDto.getTo() == null ? LocalDateTime.now() : analyticsEventGetDto.getTo();
             log.debug("Getting all events in a period from {} to {}", from, to);
             return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
                     .filter(event -> event.getReceivedAt().isAfter(from) && event.getReceivedAt().isBefore(to))
