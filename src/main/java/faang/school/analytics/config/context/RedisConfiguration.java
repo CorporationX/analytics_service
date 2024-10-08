@@ -4,13 +4,10 @@ import faang.school.analytics.listener.RedisLikeEventListener;
 import faang.school.analytics.listener.RedisMessageListener;
 import faang.school.analytics.publisher.MessagePublisher;
 import faang.school.analytics.publisher.RedisMessagePublisher;
-import faang.school.analytics.subscriber.RedisMessageSubscriber;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.MessageListener;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,7 +25,7 @@ public class RedisConfiguration {
     @Value("${redis.port}")
     private int redisPort;
 
-    @Value("{spring.data.redis.channel.like-event")
+    @Value("spring.data.redis.channel.like-event")
     private String likeEventTopic;
 
     @Bean
@@ -38,9 +35,9 @@ public class RedisConfiguration {
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
+        template.setConnectionFactory(jedisConnectionFactory());
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         return template;
@@ -57,17 +54,6 @@ public class RedisConfiguration {
     } // адаптер RedisMessageListener
 
     @Bean
-    public RedisMessageListenerContainer likeEventContainer(RedisConnectionFactory connectionFactory) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-
-        MessageListener likeEventConsumer = likeEventConsumer();
-        container.addMessageListener(likeEventConsumer, likeEventTopic());
-
-        return container;
-    } // контейнер для LikeEvent
-
-    @Bean
     public MessageListener likeEventConsumer() {
         return new RedisLikeEventListener();
     } // листенер/консьюмер для LikeEvent
@@ -78,7 +64,6 @@ public class RedisConfiguration {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
 
-        MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(redisMessageListener);
         container.addMessageListener(messageListener, topic());
         container.addMessageListener(likeEventListener, likeEventTopic());
 
@@ -86,9 +71,14 @@ public class RedisConfiguration {
     } // контейнер для MessageListener
 
     @Bean
-    MessagePublisher redisPublisher(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Object> template = redisTemplate(connectionFactory);
+    MessagePublisher messagePublisher() {
+        RedisTemplate<String, Object> template = redisTemplate();
         return new RedisMessagePublisher(template, topic());
+    } // паблишер
+    @Bean
+    MessagePublisher likeEventPublisher() {
+        RedisTemplate<String, Object> template = redisTemplate();
+        return new RedisMessagePublisher(template, likeEventTopic());
     } // паблишер
 
     @Bean
