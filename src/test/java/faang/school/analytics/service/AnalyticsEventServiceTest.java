@@ -13,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -59,7 +58,7 @@ class AnalyticsEventServiceTest {
         Interval interval = Interval.LAST_DAY;
 
         when(analyticsEventRepository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE))
-                .thenReturn(Stream.of(event1, event2));
+                .thenReturn(List.of(event1, event2));
 
         List<AnalyticsEvent> result = analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, interval, null, null);
 
@@ -76,7 +75,7 @@ class AnalyticsEventServiceTest {
         LocalDateTime to = NOW;
 
         when(analyticsEventRepository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE))
-                .thenReturn(Stream.of(event1, event2));
+                .thenReturn(List.of(event1, event2));
 
         List<AnalyticsEvent> result = analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, null, from, to);
 
