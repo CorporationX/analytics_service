@@ -29,7 +29,7 @@ public class AnalyticsEventService {
         intervalConverter.put(TimeInterval.HOUR, () -> LocalDateTime.now().minusHours(1));
         intervalConverter.put(TimeInterval.DAY, () -> LocalDateTime.now().minusDays(1));
         intervalConverter.put(TimeInterval.WEEK, () -> LocalDateTime.now().minusWeeks(1));
-        intervalConverter.put(TimeInterval.MOUNT, () -> LocalDateTime.now().minusMonths(1));
+        intervalConverter.put(TimeInterval.MONTH, () -> LocalDateTime.now().minusMonths(1));
         intervalConverter.put(TimeInterval.YEAR, () -> LocalDateTime.now().minusYears(1));
     }
 
@@ -55,6 +55,8 @@ public class AnalyticsEventService {
                                                          EventType eventType,
                                                          LocalDateTime start,
                                                          LocalDateTime end) {
-        return analyticsEventRepository.findEventsByTime(receiverId, eventType, start, end);
+        return getAnalytics(receiverId, eventType).stream()
+                .filter(event -> event.getReceivedAt().isAfter(start) && event.getReceivedAt().isBefore(end))
+                .toList();
     }
 }
