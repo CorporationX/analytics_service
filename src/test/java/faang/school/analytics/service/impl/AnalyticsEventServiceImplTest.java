@@ -1,0 +1,100 @@
+package faang.school.analytics.service.impl;
+
+import faang.school.analytics.dto.analyticsevent.AnalyticsEventDto;
+import faang.school.analytics.dto.analyticsevent.AnalyticsEventFilterDto;
+import faang.school.analytics.filter.analyticseventfilter.AnalyticsEventFilter;
+import faang.school.analytics.mapper.analyticevent.AnalyticsEventMapperImpl;
+import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
+import faang.school.analytics.model.Interval;
+import faang.school.analytics.repository.AnalyticsEventRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
+@ExtendWith(MockitoExtension.class)
+class AnalyticsEventServiceImplTest {
+
+
+    @Mock
+    private AnalyticsEventRepository analyticsEventRepository;
+
+    @Spy
+    private AnalyticsEventMapperImpl analyticsEventMapper;
+
+    @Mock
+    private AnalyticsEventFilter analyticsEventFilter;
+
+    @InjectMocks
+    private AnalyticsEventServiceImpl analyticsEventService;
+
+    @BeforeEach
+    void setUp() {
+        analyticsEventService = new AnalyticsEventServiceImpl(analyticsEventRepository,
+                List.of(analyticsEventFilter), analyticsEventMapper);
+    }
+
+
+    @Test
+    @DisplayName("Send Event Test")
+    void testSendEvent() {
+        var analyticsEvent = new AnalyticsEvent();
+        analyticsEventService.sendEvent(analyticsEvent);
+        verify(analyticsEventRepository).save(any(AnalyticsEvent.class));
+        verifyNoMoreInteractions(analyticsEventRepository);
+    }
+
+    @Test
+    void testGetAnalytics() {
+        var analyticsEvent = AnalyticsEvent.builder()
+                .id(1L)
+                .receiverId(1L)
+                .actorId(2L)
+                .eventType(EventType.PROFILE_VIEW)
+                .receivedAt(LocalDateTime.of(2023, 12, 12, 0, 0, 0))
+                .build();
+
+        var dto = AnalyticsEventDto.builder()
+                .id(1L)
+                .receiverId(1L)
+                .actorId(2L)
+                .eventType(EventType.PROFILE_VIEW)
+                .receivedAt(LocalDateTime.of(2023, 12, 12, 0, 0, 0))
+                .build();
+
+        var from = LocalDateTime.parse("2023-05-08T18:32:34.752000");
+        var to = LocalDateTime.parse("2024-05-08T18:32:34.752000");
+        var analyticsEvents = List.of(analyticsEvent, analyticsEvent, analyticsEvent);
+
+        doReturn(Stream.of(analyticsEvent)).when(analyticsEventRepository).findByReceiverIdAndEventType(anyLong(), any(EventType.class));
+        doReturn(true).when(analyticsEventFilter).isApplicable(any(AnalyticsEventFilterDto.class));
+        doReturn(analyticsEvents.stream()).when(analyticsEventFilter).apply(any(), any(AnalyticsEventFilterDto.class));
+
+
+        List<AnalyticsEventDto> analytics = analyticsEventService.getAnalytics(1, EventType.PROFILE_VIEW, Interval.YEAR,
+                from, to);
+
+        verify(analyticsEventRepository).findByReceiverIdAndEventType(anyLong(), any(EventType.class));
+        verifyNoMoreInteractions(analyticsEventRepository);
+        verify(analyticsEventMapper, times(3)).toDto(any(AnalyticsEvent.class));
+        assertThat(analytics).isNotNull().hasSize(3);
+        assertThat(analytics.get(0)).isEqualTo(dto);
+    }
+}

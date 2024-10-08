@@ -1,0 +1,120 @@
+openapi: 3.0.0
+info:
+  title: Analytics Service API
+  description: OpenAPI documentation for Analytics Service
+  version: 1.0.0
+servers:
+  - url: http://localhost:8086
+    description: Локальный сервер разработки
+paths:
+  #  AnalyticsEvent paths
+  /api/v1/analytics-event:
+    get:
+      tags:
+        - Analytics Event
+      summary: Получение аналитики событий
+      description: Получение списка аналитики событий с фильтрами по периоду
+      parameters:
+        - name: receiver-id
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+        - name: event-type
+          in: query
+          required: true
+          schema:
+              $ref: "#/components/schemas/EventType"
+        - name: filters
+          in: query
+          schema:
+            $ref: "#/components/schemas/AnalyticsEventFilterDto"
+        - name: x-user-id
+          in: header
+          description: user id header
+          schema:
+            type: integer
+            example: 1
+      responses:
+        200:
+          description: Успешный запрос, получение списка аналитики эвентов
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsEventDto"
+
+
+
+components:
+  schemas:
+    Interval:
+      type: string
+      enum: [ DAY, WEEK, MONTH, YEAR ]
+      description: Периоды времени
+
+    EventType:
+      type: string
+      enum: [
+        PROFILE_VIEW,
+        PROJECT_VIEW,
+        FOLLOWER,
+        POST_PUBLISHED,
+        POST_VIEW,
+        POST_LIKE,
+        POST_COMMENT,
+        SKILL_RECEIVED,
+        RECOMMENDATION_RECEIVED,
+        ADDED_TO_FAVOURITES,
+        PROJECT_INVITE,
+        TASK_COMPLETED,
+        GOAL_COMPLETED,
+        ACHIEVEMENT_RECEIVED,
+        PROFILE_APPEARED_IN_SEARCH,
+        PROJECT_APPEARED_IN_SEARCH
+      ]
+      description: Типы событий
+
+    AnalyticsEventFilterDto:
+      type: object
+      properties:
+        interval:
+          $ref: "#/components/schemas/Interval"
+        from:
+          type: string
+          example: 2023-12-12T00:00:00
+          description: Выборка от определённой даты
+        to:
+          type: string
+          example: 2024-12-12T00:00:00
+          description: Выборка до определённой даты
+
+    AnalyticsEventDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+          description: ID Аналитики ивента
+        receiverId:
+          type: integer
+          format: int64
+          example: 2
+          description: ID получателя
+        actorId:
+          type: integer
+          format: int64
+          example: 1
+        eventType:
+          $ref: "#/components/schemas/EventType"
+        receivedAt:
+          type: string
+          example: 2024-10-08 07:09:11
+
+
+
+
+
+  
