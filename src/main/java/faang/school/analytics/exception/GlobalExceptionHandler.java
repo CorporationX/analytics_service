@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(AnalyticsException.class)
-    public ResponseEntity<String> handleAnalyticsRequestException(AnalyticsException ex) {
+    public ResponseEntity<String> handleAnalyticsException(AnalyticsException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }

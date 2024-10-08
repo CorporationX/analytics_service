@@ -16,7 +16,8 @@ import java.time.format.DateTimeParseException;
 @Service
 @RequiredArgsConstructor
 public class AnalyticsRequestService {
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+    private static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_PATTERN);
 
     public EventType convertToEventType(String eventType) {
         try {
@@ -48,7 +49,7 @@ public class AnalyticsRequestService {
         try {
             return LocalDateTime.parse(dateTime, DATE_FORMATTER);
         } catch (DateTimeParseException e) {
-            throw new InvalidDateException("Invalid date format. Expected format: yyyy-MM-dd'T'HH:mm:ss");
+            throw new InvalidDateException("Invalid date format. Expected format: " + DATE_PATTERN);
         }
     }
 
