@@ -16,6 +16,7 @@ public class SearchAppearanceEventListener implements MessageListener {
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
 
+    // TODO create tests
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {

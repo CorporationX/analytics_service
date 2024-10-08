@@ -13,6 +13,7 @@ public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventMapper mapper;
 
+    // TODO create tests
     public void createAnalyticsEvent(SearchAppearanceEvent searchAppearanceEvent) {
         AnalyticsEvent analyticsEvent = mapper.toEntity(searchAppearanceEvent);
         analyticsEventRepository.save(analyticsEvent);
