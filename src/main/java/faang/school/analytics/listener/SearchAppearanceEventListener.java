@@ -6,12 +6,14 @@ import faang.school.analytics.model.AnalyticsEventService;
 import faang.school.analytics.model.dto.SearchAppearanceEvent;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class SearchAppearanceEventListener implements MessageListener {
@@ -19,7 +21,6 @@ public class SearchAppearanceEventListener implements MessageListener {
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper mapper;
 
-    // TODO create tests
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
@@ -27,6 +28,7 @@ public class SearchAppearanceEventListener implements MessageListener {
             AnalyticsEvent analyticsEvent = mapper.fromSearchAppearanceToEntity(event);
             analyticsEventService.saveEvent(analyticsEvent);
         } catch (IOException e) {
+            log.error("Failed to convert message", e);
             throw new RuntimeException(e);
         }
     }
