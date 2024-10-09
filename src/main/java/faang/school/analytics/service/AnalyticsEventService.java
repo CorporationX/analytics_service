@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface AnalyticsEventService {
 
-    void sendEvent(AnalyticsEvent event);
+    AnalyticsEvent sendEvent(AnalyticsEvent event);
 
     List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval,
                                          LocalDateTime from, LocalDateTime to);

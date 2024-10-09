@@ -68,7 +68,7 @@ class AnalyticsEventServiceImplTest {
                 .receiverId(1L)
                 .actorId(2L)
                 .eventType(EventType.PROFILE_VIEW)
-                .receivedAt(LocalDateTime.of(2023, 12, 12, 0, 0, 0))
+                .receivedAt(LocalDateTime.parse("2023-12-12T00:00:00"))
                 .build();
 
         var dto = AnalyticsEventDto.builder()
@@ -76,25 +76,24 @@ class AnalyticsEventServiceImplTest {
                 .receiverId(1L)
                 .actorId(2L)
                 .eventType(EventType.PROFILE_VIEW)
-                .receivedAt(LocalDateTime.of(2023, 12, 12, 0, 0, 0))
+                .receivedAt(LocalDateTime.parse("2023-12-12T00:00:00"))
                 .build();
 
         var from = LocalDateTime.parse("2023-05-08T18:32:34.752000");
         var to = LocalDateTime.parse("2024-05-08T18:32:34.752000");
-        var analyticsEvents = List.of(analyticsEvent, analyticsEvent, analyticsEvent);
 
         doReturn(Stream.of(analyticsEvent)).when(analyticsEventRepository).findByReceiverIdAndEventType(anyLong(), any(EventType.class));
         doReturn(true).when(analyticsEventFilter).isApplicable(any(AnalyticsEventFilterDto.class));
-        doReturn(analyticsEvents.stream()).when(analyticsEventFilter).apply(any(), any(AnalyticsEventFilterDto.class));
+        doReturn(Stream.of(analyticsEvent, analyticsEvent, analyticsEvent)).when(analyticsEventFilter).apply(any(), any(AnalyticsEventFilterDto.class));
 
 
-        List<AnalyticsEventDto> analytics = analyticsEventService.getAnalytics(1, EventType.PROFILE_VIEW, Interval.YEAR,
+        List<AnalyticsEventDto> result = analyticsEventService.getAnalytics(1, EventType.PROFILE_VIEW, Interval.YEAR,
                 from, to);
 
         verify(analyticsEventRepository).findByReceiverIdAndEventType(anyLong(), any(EventType.class));
         verifyNoMoreInteractions(analyticsEventRepository);
         verify(analyticsEventMapper, times(3)).toDto(any(AnalyticsEvent.class));
-        assertThat(analytics).isNotNull().hasSize(3);
-        assertThat(analytics.get(0)).isEqualTo(dto);
+        assertThat(result).isNotNull().hasSize(3);
+        assertThat(result.get(0)).isEqualTo(dto);
     }
 }

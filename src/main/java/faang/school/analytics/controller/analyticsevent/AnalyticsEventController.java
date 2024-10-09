@@ -20,7 +20,7 @@ public class AnalyticsEventController {
     private final AnalyticsEventService analyticsEventService;
 
     @GetMapping
-    public List<AnalyticsEventDto> getAnalyticsEvents(@RequestParam(value = "receiver-id") @Positive long receiverId,
+    public List<AnalyticsEventDto> getAnalyticsEvents(@RequestParam("receiver-id") @Positive long receiverId,
                                                       @RequestParam("event-type") EventType eventType,
                                                       AnalyticsEventFilterDto filters) {
         return analyticsEventService.getAnalytics(receiverId, eventType,

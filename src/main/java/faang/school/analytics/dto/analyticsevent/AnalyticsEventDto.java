@@ -22,7 +22,7 @@ public record AnalyticsEventDto(
         @NotNull
         EventType eventType,
 
-        @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", shape = JsonFormat.Shape.STRING)
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
         LocalDateTime receivedAt
 ) {
 }
