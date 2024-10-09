@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 public interface AnalyticsEventMapper {
 
     @Mapping(target = "eventType", source = "postId", qualifiedByName = "eventType")
-    @Mapping(target = "receiverId", source = "authorId")
+    @Mapping(target = "receiverId", source = "postId")
     @Mapping(target = "actorId", source = "commentId")
     @Mapping(target = "receivedAt", source = "date")
     AnalyticsEvent toAnalytics(CommentEvent commentEvent);
