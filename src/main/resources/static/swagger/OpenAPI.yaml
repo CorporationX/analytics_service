@@ -8,7 +8,7 @@ servers:
     description: Локальный сервер разработки
 paths:
   #  AnalyticsEvent paths
-  /api/v1/analytics-event:
+  /api/v1/analytics-events:
     get:
       tags:
         - Analytics Event
@@ -26,7 +26,7 @@ paths:
           in: query
           required: true
           schema:
-              $ref: "#/components/schemas/EventType"
+            $ref: "#/components/schemas/EventType"
         - name: filters
           in: query
           schema:

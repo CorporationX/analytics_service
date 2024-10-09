@@ -54,9 +54,9 @@ class AnalyticsEventServiceImplTest {
 
     @Test
     @DisplayName("Send Event Test")
-    void testSendEvent() {
+    void testSaveEvent() {
         var analyticsEvent = new AnalyticsEvent();
-        analyticsEventService.sendEvent(analyticsEvent);
+        analyticsEventService.saveEvent(analyticsEvent);
         verify(analyticsEventRepository).save(any(AnalyticsEvent.class));
         verifyNoMoreInteractions(analyticsEventRepository);
     }

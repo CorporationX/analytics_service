@@ -56,7 +56,7 @@ class AnalyticsEventControllerTest {
             .getAnalytics(anyLong(), any(EventType.class), any(Interval.class),
                     any(LocalDateTime.class), any(LocalDateTime.class));
 
-        mockMvc.perform(get("/api/v1/analytics-event")
+        mockMvc.perform(get("/api/v1/analytics-events")
                 .param("receiver-id", "1")
                 .param("event-type", "PROFILE_VIEW")
                 .param("interval", "YEAR")
