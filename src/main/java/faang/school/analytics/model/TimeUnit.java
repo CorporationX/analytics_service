@@ -5,27 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDateTime;
 
 @Slf4j
-public enum Interval {
+public enum TimeUnit {
     HOUR,
     DAY,
     WEEK,
     MONTH,
     YEAR;
 
-    public static LocalDateTime startDate(String input) {
-        String[] parts = input.split(" ");
-        if(parts.length < 2){
-            return null;
-        }
-        int quantity = Integer.parseInt(parts[0]);
-        String unit = parts[1].toUpperCase();
-
+    public static LocalDateTime startDate(int quantity, TimeUnit timeUnit) {
         try {
-            if(unit.endsWith("S")){
-                unit = unit.replace("S", "").trim();
-            }
-            Interval interval = Interval.valueOf(unit);
-            return switch (interval) {
+            return switch (timeUnit) {
                 case HOUR  -> LocalDateTime.now().minusHours(quantity);
                 case DAY -> LocalDateTime.now().minusDays(quantity);
                 case WEEK -> LocalDateTime.now().minusWeeks(quantity);
@@ -33,7 +22,7 @@ public enum Interval {
                 case YEAR -> LocalDateTime.now().minusYears(quantity);
             };
         } catch (IllegalArgumentException e) {
-            log.warn("No interval value was found for unit string: {}", unit);
+            log.warn("No interval value was found for {}", timeUnit);
         }
         return null;
     }

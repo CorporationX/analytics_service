@@ -7,7 +7,7 @@ import faang.school.analytics.exception.IntervalsNotValidException;
 import faang.school.analytics.mapper.analytics_event.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.model.Interval;
+import faang.school.analytics.model.TimeUnit;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -28,37 +28,36 @@ public class AnalyticsEventService {
 
     @Transactional
     public AnalyticsEventDto saveEvent(AnalyticsEvent analyticsEvent) {
-        log.debug("Saving event in DB with id {} and event type {}", analyticsEvent.getId(),
-                analyticsEvent.getEventType());
-        return analyticsEventMapper.toDto(analyticsEventRepository.save(analyticsEvent));
+        log.debug("Saving event in DB with event type {}", analyticsEvent.getEventType());
+        return analyticsEventMapper.toAnalyticsEventDto(analyticsEventRepository.save(analyticsEvent));
     }
 
     @Transactional
     public List<AnalyticsEventDto> getAnalytics(AnalyticsEventGetDto analyticsEventGetDto) {
         long receiverId = userContext.getUserId();
         EventType eventType = analyticsEventGetDto.getEventType();
+        TimeUnit timeUnit = analyticsEventGetDto.getTimeUnit();
+        Integer timeQuantity = analyticsEventGetDto.getTimeQuantity();
+        LocalDateTime from = analyticsEventGetDto.getFrom();
+        LocalDateTime to =
+                analyticsEventGetDto.getTo() == null ? LocalDateTime.now() : analyticsEventGetDto.getTo();
 
-        if (analyticsEventGetDto.getInterval() != null && !analyticsEventGetDto.getInterval().isBlank()) {
-            LocalDateTime intervalTime = Interval.startDate(analyticsEventGetDto.getInterval());
-            log.debug("Getting all events from {} to present moment", intervalTime);
-            return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
-                    .filter(event -> event.getReceivedAt().isAfter(intervalTime))
-                    .sorted((e1, e2) -> e2.getReceivedAt().compareTo(e1.getReceivedAt()))
-                    .map(analyticsEventMapper::toDto)
-                    .toList();
-        } else if (analyticsEventGetDto.getFrom() != null) {
-            LocalDateTime from = analyticsEventGetDto.getFrom();
-            LocalDateTime to = 
-                    analyticsEventGetDto.getTo() == null ? LocalDateTime.now() : analyticsEventGetDto.getTo();
-            log.debug("Getting all events in a period from {} to {}", from, to);
-            return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
-                    .filter(event -> event.getReceivedAt().isAfter(from) && event.getReceivedAt().isBefore(to))
-                    .sorted((e1, e2) -> e2.getReceivedAt().compareTo(e1.getReceivedAt()))
-                    .map(analyticsEventMapper::toDto)
-                    .toList();
-        } else {
-            log.error("Interval or from and to dates are null!");
-            throw new IntervalsNotValidException("Interval or from and to dates are null! Please check your request!");
-        }
+        log.debug("Getting analytics from DB by id: {} and type: {}", receiverId, eventType);
+        return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
+                .filter(event -> {
+                    if (timeUnit != null && timeQuantity != null) {
+                        log.debug("Searching events {} for interval {} {}", eventType, timeQuantity, timeUnit);
+                        return event.getReceivedAt().isAfter(TimeUnit.startDate(timeQuantity, timeUnit));
+                    } else if (from != null) {
+                        log.debug("Searching events {} from {} to {}", eventType, from, to);
+                        return event.getReceivedAt().isAfter(from) && event.getReceivedAt().isBefore(to);
+                    } else {
+                        log.error("TimeUnit, timeQuantity and from date are null, cannot set up filter");
+                        throw new IntervalsNotValidException("All date markers are null! Please check your request!");
+                    }
+                })
+                .sorted((e1, e2) -> e2.getReceivedAt().compareTo(e1.getReceivedAt()))
+                .map(analyticsEventMapper::toAnalyticsEventDto)
+                .toList();
     }
 }

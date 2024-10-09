@@ -20,17 +20,22 @@ import java.time.LocalDateTime;
 @NotNull(message = "This object mustn't be null!")
 @Schema(description = "Analytics Event entity returned to user")
 public class AnalyticsEventDto {
+
     @Schema(description = "Event id", example = "1")
     @Positive
     private long id;
+
     @Schema(description = "User receiver id", example = "1")
     @Positive
     private long receiverId;
+
     @Schema(description = "Author id who did action", example = "1")
     @Positive
     private long actorId;
+
     @Schema(description = "Event type what was made", example = "POST_LIKE")
     private EventType eventType;
+
     @Schema(description = "Date and time when this event was made", example = "2024-10-08 12:26:55.152")
     private LocalDateTime receivedAt;
 }

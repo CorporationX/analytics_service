@@ -7,6 +7,7 @@ import faang.school.analytics.exception.IntervalsNotValidException;
 import faang.school.analytics.mapper.analytics_event.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
+import faang.school.analytics.model.TimeUnit;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +32,6 @@ public class AnalyticsEventServiceTest {
     private static final long ACTOR_ID_ONE = 1L;
     private static final LocalDateTime SOME_TIME_AGO =
             LocalDateTime.of(2024, 10, 8, 13, 10, 10);
-    private static final String INTERVAL = "2 months";
     private static final LocalDateTime FROM_DATE = LocalDateTime.of(2024, 10, 7, 13, 15);
     private static final LocalDateTime TO_DATE = LocalDateTime.of(2024, 10, 8, 13, 15);
 
@@ -70,7 +70,8 @@ public class AnalyticsEventServiceTest {
 
         analyticsEventGetDto = AnalyticsEventGetDto.builder()
                 .eventType(EventType.POST_LIKE)
-                .interval(INTERVAL)
+                .timeQuantity(2)
+                .timeUnit(TimeUnit.MONTH)
                 .from(FROM_DATE)
                 .to(TO_DATE)
                 .build();
@@ -80,7 +81,7 @@ public class AnalyticsEventServiceTest {
     @DisplayName("Saves event in DB return eventDto")
     public void whenEventPassedThenSavesItInDBAndReturnDto() {
         when(analyticsEventRepository.save(event)).thenReturn(event);
-        when(analyticsEventMapper.toDto(event)).thenReturn(eventDto);
+        when(analyticsEventMapper.toAnalyticsEventDto(event)).thenReturn(eventDto);
 
         AnalyticsEventDto savedEvent = analyticsEventService.saveEvent(event);
         assertEquals(savedEvent.getId(), eventDto.getId());
@@ -95,7 +96,7 @@ public class AnalyticsEventServiceTest {
         when(analyticsEventRepository
                 .findByReceiverIdAndEventType(RECEIVER_ID_ONE, analyticsEventGetDto.getEventType()))
                 .thenReturn(Stream.of(event));
-        when(analyticsEventMapper.toDto(event)).thenReturn(eventDto);
+        when(analyticsEventMapper.toAnalyticsEventDto(event)).thenReturn(eventDto);
 
         List<AnalyticsEventDto> resultList = analyticsEventService.getAnalytics(analyticsEventGetDto);
 
@@ -104,15 +105,16 @@ public class AnalyticsEventServiceTest {
     }
 
     @Test
-    @DisplayName("Find events in DB specified by parameters passed in when interval is null" +
+    @DisplayName("Find events in DB specified by parameters passed in when timeUnit and quantity are null" +
             " and from and to dates are present then return list of eventDtos by time")
     public void whenEventGetDtoPassedWithFromToDatesFindEventsDescribedInItThenReturnEventDtoListSortedByTime() {
-        analyticsEventGetDto.setInterval(null);
+        analyticsEventGetDto.setTimeUnit(null);
+        analyticsEventGetDto.setTimeQuantity(null);
         when(userContext.getUserId()).thenReturn(RECEIVER_ID_ONE);
         when(analyticsEventRepository
                 .findByReceiverIdAndEventType(RECEIVER_ID_ONE, analyticsEventGetDto.getEventType()))
                 .thenReturn(Stream.of(event));
-        when(analyticsEventMapper.toDto(event)).thenReturn(eventDto);
+        when(analyticsEventMapper.toAnalyticsEventDto(event)).thenReturn(eventDto);
 
         List<AnalyticsEventDto> resultList = analyticsEventService.getAnalytics(analyticsEventGetDto);
 
@@ -123,12 +125,15 @@ public class AnalyticsEventServiceTest {
     @Test
     @DisplayName("If Interval and from and to dates are null then throw exception")
     public void whenEventGetDtoIntervalAndFromToDatesAreNullThenThrowException() {
-        analyticsEventGetDto.setInterval(null);
+        analyticsEventGetDto.setTimeUnit(null);
+        analyticsEventGetDto.setTimeQuantity(null);
         analyticsEventGetDto.setFrom(null);
         when(userContext.getUserId()).thenReturn(RECEIVER_ID_ONE);
+        when(analyticsEventRepository
+                .findByReceiverIdAndEventType(RECEIVER_ID_ONE, analyticsEventGetDto.getEventType()))
+                .thenReturn(Stream.of(event));
 
         assertThrows(IntervalsNotValidException.class, () ->
                 analyticsEventService.getAnalytics(analyticsEventGetDto));
-
     }
 }
