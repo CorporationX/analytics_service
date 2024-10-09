@@ -1,8 +1,8 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.model.dto.FollowerEventDto;
+import faang.school.analytics.model.entity.AnalyticsEvent;
 
 public interface AnalyticsEventService {
 
-    void saveFollowerEvent(FollowerEventDto dto);
+    void saveEvent(AnalyticsEvent event);
 }
