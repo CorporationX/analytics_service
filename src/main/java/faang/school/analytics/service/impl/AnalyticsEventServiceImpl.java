@@ -26,8 +26,8 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     private final AnalyticsEventMapper analyticEventMapper;
 
     @Override
-    public AnalyticsEvent sendEvent(AnalyticsEvent event) {
-        return analyticsEventRepository.save(event);
+    public AnalyticsEventDto sendEvent(AnalyticsEvent event) {
+        return analyticEventMapper.toDto(analyticsEventRepository.save(event));
     }
 
     @Override

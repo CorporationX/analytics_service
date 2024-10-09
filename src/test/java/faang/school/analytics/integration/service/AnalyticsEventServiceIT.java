@@ -26,15 +26,24 @@ public class AnalyticsEventServiceIT extends IntegrationTestBase {
     @Test
     @DisplayName("Send Event Test")
     void testSendEvent() {
-        AnalyticsEvent event = AnalyticsEvent.builder()
-                .receiverId(2)
-                .actorId(3)
+        var givenAnalyticsEvent = AnalyticsEvent.builder()
+                .receiverId(2L)
+                .actorId(3L)
                 .eventType(EventType.PROFILE_VIEW)
                 .receivedAt(LocalDateTime.parse("2023-06-01T15:00:00"))
                 .build();
-        var result = analyticsEventService.sendEvent(event);
+
+        var expected = AnalyticsEventDto.builder()
+                .id(4L)
+                .receiverId(2L)
+                .actorId(3L)
+                .eventType(EventType.PROFILE_VIEW)
+                .receivedAt(LocalDateTime.parse("2023-06-01T15:00:00"))
+                .build();
+
+        var result = analyticsEventService.sendEvent(givenAnalyticsEvent);
         assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(event);
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test
