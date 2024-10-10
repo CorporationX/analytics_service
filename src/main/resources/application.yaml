@@ -21,8 +21,11 @@ spring:
     redis:
       port: 6379
       host: localhost
-      channel:
-        profile-view: profile_view_channel
+      channels:
+        profile-view-channel:
+          name: profile_view_channel
+        goal-completed-event-channel:
+          name: goal_completed_event_channel
 
 server:
   port: 8086

@@ -1,5 +1,6 @@
-package faang.school.analytics.model;
+package faang.school.analytics.model.entity;
 
+import faang.school.analytics.model.enums.EventType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
