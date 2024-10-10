@@ -26,12 +26,12 @@ public class AnalyticsController {
 
     @GetMapping
     public List<AnalyticsEvent> getAnalytics(@RequestParam @Positive long receiverId,
-                                             @RequestParam(required = false) @NotNull String eventTypeString,
+                                             @RequestParam(required = false) String eventTypeString,
                                              @RequestParam(required = false) @Positive Integer eventTypeInteger,
-                                             @RequestParam(required = false) @NotNull String intervalString,
+                                             @RequestParam(required = false) String intervalString,
                                              @RequestParam(required = false) @Positive Integer intervalInteger,
-                                             @RequestParam(required = false) @NotNull LocalDateTimeInput startDate,
-                                             @RequestParam(required = false) @NotNull LocalDateTimeInput endDate) {
+                                             @RequestParam(required = false) LocalDateTimeInput startDate,
+                                             @RequestParam(required = false) LocalDateTimeInput endDate) {
         validator.validateRequestParams(eventTypeString, eventTypeInteger, intervalString, intervalInteger, startDate, endDate);
         return service.getAnalytics(receiverId, eventTypeString, eventTypeInteger, intervalString, intervalInteger, startDate, endDate);
     }
