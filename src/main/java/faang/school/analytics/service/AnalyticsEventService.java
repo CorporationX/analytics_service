@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static faang.school.analytics.model.TimeInterval.ALL;
 import static faang.school.analytics.model.TimeInterval.DAY;
@@ -30,17 +30,17 @@ import static faang.school.analytics.model.TimeInterval.YEAR;
 @RequiredArgsConstructor
 public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
-    private Map<TimeInterval, Function<LocalDateTime, LocalDateTime>> intervalConverter = new HashMap<>();
+    private Map<TimeInterval, Supplier<LocalDateTime>> intervalConverter = new HashMap<>();
 
     @PostConstruct
     public void init() {
-        intervalConverter.put(SECOND, time -> time.minusSeconds(1));
-        intervalConverter.put(MINUTE, time -> time.minusMinutes(1));
-        intervalConverter.put(HOUR, time -> time.minusHours(1));
-        intervalConverter.put(DAY, time -> time.minusDays(1));
-        intervalConverter.put(WEEK, time -> time.minusWeeks(1));
-        intervalConverter.put(MONTH, time -> time.minusMonths(1));
-        intervalConverter.put(YEAR, time -> time.minusYears(1));
+        intervalConverter.put(SECOND, () -> LocalDateTime.now().minusSeconds(1));
+        intervalConverter.put(MINUTE, () -> LocalDateTime.now().minusMinutes(1));
+        intervalConverter.put(HOUR, () -> LocalDateTime.now().minusHours(1));
+        intervalConverter.put(DAY, () -> LocalDateTime.now().minusDays(1));
+        intervalConverter.put(WEEK, () -> LocalDateTime.now().minusWeeks(1));
+        intervalConverter.put(MONTH, () -> LocalDateTime.now().minusMonths(1));
+        intervalConverter.put(YEAR, () -> LocalDateTime.now().minusYears(1));
     }
 
     @Transactional
@@ -61,12 +61,24 @@ public class AnalyticsEventService {
             return events;
         }
 
-        LocalDateTime startTime = Objects.nonNull(start) ? start : LocalDateTime.now();
-        LocalDateTime endTime = Objects.nonNull(end) ? end : intervalConverter.get(interval).apply(startTime);
+        if (Objects.nonNull(start)) {
+            events = events.stream()
+                    .filter(event -> event.getReceivedAt().isAfter(start))
+                    .toList();
+        }
 
-        return events.stream()
-                .filter(event -> event.getReceivedAt().isAfter(startTime))
-                .filter(event -> event.getReceivedAt().isBefore(endTime))
-                .toList();
+        if (Objects.nonNull(end)) {
+            events = events.stream()
+                    .filter(event -> event.getReceivedAt().isBefore(end))
+                    .toList();
+        }
+
+        if (Objects.isNull(start) && Objects.isNull(end)) {
+            events = events.stream()
+                    .filter(event -> event.getReceivedAt().isAfter(intervalConverter.get(interval).get()))
+                    .toList();
+        }
+
+        return events;
     }
 }
