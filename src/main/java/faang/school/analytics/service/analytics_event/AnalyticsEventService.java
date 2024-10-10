@@ -44,20 +44,23 @@ public class AnalyticsEventService {
 
         log.debug("Getting analytics from DB by id: {} and type: {}", receiverId, eventType);
         return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
-                .filter(event -> {
-                    if (timeUnit != null && timeQuantity != null) {
-                        log.debug("Searching events {} for interval {} {}", eventType, timeQuantity, timeUnit);
-                        return event.getReceivedAt().isAfter(TimeUnit.startDate(timeQuantity, timeUnit));
-                    } else if (from != null) {
-                        log.debug("Searching events {} from {} to {}", eventType, from, to);
-                        return event.getReceivedAt().isAfter(from) && event.getReceivedAt().isBefore(to);
-                    } else {
-                        log.error("TimeUnit, timeQuantity and from date are null, cannot set up filter");
-                        throw new IntervalsNotValidException("All date markers are null! Please check your request!");
-                    }
-                })
+                .filter(event -> checkEventByInterval(event, eventType, timeUnit, timeQuantity, from, to))
                 .sorted((e1, e2) -> e2.getReceivedAt().compareTo(e1.getReceivedAt()))
                 .map(analyticsEventMapper::toAnalyticsEventDto)
                 .toList();
+    }
+
+    private boolean checkEventByInterval(AnalyticsEvent event, EventType eventType, TimeUnit timeUnit,
+                                         Integer timeQuantity, LocalDateTime from, LocalDateTime to) {
+        if (timeUnit != null && timeQuantity != null) {
+            log.debug("Searching events {} for interval {} {}", eventType, timeQuantity, timeUnit);
+            return event.getReceivedAt().isAfter(TimeUnit.getStartDate(timeQuantity, timeUnit));
+        } else if (from != null) {
+            log.debug("Searching events {} from {} to {}", eventType, from, to);
+            return event.getReceivedAt().isAfter(from) && event.getReceivedAt().isBefore(to);
+        } else {
+            log.error("TimeUnit, timeQuantity and from date are null, cannot set up filter");
+            throw new IntervalsNotValidException("All date markers are null! Please check your request!");
+        }
     }
 }
