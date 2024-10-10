@@ -14,6 +14,12 @@ jobs:
     # Указываем виртуальную машину, на которой будет выполняться задача
     runs-on: ubuntu-latest
 
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379  # Открываем порт Redis
+
     # Определяем шаги для сборки
     steps:
       - name: Checkout code # Шаг: Клонирование кода
