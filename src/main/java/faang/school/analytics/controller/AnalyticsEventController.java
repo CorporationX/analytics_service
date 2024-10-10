@@ -6,13 +6,9 @@ import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import faang.school.analytics.service.AnalyticsRequestService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,14 +22,6 @@ public class AnalyticsEventController {
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper analyticsEventMapper;
     private final AnalyticsRequestService analyticsRequestService;
-
-    @PostMapping("/event")
-    public ResponseEntity<Long> saveEvent(@Valid @RequestBody AnalyticsEventDto eventDto) {
-        AnalyticsEvent event = analyticsEventMapper.toAnalyticsEvent(eventDto);
-        AnalyticsEvent savedEvent = analyticsEventService.saveEvent(event);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedEvent.getId());
-    }
 
     @GetMapping("/get-analytics-event")
     public ResponseEntity<List<AnalyticsEventDto>> getAnalytics(
