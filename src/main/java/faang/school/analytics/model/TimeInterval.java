@@ -7,5 +7,6 @@ public enum TimeInterval {
     DAY,
     WEEK,
     MONTH,
-    YEAR
+    YEAR,
+    ALL,
 }

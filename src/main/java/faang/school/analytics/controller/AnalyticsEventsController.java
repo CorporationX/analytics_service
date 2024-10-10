@@ -24,26 +24,12 @@ public class AnalyticsEventsController {
     private final AnalyticsEventMapper analyticsEventMapper;
 
     @GetMapping
-    public List<AnalyticsEventDto> getAnalytics(@RequestParam Long receiverId, @RequestParam EventType type) {
-        List<AnalyticsEvent> events = analyticsService.getAnalytics(receiverId, type);
+    public List<AnalyticsEventDto> getAnalytics(@RequestParam Long receiverId,
+                                                @RequestParam EventType type,
+                                                @RequestParam(defaultValue = "MONTH" ) TimeInterval interval,
+                                                @RequestParam LocalDateTime startDate,
+                                                @RequestParam LocalDateTime endDate) {
+        List<AnalyticsEvent> events = analyticsService.getAnalytics(receiverId, type, interval, startDate, endDate);
         return analyticsEventMapper.toAnalyticsEventDtoList(events);
     }
-
-    @GetMapping("/interval")
-    public List<AnalyticsEventDto> getAnalyticsByInterval(@RequestParam Long receiverId,
-                                                          @RequestParam EventType type,
-                                                          @RequestParam(defaultValue = "MONTH" ) TimeInterval interval) {
-        List<AnalyticsEvent> events = analyticsService.getAnalyticsByInterval(receiverId, type, interval);
-        return analyticsEventMapper.toAnalyticsEventDtoList(events);
-    }
-
-    @GetMapping("/between-dates")
-    public List<AnalyticsEventDto> getAnalyticsBetweenDates(@RequestParam Long receiverId,
-                                                            @RequestParam EventType type,
-                                                            @RequestParam LocalDateTime startDate,
-                                                            @RequestParam LocalDateTime endDate) {
-        List<AnalyticsEvent> events = analyticsService.getAnalyticsBetweenDates(receiverId, type, startDate, endDate);
-        return analyticsEventMapper.toAnalyticsEventDtoList(events);
-    }
-
 }
