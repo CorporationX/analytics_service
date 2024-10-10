@@ -37,3 +37,8 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    url: /swagger/OpenAPI.yaml
