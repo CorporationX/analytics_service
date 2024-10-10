@@ -34,3 +34,8 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+redis:
+  pubsub:
+    topics:
+      like-event
