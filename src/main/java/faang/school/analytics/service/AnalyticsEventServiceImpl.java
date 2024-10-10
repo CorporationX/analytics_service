@@ -50,7 +50,7 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
         if (interval != null) {
             return matchesInterval(date, interval);
         }
-        return !date.isBefore(from) && !date.isAfter(to);
+        return date.isAfter(from) && date.isBefore(to);
     }
 
     private boolean matchesInterval(LocalDateTime date, Interval interval) {
