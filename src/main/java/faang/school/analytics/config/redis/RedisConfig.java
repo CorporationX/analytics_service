@@ -1,7 +1,10 @@
 package faang.school.analytics.config.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.listener.LikeEventListener;
 import faang.school.analytics.service.AnalyticsEventService;
+import faang.school.analytics.service.AnalyticsEventServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,12 +20,13 @@ public class RedisConfig {
 
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
+    private final AnalyticsEventMapper analyticsEventMapper;
 
     @Value("${redis.pubsub.topic:like-event}")
-    private String topic;
+    private String likeEventTopic;
     @Bean
     public MessageListenerAdapter messageListener() {
-        return new MessageListenerAdapter(new LikeEventListener(objectMapper, analyticsEventService));
+        return new MessageListenerAdapter(new LikeEventListener(objectMapper, analyticsEventService, analyticsEventMapper));
     }
 
     @Bean
@@ -35,7 +39,7 @@ public class RedisConfig {
 
     @Bean
     public ChannelTopic likeEventTopic() {
-        return new ChannelTopic(topic);
+        return new ChannelTopic(likeEventTopic);
     }
 
 }
