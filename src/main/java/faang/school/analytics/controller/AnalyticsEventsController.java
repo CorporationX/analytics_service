@@ -26,9 +26,9 @@ public class AnalyticsEventsController {
     @GetMapping
     public List<AnalyticsEventDto> getAnalytics(@RequestParam Long receiverId,
                                                 @RequestParam EventType type,
-                                                @RequestParam(defaultValue = "MONTH" ) TimeInterval interval,
-                                                @RequestParam LocalDateTime startDate,
-                                                @RequestParam LocalDateTime endDate) {
+                                                @RequestParam(required = false) TimeInterval interval,
+                                                @RequestParam(required = false) LocalDateTime startDate,
+                                                @RequestParam(required = false) LocalDateTime endDate) {
         List<AnalyticsEvent> events = analyticsService.getAnalytics(receiverId, type, interval, startDate, endDate);
         return analyticsEventMapper.toAnalyticsEventDtoList(events);
     }

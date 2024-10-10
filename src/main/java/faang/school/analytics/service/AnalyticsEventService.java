@@ -4,7 +4,6 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.TimeInterval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
-import static faang.school.analytics.model.TimeInterval.ALL;
 import static faang.school.analytics.model.TimeInterval.DAY;
 import static faang.school.analytics.model.TimeInterval.HOUR;
 import static faang.school.analytics.model.TimeInterval.MINUTE;
@@ -30,18 +28,15 @@ import static faang.school.analytics.model.TimeInterval.YEAR;
 @RequiredArgsConstructor
 public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
-    private Map<TimeInterval, Supplier<LocalDateTime>> intervalConverter = new HashMap<>();
-
-    @PostConstruct
-    public void init() {
-        intervalConverter.put(SECOND, () -> LocalDateTime.now().minusSeconds(1));
-        intervalConverter.put(MINUTE, () -> LocalDateTime.now().minusMinutes(1));
-        intervalConverter.put(HOUR, () -> LocalDateTime.now().minusHours(1));
-        intervalConverter.put(DAY, () -> LocalDateTime.now().minusDays(1));
-        intervalConverter.put(WEEK, () -> LocalDateTime.now().minusWeeks(1));
-        intervalConverter.put(MONTH, () -> LocalDateTime.now().minusMonths(1));
-        intervalConverter.put(YEAR, () -> LocalDateTime.now().minusYears(1));
-    }
+    private Map<TimeInterval, Function<LocalDateTime, LocalDateTime>> intervalConverter = new HashMap<>() {{
+        put(SECOND, time -> time.minusSeconds(1));
+        put(MINUTE, time -> time.minusMinutes(1));
+        put(HOUR, time -> time.minusHours(1));
+        put(DAY, time -> time.minusDays(1));
+        put(WEEK, time -> time.minusWeeks(1));
+        put(MONTH, time -> time.minusMonths(1));
+        put(YEAR, time -> time.minusYears(1));
+    }};
 
     @Transactional
     public AnalyticsEvent saveEvent(AnalyticsEvent event) {
@@ -55,35 +50,38 @@ public class AnalyticsEventService {
                                              LocalDateTime start,
                                              LocalDateTime end) {
 
-        List<AnalyticsEvent> events = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
-
-        if (interval.equals(ALL)) {
-            return events;
+        if (isNonTimeFilter(interval, start, end)) {
+            return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
         }
 
-        if (Objects.isNull(start) && Objects.isNull(end)) {
-            return events.stream()
-                    .filter(event -> event.getReceivedAt().isAfter(intervalConverter.get(interval).get()))
-                    .toList();
-        } else if (Objects.nonNull(start) && Objects.nonNull(end)) {
+        if (isIntervalFilter(interval)) {
+            LocalDateTime endTime = LocalDateTime.now();
+            LocalDateTime startTime = intervalConverter.get(interval).apply(endTime);
+            return analyticsEventRepository.findEventsBetweenTimes(receiverId, eventType, startTime, endTime);
+        }
+
+        if (isBetweenTimesFilters(start, end)) {
+            return analyticsEventRepository.findEventsBetweenTimes(receiverId, eventType, start, end);
+        }
+
+        throw new IllegalArgumentException("Chose interval or between times args");
+    }
+
+    private boolean isBetweenTimesFilters(LocalDateTime start, LocalDateTime end) {
+        if (Objects.isNull(start) || Objects.isNull(end)) {
+            return false;
+        }
             if (start.isAfter(end)) {
-                throw new IllegalArgumentException("start time can`t be after end time");
-            }
+                throw new IllegalArgumentException("Start can`t be after end");
         }
+            return true;
+    }
 
+    private boolean isIntervalFilter(TimeInterval interval) {
+        return Objects.nonNull(interval);
+    }
 
-        if (Objects.nonNull(start)) {
-            events = events.stream()
-                    .filter(event -> event.getReceivedAt().isAfter(start))
-                    .toList();
-        }
-
-        if (Objects.nonNull(end)) {
-            events = events.stream()
-                    .filter(event -> event.getReceivedAt().isBefore(end))
-                    .toList();
-        }
-
-        return events;
+    private boolean isNonTimeFilter(TimeInterval interval, LocalDateTime start, LocalDateTime end) {
+        return Objects.isNull(interval) && Objects.isNull(start) && Objects.isNull(end);
     }
 }
