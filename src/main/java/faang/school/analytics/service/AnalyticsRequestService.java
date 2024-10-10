@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -18,6 +19,35 @@ import java.time.format.DateTimeParseException;
 public class AnalyticsRequestService {
     private static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_PATTERN);
+
+    public AnalyticsRequestParams processRequestParams(String eventType, String interval, String from, String to) {
+        EventType eventTypeEnum = convertToEventType(eventType);
+
+        Interval intervalEnum;
+        LocalDateTime fromDateTime = null;
+        LocalDateTime toDateTime = null;
+
+        if (interval != null && !interval.isEmpty()) {
+            if (from != null || to != null) {
+                throw new IllegalArgumentException("Нельзя указывать 'from' или 'to', когда задан 'interval'.");
+            }
+            intervalEnum = convertToInterval(interval);
+        } else {
+            intervalEnum = Interval.ALL_TIME;
+
+            fromDateTime = (from != null && !from.isEmpty())
+                    ? convertToLocalDateTime(from)
+                    : LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.UTC);
+            toDateTime = (to != null && !to.isEmpty())
+                    ? convertToLocalDateTime(to)
+                    : LocalDateTime.now();
+
+            if (fromDateTime.isAfter(toDateTime)) {
+                throw new IllegalArgumentException("'from' дата не может быть позже 'to' даты.");
+            }
+        }
+        return new AnalyticsRequestParams(eventTypeEnum, intervalEnum, fromDateTime, toDateTime);
+    }
 
     public EventType convertToEventType(String eventType) {
         try {
@@ -50,23 +80,6 @@ public class AnalyticsRequestService {
             return LocalDateTime.parse(dateTime, DATE_FORMATTER);
         } catch (DateTimeParseException e) {
             throw new InvalidDateException("Invalid date format. Expected format: " + DATE_PATTERN);
-        }
-    }
-
-    public AnalyticsRequestParams processRequestParams(String eventType, String interval, String from, String to) {
-        EventType eventTypeEnum = convertToEventType(eventType);
-        Interval intervalEnum = (interval != null) ? convertToInterval(interval) : null;
-        LocalDateTime fromDateTime = (from != null) ? convertToLocalDateTime(from) : null;
-        LocalDateTime toDateTime = (to != null) ? convertToLocalDateTime(to) : null;
-
-        validateRequest(intervalEnum, fromDateTime, toDateTime);
-
-        return new AnalyticsRequestParams(eventTypeEnum, intervalEnum, fromDateTime, toDateTime);
-    }
-
-    private void validateRequest(Interval interval, LocalDateTime from, LocalDateTime to) {
-        if (interval == null && (from == null || to == null)) {
-            throw new IllegalArgumentException("Either 'interval' must be specified or both 'from' and 'to' dates must be provided.");
         }
     }
 }

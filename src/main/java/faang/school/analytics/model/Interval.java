@@ -15,7 +15,8 @@ public enum Interval {
     LAST_MONTH (LocalDateTime.of(LocalDate.now().minusMonths(1), LocalTime.MIN), LocalDateTime.now()),
     LAST_THREE_MONTHS (LocalDateTime.of(LocalDate.now().minusMonths(3), LocalTime.MIN), LocalDateTime.now()),
     LAST_SIX_MONTHS (LocalDateTime.of(LocalDate.now().minusMonths(6), LocalTime.MIN), LocalDateTime.now()),
-    YEAR_TO_DATE (LocalDateTime.of(LocalDate.now().getYear(),1,1,0,0), LocalDateTime.now());
+    YEAR_TO_DATE (LocalDateTime.of(LocalDate.now().getYear(),1,1,0,0), LocalDateTime.now()),
+    ALL_TIME(LocalDateTime.of(1970, 1, 1, 0, 0), LocalDateTime.now());
 
     private final LocalDateTime from;
     private final LocalDateTime to;
