@@ -25,6 +25,9 @@ class AnalyticsEventServiceTest {
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
 
+    @Mock
+    private IntervalService intervalService;
+
     @InjectMocks
     private AnalyticsEventService analyticsEventService;
 
@@ -59,6 +62,8 @@ class AnalyticsEventServiceTest {
 
         when(analyticsEventRepository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE))
                 .thenReturn(List.of(event1, event2));
+        when(intervalService.getFrom(interval)).thenReturn(YESTERDAY);
+        when(intervalService.getTo()).thenReturn(NOW);
 
         List<AnalyticsEvent> result = analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, interval, null, null);
 
@@ -67,6 +72,8 @@ class AnalyticsEventServiceTest {
         assertTrue(result.contains(event2));
 
         verify(analyticsEventRepository, times(1)).findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE);
+        verify(intervalService, times(2)).getFrom(interval);
+        verify(intervalService, times(2)).getTo();
     }
 
     @Test

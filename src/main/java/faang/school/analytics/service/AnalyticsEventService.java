@@ -17,6 +17,7 @@ import java.util.List;
 @Service
 public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
+    private final IntervalService intervalService;
 
     @Transactional
     public AnalyticsEvent saveEvent(AnalyticsEvent event) {
@@ -44,7 +45,9 @@ public class AnalyticsEventService {
         LocalDateTime eventDate = event.getReceivedAt();
 
         if (interval != null) {
-            return DateUtils.isBetweenInclusive(eventDate, interval.getFrom(), interval.getTo());
+            LocalDateTime calculatedFrom = intervalService.getFrom(interval);
+            LocalDateTime calculatedTo = intervalService.getTo();
+            return DateUtils.isBetweenInclusive(eventDate, calculatedFrom, calculatedTo);
         } else {
             return DateUtils.isBetweenInclusive(eventDate, from, to);
         }
