@@ -1,11 +1,10 @@
 package faang.school.analytics.service.impl.analyticsevent;
 
-import faang.school.analytics.model.entity.AnalyticsEvent;
-import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventDto;
-import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventFilterDto;
 import faang.school.analytics.filter.analyticseventfilter.AnalyticsEventFilter;
 import faang.school.analytics.mapper.analyticevent.AnalyticsEventMapperImpl;
-import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventDto;
+import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventFilterDto;
+import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.model.enums.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
@@ -18,14 +17,13 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.ArgumentMatchers.any;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -48,8 +46,8 @@ class AnalyticsEventServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        analyticsEventService = new AnalyticsEventServiceImpl(analyticsEventRepository,
-                List.of(analyticsEventFilter), analyticsEventMapper);
+        analyticsEventService = new AnalyticsEventServiceImpl(List.of(analyticsEventFilter),
+                analyticsEventMapper, analyticsEventRepository);
     }
 
 
