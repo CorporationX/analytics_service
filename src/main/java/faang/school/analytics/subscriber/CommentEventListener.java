@@ -11,9 +11,7 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 
 @Service
 @RequiredArgsConstructor
@@ -21,19 +19,18 @@ import java.io.ObjectInputStream;
 public class CommentEventListener implements MessageListener {
     private final AnalyticsEventRepository repository;
     private final AnalyticsEventMapper mapper;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         CommentEvent commentEvent;
-        ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         try {
-            String json = (String) new ObjectInputStream(new ByteArrayInputStream(message.getBody())).readObject();
-            commentEvent = objectMapper.readValue(json, CommentEvent.class);
-        } catch (IOException | ClassNotFoundException e) {
+            commentEvent = objectMapper.readValue(message.getBody(), CommentEvent.class);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        log.info(commentEvent.toString());
+        log.info("получили ивент: " + commentEvent);
         repository.save(mapper.toAnalytics(commentEvent));
     }
 }

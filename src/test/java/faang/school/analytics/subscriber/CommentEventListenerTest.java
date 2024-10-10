@@ -5,6 +5,7 @@ import faang.school.analytics.dto.CommentEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +27,8 @@ class CommentEventListenerTest {
     private AnalyticsEventRepository repository;
     @Mock
     private AnalyticsEventMapper mapper;
+    @Mock
+    private ObjectMapper objectMapper;
 
     private AnalyticsEvent event;
     private CommentEvent commentEvent;
@@ -36,27 +39,32 @@ class CommentEventListenerTest {
         event = new AnalyticsEvent();
         commentEvent = new CommentEvent();
         message = Mockito.mock(Message.class);
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try (ByteArrayOutputStream b = new ByteArrayOutputStream();
-             ObjectOutputStream o = new ObjectOutputStream(b)) {
-            o.writeObject(objectMapper.writeValueAsString(commentEvent));
-            Mockito.lenient().when(message.getBody())
-                    .thenReturn(b.toByteArray());
-        }
-
 
         Mockito.lenient().when(mapper.toAnalytics(commentEvent))
                 .thenReturn(event);
+        Mockito.lenient().when(objectMapper.readValue(message.getBody(), CommentEvent.class))
+                .thenReturn(commentEvent);
     }
 
     @Test
-    void onMessage_WhenOk() {
+    void onMessage_WhenOk() throws IOException {
         commentEventListener.onMessage(message, null);
         Mockito.verify(repository, Mockito.times(1))
                 .save(event);
         Mockito.verify(mapper, Mockito.times(1))
                 .toAnalytics(commentEvent);
+        Mockito.verify(objectMapper, Mockito.times(1))
+                .readValue(message.getBody(), CommentEvent.class);
+    }
+
+    @Test
+    void onMessage_WhenWrongBody() throws IOException {
+        Mockito.when(objectMapper.readValue(message.getBody(), CommentEvent.class))
+                        .thenThrow(new IOException());
+        Assertions.assertThrows(RuntimeException.class, () -> commentEventListener.onMessage(message, null));
+
+        Mockito.verify(objectMapper, Mockito.times(1))
+                .readValue(message.getBody(), CommentEvent.class);
     }
 
 

@@ -26,20 +26,14 @@ public class RedisPubSubConfig {
     }
 
     @Bean
-    JedisConnectionFactory jedisConnectionFactory() {
-        return new JedisConnectionFactory();
+    MessageListenerAdapter messageListener(CommentEventListener commentEventListener) {
+        return new MessageListenerAdapter(commentEventListener);
     }
 
     @Bean
-    MessageListenerAdapter messageListener() {
-        return new MessageListenerAdapter(new CommentEventListener(analyticsEventRepository, Mappers.getMapper(AnalyticsEventMapper.class)));
-    }
-
-    @Bean
-    RedisMessageListenerContainer redisContainer() {
+    RedisMessageListenerContainer redisContainer(CommentEventListener commentEventListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(messageListener(), commentEventTopic());
+        container.addMessageListener(messageListener(commentEventListener), commentEventTopic());
         return container;
     }
 }
