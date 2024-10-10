@@ -13,4 +13,8 @@ public interface AnalyticsEventService {
     void saveEvent(AbstractEventDto abstractEventDto);
 
     List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to);
+import faang.school.analytics.model.AnalyticsEvent;
+
+public interface AnalyticsEventService {
+    void saveEvent(AnalyticsEvent analyticsEventDto);
 }
