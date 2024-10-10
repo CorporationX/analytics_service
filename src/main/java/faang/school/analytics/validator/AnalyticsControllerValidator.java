@@ -13,33 +13,44 @@ public class AnalyticsControllerValidator {
     public void validateRequestParams(String eventTypeString, Integer eventTypeInteger,
                                       String intervalString, Integer intervalInteger,
                                       LocalDateTimeInput startDate, LocalDateTimeInput endDate) {
-        if (eventTypeString.isBlank() && eventTypeInteger == null) {
+        if (eventTypeString == null && eventTypeInteger == null) {
             throw new DataValidationException("there is no eventType parameter in the request");
         }
 
-        if (intervalString.isBlank() && intervalInteger == null
-                && startDate.getDateTime() == null && endDate.getDateTime() == null) {
+        if (intervalString == null && intervalInteger == null
+                && (startDate == null || endDate == null)) {
             throw new DataValidationException("there is no interval parameter in the request");
         }
 
+        if ((startDate != null && endDate != null) &&
+                (startDate.getDateTime() == null && endDate.getDateTime() == null)) {
+            throw new DataValidationException("zero time passed");
+        }
+
         validateEventTypeFormatAndInteger(eventTypeString, eventTypeInteger);
-        validateIntervalFormatAndInteger(eventTypeString, eventTypeInteger);
+        validateIntervalFormatAndInteger(intervalString, intervalInteger);
     }
 
-    public void validateEventTypeFormatAndInteger(String eventTypeString, int eventTypeInteger) {
+    private void validateEventTypeFormatAndInteger(String eventTypeString, Integer eventTypeInteger) {
         try {
-            EventType.valueOf(eventTypeString.toUpperCase(Locale.ROOT));
-            EventType.of(eventTypeInteger);
-        } catch (IllegalArgumentException|NullPointerException e) {
+            if (eventTypeString != null) {
+                EventType.valueOf(eventTypeString.toUpperCase(Locale.ROOT));
+            } else {
+                EventType.of(eventTypeInteger);
+            }
+        } catch (IllegalArgumentException | NullPointerException e) {
             throw new DataValidationException("there is no event with this type: " + eventTypeString + " " + eventTypeInteger);
         }
     }
 
-    public void validateIntervalFormatAndInteger(String intervalString, Integer intervalInteger) {
+    private void validateIntervalFormatAndInteger(String intervalString, Integer intervalInteger) {
         try {
-            Interval.valueOf(intervalString);
-            Interval.of(intervalInteger);
-        } catch (IllegalArgumentException|NullPointerException e) {
+            if (intervalString != null) {
+                Interval.valueOf(intervalString);
+            } else {
+                Interval.of(intervalInteger);
+            }
+        } catch (IllegalArgumentException | NullPointerException e) {
             throw new DataValidationException("there is no such interval " + intervalString + " " + intervalInteger);
         }
     }
