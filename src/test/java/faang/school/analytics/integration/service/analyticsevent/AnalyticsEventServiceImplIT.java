@@ -73,7 +73,7 @@ public class AnalyticsEventServiceImplIT extends IntegrationTestBase {
         var from = LocalDateTime.parse("2023-06-01T15:00:00");
         var to = LocalDateTime.parse("2024-12-01T15:00:00");
         var element1 = AnalyticsEventDto.builder()
-                .id(1L)
+                .id(2L)
                 .receiverId(1L)
                 .actorId(2L)
                 .eventType(EventType.PROFILE_VIEW)
@@ -81,7 +81,7 @@ public class AnalyticsEventServiceImplIT extends IntegrationTestBase {
                 .build();
 
         var element2 = AnalyticsEventDto.builder()
-                .id(2L)
+                .id(1L)
                 .receiverId(1L)
                 .actorId(3L)
                 .eventType(EventType.PROFILE_VIEW)

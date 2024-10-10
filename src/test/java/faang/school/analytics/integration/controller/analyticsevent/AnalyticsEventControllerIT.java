@@ -59,11 +59,11 @@ class AnalyticsEventControllerIT extends IntegrationTestBase {
                 .andExpectAll(status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
                         jsonPath("$.length()").value(2),
-                        jsonPath("$[0].id").value(1),
+                        jsonPath("$[0].id").value(2),
                         jsonPath("$[0].receiverId").value(1),
                         jsonPath("$[0].actorId").value(2),
                         jsonPath("$[0].eventType").value("PROFILE_VIEW"),
-                        jsonPath("$[1].id").value(2),
+                        jsonPath("$[1].id").value(1),
                         jsonPath("$[1].receiverId").value(1),
                         jsonPath("$[1].actorId").value(3),
                         jsonPath("$[1].eventType").value("PROFILE_VIEW")
