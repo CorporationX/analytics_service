@@ -1,7 +1,7 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEventService;
 import faang.school.analytics.model.dto.SearchAppearanceEvent;
 import faang.school.analytics.model.entity.AnalyticsEvent;
@@ -36,7 +36,7 @@ class SearchAppearanceEventListenerTest {
     private AnalyticsEventService analyticsEventService;
 
     @Spy
-    private AnalyticsEventMapperImpl mapper;
+    private AnalyticsEventMapper mapper;
 
     @Captor
     private ArgumentCaptor<AnalyticsEvent> analyticsEventCaptor;
