@@ -1,10 +1,11 @@
-package faang.school.analytics.integration.service;
+package faang.school.analytics.integration.service.analyticsevent;
 
-import faang.school.analytics.dto.analyticsevent.AnalyticsEventDto;
 import faang.school.analytics.integration.IntegrationTestBase;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
-import faang.school.analytics.model.Interval;
+import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventDto;
+import faang.school.analytics.model.enums.EventType;
+import faang.school.analytics.model.enums.Interval;
+import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,16 +16,18 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AnalyticsEventServiceIT extends IntegrationTestBase {
+public class AnalyticsEventServiceImplIT extends IntegrationTestBase {
     private final AnalyticsEventService analyticsEventService;
+    private final AnalyticsEventRepository analyticsEventRepository;
 
     @Autowired
-    public AnalyticsEventServiceIT(AnalyticsEventService analyticsEventService) {
+    public AnalyticsEventServiceImplIT(AnalyticsEventService analyticsEventService, AnalyticsEventRepository analyticsEventRepository) {
         this.analyticsEventService = analyticsEventService;
+        this.analyticsEventRepository = analyticsEventRepository;
     }
 
     @Test
-    @DisplayName("Send Event Test")
+    @DisplayName("Save Event Test")
     void testSaveEvent() {
         var givenAnalyticsEvent = AnalyticsEvent.builder()
                 .receiverId(2L)
@@ -33,7 +36,7 @@ public class AnalyticsEventServiceIT extends IntegrationTestBase {
                 .receivedAt(LocalDateTime.parse("2023-06-01T15:00:00"))
                 .build();
 
-        var expected = AnalyticsEventDto.builder()
+        var expected = AnalyticsEvent.builder()
                 .id(4L)
                 .receiverId(2L)
                 .actorId(3L)
@@ -41,9 +44,11 @@ public class AnalyticsEventServiceIT extends IntegrationTestBase {
                 .receivedAt(LocalDateTime.parse("2023-06-01T15:00:00"))
                 .build();
 
-        var result = analyticsEventService.saveEvent(givenAnalyticsEvent);
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(expected);
+        analyticsEventService.saveEvent(givenAnalyticsEvent);
+        var savedEntity = analyticsEventRepository.findById(expected.getId());
+        assertThat(savedEntity).isPresent();
+        assertThat(savedEntity.get()).isNotNull();
+        assertThat(savedEntity.get()).isEqualTo(expected);
     }
 
     @Test

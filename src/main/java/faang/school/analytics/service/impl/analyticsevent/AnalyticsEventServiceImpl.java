@@ -1,12 +1,12 @@
-package faang.school.analytics.service.impl;
+package faang.school.analytics.service.impl.analyticsevent;
 
-import faang.school.analytics.dto.analyticsevent.AnalyticsEventDto;
-import faang.school.analytics.dto.analyticsevent.AnalyticsEventFilterDto;
+import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventDto;
+import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventFilterDto;
 import faang.school.analytics.filter.analyticseventfilter.AnalyticsEventFilter;
 import faang.school.analytics.mapper.analyticevent.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
-import faang.school.analytics.model.Interval;
+import faang.school.analytics.model.enums.EventType;
+import faang.school.analytics.model.enums.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +26,12 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     private final AnalyticsEventMapper analyticEventMapper;
 
     @Override
-    public AnalyticsEventDto saveEvent(AnalyticsEvent event) {
-        return analyticEventMapper.toDto(analyticsEventRepository.save(event));
+    public void saveEvent(AnalyticsEvent event) {
+        analyticsEventRepository.save(event);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval,
                                                 LocalDateTime from, LocalDateTime to) {
         AnalyticsEventFilterDto filters = AnalyticsEventFilterDto.builder()

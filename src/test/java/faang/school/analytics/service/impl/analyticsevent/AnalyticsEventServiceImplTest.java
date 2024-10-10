@@ -1,12 +1,12 @@
-package faang.school.analytics.service.impl;
+package faang.school.analytics.service.impl.analyticsevent;
 
-import faang.school.analytics.dto.analyticsevent.AnalyticsEventDto;
-import faang.school.analytics.dto.analyticsevent.AnalyticsEventFilterDto;
+import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventDto;
+import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventFilterDto;
 import faang.school.analytics.filter.analyticseventfilter.AnalyticsEventFilter;
 import faang.school.analytics.mapper.analyticevent.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
-import faang.school.analytics.model.Interval;
+import faang.school.analytics.model.enums.EventType;
+import faang.school.analytics.model.enums.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -53,7 +53,7 @@ class AnalyticsEventServiceImplTest {
 
 
     @Test
-    @DisplayName("Send Event Test")
+    @DisplayName("Save Event Test")
     void testSaveEvent() {
         var analyticsEvent = new AnalyticsEvent();
         analyticsEventService.saveEvent(analyticsEvent);
@@ -62,6 +62,7 @@ class AnalyticsEventServiceImplTest {
     }
 
     @Test
+    @DisplayName("Get Analytics Test")
     void testGetAnalytics() {
         var analyticsEvent = AnalyticsEvent.builder()
                 .id(1L)

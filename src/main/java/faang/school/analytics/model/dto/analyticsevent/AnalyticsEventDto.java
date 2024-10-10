@@ -1,7 +1,7 @@
-package faang.school.analytics.dto.analyticsevent;
+package faang.school.analytics.model.dto.analyticsevent;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import faang.school.analytics.model.EventType;
+import faang.school.analytics.model.enums.EventType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;

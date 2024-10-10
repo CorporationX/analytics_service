@@ -1,6 +1,6 @@
 package faang.school.analytics.filter.analyticseventfilter;
 
-import faang.school.analytics.dto.analyticsevent.AnalyticsEventFilterDto;
+import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventFilterDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.springframework.stereotype.Component;
 

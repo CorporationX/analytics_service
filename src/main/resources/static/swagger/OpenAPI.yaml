@@ -5,15 +5,15 @@ info:
   version: 1.0.0
 servers:
   - url: http://localhost:8086
-    description: Локальный сервер разработки
+    description: Local development server
 paths:
   #  AnalyticsEvent paths
   /api/v1/analytics-events:
     get:
       tags:
         - Analytics Event
-      summary: Получение аналитики событий
-      description: Получение списка аналитики событий с фильтрами по периоду
+      summary: Retrieve analytics events
+      description: Get a list of analytics events with filtering by period
       parameters:
         - name: receiver-id
           in: query
@@ -33,26 +33,24 @@ paths:
             $ref: "#/components/schemas/AnalyticsEventFilterDto"
         - name: x-user-id
           in: header
-          description: user id header
+          description: User ID header
           schema:
             type: integer
             example: 1
       responses:
         200:
-          description: Успешный запрос, получение списка аналитики эвентов
+          description: Successful request, retrieving the list of event analytics
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AnalyticsEventDto"
-
-
 
 components:
   schemas:
     Interval:
       type: string
       enum: [ DAY, WEEK, MONTH, YEAR ]
-      description: Периоды времени
+      description: Time periods
 
     EventType:
       type: string
@@ -74,7 +72,7 @@ components:
         PROFILE_APPEARED_IN_SEARCH,
         PROJECT_APPEARED_IN_SEARCH
       ]
-      description: Типы событий
+      description: Event types
 
     AnalyticsEventFilterDto:
       type: object
@@ -84,11 +82,11 @@ components:
         from:
           type: string
           example: 2023-12-12T00:00:00
-          description: Выборка от определённой даты
+          description: Filter from a specific date
         to:
           type: string
           example: 2024-12-12T00:00:00
-          description: Выборка до определённой даты
+          description: Filter until a specific date
 
     AnalyticsEventDto:
       type: object
@@ -97,12 +95,12 @@ components:
           type: integer
           format: int64
           example: 1
-          description: ID Аналитики ивента
+          description: Event analytics ID
         receiverId:
           type: integer
           format: int64
           example: 2
-          description: ID получателя
+          description: Receiver ID
         actorId:
           type: integer
           format: int64
@@ -112,9 +110,3 @@ components:
         receivedAt:
           type: string
           example: 2024-10-08 07:09:11
-
-
-
-
-
-  

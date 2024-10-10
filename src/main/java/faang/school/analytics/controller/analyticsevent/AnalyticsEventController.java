@@ -1,8 +1,8 @@
 package faang.school.analytics.controller.analyticsevent;
 
-import faang.school.analytics.dto.analyticsevent.AnalyticsEventDto;
-import faang.school.analytics.dto.analyticsevent.AnalyticsEventFilterDto;
-import faang.school.analytics.model.EventType;
+import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventDto;
+import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventFilterDto;
+import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
