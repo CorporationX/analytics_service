@@ -32,9 +32,9 @@ public class AnalyticsService {
 
         Interval interval;
         if (intervalString != null) {
-            interval = Interval.valueOf(eventTypeString);
+            interval = Interval.valueOf(intervalString);
         } else if (intervalInteger != null) {
-            interval = Interval.of(eventTypeInteger);
+            interval = Interval.of(intervalInteger);
         } else {
             return getAnalyticsByStartEndDate(receiverId, eventType, startDate.getDateTime(), endDate.getDateTime());
         }
