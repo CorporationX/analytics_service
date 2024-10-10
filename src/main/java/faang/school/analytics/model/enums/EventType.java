@@ -1,4 +1,4 @@
-package faang.school.analytics.model;
+package faang.school.analytics.model.enums;
 
 public enum EventType {
     PROFILE_VIEW,
