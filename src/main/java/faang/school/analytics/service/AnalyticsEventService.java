@@ -65,7 +65,12 @@ public class AnalyticsEventService {
             return events.stream()
                     .filter(event -> event.getReceivedAt().isAfter(intervalConverter.get(interval).get()))
                     .toList();
+        } else if (Objects.nonNull(start) && Objects.nonNull(end)) {
+            if (start.isAfter(end)) {
+                throw new IllegalArgumentException("start time can`t be after end time");
+            }
         }
+
 
         if (Objects.nonNull(start)) {
             events = events.stream()
