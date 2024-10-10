@@ -61,6 +61,12 @@ public class AnalyticsEventService {
             return events;
         }
 
+        if (Objects.isNull(start) && Objects.isNull(end)) {
+            return events.stream()
+                    .filter(event -> event.getReceivedAt().isAfter(intervalConverter.get(interval).get()))
+                    .toList();
+        }
+
         if (Objects.nonNull(start)) {
             events = events.stream()
                     .filter(event -> event.getReceivedAt().isAfter(start))
@@ -70,12 +76,6 @@ public class AnalyticsEventService {
         if (Objects.nonNull(end)) {
             events = events.stream()
                     .filter(event -> event.getReceivedAt().isBefore(end))
-                    .toList();
-        }
-
-        if (Objects.isNull(start) && Objects.isNull(end)) {
-            events = events.stream()
-                    .filter(event -> event.getReceivedAt().isAfter(intervalConverter.get(interval).get()))
                     .toList();
         }
 
