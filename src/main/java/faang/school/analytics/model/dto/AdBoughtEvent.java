@@ -14,7 +14,9 @@ import java.time.LocalDateTime;
 @Builder
 public class AdBoughtEvent {
     private final EventType eventType = EventType.ADV_BOUGHT;
-    private Long receiverId;
-    private Long actorId;
+    private Long postId;
+    private Long userId;
+    private Long amount;
+    private Integer advDuration;
     private LocalDateTime receivedAt;
 }
