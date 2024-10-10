@@ -1,5 +1,6 @@
 package faang.school.analytics.service.impl.analyticsevent;
 
+import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventDto;
 import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventFilterDto;
 import faang.school.analytics.filter.analyticseventfilter.AnalyticsEventFilter;
@@ -10,6 +11,7 @@ import faang.school.analytics.model.enums.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,16 +20,19 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AnalyticsEventServiceImpl implements AnalyticsEventService {
-    private final AnalyticsEventRepository analyticsEventRepository;
     private final List<AnalyticsEventFilter> analyticsEventFilters;
     private final AnalyticsEventMapper analyticEventMapper;
+    private final AnalyticsEventRepository analyticsEventRepository;
 
     @Override
+    @Transactional
     public void saveEvent(AnalyticsEvent event) {
         analyticsEventRepository.save(event);
+        log.info("Saved follower event: {}", event);
     }
 
     @Override
@@ -50,3 +55,4 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
                 .toList();
     }
 }
+

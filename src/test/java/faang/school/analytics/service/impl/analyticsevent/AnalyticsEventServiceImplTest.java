@@ -1,5 +1,6 @@
 package faang.school.analytics.service.impl.analyticsevent;
 
+import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventDto;
 import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventFilterDto;
 import faang.school.analytics.filter.analyticseventfilter.AnalyticsEventFilter;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.mockito.ArgumentMatchers.any;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
@@ -31,7 +33,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @ExtendWith(MockitoExtension.class)
 class AnalyticsEventServiceImplTest {
-
 
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
@@ -60,7 +61,6 @@ class AnalyticsEventServiceImplTest {
         verify(analyticsEventRepository).save(any(AnalyticsEvent.class));
         verifyNoMoreInteractions(analyticsEventRepository);
     }
-
     @Test
     @DisplayName("Get Analytics Test")
     void testGetAnalytics() {
