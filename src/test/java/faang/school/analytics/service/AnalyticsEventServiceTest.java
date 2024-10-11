@@ -12,12 +12,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static faang.school.analytics.model.TimeInterval.HOUR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -31,139 +35,76 @@ class AnalyticsEventServiceTest {
     @InjectMocks
     private AnalyticsEventService analyticsEventService;
 
-    private List<AnalyticsEvent> events;
-
     @BeforeEach
     void setUp() {
-        events = List.of(
-                AnalyticsEvent.builder()
-                        .receiverId(1L)
-                        .eventType(EventType.FOLLOWER)
-                        .receivedAt(LocalDateTime.of(2024, 10, 1, 10, 0))
-                        .build(),
 
-                AnalyticsEvent.builder()
-                        .receiverId(1L)
-                        .eventType(EventType.FOLLOWER)
-                        .receivedAt(LocalDateTime.of(2024, 10, 2, 12, 0))
-                        .build(),
-
-                AnalyticsEvent.builder()
-                        .receiverId(1L)
-                        .eventType(EventType.FOLLOWER)
-                        .receivedAt(LocalDateTime.of(2024, 10, 3, 14, 0))
-                        .build()
-        );
-        analyticsEventService.init();
     }
 
     @Test
-    void testSaveEvent_Success() {
-        when(analyticsEventRepository.save(events.get(0))).thenReturn(events.get(0));
+    void testSaveEvent() {
+        AnalyticsEvent event = new AnalyticsEvent();
+        when(analyticsEventRepository.save(event)).thenReturn(event);
 
-        AnalyticsEvent savedEvent = analyticsEventService.saveEvent(events.get(0));
-        assertThat(savedEvent).usingRecursiveComparison().isEqualTo(events.get(0));
+        AnalyticsEvent savedEvent = analyticsEventService.saveEvent(event);
 
-        verify(analyticsEventRepository, times(1)).save(events.get(0));
+        assertEquals(event, savedEvent);
+        verify(analyticsEventRepository, times(1)).save(event);
     }
 
     @Test
-    void testGetAnalytics_withIntervalAll() {
+    void testGetAnalytics_WithNonTimeFilter() {
         long receiverId = 1L;
         EventType eventType = EventType.FOLLOWER;
-        TimeInterval interval = TimeInterval.ALL;
+        List<AnalyticsEvent> expectedEvents = Arrays.asList(new AnalyticsEvent(), new AnalyticsEvent());
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)).thenReturn(events);
+        when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)).thenReturn(expectedEvents);
 
-        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventType, interval, null, null);
-        assertIterableEquals(events, result);
+        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventType, null, null, null);
 
+        assertEquals(expectedEvents, result);
         verify(analyticsEventRepository, times(1)).findByReceiverIdAndEventType(receiverId, eventType);
     }
 
     @Test
-    void testGetAnalytics_withIntervalDay() {
+    void testGetAnalytics_WithIntervalFilter() {
         long receiverId = 1L;
         EventType eventType = EventType.FOLLOWER;
-        TimeInterval interval = TimeInterval.DAY;
+        TimeInterval interval = HOUR;
+        List<AnalyticsEvent> expectedEvents = Arrays.asList(new AnalyticsEvent(), new AnalyticsEvent());
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)).thenReturn(events);
+        when(analyticsEventRepository.findEventsBetweenTimes(eq(receiverId), eq(eventType), any(LocalDateTime.class), any(LocalDateTime.class)))
+                .thenReturn(expectedEvents);
 
         List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventType, interval, null, null);
 
-        LocalDateTime dayAgo = LocalDateTime.now().minusDays(1);
-        List<AnalyticsEvent> expected = events.stream()
-                .filter(event -> event.getReceivedAt().isAfter(dayAgo))
-                .toList();
-
-        assertIterableEquals(result, expected);
+        assertIterableEquals(expectedEvents, result);
     }
 
     @Test
-    void testGetAnalytics_withCustomStartAndEnd() {
+    void testGetAnalytics_WithBetweenTimesFilter() {
         long receiverId = 1L;
         EventType eventType = EventType.FOLLOWER;
-        TimeInterval interval = TimeInterval.DAY;
-        LocalDateTime start = LocalDateTime.of(2024, 10, 1, 0, 0);
-        LocalDateTime end = LocalDateTime.of(2024, 10, 2, 23, 59);
+        LocalDateTime start = LocalDateTime.now().minusDays(1);
+        LocalDateTime end = LocalDateTime.now();
+        List<AnalyticsEvent> expectedEvents = Collections.singletonList(new AnalyticsEvent());
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)).thenReturn(events);
+        when(analyticsEventRepository.findEventsBetweenTimes(receiverId, eventType, start, end)).thenReturn(expectedEvents);
 
-        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventType, interval, start, end);
+        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventType, null, start, end);
 
-        List<AnalyticsEvent> expected = events.stream()
-                .filter(event -> event.getReceivedAt().isAfter(start) && event.getReceivedAt().isBefore(end))
-                .toList();
-
-        assertIterableEquals(expected, result);
+        assertIterableEquals(expectedEvents, result);
     }
 
     @Test
-    void testGetAnalytics_throwsException() {
+    void testGetAnalytics_ThrowsException_WhenStartIsAfterEnd() {
         long receiverId = 1L;
         EventType eventType = EventType.FOLLOWER;
-        TimeInterval interval = TimeInterval.DAY;
-        LocalDateTime start = LocalDateTime.of(2024, 10, 3, 0, 0);
-        LocalDateTime end = LocalDateTime.of(2024, 10, 1, 0, 0);
+        LocalDateTime start = LocalDateTime.now();
+        LocalDateTime end = LocalDateTime.now().minusDays(1);
 
         assertThrows(IllegalArgumentException.class, () ->
-                analyticsEventService.getAnalytics(receiverId, eventType, interval, start, end));
-    }
-
-    @Test
-    void getAnalytics_withOnlyStart() {
-        long receiverId = 1L;
-        EventType eventType = EventType.FOLLOWER;
-        TimeInterval interval = TimeInterval.DAY;
-        LocalDateTime start = LocalDateTime.of(2024, 10, 2, 0, 0);
-
-        when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)).thenReturn(events);
-
-        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventType, interval, start, null);
-
-        List<AnalyticsEvent> expected = events.stream()
-                .filter(event -> event.getReceivedAt().isAfter(start))
-                .toList();
-
-        assertIterableEquals(expected, result);
-    }
-
-    @Test
-    void getAnalytics_withOnlyEnd() {
-        long receiverId = 1L;
-        EventType eventType = EventType.FOLLOWER;
-        TimeInterval interval = TimeInterval.DAY;
-        LocalDateTime end = LocalDateTime.of(2024, 10, 2, 23, 59);
-
-        when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)).thenReturn(events);
-
-        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventType, interval, null, end);
-
-        List<AnalyticsEvent> expected = events.stream()
-                .filter(event -> event.getReceivedAt().isBefore(end))
-                .toList();
-
-        assertEquals(expected, result);
+                analyticsEventService.getAnalytics(receiverId, eventType, null, start, end));
     }
 }
+
 

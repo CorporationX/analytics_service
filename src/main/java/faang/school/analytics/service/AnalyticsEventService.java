@@ -64,7 +64,7 @@ public class AnalyticsEventService {
             return analyticsEventRepository.findEventsBetweenTimes(receiverId, eventType, start, end);
         }
 
-        throw new IllegalArgumentException("Chose interval or between times args");
+        throw new IllegalArgumentException("Choose interval or between times args");
     }
 
     private boolean isBetweenTimesFilters(LocalDateTime start, LocalDateTime end) {
