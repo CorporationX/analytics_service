@@ -24,12 +24,26 @@ public class AnalyticsEventsController {
     private final AnalyticsEventMapper analyticsEventMapper;
 
     @GetMapping
-    public List<AnalyticsEventDto> getAnalytics(@RequestParam Long receiverId,
-                                                @RequestParam EventType type,
-                                                @RequestParam(required = false) TimeInterval interval,
-                                                @RequestParam(required = false) LocalDateTime startDate,
-                                                @RequestParam(required = false) LocalDateTime endDate) {
-        List<AnalyticsEvent> events = analyticsService.getAnalytics(receiverId, type, interval, startDate, endDate);
+    public List<AnalyticsEventDto> getAllAnalytics(@RequestParam Long receiverId,
+                                                   @RequestParam EventType type) {
+        List<AnalyticsEvent> events = analyticsService.getAllAnalytics(receiverId, type);
+        return analyticsEventMapper.toAnalyticsEventDtoList(events);
+    }
+
+    @GetMapping("/interval")
+    public List<AnalyticsEventDto> getAnalyticsInInterval(@RequestParam Long receiverId,
+                                                          @RequestParam EventType type,
+                                                          @RequestParam TimeInterval interval) {
+        List<AnalyticsEvent> events = analyticsService.getAnalyticsInInterval(receiverId, type, interval);
+        return analyticsEventMapper.toAnalyticsEventDtoList(events);
+    }
+
+    @GetMapping("/between-time")
+    public List<AnalyticsEventDto> getAnalyticsBetweenInterval(@RequestParam Long receiverId,
+                                                               @RequestParam EventType type,
+                                                               @RequestParam LocalDateTime start,
+                                                               @RequestParam LocalDateTime end) {
+        List<AnalyticsEvent> events = analyticsService.getAnalyticsBetweenTime(receiverId, type, start, end);
         return analyticsEventMapper.toAnalyticsEventDtoList(events);
     }
 }

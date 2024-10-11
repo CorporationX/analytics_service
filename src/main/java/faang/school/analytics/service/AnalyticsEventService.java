@@ -44,44 +44,25 @@ public class AnalyticsEventService {
     }
 
     @Transactional(readOnly = true)
-    public List<AnalyticsEvent> getAnalytics(long receiverId,
-                                             EventType eventType,
-                                             TimeInterval interval,
-                                             LocalDateTime start,
-                                             LocalDateTime end) {
-
-        if (isNonTimeFilter(interval, start, end)) {
-            return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
-        }
-
-        if (isIntervalFilter(interval)) {
-            LocalDateTime endTime = LocalDateTime.now();
-            LocalDateTime startTime = intervalConverter.get(interval).apply(endTime);
-            return analyticsEventRepository.findEventsBetweenTimes(receiverId, eventType, startTime, endTime);
-        }
-
-        if (isBetweenTimesFilters(start, end)) {
-            return analyticsEventRepository.findEventsBetweenTimes(receiverId, eventType, start, end);
-        }
-
-        throw new IllegalArgumentException("Choose interval or between times args");
+    public List<AnalyticsEvent> getAllAnalytics(long receiverId, EventType eventType) {
+        return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
     }
 
-    private boolean isBetweenTimesFilters(LocalDateTime start, LocalDateTime end) {
-        if (Objects.isNull(start) || Objects.isNull(end)) {
-            return false;
+    @Transactional(readOnly = true)
+    public List<AnalyticsEvent> getAnalyticsInInterval(Long receiverId, EventType type, TimeInterval interval) {
+        if (Objects.isNull(interval)) {
+            throw new IllegalArgumentException("Interval can`t be null");
         }
-            if (start.isAfter(end)) {
-                throw new IllegalArgumentException("Start can`t be after end");
-        }
-            return true;
+        LocalDateTime end = LocalDateTime.now();
+        LocalDateTime start = intervalConverter.get(interval).apply(end);
+        return analyticsEventRepository.findEventsBetweenTimes(receiverId, type, start, end);
     }
 
-    private boolean isIntervalFilter(TimeInterval interval) {
-        return Objects.nonNull(interval);
-    }
-
-    private boolean isNonTimeFilter(TimeInterval interval, LocalDateTime start, LocalDateTime end) {
-        return Objects.isNull(interval) && Objects.isNull(start) && Objects.isNull(end);
+    @Transactional(readOnly = true)
+    public List<AnalyticsEvent> getAnalyticsBetweenTime(Long receiverId, EventType type, LocalDateTime start, LocalDateTime end) {
+        if (Objects.isNull(start) || Objects.isNull(end) || start.isAfter(end)) {
+            throw new IllegalArgumentException("Incorrect start or end time");
+        }
+        return analyticsEventRepository.findEventsBetweenTimes(receiverId, type, start, end);
     }
 }
