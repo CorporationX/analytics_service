@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis.user;
 
+import faang.school.analytics.service.user.listener.RedisProfileViewEventSubscriber;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +11,7 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 @Configuration
-public class UserRedisConfig {
+public class UserRedisListenerConfig {
     @Value("${app.user-redis-config.profile_view_event_topic}")
     private String profileViewEventTopic;
 
