@@ -32,7 +32,7 @@ class UserViewEventSaveJobTest {
     }
 
     @Test
-    @DisplayName("Given false when check analitics events then not execute saveAllUserViewEvents")
+    @DisplayName("Given false when check analytics events then execute saveAllUserViewEvents")
     void testExecuteListIsEmptyFalse() {
         when(redisProfileViewEventSubscriber.analyticsEventsListIsEmpty()).thenReturn(false);
         userViewEventSaveJob.execute(mock(JobExecutionContext.class));
