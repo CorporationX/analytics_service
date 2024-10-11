@@ -24,7 +24,6 @@ public class CommentEventListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         CommentEvent commentEvent;
-        objectMapper.registerModule(new JavaTimeModule());
         try {
             commentEvent = objectMapper.readValue(message.getBody(), CommentEvent.class);
         } catch (IOException e) {
