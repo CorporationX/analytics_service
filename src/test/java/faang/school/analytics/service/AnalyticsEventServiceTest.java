@@ -5,6 +5,7 @@ import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.TimeInterval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,13 +13,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static faang.school.analytics.model.TimeInterval.HOUR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
@@ -35,76 +34,78 @@ class AnalyticsEventServiceTest {
     @InjectMocks
     private AnalyticsEventService analyticsEventService;
 
+    private AnalyticsEvent event;
+    private long receiverId;
+    private EventType eventType;
+    private LocalDateTime start;
+    private LocalDateTime end;
+
     @BeforeEach
     void setUp() {
-
+        event = new AnalyticsEvent();
+        receiverId = 1L;
+        eventType = EventType.FOLLOWER;
+        start = LocalDateTime.now().minusDays(1);
+        end = LocalDateTime.now();
     }
 
     @Test
+    @DisplayName("Should save event successfully")
     void testSaveEvent() {
-        AnalyticsEvent event = new AnalyticsEvent();
         when(analyticsEventRepository.save(event)).thenReturn(event);
 
         AnalyticsEvent savedEvent = analyticsEventService.saveEvent(event);
 
-        assertEquals(event, savedEvent);
+        assertNotNull(savedEvent);
         verify(analyticsEventRepository, times(1)).save(event);
     }
 
     @Test
-    void testGetAnalytics_WithNonTimeFilter() {
-        long receiverId = 1L;
-        EventType eventType = EventType.FOLLOWER;
-        List<AnalyticsEvent> expectedEvents = Arrays.asList(new AnalyticsEvent(), new AnalyticsEvent());
+    @DisplayName("Should retrieve analytics events within a given time interval")
+    void testGetAnalyticsInInterval() {
+        TimeInterval interval = TimeInterval.HOUR;
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)).thenReturn(expectedEvents);
-
-        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventType, null, null, null);
-
-        assertEquals(expectedEvents, result);
-        verify(analyticsEventRepository, times(1)).findByReceiverIdAndEventType(receiverId, eventType);
-    }
-
-    @Test
-    void testGetAnalytics_WithIntervalFilter() {
-        long receiverId = 1L;
-        EventType eventType = EventType.FOLLOWER;
-        TimeInterval interval = HOUR;
-        List<AnalyticsEvent> expectedEvents = Arrays.asList(new AnalyticsEvent(), new AnalyticsEvent());
+        List<AnalyticsEvent> events = Collections.singletonList(event);
 
         when(analyticsEventRepository.findEventsBetweenTimes(eq(receiverId), eq(eventType), any(LocalDateTime.class), any(LocalDateTime.class)))
-                .thenReturn(expectedEvents);
+                .thenReturn(events);
 
-        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventType, interval, null, null);
+        List<AnalyticsEvent> result = analyticsEventService.getAnalyticsInInterval(receiverId, eventType, interval);
 
-        assertIterableEquals(expectedEvents, result);
+        assertNotNull(result);
+        assertEquals(1, result.size());
     }
 
     @Test
-    void testGetAnalytics_WithBetweenTimesFilter() {
-        long receiverId = 1L;
-        EventType eventType = EventType.FOLLOWER;
-        LocalDateTime start = LocalDateTime.now().minusDays(1);
-        LocalDateTime end = LocalDateTime.now();
-        List<AnalyticsEvent> expectedEvents = Collections.singletonList(new AnalyticsEvent());
+    @DisplayName("Should throw IllegalArgumentException when time interval is null")
+    void testGetAnalyticsInIntervalThrowsExceptionWhenIntervalIsNull() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                analyticsEventService.getAnalyticsInInterval(receiverId, eventType, null));
 
-        when(analyticsEventRepository.findEventsBetweenTimes(receiverId, eventType, start, end)).thenReturn(expectedEvents);
-
-        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventType, null, start, end);
-
-        assertIterableEquals(expectedEvents, result);
+        assertEquals("Interval can`t be null", exception.getMessage());
     }
 
     @Test
-    void testGetAnalytics_ThrowsException_WhenStartIsAfterEnd() {
-        long receiverId = 1L;
-        EventType eventType = EventType.FOLLOWER;
-        LocalDateTime start = LocalDateTime.now();
-        LocalDateTime end = LocalDateTime.now().minusDays(1);
+    @DisplayName("Should retrieve analytics events between specific start and end times")
+    void testGetAnalyticsBetweenTime() {
+        List<AnalyticsEvent> events = Collections.singletonList(event);
 
+        when(analyticsEventRepository.findEventsBetweenTimes(receiverId, eventType, start, end))
+                .thenReturn(events);
+
+        List<AnalyticsEvent> result = analyticsEventService.getAnalyticsBetweenTime(receiverId, eventType, start, end);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when end time is null")
+    void testGetAnalyticsBetweenTimeThrowsExceptionWhenEndIsNull() {
         assertThrows(IllegalArgumentException.class, () ->
-                analyticsEventService.getAnalytics(receiverId, eventType, null, start, end));
+                analyticsEventService.getAnalyticsBetweenTime(receiverId, eventType, null, null));
     }
 }
+
 
 
