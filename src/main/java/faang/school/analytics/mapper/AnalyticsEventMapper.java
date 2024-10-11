@@ -9,7 +9,7 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
 
-    @Mapping(source = "postId", target = "receiverId")
+    @Mapping(source = "authorPostId", target = "receiverId")
     @Mapping(source = "userId", target = "actorId")
     @Mapping(target = "eventType", constant = "POST_LIKE")
     @Mapping(target = "receivedAt", expression = "java(java.time.LocalDateTime.now())")
