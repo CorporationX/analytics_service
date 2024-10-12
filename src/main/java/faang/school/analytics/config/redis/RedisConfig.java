@@ -24,6 +24,7 @@ public class RedisConfig {
 
     @Value("${redis.pubsub.topic:like-event}")
     private String likeEventTopic;
+
     @Bean
     public MessageListenerAdapter messageListener() {
         return new MessageListenerAdapter(new LikeEventListener(objectMapper, analyticsEventService, analyticsEventMapper));
