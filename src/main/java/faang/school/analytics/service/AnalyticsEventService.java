@@ -12,9 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 
 @RequiredArgsConstructor
 @Service
@@ -41,7 +38,7 @@ public class AnalyticsEventService {
         return events.stream()
                 .filter(event -> filterByIntervalOrPeriod(event, interval, from, to))
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private boolean filterByIntervalOrPeriod(AnalyticsEvent event, Interval interval, LocalDateTime from, LocalDateTime to) {
