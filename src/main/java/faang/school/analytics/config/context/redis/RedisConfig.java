@@ -1,4 +1,4 @@
-package faang.school.analytics.redis;
+package faang.school.analytics.config.context.redis;
 
 import faang.school.analytics.listener.PostViewEventListener;
 import org.springframework.beans.factory.annotation.Value;
