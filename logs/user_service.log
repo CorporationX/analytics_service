@@ -1,43 +1,43 @@
-19:11:42.577 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.0.Final
-19:11:42.598 [main] INFO  f.s.analytics.AnalyticsServiceApp - Starting AnalyticsServiceApp using Java 19.0.2 with PID 32916 (/Users/sultan/Documents/intellijeIDEA_workspace/FAANG_school/CorporationX/analytics_service/build/classes/java/main started by sultan in /Users/sultan/Documents/intellijeIDEA_workspace/FAANG_school/CorporationX/analytics_service)
-19:11:42.599 [main] INFO  f.s.analytics.AnalyticsServiceApp - No active profile set, falling back to 1 default profile: "default"
-19:11:42.914 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-19:11:42.914 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
-19:11:42.927 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JDBC - Could not safely identify store assignment for repository candidate interface faang.school.analytics.repository.AnalyticsEventRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
-19:11:42.927 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 11 ms. Found 0 JDBC repository interfaces.
-19:11:42.931 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-19:11:42.932 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-19:11:42.990 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 57 ms. Found 1 JPA repository interfaces.
-19:11:42.996 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-19:11:42.996 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-19:11:43.001 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface faang.school.analytics.repository.AnalyticsEventRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-19:11:43.001 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 2 ms. Found 0 Redis repository interfaces.
-19:11:43.086 [main] INFO  o.s.cloud.context.scope.GenericScope - BeanFactory id=e7a53c8d-8790-3746-adb0-914d112dadc4
-19:11:43.111 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'faang.school.analytics.client.ProjectServiceClient' of type [org.springframework.cloud.openfeign.FeignClientFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-19:11:43.243 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8086 (http)
-19:11:43.247 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8086"]
-19:11:43.247 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-19:11:43.247 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.8]
-19:11:43.298 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-19:11:43.298 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 678 ms
-19:11:43.348 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-19:11:43.393 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@20ffb8d5
-19:11:43.394 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-19:11:43.449 [main] INFO  liquibase.database - Set default schema name to public
-19:11:43.495 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
-19:11:43.542 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
-19:11:43.564 [main] INFO  liquibase.lockservice - Successfully released change log lock
-19:11:43.595 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-19:11:43.612 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
-19:11:43.737 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-19:11:44.019 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-19:11:44.022 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-19:11:44.224 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-19:11:44.448 [main] INFO  org.quartz.impl.StdSchedulerFactory - Using default implementation for ThreadExecutor
-19:11:44.452 [main] INFO  o.quartz.core.SchedulerSignalerImpl - Initialized Scheduler Signaller of type: class org.quartz.core.SchedulerSignalerImpl
-19:11:44.452 [main] INFO  org.quartz.core.QuartzScheduler - Quartz Scheduler v.2.3.0 created.
-19:11:44.453 [main] INFO  org.quartz.simpl.RAMJobStore - RAMJobStore initialized.
-19:11:44.453 [main] INFO  org.quartz.core.QuartzScheduler - Scheduler meta-data: Quartz Scheduler (v2.3.0) 'quartzScheduler' with instanceId 'NON_CLUSTERED'
+12:47:08.238 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.0.Final
+12:47:08.256 [main] INFO  f.s.analytics.AnalyticsServiceApp - Starting AnalyticsServiceApp using Java 19.0.2 with PID 37698 (/Users/sultan/Documents/intellijeIDEA_workspace/FAANG_school/CorporationX/analytics_service/build/classes/java/main started by sultan in /Users/sultan/Documents/intellijeIDEA_workspace/FAANG_school/CorporationX/analytics_service)
+12:47:08.257 [main] INFO  f.s.analytics.AnalyticsServiceApp - No active profile set, falling back to 1 default profile: "default"
+12:47:08.571 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+12:47:08.572 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+12:47:08.584 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JDBC - Could not safely identify store assignment for repository candidate interface faang.school.analytics.repository.AnalyticsEventRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+12:47:08.584 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 11 ms. Found 0 JDBC repository interfaces.
+12:47:08.588 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+12:47:08.588 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+12:47:08.648 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 58 ms. Found 1 JPA repository interfaces.
+12:47:08.655 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+12:47:08.655 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+12:47:08.660 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface faang.school.analytics.repository.AnalyticsEventRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+12:47:08.660 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 1 ms. Found 0 Redis repository interfaces.
+12:47:08.754 [main] INFO  o.s.cloud.context.scope.GenericScope - BeanFactory id=e7a53c8d-8790-3746-adb0-914d112dadc4
+12:47:08.778 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'faang.school.analytics.client.ProjectServiceClient' of type [org.springframework.cloud.openfeign.FeignClientFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+12:47:08.906 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8086 (http)
+12:47:08.910 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8086"]
+12:47:08.910 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+12:47:08.910 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.8]
+12:47:08.953 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+12:47:08.954 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 680 ms
+12:47:09.005 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+12:47:09.057 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@23b1aa9
+12:47:09.057 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+12:47:09.111 [main] INFO  liquibase.database - Set default schema name to public
+12:47:09.146 [main] INFO  liquibase.lockservice - Successfully acquired change log lock
+12:47:09.190 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
+12:47:09.210 [main] INFO  liquibase.lockservice - Successfully released change log lock
+12:47:09.247 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+12:47:09.272 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.1.7.Final
+12:47:09.389 [main] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+12:47:09.683 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+12:47:09.687 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+12:47:09.879 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+12:47:10.114 [main] INFO  org.quartz.impl.StdSchedulerFactory - Using default implementation for ThreadExecutor
+12:47:10.118 [main] INFO  o.quartz.core.SchedulerSignalerImpl - Initialized Scheduler Signaller of type: class org.quartz.core.SchedulerSignalerImpl
+12:47:10.118 [main] INFO  org.quartz.core.QuartzScheduler - Quartz Scheduler v.2.3.0 created.
+12:47:10.118 [main] INFO  org.quartz.simpl.RAMJobStore - RAMJobStore initialized.
+12:47:10.119 [main] INFO  org.quartz.core.QuartzScheduler - Scheduler meta-data: Quartz Scheduler (v2.3.0) 'quartzScheduler' with instanceId 'NON_CLUSTERED'
   Scheduler class: 'org.quartz.core.QuartzScheduler' - running locally.
   NOT STARTED.
   Currently in standby mode.
@@ -45,11 +45,26 @@
   Using thread pool 'org.quartz.simpl.SimpleThreadPool' - with 10 threads.
   Using job-store 'org.quartz.simpl.RAMJobStore' - which does not support persistence. and is not clustered.
 
-19:11:44.453 [main] INFO  org.quartz.impl.StdSchedulerFactory - Quartz scheduler 'quartzScheduler' initialized from an externally provided properties instance.
-19:11:44.453 [main] INFO  org.quartz.impl.StdSchedulerFactory - Quartz scheduler version: 2.3.0
-19:11:44.453 [main] INFO  org.quartz.core.QuartzScheduler - JobFactory set to: org.springframework.scheduling.quartz.SpringBeanJobFactory@1455a374
-19:11:44.490 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8086"]
-19:11:44.497 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8086 (http) with context path ''
-19:11:44.526 [main] INFO  o.s.s.quartz.SchedulerFactoryBean - Starting Quartz Scheduler now
-19:11:44.526 [main] INFO  org.quartz.core.QuartzScheduler - Scheduler quartzScheduler_$_NON_CLUSTERED started.
-19:11:44.531 [main] INFO  f.s.analytics.AnalyticsServiceApp - Started AnalyticsServiceApp in 2.119 seconds (process running for 2.406)
+12:47:10.119 [main] INFO  org.quartz.impl.StdSchedulerFactory - Quartz scheduler 'quartzScheduler' initialized from an externally provided properties instance.
+12:47:10.119 [main] INFO  org.quartz.impl.StdSchedulerFactory - Quartz scheduler version: 2.3.0
+12:47:10.119 [main] INFO  org.quartz.core.QuartzScheduler - JobFactory set to: org.springframework.scheduling.quartz.SpringBeanJobFactory@6f959640
+12:47:10.154 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8086"]
+12:47:10.160 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8086 (http) with context path ''
+12:47:10.188 [main] INFO  o.s.s.quartz.SchedulerFactoryBean - Starting Quartz Scheduler now
+12:47:10.188 [main] INFO  org.quartz.core.QuartzScheduler - Scheduler quartzScheduler_$_NON_CLUSTERED started.
+12:47:10.193 [main] INFO  f.s.analytics.AnalyticsServiceApp - Started AnalyticsServiceApp in 2.102 seconds (process running for 2.613)
+12:49:55.721 [redisContainer-2] INFO  f.s.a.s.u.l.RedisProfileViewEventSubscriber - Received message: {"receiverId":1,"actorId":2,"receivedAt":"2024-10-12T12:49:50"}
+12:49:59.864 [quartzScheduler_Worker-8] INFO  f.s.a.s.u.job.UserViewEventSaveJob - Save all user view events job execute
+12:49:59.866 [quartzScheduler_Worker-8] INFO  f.s.a.s.u.l.RedisProfileViewEventSubscriber - Save profile view events, size: 1
+12:52:46.053 [redisContainer-3] INFO  f.s.a.s.u.l.RedisProfileViewEventSubscriber - Received message: {"receiverId":1,"actorId":2,"receivedAt":"2024-10-12T12:52:40"}
+12:52:46.057 [redisContainer-4] INFO  f.s.a.s.u.l.RedisProfileViewEventSubscriber - Received message: {"receiverId":1,"actorId":2,"receivedAt":"2024-10-12T12:52:41"}
+12:52:49.866 [quartzScheduler_Worker-5] INFO  f.s.a.s.u.job.UserViewEventSaveJob - Save all user view events job execute
+12:52:49.867 [quartzScheduler_Worker-5] INFO  f.s.a.s.u.l.RedisProfileViewEventSubscriber - Save profile view events, size: 2
+12:53:28.225 [SpringApplicationShutdownHook] INFO  org.quartz.core.QuartzScheduler - Scheduler quartzScheduler_$_NON_CLUSTERED paused.
+12:53:28.230 [SpringApplicationShutdownHook] INFO  o.s.s.quartz.SchedulerFactoryBean - Shutting down Quartz Scheduler
+12:53:28.230 [SpringApplicationShutdownHook] INFO  org.quartz.core.QuartzScheduler - Scheduler quartzScheduler_$_NON_CLUSTERED shutting down.
+12:53:28.230 [SpringApplicationShutdownHook] INFO  org.quartz.core.QuartzScheduler - Scheduler quartzScheduler_$_NON_CLUSTERED paused.
+12:53:28.230 [SpringApplicationShutdownHook] INFO  org.quartz.core.QuartzScheduler - Scheduler quartzScheduler_$_NON_CLUSTERED shutdown complete.
+12:53:28.235 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+12:53:28.236 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+12:53:28.237 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

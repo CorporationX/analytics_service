@@ -1,7 +1,6 @@
 package faang.school.analytics.config.redis.user;
 
 import faang.school.analytics.service.user.listener.RedisProfileViewEventSubscriber;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,26 +15,22 @@ public class UserRedisListenerConfig {
     private String profileViewEventTopic;
 
     @Bean
-    @Qualifier("profileViewEventTopic")
     public ChannelTopic profileViewEventTopic() {
         return new ChannelTopic(profileViewEventTopic);
     }
 
     @Bean
-    @Qualifier("profileViewEventListener")
     public MessageListenerAdapter profileViewEventListener(RedisProfileViewEventSubscriber messageListener) {
         return new MessageListenerAdapter(messageListener);
     }
 
     @Bean
     public RedisMessageListenerContainer redisContainer(JedisConnectionFactory jedisConnectionFactory,
-                                                        @Qualifier("profileViewEventTopic")
-                                                        ChannelTopic topic,
-                                                        @Qualifier("profileViewEventListener")
-                                                        MessageListenerAdapter listener) {
+                                                        ChannelTopic profileViewEventTopic,
+                                                        MessageListenerAdapter profileViewEventListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory);
-        container.addMessageListener(listener, topic);
+        container.addMessageListener(profileViewEventListener, profileViewEventTopic);
 
         return container;
     }
