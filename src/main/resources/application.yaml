@@ -23,6 +23,7 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+        comment: comment_event
 
 server:
   port: 8086
@@ -30,3 +31,7 @@ server:
 project-service:
   host: localhost
   port: 8082
+
+event:
+  listener:
+    flushInterval: 5000
