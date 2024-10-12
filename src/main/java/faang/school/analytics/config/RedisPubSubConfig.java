@@ -1,14 +1,11 @@
 package faang.school.analytics.config;
 
-import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.subscriber.CommentEventListener;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
