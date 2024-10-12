@@ -1,13 +1,11 @@
 package faang.school.analytics.dto.event;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
 public abstract class AbstractEventDto {
     protected Long receiverId;

@@ -1,10 +1,24 @@
 package faang.school.analytics.dto.event;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
+import java.time.LocalDateTime;
+
+@NoArgsConstructor
 public class FollowerEventDto extends AbstractEventDto {
 
+    @JsonProperty("followeeId")
+    public void setReceiverId(Long receiverId) {
+        this.receiverId = receiverId;
+    }
+
+    @JsonProperty("followerId")
+    public void setActorId(Long actorId) {
+        this.actorId = actorId;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
 }

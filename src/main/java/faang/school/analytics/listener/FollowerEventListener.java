@@ -1,8 +1,6 @@
 package faang.school.analytics.listener;
 
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.dto.event.AbstractEventDto;
 import faang.school.analytics.dto.event.FollowerEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.EventType;
@@ -28,7 +26,6 @@ public class FollowerEventListener extends AbstractEventListener<FollowerEventDt
         try {
             FollowerEventDto followerEventDto = objectMapper.readValue(message.getBody(),
                     FollowerEventDto.class);
-            log.info(new String(message.getBody()));
             sendAnalytics(followerEventDto);
         } catch (IOException e) {
             log.error(e.getMessage(), e);

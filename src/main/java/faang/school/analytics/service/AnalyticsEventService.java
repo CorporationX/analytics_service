@@ -16,5 +16,5 @@ public interface AnalyticsEventService {
 import faang.school.analytics.model.AnalyticsEvent;
 
 public interface AnalyticsEventService {
-    void saveEvent(AnalyticsEvent analyticsEventDto);
+    void saveEvent(AnalyticsEvent analyticsEvent);
 }
