@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.LongStream;
 
 public class AnalyticFabric {
-
     public static AnalyticsEvent buildAnalyticsEvent(Long id) {
         return AnalyticsEvent
                 .builder()

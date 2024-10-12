@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis.user;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.user.ProfileViewEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -9,29 +10,28 @@ import faang.school.analytics.service.user.listener.RedisProfileViewEventSubscri
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static faang.school.analytics.util.AnalyticFabric.buildAnalyticsEvent;
 import static faang.school.analytics.util.AnalyticFabric.buildAnalyticsEvents;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class RedisProfileViewEventSubscriberTest {
-    private static final String JSON = "{\"receiverId\":1,\"actorId\":2,\"receivedAt\":\"2024-10-08T18:46:50\"}";
+    private static final String JSON = "[{\"receiverId\":1,\"actorId\":2,\"receivedAt\":\"2024-10-12T14:20:19\"}]";
     private static final long RECEIVER_ID = 1L;
     private static final long ACTOR_ID = 2L;
     private static final LocalDateTime LOCAL_DATE_TIME = LocalDateTime.of(2000, 1, 1, 1, 1);
@@ -39,11 +39,14 @@ class RedisProfileViewEventSubscriberTest {
     @Mock
     private ObjectMapper objectMapper;
 
-    @Spy
-    private AnalyticsEventMapper analyticsEventMapper = Mappers.getMapper(AnalyticsEventMapper.class);
+    @Mock
+    private AnalyticsEventMapper analyticsEventMapper;
 
     @Mock
     private AnalyticsEventService analyticsEventService;
+
+    @Mock
+    private Message message;
 
     @InjectMocks
     private RedisProfileViewEventSubscriber redisProfileViewEventSubscriber;
@@ -52,18 +55,24 @@ class RedisProfileViewEventSubscriberTest {
     @Test
     @DisplayName("Received message of redis topic successful")
     void testOnMessage() throws IOException {
-        Message message = mock(Message.class);
-        ProfileViewEventDto profileViewEventDto = new ProfileViewEventDto(RECEIVER_ID, ACTOR_ID, LOCAL_DATE_TIME);
-        byte[] bytes = JSON.getBytes(StandardCharsets.UTF_8);
+        byte[] messageBody = JSON.getBytes();
 
-        when(message.getBody()).thenReturn(bytes);
-        when(objectMapper.readValue(bytes, ProfileViewEventDto.class)).thenReturn(profileViewEventDto);
+        List<ProfileViewEventDto> profileViewEventDtos = List.of(new ProfileViewEventDto(RECEIVER_ID, ACTOR_ID, LOCAL_DATE_TIME));
+        List<AnalyticsEvent> newAnalyticsEvents = List.of(buildAnalyticsEvent(1L));
 
-        redisProfileViewEventSubscriber.onMessage(message, "test".getBytes());
+        when(message.getBody()).thenReturn(messageBody);
+        when(objectMapper.readValue(any(byte[].class), any(TypeReference.class))).thenReturn(profileViewEventDtos);
+        when(analyticsEventMapper.toAnalyticsEvents(profileViewEventDtos)).thenReturn(newAnalyticsEvents);
+
+        redisProfileViewEventSubscriber.onMessage(message, null);
+
+        verify(analyticsEventMapper).toAnalyticsEvents(profileViewEventDtos);
 
         List<AnalyticsEvent> analyticsEvents = (List<AnalyticsEvent>)
                 ReflectionTestUtils.getField(redisProfileViewEventSubscriber, "analyticsEvents");
-        assertThat(analyticsEvents).isNotEmpty();
+        assertThat(analyticsEvents).isNotNull();
+        assertThat(analyticsEvents.size()).isEqualTo(1);
+        assertThat(analyticsEvents.get(0)).isEqualTo(newAnalyticsEvents.get(0));
     }
 
     @Test

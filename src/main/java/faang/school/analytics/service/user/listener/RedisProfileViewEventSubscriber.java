@@ -1,5 +1,6 @@
 package faang.school.analytics.service.user.listener;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.user.ProfileViewEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -30,9 +31,9 @@ public class RedisProfileViewEventSubscriber implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         try {
             log.info("Received message: {}", message);
-            ProfileViewEventDto dto = objectMapper.readValue(message.getBody(), ProfileViewEventDto.class);
-            AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(dto);
-            analyticsEvents.add(analyticsEvent);
+            List<ProfileViewEventDto> dtos = objectMapper.readValue(message.getBody(), new TypeReference<>() {});
+            List<AnalyticsEvent> analyticsEventsNew = analyticsEventMapper.toAnalyticsEvents(dtos);
+            analyticsEvents.addAll(analyticsEventsNew);
         } catch (IOException e) {
             log.error("Object mapper unread ProfileViewEventDto message error:", e);
         }
