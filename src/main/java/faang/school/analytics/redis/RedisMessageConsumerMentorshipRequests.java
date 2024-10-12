@@ -23,6 +23,7 @@ public class RedisMessageConsumerMentorshipRequests implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         String channel = new String(message.getChannel());
         String body = new String(message.getBody());
+        log.info("Received message body: {}", body);
         try {
             MentorshipRequestEvent event = mapper.readValue(message.getBody(), MentorshipRequestEvent.class);
             analyticsEventService.saveAnalyticEvent(event);

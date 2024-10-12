@@ -11,6 +11,6 @@ import org.mapstruct.ReportingPolicy;
 public interface AnalyticMapper {
 
     @Mapping(source = "requesterId", target = "actorId")
-    @Mapping(source = "eventTimestamp", target = "receivedAt")
+    @Mapping(source = "requestTime", target = "receivedAt")
     AnalyticsEvent toAnalytic(MentorshipRequestEvent event);
 }
