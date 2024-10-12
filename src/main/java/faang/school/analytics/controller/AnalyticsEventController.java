@@ -23,14 +23,12 @@ public class AnalyticsEventController {
     private final AnalyticsEventMapper analyticsEventMapper;
     private final AnalyticsRequestService analyticsRequestService;
 
-    @GetMapping("/get-analytics-event")
-    public ResponseEntity<List<AnalyticsEventDto>> getAnalytics(
-            @RequestParam long receiverId,
-            @RequestParam String eventType,
-            @RequestParam(required = false) String interval,
-            @RequestParam(required = false) String from,
-            @RequestParam(required = false) String to) {
-
+    @GetMapping("/event")
+    public ResponseEntity<List<AnalyticsEventDto>> getAnalytics(@RequestParam long receiverId,
+                                                                @RequestParam String eventType,
+                                                                @RequestParam(required = false) String interval,
+                                                                @RequestParam(required = false) String from,
+                                                                @RequestParam(required = false) String to) {
         AnalyticsRequestParams params = analyticsRequestService.processRequestParams(eventType, interval, from, to);
         List<AnalyticsEvent> analyticsEvents = analyticsEventService.getAnalytics(
                 receiverId,

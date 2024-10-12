@@ -4,6 +4,7 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import faang.school.analytics.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import java.util.stream.Stream;
 @Service
 public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
+    private final IntervalService intervalService;
 
     @Transactional
     public AnalyticsEvent saveEvent(AnalyticsEvent event) {
@@ -32,9 +34,7 @@ public class AnalyticsEventService {
     }
 
     private List<AnalyticsEvent> retrieveAnalytics(long receiverId, EventType eventType) {
-        try (Stream<AnalyticsEvent> eventStream = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)) {
-            return eventStream.collect(Collectors.toList());
-        }
+        return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
     }
 
     private List<AnalyticsEvent> filterAnalyticsEvents(List<AnalyticsEvent> events, Interval interval, LocalDateTime from, LocalDateTime to) {
@@ -45,12 +45,14 @@ public class AnalyticsEventService {
     }
 
     private boolean filterByIntervalOrPeriod(AnalyticsEvent event, Interval interval, LocalDateTime from, LocalDateTime to) {
+        LocalDateTime eventDate = event.getReceivedAt();
+
         if (interval != null) {
-            return (event.getReceivedAt().isAfter(interval.getFrom()) || event.getReceivedAt().isEqual(interval.getFrom())) &&
-                    (event.getReceivedAt().isBefore(interval.getTo()) || event.getReceivedAt().isEqual(interval.getTo()));
+            LocalDateTime calculatedFrom = intervalService.getFrom(interval);
+            LocalDateTime calculatedTo = intervalService.getTo();
+            return DateUtils.isBetweenInclusive(eventDate, calculatedFrom, calculatedTo);
         } else {
-            return (event.getReceivedAt().isAfter(from) || event.getReceivedAt().isEqual(from)) &&
-                    (event.getReceivedAt().isBefore(to) || event.getReceivedAt().isEqual(to));
+            return DateUtils.isBetweenInclusive(eventDate, from, to);
         }
     }
 }

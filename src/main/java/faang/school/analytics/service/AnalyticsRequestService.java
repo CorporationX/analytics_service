@@ -51,27 +51,17 @@ public class AnalyticsRequestService {
 
     public EventType convertToEventType(String eventType) {
         try {
-            int index = Integer.parseInt(eventType);
-            return EventType.values()[index];
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            try {
-                return EventType.valueOf(eventType.toUpperCase());
-            } catch (IllegalArgumentException ex) {
-                throw new InvalidEventTypeException("Invalid EventType: " + eventType);
-            }
+            return EventType.valueOf(eventType.toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            throw new InvalidEventTypeException("Invalid EventType: " + eventType);
         }
     }
 
     public Interval convertToInterval(String interval) {
         try {
-            int index = Integer.parseInt(interval);
-            return Interval.values()[index];
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            try {
-                return Interval.valueOf(interval.toUpperCase());
-            } catch (IllegalArgumentException ex) {
-                throw new InvalidIntervalException("Invalid Interval: " + interval);
-            }
+            return Interval.valueOf(interval.toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            throw new InvalidIntervalException("Invalid Interval: " + interval);
         }
     }
 

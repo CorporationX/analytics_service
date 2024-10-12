@@ -13,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,6 +24,9 @@ import static org.mockito.Mockito.when;
 class AnalyticsEventServiceTest {
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
+
+    @Mock
+    private IntervalService intervalService;
 
     @InjectMocks
     private AnalyticsEventService analyticsEventService;
@@ -59,7 +61,9 @@ class AnalyticsEventServiceTest {
         Interval interval = Interval.LAST_DAY;
 
         when(analyticsEventRepository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE))
-                .thenReturn(Stream.of(event1, event2));
+                .thenReturn(List.of(event1, event2));
+        when(intervalService.getFrom(interval)).thenReturn(YESTERDAY);
+        when(intervalService.getTo()).thenReturn(NOW);
 
         List<AnalyticsEvent> result = analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, interval, null, null);
 
@@ -68,6 +72,8 @@ class AnalyticsEventServiceTest {
         assertTrue(result.contains(event2));
 
         verify(analyticsEventRepository, times(1)).findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE);
+        verify(intervalService, times(2)).getFrom(interval);
+        verify(intervalService, times(2)).getTo();
     }
 
     @Test
@@ -76,7 +82,7 @@ class AnalyticsEventServiceTest {
         LocalDateTime to = NOW;
 
         when(analyticsEventRepository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE))
-                .thenReturn(Stream.of(event1, event2));
+                .thenReturn(List.of(event1, event2));
 
         List<AnalyticsEvent> result = analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, null, from, to);
 

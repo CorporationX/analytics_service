@@ -25,11 +25,8 @@ class AnalyticsRequestServiceTest {
     @InjectMocks
     private AnalyticsRequestService analyticsRequestService;
 
-    private static final String VALID_EVENT_TYPE_INDEX = "0";
     private static final String VALID_EVENT_TYPE_NAME = "PROFILE_VIEW";
     private static final String INVALID_EVENT_TYPE = "INVALID_TYPE";
-
-    private static final String VALID_INTERVAL_INDEX = "1";
     private static final String VALID_INTERVAL_NAME = "LAST_WEEK";
     private static final String INVALID_INTERVAL = "INVALID_INTERVAL";
 
@@ -38,12 +35,6 @@ class AnalyticsRequestServiceTest {
 
     private static final String FROM_DATE = "2023-10-01T00:00:00";
     private static final String TO_DATE = "2023-10-07T23:59:59";
-
-    @Test
-    void testConvertToEventType_validIndex() {
-        EventType result = analyticsRequestService.convertToEventType(VALID_EVENT_TYPE_INDEX);
-        assertEquals(EventType.values()[0], result);
-    }
 
     @Test
     void testConvertToEventType_validName() {
@@ -55,12 +46,6 @@ class AnalyticsRequestServiceTest {
     void testConvertToEventType_invalidInput() {
         assertThrows(InvalidEventTypeException.class, () ->
                 analyticsRequestService.convertToEventType(INVALID_EVENT_TYPE));
-    }
-
-    @Test
-    void testConvertToInterval_validIndex() {
-        Interval result = analyticsRequestService.convertToInterval(VALID_INTERVAL_INDEX);
-        assertEquals(Interval.values()[1], result);
     }
 
     @Test
@@ -90,9 +75,9 @@ class AnalyticsRequestServiceTest {
     @Test
     void testProcessRequestParams_withInterval() {
         AnalyticsRequestParams params = analyticsRequestService.processRequestParams(
-                VALID_EVENT_TYPE_INDEX, VALID_INTERVAL_NAME, null, null);
+                VALID_EVENT_TYPE_NAME, VALID_INTERVAL_NAME, null, null);
         assertNotNull(params);
-        assertEquals(EventType.values()[0], params.getEventType());
+        assertEquals(EventType.PROFILE_VIEW, params.getEventType());
         assertEquals(Interval.LAST_WEEK, params.getInterval());
         assertNull(params.getFrom());
         assertNull(params.getTo());
@@ -101,20 +86,21 @@ class AnalyticsRequestServiceTest {
     @Test
     void testProcessRequestParams_withFromAndTo() {
         AnalyticsRequestParams params = analyticsRequestService.processRequestParams(
-                VALID_EVENT_TYPE_INDEX, null, FROM_DATE, TO_DATE);
+                VALID_EVENT_TYPE_NAME, null, FROM_DATE, TO_DATE);
         assertNotNull(params);
-        assertEquals(EventType.values()[0], params.getEventType());
+        assertEquals(EventType.PROFILE_VIEW, params.getEventType());
         assertEquals(Interval.ALL_TIME, params.getInterval());
         assertEquals(LocalDateTime.of(2023, 10, 1, 0, 0), params.getFrom());
         assertEquals(LocalDateTime.of(2023, 10, 7, 23, 59, 59), params.getTo());
     }
 
+
     @Test
     void testProcessRequestParams_withDefaultFromAndTo() {
         AnalyticsRequestParams params = analyticsRequestService.processRequestParams(
-                VALID_EVENT_TYPE_INDEX, null, null, null);
+                VALID_EVENT_TYPE_NAME, null, null, null);
         assertNotNull(params);
-        assertEquals(EventType.values()[0], params.getEventType());
+        assertEquals(EventType.PROFILE_VIEW, params.getEventType());
         assertEquals(Interval.ALL_TIME, params.getInterval());
         assertEquals(LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.UTC), params.getFrom());
 
@@ -125,7 +111,7 @@ class AnalyticsRequestServiceTest {
     @Test
     void testProcessRequestParams_withIntervalAndFromTo() {
         assertThrows(IllegalArgumentException.class, () ->
-                analyticsRequestService.processRequestParams(VALID_EVENT_TYPE_INDEX, VALID_INTERVAL_NAME, FROM_DATE, TO_DATE));
+                analyticsRequestService.processRequestParams(VALID_EVENT_TYPE_NAME, VALID_INTERVAL_NAME, FROM_DATE, TO_DATE));
     }
 
     @Test
@@ -137,32 +123,32 @@ class AnalyticsRequestServiceTest {
     @Test
     void testProcessRequestParams_invalidInterval() {
         assertThrows(InvalidIntervalException.class, () ->
-                analyticsRequestService.processRequestParams(VALID_EVENT_TYPE_INDEX, INVALID_INTERVAL, null, null));
+                analyticsRequestService.processRequestParams(VALID_EVENT_TYPE_NAME, INVALID_INTERVAL, null, null));
     }
 
     @Test
     void testProcessRequestParams_fromDateAfterToDate() {
         String invalidFromDate = "2023-10-08T00:00:00";
         assertThrows(IllegalArgumentException.class, () ->
-                analyticsRequestService.processRequestParams(VALID_EVENT_TYPE_INDEX, null, invalidFromDate, TO_DATE));
+                analyticsRequestService.processRequestParams(VALID_EVENT_TYPE_NAME, null, invalidFromDate, TO_DATE));
     }
 
     @Test
     void testProcessRequestParams_invalidFromDateFormat() {
         assertThrows(InvalidDateException.class, () ->
-                analyticsRequestService.processRequestParams(VALID_EVENT_TYPE_INDEX, null, INVALID_DATE_TIME, TO_DATE));
+                analyticsRequestService.processRequestParams(VALID_EVENT_TYPE_NAME, null, INVALID_DATE_TIME, TO_DATE));
     }
 
     @Test
     void testProcessRequestParams_invalidToDateFormat() {
         assertThrows(InvalidDateException.class, () ->
-                analyticsRequestService.processRequestParams(VALID_EVENT_TYPE_INDEX, null, FROM_DATE, INVALID_DATE_TIME));
+                analyticsRequestService.processRequestParams(VALID_EVENT_TYPE_NAME, null, FROM_DATE, INVALID_DATE_TIME));
     }
 
     @Test
     void testProcessRequestParams_nullFromAndToWithNullInterval() {
         AnalyticsRequestParams params = analyticsRequestService.processRequestParams(
-                VALID_EVENT_TYPE_INDEX, null, null, null);
+                VALID_EVENT_TYPE_NAME, null, null, null);
         assertNotNull(params);
         assertEquals(Interval.ALL_TIME, params.getInterval());
         assertNotNull(params.getFrom());

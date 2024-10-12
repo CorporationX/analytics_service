@@ -1,24 +1,14 @@
 package faang.school.analytics.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-
 @Getter
-@AllArgsConstructor
 public enum Interval {
-    LAST_DAY (LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.MIN), LocalDateTime.now()),
-    LAST_WEEK (LocalDateTime.of(LocalDate.now().minusWeeks(1), LocalTime.MIN), LocalDateTime.now()),
-    LAST_MONTH (LocalDateTime.of(LocalDate.now().minusMonths(1), LocalTime.MIN), LocalDateTime.now()),
-    LAST_THREE_MONTHS (LocalDateTime.of(LocalDate.now().minusMonths(3), LocalTime.MIN), LocalDateTime.now()),
-    LAST_SIX_MONTHS (LocalDateTime.of(LocalDate.now().minusMonths(6), LocalTime.MIN), LocalDateTime.now()),
-    YEAR_TO_DATE (LocalDateTime.of(LocalDate.now().getYear(),1,1,0,0), LocalDateTime.now()),
-    ALL_TIME(LocalDateTime.of(1970, 1, 1, 0, 0), LocalDateTime.now());
-
-    private final LocalDateTime from;
-    private final LocalDateTime to;
-
+    LAST_DAY,
+    LAST_WEEK,
+    LAST_MONTH,
+    LAST_THREE_MONTHS,
+    LAST_SIX_MONTHS,
+    YEAR_TO_DATE,
+    ALL_TIME
 }
