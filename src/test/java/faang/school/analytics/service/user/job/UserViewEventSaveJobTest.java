@@ -28,7 +28,7 @@ class UserViewEventSaveJobTest {
         when(redisProfileViewEventSubscriber.analyticsEventsListIsEmpty()).thenReturn(true);
         userViewEventSaveJob.execute(mock(JobExecutionContext.class));
 
-        verify(redisProfileViewEventSubscriber, never()).saveAllUserViewEvents();
+        verify(redisProfileViewEventSubscriber, never()).saveAllEvents();
     }
 
     @Test
@@ -37,7 +37,7 @@ class UserViewEventSaveJobTest {
         when(redisProfileViewEventSubscriber.analyticsEventsListIsEmpty()).thenReturn(false);
         userViewEventSaveJob.execute(mock(JobExecutionContext.class));
 
-        verify(redisProfileViewEventSubscriber).saveAllUserViewEvents();
+        verify(redisProfileViewEventSubscriber).saveAllEvents();
     }
 
 }

@@ -19,7 +19,7 @@ public class UserViewEventSaveJob implements Job {
     public void execute(JobExecutionContext jobExecutionContext) {
         if (!redisProfileViewEventSubscriber.analyticsEventsListIsEmpty()) {
             log.info("Save all user view events job execute");
-            redisProfileViewEventSubscriber.saveAllUserViewEvents();
+            redisProfileViewEventSubscriber.saveAllEvents();
         }
     }
 }
