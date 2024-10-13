@@ -48,7 +48,7 @@ public abstract class RedisEventSubscriberBatchSave<T> implements MessageListene
         while ((eventDto = analyticsEvents.poll()) != null) {
             analyticsEventsCopy.add(eventDto);
         }
-        log.info("Save all events, size: {}", analyticsEvents.size());
+        log.info("Save all events, size: {}", analyticsEventsCopy.size());
         try {
             analyticsEventService.saveAllEvents(analyticsEventsCopy);
         } catch (Exception e) {
