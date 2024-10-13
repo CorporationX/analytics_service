@@ -24,6 +24,8 @@ spring:
       channels:
         profile-view-channel:
           name: profile_view_channel
+        follower-event-channel:
+          name: follower_event_channel
         goal-completed-event-channel:
           name: goal_completed_event_channel
 
@@ -37,3 +39,8 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    url: /swagger/OpenAPI.yaml
