@@ -1,7 +1,6 @@
-package faang.school.analytics.config.context;
+package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.LikeEventListener;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
@@ -15,18 +14,11 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfiguration {
-    @Value("${redis.host}")
-    private String redisHost;
-
-    @Value("${redis.port}")
-    private int redisPort;
-
-    @Value("spring.data.redis.channels.like-event")
-    private String likeEventTopic;
+    RedisProperties redisProperties;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(redisHost, redisPort);
+        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(redisProperties.getHost(), redisProperties.getPort());
         return new JedisConnectionFactory(redisConfig);
     }
 
@@ -40,8 +32,8 @@ public class RedisConfiguration {
     }
 
     @Bean
-    MessageListenerAdapter likeEventListener(LikeEventListener redisLikeEventListener) {
-        return new MessageListenerAdapter(redisLikeEventListener);
+    MessageListenerAdapter likeEventListener(LikeEventListener LikeEventListener) {
+        return new MessageListenerAdapter(LikeEventListener);
     }
 
     @Bean
@@ -56,6 +48,6 @@ public class RedisConfiguration {
 
     @Bean
     ChannelTopic likeEventTopic() {
-        return new ChannelTopic(likeEventTopic);
+        return new ChannelTopic(redisProperties.getChannels().get("like-event-channel"));
     }
 }

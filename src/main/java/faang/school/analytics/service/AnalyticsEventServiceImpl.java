@@ -18,11 +18,8 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
 
     @Override
     public void saveLikeEvent(LikeEvent likeEvent) {
-       AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(likeEvent);
-       analyticsEvent.setEventType(POST_LIKE);
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(likeEvent);
+        analyticsEvent.setEventType(POST_LIKE);
         analyticsEventRepository.save(analyticsEvent);
     }
-
-
-
 }
