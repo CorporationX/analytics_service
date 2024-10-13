@@ -23,6 +23,7 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+      mentorship-request-topic: mentorship_request_topic
 
 server:
   port: 8086
