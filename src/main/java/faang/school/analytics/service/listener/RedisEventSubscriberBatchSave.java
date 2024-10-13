@@ -28,7 +28,6 @@ public abstract class RedisEventSubscriberBatchSave<T> implements MessageListene
     protected void addToList(Message message, Class<T> clazz,
                              Function<List<T>, List<AnalyticsEvent>> analyticEventsMapfunction) {
         try {
-            log.info("Received message: {}", message);
             List<T> dtos = objectMapper.readValue(message.getBody(),
                     objectMapper.getTypeFactory().constructCollectionType(List.class, clazz));
             List<AnalyticsEvent> analyticsEventsNew = analyticEventsMapfunction.apply(dtos);

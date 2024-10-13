@@ -23,6 +23,7 @@ public class RedisProfileViewEventSubscriber extends RedisEventSubscriberBatchSa
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
+        log.info("Received message: {}", message);
         Function<List<ProfileViewEventDto>, List<AnalyticsEvent>> toEventsFunction =
                 profileViewEventDtos -> getAnalyticsEventMapper().toAnalyticsEvents(profileViewEventDtos);
         addToList(message, ProfileViewEventDto.class, toEventsFunction);
