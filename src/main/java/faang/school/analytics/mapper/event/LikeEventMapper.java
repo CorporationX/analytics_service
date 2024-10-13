@@ -8,8 +8,9 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface LikeEventMapper {
-    @Mapping(source = "authorId", target = "receiverId")
+
+    @Mapping(source = "postAuthorId", target = "receiverId")
     @Mapping(source = "likerId", target = "actorId")
     @Mapping(source = "createdAt", target = "receivedAt")
-    AnalyticsEvent fromLikeEventToEntity(LikeEventDto likeEventDto);
+    AnalyticsEvent fromLikeEventDtoToEntity(LikeEventDto likeEventDto);
 }
