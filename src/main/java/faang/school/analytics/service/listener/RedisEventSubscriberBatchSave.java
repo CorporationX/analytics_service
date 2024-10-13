@@ -44,19 +44,17 @@ public abstract class RedisEventSubscriberBatchSave<T> implements MessageListene
 
     public void saveAllEvents() {
         List<AnalyticsEvent> analyticsEventsCopy = new ArrayList<>();
+        AnalyticsEvent eventDto;
+        while ((eventDto = analyticsEvents.poll()) != null) {
+            analyticsEventsCopy.add(eventDto);
+        }
+        log.info("Save all events, size: {}", analyticsEvents.size());
         try {
-            synchronized (analyticsEvents) {
-                log.info("Save all events, size: {}", analyticsEvents.size());
-                analyticsEventsCopy = new ArrayList<>(analyticsEvents);
-                analyticsEvents.clear();
-            }
             analyticsEventService.saveAllEvents(analyticsEventsCopy);
         } catch (Exception e) {
-            synchronized (analyticsEvents) {
-                log.error("Events list save failed:", e);
-                log.info("Save back to main list events copy, size: {}", analyticsEventsCopy.size());
-                analyticsEvents.addAll(analyticsEventsCopy);
-            }
+            log.error("Events list save failed:", e);
+            log.info("Save back to main list events copy, size: {}", analyticsEventsCopy.size());
+            analyticsEvents.addAll(analyticsEventsCopy);
         }
     }
 }
