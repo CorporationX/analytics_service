@@ -26,6 +26,8 @@ spring:
           name: profile_view_channel
         follower-event-channel:
           name: follower_event_channel
+        project-view-channel:
+          name: project_view_channel
 
 server:
   port: 8086
