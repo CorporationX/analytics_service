@@ -13,7 +13,8 @@ import org.springframework.data.redis.connection.MessageListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.function.Function;
 
 @Slf4j
@@ -23,7 +24,7 @@ public abstract class RedisEventSubscriberBatchSave<T> implements MessageListene
     protected final ObjectMapper objectMapper;
     protected final AnalyticsEventMapper analyticsEventMapper;
     protected final AnalyticsEventService analyticsEventService;
-    private final List<AnalyticsEvent> analyticsEvents = new CopyOnWriteArrayList<>();
+    private final Queue<AnalyticsEvent> analyticsEvents = new ConcurrentLinkedDeque<>();
 
     protected void addToList(Message message, Class<T> clazz,
                              Function<List<T>, List<AnalyticsEvent>> analyticEventsMapfunction) {
