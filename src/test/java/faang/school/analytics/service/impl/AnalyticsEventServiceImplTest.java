@@ -2,6 +2,7 @@ package faang.school.analytics.service.impl;
 
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import faang.school.analytics.service.impl.analyticsevent.AnalyticsEventServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
