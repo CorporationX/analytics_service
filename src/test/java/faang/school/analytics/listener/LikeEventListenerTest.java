@@ -1,9 +1,9 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
-import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.mapper.analyticevent.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.dto.LikeEventDto;
+import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
