@@ -2,9 +2,9 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
-import faang.school.analytics.model.AnalyticsEventService;
 import faang.school.analytics.model.dto.SearchAppearanceEvent;
 import faang.school.analytics.model.entity.AnalyticsEvent;
+import faang.school.analytics.service.AnalyticsEventService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -33,8 +33,8 @@ class SearchAppearanceEventListenerTest {
     private ObjectMapper objectMapper;
 
     @Mock
-    private AnalyticsEventService analyticsEventService;
-
+//    private AnalyticsEventService analyticsEventService;
+private AnalyticsEventService analyticsEventService;
     @Spy
     private AnalyticsEventMapper mapper;
 
