@@ -22,6 +22,8 @@ spring:
       port: 6379
       host: localhost
       channels:
+        recommendation-event-channel:
+          name:recommendation_event_channel
         profile-view:
           name: profile_view_channel
         like-channel:
