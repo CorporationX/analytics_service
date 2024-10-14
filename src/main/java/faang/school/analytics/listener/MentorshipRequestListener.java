@@ -1,7 +1,8 @@
-package faang.school.analytics.redis;
+package faang.school.analytics.listener;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.event.MentorshipRequestEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class RedisMessageConsumerMentorshipRequests implements MessageListener {
+public class MentorshipRequestListener implements MessageListener {
 
     private final ObjectMapper mapper;
     private final AnalyticsEventService analyticsEventService;
@@ -28,6 +29,7 @@ public class RedisMessageConsumerMentorshipRequests implements MessageListener {
             MentorshipRequestEvent event = mapper.readValue(message.getBody(), MentorshipRequestEvent.class);
             analyticsEventService.saveAnalyticEvent(event);
         } catch (IOException e) {
+            log.error("Error saving analytics", e);
             throw new RuntimeException(e);
         }
         log.info("Received message from channel {}: {}", channel, body);
