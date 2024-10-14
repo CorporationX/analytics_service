@@ -23,9 +23,12 @@ spring:
       host: localhost
       channels:
         profile-view: profile_view_channel
+      mentorship-channel:
+        name: mentorship_channel
         project-profile-attendance: appa_channel
       topics:
         comment_event_topic: commentEventQueue
+
 
 server:
   port: 8086

@@ -1,10 +1,7 @@
 package faang.school.analytics.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import faang.school.analytics.event.ProjectViewEvent;
 import faang.school.analytics.mapper.AnalyticMapper;
-import faang.school.analytics.mapper.AnalyticMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
@@ -18,7 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AnalyticServiceImplTest {
@@ -27,7 +26,7 @@ public class AnalyticServiceImplTest {
     private AnalyticsEventRepository analyticsEventRepository;
 
     @Spy
-    private AnalyticMapperImpl analyticMapper;
+    private AnalyticMapper analyticMapper;
 
     @InjectMocks
     private AnalyticServiceImpl analyticService;
