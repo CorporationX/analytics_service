@@ -1,4 +1,4 @@
-package faang.school.analytics.model.dto.analyticsevent;
+package faang.school.analytics.model.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import faang.school.analytics.model.enums.EventType;

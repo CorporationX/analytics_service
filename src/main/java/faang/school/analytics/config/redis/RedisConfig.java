@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.CommentEventListener;
 import faang.school.analytics.listener.FollowerEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,8 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channels.follower-event-channel.name}")
     private String followerEvent;
+    @Value("${spring.data.redis.channels.comment-event-channel.name}")
+    private String commentEvent;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -44,16 +47,28 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener) {
+    MessageListenerAdapter commentListener(CommentEventListener commentEventListener) {
+        return new MessageListenerAdapter(commentEventListener);
+    }
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener,
+                                                 MessageListenerAdapter commentListener) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener, followerTopic());
+        container.addMessageListener(commentListener, commentTopic());
         return container;
     }
 
     @Bean
     ChannelTopic followerTopic() {
         return new ChannelTopic(followerEvent);
+    }
+
+    @Bean
+    ChannelTopic commentTopic() {
+        return new ChannelTopic(commentEvent);
     }
 }

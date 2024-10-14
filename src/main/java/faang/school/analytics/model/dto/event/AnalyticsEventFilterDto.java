@@ -1,4 +1,4 @@
-package faang.school.analytics.model.dto.analyticsevent;
+package faang.school.analytics.model.dto.event;
 
 import faang.school.analytics.model.enums.Interval;
 import lombok.Builder;
