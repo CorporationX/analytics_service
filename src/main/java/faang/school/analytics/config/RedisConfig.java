@@ -1,6 +1,7 @@
 package faang.school.analytics.config;
 
 import faang.school.analytics.listener.AdBoughtEventListener;
+import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.LikeEventListener;
 import faang.school.analytics.listener.ProfileViewEventListener;
 import faang.school.analytics.listener.RecommendationEventListener;
@@ -8,11 +9,13 @@ import faang.school.analytics.listener.SearchAppearanceEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
@@ -37,10 +40,15 @@ public class RedisConfig {
     @Value("${spring.data.redis.channel.profile-view}")
     private String profileViewChannel;
 
-    @Bean
-    public JedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(redisHost, redisPort);
-        return new JedisConnectionFactory(redisConfig);
+    @Value("${spring.data.redis.channel.goal-completed}")
+    private String goalCompletedChannel;
+
+    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(lettuceConnectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        return template;
     }
 
     @Bean
@@ -69,6 +77,11 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter goalCompletedEvent(GoalCompletedEventListener goalCompletedEventListener) {
+        return new MessageListenerAdapter(goalCompletedEventListener);
+    }
+
+    @Bean
     ChannelTopic likeTopic() {
         return new ChannelTopic(likeChannel);
     }
@@ -94,20 +107,26 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter searchAppearanceEvent,
-                                                 MessageListenerAdapter likeEvent,
-                                                 MessageListenerAdapter recommendationEvent,
-                                                 MessageListenerAdapter adBoughtEvent,
-                                                 MessageListenerAdapter profileViewEvent) {
+    ChannelTopic goalCompletedTopic() {
+        return new ChannelTopic(goalCompletedChannel);
+    }
 
+    @Bean
+    public RedisMessageListenerContainer redisContainer(LettuceConnectionFactory lettuceConnectionFactory,
+                                                        MessageListenerAdapter searchAppearanceEvent,
+                                                        MessageListenerAdapter likeEvent,
+                                                        MessageListenerAdapter recommendationEvent,
+                                                        MessageListenerAdapter adBoughtEvent,
+                                                        MessageListenerAdapter profileViewEvent,
+                                                        MessageListenerAdapter goalCompletedEvent) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(jedisConnectionFactory());
-
+        container.setConnectionFactory(lettuceConnectionFactory);
         container.addMessageListener(likeEvent, likeTopic());
         container.addMessageListener(recommendationEvent, recommendationTopic());
         container.addMessageListener(searchAppearanceEvent, searchAppearanceTopic());
         container.addMessageListener(adBoughtEvent, adBoughtTopic());
         container.addMessageListener(profileViewEvent, profileViewTopic());
+        container.addMessageListener(goalCompletedEvent, goalCompletedTopic());
         return container;
     }
 }
