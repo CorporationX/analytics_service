@@ -21,6 +21,7 @@ public class AnalyticsController {
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
     public List<AnalyticsEventDto> getAnalytics(@RequestParam("id") Long id,
                                                 @RequestParam("eventType") String eventType,
                                                 @RequestParam(value = "interval", required = false) String interval,
@@ -38,7 +39,8 @@ public class AnalyticsController {
             endDateRes = LocalDateTime.parse(endDate);
         }
         EventType eventTypeRes = EventType.valueOf(eventType.toUpperCase());
-
-        return analyticsEventServiceImpl.getAnalytics(id, eventTypeRes, intervalRes, startDateRes, endDateRes);
+        List<AnalyticsEventDto> result = analyticsEventServiceImpl.getAnalytics(id, eventTypeRes, intervalRes, startDateRes, endDateRes);
+        System.out.printf("result "+result);
+        return result;
     }
 }
