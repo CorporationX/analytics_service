@@ -51,16 +51,15 @@ public class RedisConfig {
         return new MessageListenerAdapter(followerEventListener);
     }
 
-    @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener,
-                                                 MessageListenerAdapter likeListener) {
+
     MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
         return new MessageListenerAdapter(profileViewEventListener);
     }
 
     @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener,
-                                                 MessageListenerAdapter profileViewListener) {
+                                                 MessageListenerAdapter profileViewListener,
+                                                 MessageListenerAdapter likeListener) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
