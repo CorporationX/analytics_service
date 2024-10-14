@@ -1,4 +1,4 @@
-package faang.school.analytics.model.service;
+package faang.school.analytics.service;
 
 import faang.school.analytics.model.dto.AnalyticsEventDto;
 import faang.school.analytics.model.entity.AnalyticsEvent;
@@ -8,8 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public interface AnalyticsEventService {
 
@@ -18,8 +16,8 @@ public interface AnalyticsEventService {
 
     @Transactional(readOnly = true)
     List<AnalyticsEventDto> getAnalytics(Long receiverId,
-                                                EventType eventType,
-                                                Interval interval,
-                                                LocalDateTime from,
-                                                LocalDateTime to);
+                                         EventType eventType,
+                                         Interval interval,
+                                         LocalDateTime from,
+                                         LocalDateTime to);
 }

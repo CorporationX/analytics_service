@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.dto.SearchAppearanceEvent;
 import faang.school.analytics.model.entity.AnalyticsEvent;
-import faang.school.analytics.model.service.impl.AnalyticsEventServiceImpl;
+import faang.school.analytics.service.impl.AnalyticsEventServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -1,11 +1,11 @@
-package faang.school.analytics.model.service.impl;
+package faang.school.analytics.service.impl;
 
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.dto.AnalyticsEventDto;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.model.enums.Interval;
-import faang.school.analytics.model.service.AnalyticsEventService;
+import faang.school.analytics.service.AnalyticsEventService;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,11 +41,13 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
         LocalDateTime startDate;
         if (interval != null) {
             startDate = Interval.getFromDate(interval);
+            to = LocalDateTime.now();
         } else {
             startDate = from;
         }
+        LocalDateTime finalTo = to;
         List<AnalyticsEvent> filteredEvents = events.filter(event ->
-                        event.getReceivedAt().isAfter(startDate) && event.getReceivedAt().isBefore(to))
+                        event.getReceivedAt().isAfter(startDate) && event.getReceivedAt().isBefore(finalTo))
                 .sorted((e1, e2) -> e2.getReceivedAt().compareTo(e1.getReceivedAt()))
                 .toList();
         List<AnalyticsEventDto> result = filteredEvents.stream()

@@ -11,7 +11,7 @@ import faang.school.analytics.model.dto.AnalyticsEventDto;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.model.enums.Interval;
-import faang.school.analytics.model.service.impl.AnalyticsEventServiceImpl;
+import faang.school.analytics.service.impl.AnalyticsEventServiceImpl;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
