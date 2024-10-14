@@ -1,12 +1,14 @@
 package faang.school.analytics.redis.listener;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.comment.CommentEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -20,12 +22,20 @@ import static org.mockito.Mockito.when;
 class CommentEventListenerTest {
     @Mock
     private AnalyticsEventService analyticsEventService;
-
     @Mock
     private AnalyticsEventMapper analyticsEventMapper;
+    @Mock
+    private ObjectMapper objectMapper;
 
-    @InjectMocks
     private CommentEventListener commentEventListener;
+
+    @BeforeEach
+    void setUp() {
+        commentEventListener = new CommentEventListener(objectMapper,
+                analyticsEventService,
+                analyticsEventMapper,
+                "testChannel");
+    }
 
     @Test
     void testSaveBatch() {

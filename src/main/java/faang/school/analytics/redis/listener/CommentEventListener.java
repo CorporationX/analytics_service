@@ -7,12 +7,13 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
 
 @Slf4j
 @Component
@@ -21,10 +22,13 @@ public class CommentEventListener extends AbstractEventListener<CommentEvent> {
     private final AnalyticsEventMapper analyticsEventMapper;
 
     @Autowired
-    public CommentEventListener(ObjectMapper objectMapper,
-                                AnalyticsEventService analyticsEventService,
-                                AnalyticsEventMapper analyticsEventMapper) {
-        super(objectMapper);
+    public CommentEventListener(
+            ObjectMapper objectMapper,
+            AnalyticsEventService analyticsEventService,
+            AnalyticsEventMapper analyticsEventMapper,
+            @Value("${spring.data.redis.channel.comment}") String commentEventChannel) {
+
+        super(objectMapper, new ChannelTopic(commentEventChannel));
         this.analyticsEventService = analyticsEventService;
         this.analyticsEventMapper = analyticsEventMapper;
     }
