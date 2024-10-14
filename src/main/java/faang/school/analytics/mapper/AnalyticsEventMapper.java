@@ -1,5 +1,6 @@
 package faang.school.analytics.mapper;
 
+import faang.school.analytics.dto.MentorshipRequestReceivedDto;
 import faang.school.analytics.dto.PostViewEventDto;
 import faang.school.analytics.dto.analyticsEvent.AnalyticsEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
@@ -15,4 +16,7 @@ public interface AnalyticsEventMapper {
 
     @Mapping(target = "id", source = "postId", ignore = true)
     AnalyticsEvent postViewEventDtoToAnalyticsEvent(PostViewEventDto dto);
+
+    @Mapping(target = "id", source = "requestId", ignore = true)
+    AnalyticsEvent mentorshipRequestReceivedDtoToAnalyticsEvent(MentorshipRequestReceivedDto dto);
 }

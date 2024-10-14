@@ -1,5 +1,6 @@
 package faang.school.analytics.config.context.redis;
 
+import faang.school.analytics.listener.MentorshipRequestReceivedEventListener;
 import faang.school.analytics.listener.PostViewEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int port;
 
+    @Value("${spring.data.redis.channel.mentorship_request_received}")
+    private String mentorshipRequestReceivedTopicName;
+
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
@@ -47,21 +51,33 @@ public class RedisConfig {
     }
 
     @Bean
-    public MessageListenerAdapter listenerAdapter(PostViewEventListener listener) {
+    public MessageListenerAdapter postViewListenerAdapter(PostViewEventListener listener) {
+        return new MessageListenerAdapter(listener);
+    }
+
+    @Bean
+    public MessageListenerAdapter mentorshipListenerAdapter(MentorshipRequestReceivedEventListener listener) {
         return new MessageListenerAdapter(listener);
     }
 
     @Bean
     public RedisMessageListenerContainer container(JedisConnectionFactory jedisConnectionFactory,
-                                                   MessageListenerAdapter listenerAdapter) {
+                                                   MessageListenerAdapter postViewListenerAdapter,
+                                                   MessageListenerAdapter mentorshipListenerAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory);
-        container.addMessageListener(listenerAdapter, postViewEventTopic());
+        container.addMessageListener(postViewListenerAdapter, postViewEventTopic());
+        container.addMessageListener(mentorshipListenerAdapter, mentorshipRequestReceivedTopicName());
         return container;
     }
 
     @Bean
     public ChannelTopic postViewEventTopic() {
         return new ChannelTopic(postViewEventTopic);
+    }
+
+    @Bean
+    public ChannelTopic mentorshipRequestReceivedTopicName() {
+        return new ChannelTopic(mentorshipRequestReceivedTopicName);
     }
 }
