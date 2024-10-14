@@ -12,7 +12,6 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 public abstract class AbstractEventListener<T> {
-
     protected final AnalyticsEventService analyticsEventService;
     protected final AnalyticsEventMapper analyticsEventMapper;
     private final ObjectMapper objectMapper;
