@@ -1,6 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.FollowerEventListener;
+import faang.school.analytics.listener.ProfileViewEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,8 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channels.follower-event-channel.name}")
     private String followerEvent;
+    @Value("${spring.data.redis.channels.profile-view-channel.name}")
+    private String profileViewEvent;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -44,16 +47,28 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener) {
+    MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
+        return new MessageListenerAdapter(profileViewEventListener);
+    }
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener,
+                                                 MessageListenerAdapter profileViewListener) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener, followerTopic());
+        container.addMessageListener(profileViewListener, profileViewTopic());
         return container;
     }
 
     @Bean
     ChannelTopic followerTopic() {
         return new ChannelTopic(followerEvent);
+    }
+
+    @Bean
+    ChannelTopic profileViewTopic() {
+        return new ChannelTopic(profileViewEvent);
     }
 }
