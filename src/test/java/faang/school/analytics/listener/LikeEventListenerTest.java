@@ -1,8 +1,8 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.mapper.analyticevent.AnalyticsEventMapperImpl;
-import faang.school.analytics.model.dto.LikeEventDto;
+import faang.school.analytics.mapper.analyticsevent.AnalyticsEventMapperImpl;
+import faang.school.analytics.model.dto.LikeEvent;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,11 +40,11 @@ class LikeEventListenerTest {
 
     @InjectMocks
     private LikeEventListener likeEventListener;
-    private LikeEventDto likeEvent;
+    private LikeEvent likeEvent;
 
     @BeforeEach
     void setUp() {
-        likeEvent = LikeEventDto.builder().build();
+        likeEvent = LikeEvent.builder().build();
     }
 
     @Test
@@ -52,11 +52,11 @@ class LikeEventListenerTest {
     void testOnMessage() throws IOException {
         byte[] messageBody = "{\"postId\":123,\"authorId\":456,\"userId\":789,\"receivedAt\":\"2024-08-16T12:00:00\\\"}".getBytes();
         doReturn(messageBody).when(message).getBody();
-        doReturn(likeEvent).when(objectMapper).readValue(messageBody, LikeEventDto.class);
+        doReturn(likeEvent).when(objectMapper).readValue(messageBody, LikeEvent.class);
 
         likeEventListener.onMessage(message, null);
 
-        verify(objectMapper).readValue(messageBody, LikeEventDto.class);
+        verify(objectMapper).readValue(messageBody, LikeEvent.class);
         verify(analyticsEventService).saveEvent(any(AnalyticsEvent.class));
         verify(analyticsEventMapper).toEntity(likeEvent);
     }
@@ -70,7 +70,7 @@ class LikeEventListenerTest {
         assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> likeEventListener.onMessage(message, null));
 
-        verify(objectMapper).readValue(messageBody, LikeEventDto.class);
+        verify(objectMapper).readValue(messageBody, LikeEvent.class);
         verify(analyticsEventService, never()).saveEvent(any(AnalyticsEvent.class));
         verify(analyticsEventMapper, never()).toEntity(likeEvent);
         verifyNoMoreInteractions(objectMapper, analyticsEventService);
