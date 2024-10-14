@@ -21,9 +21,11 @@ spring:
     redis:
       port: 6379
       host: localhost
-      channel:
-        profile-view: profile_view_channel
-        follower-event-channel: follower_channel
+      channels:
+        profile-view-channel:
+          name: profile_view_channel
+        follower-channel:
+          name: follower_channel
 
 
 
