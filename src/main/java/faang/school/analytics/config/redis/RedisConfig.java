@@ -51,7 +51,7 @@ public class RedisConfig {
         return new MessageListenerAdapter(followerEventListener);
     }
 
-
+    @Bean
     MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
         return new MessageListenerAdapter(profileViewEventListener);
     }
@@ -79,6 +79,7 @@ public class RedisConfig {
         return new ChannelTopic(likeChannelName);
     }
 
+    @Bean
     ChannelTopic followerTopic() {
         return new ChannelTopic(followerEvent);
     }
