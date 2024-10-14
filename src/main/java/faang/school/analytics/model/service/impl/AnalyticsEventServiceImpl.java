@@ -1,10 +1,11 @@
-package faang.school.analytics.service;
+package faang.school.analytics.model.service.impl;
 
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.dto.AnalyticsEventDto;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.model.enums.Interval;
+import faang.school.analytics.model.service.AnalyticsEventService;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ import java.util.stream.Stream;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AnalyticsEventService {
+public class AnalyticsEventServiceImpl implements AnalyticsEventService {
 
     private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventMapper mapper;
