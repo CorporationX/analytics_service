@@ -10,7 +10,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @IT
 @Sql("classpath:sql/data.sql")
 public abstract class IntegrationTestBase {
-    private static final PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:13.3");
+    private static final PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:latest");
 
     @BeforeAll
     static void runContainer() {
