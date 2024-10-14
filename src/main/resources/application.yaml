@@ -26,6 +26,8 @@ spring:
           name: profile_view_channel
         like-channel:
           name: like-channel
+        follower-event-channel:
+          name: follower_event_channel
 
 server:
   port: 8086
@@ -37,3 +39,8 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    url: /swagger/OpenAPI.yaml
