@@ -3,7 +3,7 @@ package faang.school.analytics.listener;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.analyticsevents.AnalyticsEventMapper;
-import faang.school.analytics.model.dto.GoalCompletedEventDto;
+import faang.school.analytics.model.dto.GoalCompletedEvent;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.service.impl.analyticsevent.AnalyticsEventServiceImpl;
@@ -44,11 +44,11 @@ class GoalCompletedEventListenerTest {
     private GoalCompletedEventListener goalCompletedEventListener;
 
     private Message message;
-    private GoalCompletedEventDto goalCompletedEventDto;
+    private GoalCompletedEvent goalCompletedEventDto;
 
     @BeforeEach
     void setUp() {
-        goalCompletedEventDto = GoalCompletedEventDto.builder().build();
+        goalCompletedEventDto = GoalCompletedEvent.builder().build();
         String json = "{\"userId\":1, \"goalId\":2}";
         message = mock(Message.class);
         when(message.getBody()).thenReturn(json.getBytes(StandardCharsets.UTF_8));
@@ -58,7 +58,7 @@ class GoalCompletedEventListenerTest {
     void onMessage_shouldHandleEventSuccessfully() throws IOException {
         // given
         var analyticsEvent = new AnalyticsEvent();
-        when(objectMapper.readValue(any(byte[].class), eq(GoalCompletedEventDto.class))).thenReturn(goalCompletedEventDto);
+        when(objectMapper.readValue(any(byte[].class), eq(GoalCompletedEvent.class))).thenReturn(goalCompletedEventDto);
         when(analyticsEventMapper.toEntity(goalCompletedEventDto)).thenReturn(analyticsEvent);
         // when
         goalCompletedEventListener.onMessage(message, null);
@@ -71,7 +71,7 @@ class GoalCompletedEventListenerTest {
     @Test
     void onMessage_shouldThrowRuntimeException_whenDeserializationFails() throws IOException {
         // given
-        when(objectMapper.readValue(any(byte[].class), eq(GoalCompletedEventDto.class)))
+        when(objectMapper.readValue(any(byte[].class), eq(GoalCompletedEvent.class)))
                 .thenThrow(new JsonProcessingException("Test exception") {
                 });
         // when & then

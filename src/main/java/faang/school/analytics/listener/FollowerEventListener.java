@@ -2,7 +2,7 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.analyticsevents.AnalyticsEventMapper;
-import faang.school.analytics.model.dto.FollowerEventDto;
+import faang.school.analytics.model.dto.FollowerEvent;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -11,7 +11,7 @@ import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FollowerEventListener extends AbstractEventListener<FollowerEventDto> implements MessageListener {
+public class FollowerEventListener extends AbstractEventListener<FollowerEvent> implements MessageListener {
 
     public FollowerEventListener(AnalyticsEventService analyticsEventService,
                                  ObjectMapper objectMapper,
@@ -21,7 +21,7 @@ public class FollowerEventListener extends AbstractEventListener<FollowerEventDt
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        FollowerEventDto dto = handleEvent(message, FollowerEventDto.class);
+        FollowerEvent dto = handleEvent(message, FollowerEvent.class);
         AnalyticsEvent entity = analyticsEventMapper.toEntity(dto);
         entity.setEventType(EventType.FOLLOWER);
         analyticsEventService.saveEvent(entity);

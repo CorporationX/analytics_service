@@ -3,7 +3,7 @@ package faang.school.analytics.listener;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.analyticsevents.AnalyticsEventMapper;
-import faang.school.analytics.model.dto.FollowerEventDto;
+import faang.school.analytics.model.dto.FollowerEvent;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.service.impl.analyticsevent.AnalyticsEventServiceImpl;
@@ -44,11 +44,11 @@ class FollowerEventListenerTest {
     private FollowerEventListener followerEventListener;
 
     private Message message;
-    private FollowerEventDto followerEventDto;
+    private FollowerEvent followerEventDto;
 
     @BeforeEach
     void setUp() {
-        followerEventDto = FollowerEventDto.builder().build();
+        followerEventDto = FollowerEvent.builder().build();
         String json = "{\"followerId\":1, \"followeeId\":2}";
         message = mock(Message.class);
         when(message.getBody()).thenReturn(json.getBytes(StandardCharsets.UTF_8));
@@ -58,7 +58,7 @@ class FollowerEventListenerTest {
     void onMessage_shouldHandleEventSuccessfully() throws IOException {
         // given
         AnalyticsEvent analyticsEvent = new AnalyticsEvent();
-        when(objectMapper.readValue(any(byte[].class), eq(FollowerEventDto.class))).thenReturn(followerEventDto);
+        when(objectMapper.readValue(any(byte[].class), eq(FollowerEvent.class))).thenReturn(followerEventDto);
         when(analyticsEventMapper.toEntity(followerEventDto)).thenReturn(analyticsEvent);
         // when
         followerEventListener.onMessage(message, null);
@@ -71,7 +71,7 @@ class FollowerEventListenerTest {
     @Test
     void onMessage_shouldThrowRuntimeException_whenDeserializationFails() throws IOException {
         // given
-        when(objectMapper.readValue(any(byte[].class), eq(FollowerEventDto.class)))
+        when(objectMapper.readValue(any(byte[].class), eq(FollowerEvent.class)))
                 .thenThrow(new JsonProcessingException("Test exception") {});
         // when & then
         assertThrows(RuntimeException.class, () -> followerEventListener.onMessage(message, null));
