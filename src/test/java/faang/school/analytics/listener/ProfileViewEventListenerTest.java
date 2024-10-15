@@ -2,28 +2,20 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
-import faang.school.analytics.model.AnalyticsEventService;
 import faang.school.analytics.model.dto.ProfileViewEvent;
 import faang.school.analytics.model.entity.AnalyticsEvent;
+import faang.school.analytics.service.impl.AnalyticsEventServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.Message;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProfileViewEventListenerTest {
@@ -32,7 +24,7 @@ class ProfileViewEventListenerTest {
     private ObjectMapper objectMapper;
 
     @Mock
-    private AnalyticsEventService analyticsEventService;
+    private AnalyticsEventServiceImpl analyticsEventService;
 
     @Spy
     private AnalyticsEventMapperImpl mapper;
