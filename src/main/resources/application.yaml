@@ -28,7 +28,7 @@ spring:
           comment-channel:
             name: comment_event_channel
           post-like-channel:
-            name: like_event_channel
+            name: post_like_event_channel
 
       channel:
         profile-view: profile_view_channel

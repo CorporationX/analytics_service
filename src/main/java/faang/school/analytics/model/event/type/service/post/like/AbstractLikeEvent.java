@@ -12,7 +12,7 @@ public abstract class AbstractLikeEvent {
     protected final Long likedEntityId;
     protected final Long authorId;
     protected final Long userExciterId;
-    protected final LocalDateTime createdAt = LocalDateTime.now();
+    protected final LocalDateTime createdAt;
 
     public abstract AnalyticsEvent createAnalyticsEvent();
 }

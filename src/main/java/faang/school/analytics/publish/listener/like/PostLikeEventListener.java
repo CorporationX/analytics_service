@@ -1,5 +1,6 @@
 package faang.school.analytics.publish.listener.like;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.config.redis.RedisProperties;
 import faang.school.analytics.exception.MessageProcessingException;
@@ -23,12 +24,14 @@ public class PostLikeEventListener implements MessageListener {
     private final StringRedisTemplate redisTemplate;
     private final RedisProperties redisProperties;
 
-
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
             PostLikeEvent postLikeEvent = objectMapper.readValue(message.getBody(), PostLikeEvent.class);
             analyticsEventService.saveEvent(postLikeEvent.createAnalyticsEvent());
+
+        } catch (JsonMappingException e) {
+            log.error("JSON mapping error: {}", e.getMessage());
 
         } catch (IOException e) {
             log.error("Error while parsing message: {}", message.getBody(), e);
