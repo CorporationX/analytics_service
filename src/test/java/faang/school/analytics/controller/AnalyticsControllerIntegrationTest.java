@@ -1,8 +1,8 @@
 package faang.school.analytics.controller;
 
-import com.jayway.jsonpath.JsonPath;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.config.context.UserContext;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,14 +18,19 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Testcontainers
-class AnalyticsControllerIntgTest {
+class AnalyticsControllerIntegrationTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -40,10 +45,6 @@ class AnalyticsControllerIntgTest {
                     .withUsername("admin")
                     .withPassword("admin")
                     .withInitScript("schema_for_AnalyticController.sql");
-
-    @BeforeEach
-    public void setUp() {
-    }
 
     @DynamicPropertySource
     static void overrideSourceProperties(DynamicPropertyRegistry registry) {
@@ -79,17 +80,30 @@ class AnalyticsControllerIntgTest {
 
         String jsonResponse = mvcResult.getResponse().getContentAsString();
 
-        LocalDateTime receivedAtFirstObject = JsonPath.parse(jsonResponse).read("$[0].receivedAt", LocalDateTime.class);
-//        String receivedAtFirstObject = JsonPath.parse(jsonResponse).read("$[0].eventType");
-        // TODO
-        System.out.println("receiveeeeeeeeeeeeeeeeeeeeeeeeeeee"+receivedAtFirstObject);
-        LocalDateTime receivedAtSecondObject = JsonPath.parse(jsonResponse).read("$[1].receivedAt", LocalDateTime.class);
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode rootArray = mapper.readTree(jsonResponse);
+        Iterator<JsonNode> elements = rootArray.elements();
+        List<LocalDateTime> localDateTimes = new ArrayList<>();
+        while (elements.hasNext()) {
+            JsonNode element = elements.next();
+            JsonNode receivedAtNode = element.get("receivedAt");
+            LocalDateTime receivedAt = LocalDateTime.of(
+                    receivedAtNode.get(0).asInt(),
+                    receivedAtNode.get(1).asInt(),
+                    receivedAtNode.get(2).asInt(),
+                    receivedAtNode.get(3).asInt(),
+                    receivedAtNode.get(4).asInt(),
+                    receivedAtNode.get(5).asInt(),
+                    receivedAtNode.get(6).asInt()
+            );
+            localDateTimes.add(receivedAt);
+        }
 
-//        Assertions.assertAll(
-//                ()->Assertions.assertTrue(receivedAtFirstObject.isAfter(LocalDateTime.parse(startDate))),
-//                ()->Assertions.assertTrue(receivedAtFirstObject.isBefore(LocalDateTime.parse(endDate))),
-//                ()->Assertions.assertTrue(receivedAtSecondObject.isAfter(LocalDateTime.parse(startDate))),
-//                ()->Assertions.assertTrue(receivedAtSecondObject.isBefore(LocalDateTime.parse(endDate)))
-//        );
+        assertAll(
+                () -> assertTrue(localDateTimes.get(0).isAfter(LocalDateTime.parse(startDate))),
+                () -> assertTrue(localDateTimes.get(0).isBefore(LocalDateTime.parse(endDate))),
+                () -> assertTrue(localDateTimes.get(1).isAfter(LocalDateTime.parse(startDate))),
+                () -> assertTrue(localDateTimes.get(1).isBefore(LocalDateTime.parse(endDate)))
+        );
     }
 }
