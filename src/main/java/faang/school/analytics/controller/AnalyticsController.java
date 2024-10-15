@@ -21,7 +21,6 @@ public class AnalyticsController {
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
     public List<AnalyticsEventDto> getAnalytics(@RequestParam("id") Long id,
                                                 @RequestParam("eventType") String eventType,
                                                 @RequestParam(value = "interval", required = false) String interval,
