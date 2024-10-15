@@ -1,5 +1,6 @@
 package faang.school.analytics.service;
 
+import faang.school.analytics.dto.AbstractEventDto;
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
@@ -25,9 +26,10 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     private final AnalyticsEventMapper analyticsEventMapper;
 
     @Override
-    public void saveEvent(AnalyticsEventDto analyticsEventDto) {
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(analyticsEventDto);
+    public void saveEvent(AbstractEventDto abstractEventDto) {
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(abstractEventDto);
         analyticsEventRepository.save(analyticsEvent);
+        log.info("Saved analytics event: {}", analyticsEvent);
     }
 
     @Override
@@ -36,21 +38,26 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
                                                 Interval interval,
                                                 LocalDateTime from,
                                                 LocalDateTime to) {
+        log.info("Fetching analytics for receiverId: {}, eventType: {}, interval: {}, from: {}, to: {}",
+                receiverId, eventType, interval, from, to);
         Stream<AnalyticsEvent> analyticsEventStream = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
-        return analyticsEventStream.filter(event -> matchesIntervalOrPeriod(event.getReceivedAt(), interval, from, to))
-                    .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
-                    .map(analyticsEventMapper::toAnalyticsEventDto)
-                    .toList();
+        List<AnalyticsEventDto> events = analyticsEventStream
+                .filter(event -> matchesIntervalOrPeriod(event.getReceivedAt(), interval, from, to))
+                .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
+                .map(analyticsEventMapper::toAnalyticsEventDto)
+                .toList();
+        log.info("Retrieved {} analytics events for receiverId: {}", events.size(), receiverId);
+        return events;
     }
 
     private boolean matchesIntervalOrPeriod(LocalDateTime date,
                                             Interval interval,
                                             LocalDateTime from,
                                             LocalDateTime to) {
-        if (interval != null) {
-            return matchesInterval(date, interval);
-        }
-        return date.isAfter(from) && date.isBefore(to);
+        boolean matches = interval != null ?
+                matchesInterval(date, interval) : (date.isAfter(from) && date.isBefore(to));
+        log.debug("Checking date: {}, interval: {}, from: {}, to: {}, matches: {}", date, interval, from, to, matches);
+        return matches;
     }
 
     private boolean matchesInterval(LocalDateTime date, Interval interval) {
