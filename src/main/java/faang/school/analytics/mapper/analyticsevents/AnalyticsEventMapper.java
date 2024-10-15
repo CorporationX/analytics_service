@@ -1,7 +1,8 @@
-package faang.school.analytics.mapper.analyticevent;
+package faang.school.analytics.mapper.analyticsevents;
 
-import faang.school.analytics.model.dto.FollowerEventDto;
-import faang.school.analytics.model.dto.LikeEventDto;
+import faang.school.analytics.model.dto.FollowerEvent;
+import faang.school.analytics.model.dto.GoalCompletedEvent;
+import faang.school.analytics.model.dto.LikeEvent;
 import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventDto;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import org.mapstruct.Mapper;
@@ -16,10 +17,15 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "receiverId", source = "followeeId")
     @Mapping(target = "actorId", source = "followerId")
     @Mapping(target = "receivedAt", source = "subscribedAt")
-    AnalyticsEvent toEntity(FollowerEventDto followerEvent);
+    AnalyticsEvent toEntity(FollowerEvent followerEvent);
 
     @Mapping(target = "receiverId", source = "postId")
     @Mapping(target = "actorId", source = "userId")
     @Mapping(target = "receivedAt", source = "likedTime")
-    AnalyticsEvent toEntity(LikeEventDto likeEventDto);
+    AnalyticsEvent toEntity(LikeEvent likeEvent);
+
+    @Mapping(target = "receiverId", source = "goalId")
+    @Mapping(target = "actorId", source = "userId")
+    @Mapping(target = "receivedAt", source = "completedAt")
+    AnalyticsEvent toEntity(GoalCompletedEvent goalCompletedEvent);
 }

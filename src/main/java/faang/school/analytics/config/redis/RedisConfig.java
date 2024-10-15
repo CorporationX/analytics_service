@@ -1,6 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.FollowerEventListener;
+import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.LikeEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,15 +19,15 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.host}")
     private String host;
-
     @Value("${spring.data.redis.port}")
     private int port;
 
     @Value("${spring.data.redis.channels.like-channel.name}")
     private String likeChannelName;
-
     @Value("${spring.data.redis.channels.follower-event-channel.name}")
     private String followerEvent;
+    @Value("${spring.data.redis.channels.goal-completed-event-channel.name}")
+    private String goalCompletedEvent;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -49,12 +50,19 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter goalCompletedListener(GoalCompletedEventListener goalCompletedEventListener) {
+        return new MessageListenerAdapter(goalCompletedEventListener);
+    }
+
+    @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener,
-                                                 MessageListenerAdapter likeListener) {
+                                                 MessageListenerAdapter likeListener,
+                                                 MessageListenerAdapter goalCompletedListener) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener, followerTopic());
+        container.addMessageListener(goalCompletedListener, goalCompletedTopic());
         container.addMessageListener(likeListener, likeTopic());
         return container;
     }
@@ -69,7 +77,13 @@ public class RedisConfig {
         return new ChannelTopic(likeChannelName);
     }
 
+    @Bean
     ChannelTopic followerTopic() {
         return new ChannelTopic(followerEvent);
+    }
+
+    @Bean
+    ChannelTopic goalCompletedTopic() {
+        return new ChannelTopic(goalCompletedEvent);
     }
 }
