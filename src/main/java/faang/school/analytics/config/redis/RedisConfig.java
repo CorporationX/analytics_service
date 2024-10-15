@@ -21,6 +21,8 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int port;
 
+    @Value("${spring.data.redis.channels.like-channel.name}")
+    private String likeChannelName;
     @Value("${spring.data.redis.channels.follower-event-channel.name}")
     private String followerEvent;
     @Value("${spring.data.redis.channels.goal-completed-event-channel.name}")
@@ -53,13 +55,25 @@ public class RedisConfig {
 
     @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener,
+                                                 MessageListenerAdapter likeListener,
                                                  MessageListenerAdapter goalCompletedListener) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener, followerTopic());
         container.addMessageListener(goalCompletedListener, goalCompletedTopic());
+        container.addMessageListener(likeListener, likeTopic());
         return container;
+    }
+
+    @Bean
+    MessageListenerAdapter likeListener(LikeEventListener likeEventListener) {
+        return new MessageListenerAdapter(likeEventListener);
+    }
+
+    @Bean
+    ChannelTopic likeTopic() {
+        return new ChannelTopic(likeChannelName);
     }
 
     @Bean

@@ -18,6 +18,11 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "receivedAt", source = "subscribedAt")
     AnalyticsEvent toEntity(FollowerEventDto followerEvent);
 
+    @Mapping(target = "receiverId", source = "postId")
+    @Mapping(target = "actorId", source = "userId")
+    @Mapping(target = "receivedAt", source = "likedTime")
+    AnalyticsEvent toEntity(LikeEventDto likeEventDto);
+
     @Mapping(target = "receiverId", source = "goalId")
     @Mapping(target = "actorId", source = "userId")
     @Mapping(target = "receivedAt", source = "completedAt")
