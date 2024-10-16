@@ -1,4 +1,4 @@
-package faang.school.analytics.model.event.type;
+package faang.school.analytics.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

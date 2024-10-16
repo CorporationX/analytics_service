@@ -1,7 +1,7 @@
 package faang.school.analytics.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import faang.school.analytics.model.event.type.EventType;
+import faang.school.analytics.model.EventType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

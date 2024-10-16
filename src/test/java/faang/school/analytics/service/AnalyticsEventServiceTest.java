@@ -1,7 +1,7 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.model.event.type.AnalyticsEvent;
-import faang.school.analytics.model.event.type.EventType;
+import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.TimeInterval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import org.junit.jupiter.api.BeforeEach;

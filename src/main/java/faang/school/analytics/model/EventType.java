@@ -1,6 +1,6 @@
-package faang.school.analytics.model.event.type;
+package faang.school.analytics.model;
 
-import faang.school.analytics.model.event.type.service.post.like.PostLikeEvent;
+import faang.school.analytics.dto.event.type.service.post.like.PostLikeEventDto;
 
 public enum EventType {
     //PROFILE_VIEW(Object.class),
@@ -8,7 +8,7 @@ public enum EventType {
     FOLLOWER(Object.class),// <- у кого будет задание по подписке, реализуйте класс
     //POST_PUBLISHED(Object.class),
     //POST_VIEW(Object.class),
-    POST_LIKE(PostLikeEvent.class);
+    POST_LIKE(PostLikeEventDto.class);
     //POST_COMMENT(Object.class),
     //SKILL_RECEIVED(Object.class),
     //RECOMMENDATION_RECEIVED(Object.class),
