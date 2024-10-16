@@ -1,7 +1,7 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.listener.event.SearchAppearanceEvent;
+import faang.school.analytics.listener.event.ProfileVeiwEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -17,8 +17,7 @@ import java.io.IOException;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class SearchAppearanceEventListener implements MessageListener {
-
+public class ProfileViewEventListener implements MessageListener {
     private final AnalyticsEventMapper mapper;
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
@@ -26,14 +25,14 @@ public class SearchAppearanceEventListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         log.info("New message received: {}", message);
-        SearchAppearanceEvent event;
+        ProfileVeiwEvent event;
         try {
-            event = objectMapper.readValue(message.getBody(), SearchAppearanceEvent.class);
+            event = objectMapper.readValue(message.getBody(), ProfileVeiwEvent.class);
         } catch (IOException e) {
             log.error("Error while parsing message");
             throw new RuntimeException(e);
         }
-        AnalyticsEvent analyticsEvent = mapper.toEntity(event, EventType.PROFILE_APPEARED_IN_SEARCH.name());
+        AnalyticsEvent analyticsEvent = mapper.toEntity(event, EventType.PROFILE_VIEW.name());
         analyticsEventService.saveEvent(analyticsEvent);
     }
 }

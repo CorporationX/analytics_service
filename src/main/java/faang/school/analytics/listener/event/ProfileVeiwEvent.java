@@ -1,4 +1,4 @@
-package faang.school.analytics.model;
+package faang.school.analytics.listener.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Data
-public class SearchAppearanceEvent {
+public class ProfileVeiwEvent {
     private Long id;
     private long receiverId;
     private long actorId;

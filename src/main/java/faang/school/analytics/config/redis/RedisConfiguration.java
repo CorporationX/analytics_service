@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.ProfileViewEventListener;
 import faang.school.analytics.listener.SearchAppearanceEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,7 @@ import java.util.List;
 public class RedisConfiguration {
     private final RedisConnectionFactory connectionFactory;
     private final SearchAppearanceEventListener searchAppearanceEventListener;
+    private final ProfileViewEventListener profileViewEventListener;
     private List<String> topics;
 
     @Bean
@@ -24,7 +26,9 @@ public class RedisConfiguration {
         container.setConnectionFactory(connectionFactory);
 
         MessageListenerAdapter searchAppearanceEventListenerAdapter = new MessageListenerAdapter(searchAppearanceEventListener);
+        MessageListenerAdapter profileViewEventListenerAdapter = new MessageListenerAdapter(profileViewEventListener);
         container.addMessageListener(searchAppearanceEventListenerAdapter, new ChannelTopic("search-appearance"));
+        container.addMessageListener(profileViewEventListenerAdapter, new ChannelTopic("profile-view"));
         return container;
     }
 }
