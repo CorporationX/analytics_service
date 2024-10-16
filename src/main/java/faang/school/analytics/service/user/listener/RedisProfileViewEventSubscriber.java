@@ -6,6 +6,7 @@ import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Service;
@@ -17,13 +18,16 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class RedisProfileViewEventSubscriber implements MessageListener {
+    @Value("${app.user-redis-config.profile_view_event_topic}")
+    private String profileViewEventTopic;
+
     protected final ObjectMapper objectMapper;
     protected final AnalyticsEventMapper analyticsEventMapper;
     protected final AnalyticsEventService analyticsEventService;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        log.info("Received message from \"profileViewEvent\" topic");
+        log.info("Received message from \"{}}\" topic", profileViewEventTopic);
         try {
             List<ProfileViewEventDto> profileViewEventDtoList = objectMapper.readValue(message.getBody(),
                     objectMapper.getTypeFactory().constructCollectionType(List.class, ProfileViewEventDto.class));
