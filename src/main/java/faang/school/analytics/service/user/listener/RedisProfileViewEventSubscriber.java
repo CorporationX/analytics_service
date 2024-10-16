@@ -3,29 +3,35 @@ package faang.school.analytics.service.user.listener;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.user.ProfileViewEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
-import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
-import faang.school.analytics.service.listener.RedisEventSubscriberBatchSave;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
+import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.function.Function;
 
 @Slf4j
 @Service
-public class RedisProfileViewEventSubscriber extends RedisEventSubscriberBatchSave<ProfileViewEventDto> {
-    public RedisProfileViewEventSubscriber(ObjectMapper objectMapper, AnalyticsEventMapper analyticsEventMapper,
-                                           AnalyticsEventService analyticsEventService) {
-        super(objectMapper, analyticsEventMapper, analyticsEventService);
-    }
+@RequiredArgsConstructor
+public class RedisProfileViewEventSubscriber implements MessageListener {
+    protected final ObjectMapper objectMapper;
+    protected final AnalyticsEventMapper analyticsEventMapper;
+    protected final AnalyticsEventService analyticsEventService;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        log.info("Received message: {}", message);
-        Function<List<ProfileViewEventDto>, List<AnalyticsEvent>> toEventsFunction =
-                profileViewEventDtos -> getAnalyticsEventMapper().toAnalyticsEvents(profileViewEventDtos);
-        addToList(message, ProfileViewEventDto.class, toEventsFunction);
+        log.info("Received message from \"profileViewEvent\" topic");
+        try {
+            List<ProfileViewEventDto> profileViewEventDtoList = objectMapper.readValue(message.getBody(),
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, ProfileViewEventDto.class));
+
+            analyticsEventService.saveAllEvents(analyticsEventMapper.toAnalyticsEvents(profileViewEventDtoList));
+            log.info("{} user view events saved", profileViewEventDtoList.size());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
