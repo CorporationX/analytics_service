@@ -1,6 +1,5 @@
 package faang.school.analytics.listener.like;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.event.like.LikeEventDto;
 import faang.school.analytics.mapper.event.LikeEventMapper;
@@ -15,18 +14,19 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.Message;
 
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class LikeEventListenerTest {
 
-    private static final String JSON_STRING_FROM_POST_SERVICE =
-            "{\"postAuthorId\":1,\"likerId\":1,\"eventType\":\"POST_LIKE\"}";
     private static final long POST_AUTHOR_ID_ONE = 1L;
     private static final long LIKER_ID = 1L;
     @InjectMocks
@@ -38,6 +38,7 @@ public class LikeEventListenerTest {
     @Mock
     private AnalyticsEventService analyticsEventService;
     private LikeEventDto likeEventDto;
+    private Message message;
 
 
     @BeforeEach
@@ -47,17 +48,28 @@ public class LikeEventListenerTest {
                 .likerId(LIKER_ID)
                 .eventType(EventType.POST_LIKE)
                 .build();
+        message = mock(Message.class);
     }
 
     @Test
-    @DisplayName("When Json string passed filter with regex, readValue to dto, save it")
-    public void whenJsonStringPassedThenFilterReadItsValueAndSaveIt() throws JsonProcessingException {
-        Message message = mock(Message.class);
-        when(message.getBody()).thenReturn(JSON_STRING_FROM_POST_SERVICE.getBytes(StandardCharsets.UTF_8));
-        when(message.getChannel()).thenReturn(new byte[]{});
-        when(objectMapper.readValue(JSON_STRING_FROM_POST_SERVICE, LikeEventDto.class)).thenReturn(likeEventDto);
+    @DisplayName("When json object passed readValue, map to dto and save it")
+    public void whenJsonStringPassedThenFilterReadItsValueAndSaveIt() throws IOException {
+        when(message.getBody()).thenReturn(new byte[0]);
+        when(objectMapper.readValue(any(byte[].class), eq(LikeEventDto.class))).thenReturn(likeEventDto);
 
-        assertDoesNotThrow(() -> likeEventListener.onMessage(message, new byte[]{}));
+        likeEventListener.onMessage(message, null);
+
+        verify(objectMapper).readValue(any(byte[].class), eq(LikeEventDto.class));
+        verify(likeEventMapper).fromLikeEventDtoToEntity(likeEventDto);
         verify(analyticsEventService).saveEvent(likeEventMapper.fromLikeEventDtoToEntity(likeEventDto));
+    }
+
+    @Test
+    @DisplayName("If IOException while reading then throw exception")
+    void whenIOExceptionOccursThenThrowsException() throws Exception {
+        when(message.getBody()).thenReturn(new byte[0]);
+        when(objectMapper.readValue(any(byte[].class), eq(LikeEventDto.class))).thenThrow(new IOException());
+        assertThrows(RuntimeException.class, () -> likeEventListener.onMessage(message, null));
+        verify(analyticsEventService, never()).saveEvent(any());
     }
 }

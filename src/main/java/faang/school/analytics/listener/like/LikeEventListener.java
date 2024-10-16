@@ -11,31 +11,32 @@ import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
 public class LikeEventListener implements MessageListener {
+
     private final ObjectMapper objectMapper;
     private final LikeEventMapper likeEventMapper;
     private final AnalyticsEventService analyticsEventService;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        String jsonString = new String(message.getBody(), StandardCharsets.UTF_8).trim();
-        log.debug("Received new message from like-events channel");
-        jsonString = jsonString.replaceFirst("^[^\\[{]*(\\{.*?}.*)$", "$1");
         try {
-            LikeEventDto likeEventDto = objectMapper.readValue(jsonString, LikeEventDto.class);
+            LikeEventDto likeEventDto = objectMapper.readValue(message.getBody(),
+                    LikeEventDto.class);
             log.debug("Saving new analytic report with event type of - {} from channel: {} time received: {}",
                     likeEventDto.getEventType(),
                     Arrays.toString(message.getChannel()),
-                    LocalDate.now());
+                    LocalDateTime.now());
+            log.debug("Saving to analytics DB");
             analyticsEventService.saveEvent(likeEventMapper.fromLikeEventDtoToEntity(likeEventDto));
+            log.debug("Saved successfully!");
         } catch (IOException e) {
+            log.error("Something went wrong while reading {}", Arrays.toString(e.getStackTrace()));
             throw new RuntimeException(e);
         }
     }

@@ -6,39 +6,51 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfiguration {
 
-    private final LikeEventListener likeEventsListener;
-    private final RedisPropertiesConfiguration propertiesConfig;
+    private final RedisProperties propertiesConfig;
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(propertiesConfig.getHost()
-                , propertiesConfig.getPort());
+        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(
+                propertiesConfig.getHost(),
+                propertiesConfig.getPort());
         return new JedisConnectionFactory(redisConfig);
     }
 
     @Bean
-    public RedisMessageListenerContainer redisContainer() {
+    public RedisTemplate<String, Object> redisTemplate() {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(jedisConnectionFactory());
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        return template;
+    }
+
+    @Bean
+    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter likeEventAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(likeEventListenerAdapter(likeEventsListener), likeEventsTopic());
+        container.addMessageListener(likeEventAdapter, likeEventsTopic());
         return container;
     }
 
     @Bean
-    public MessageListenerAdapter likeEventListenerAdapter(LikeEventListener likeEventListener) {
+    public MessageListenerAdapter likeEventAdapter(LikeEventListener likeEventListener) {
         return new MessageListenerAdapter(likeEventListener);
     }
 
     @Bean
     public ChannelTopic likeEventsTopic() {
-        return new ChannelTopic(propertiesConfig.getLikeEvents());
+        return new ChannelTopic(propertiesConfig.getChannels().getLike_events());
     }
 }
