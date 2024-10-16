@@ -15,7 +15,7 @@ public abstract class AbstractEventListener<T extends AbstractEventDto> {
     private final AnalyticsEventService analyticsEventService;
 
     protected void sendAnalytics(T event) {
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEventFromAbstractEvent(event);
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(event);
         analyticsEvent.setEventType(getEventType());
         analyticsEventService.saveEvent(analyticsEvent);
     }

@@ -11,6 +11,7 @@ import org.mapstruct.ReportingPolicy;
 public interface AnalyticsEventMapper {
 
     @Mapping(source = "timestamp", target = "receivedAt")
+    AnalyticsEvent toAnalyticsEvent(AbstractEventDto abstractEventDto);
     AnalyticsEvent toAnalyticsEventFromAbstractEvent(AbstractEventDto abstractEventDto);
 
     AnalyticsEvent toAnalyticsEvent(AbstractEventDto abstractEventDto);
