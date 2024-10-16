@@ -46,8 +46,7 @@ public class AnalyticsEventServiceImplTest {
     @Test
     void saveEvent_shouldSaveEvent() {
 
-        when(analyticsEventMapper.toAnalyticsEvent(analyticsEventDto)).thenReturn(analyticsEvent);
-        analyticsEventService.saveEvent(analyticsEventDto);
+        analyticsEventService.saveEvent(analyticsEvent);
         verify(analyticsEventRepository).save(analyticsEvent);
     }
 
