@@ -1,10 +1,6 @@
 package faang.school.analytics.config;
 
-import faang.school.analytics.listener.AdBoughtEventListener;
-import faang.school.analytics.listener.LikeEventListener;
-import faang.school.analytics.listener.ProfileViewEventListener;
-import faang.school.analytics.listener.RecommendationEventListener;
-import faang.school.analytics.listener.SearchAppearanceEventListener;
+import faang.school.analytics.listener.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +32,9 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.profile-view}")
     private String profileViewChannel;
+
+    @Value("${spring.data.redis.channel.post_view_channel}")
+    private String postViewChannel;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -69,6 +68,11 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter postViewEvent(PostViewEventListener postViewEventListener) {
+        return new MessageListenerAdapter(postViewEventListener);
+    }
+
+    @Bean
     ChannelTopic likeTopic() {
         return new ChannelTopic(likeChannel);
     }
@@ -94,11 +98,17 @@ public class RedisConfig {
     }
 
     @Bean
+    ChannelTopic postViewTopic() {
+        return new ChannelTopic(postViewChannel);
+    }
+
+    @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter searchAppearanceEvent,
                                                  MessageListenerAdapter likeEvent,
                                                  MessageListenerAdapter recommendationEvent,
                                                  MessageListenerAdapter adBoughtEvent,
-                                                 MessageListenerAdapter profileViewEvent) {
+                                                 MessageListenerAdapter profileViewEvent,
+                                                 MessageListenerAdapter postViewEvent) {
 
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
@@ -108,6 +118,7 @@ public class RedisConfig {
         container.addMessageListener(searchAppearanceEvent, searchAppearanceTopic());
         container.addMessageListener(adBoughtEvent, adBoughtTopic());
         container.addMessageListener(profileViewEvent, profileViewTopic());
+        container.addMessageListener(postViewEvent, postViewTopic());
         return container;
     }
 }
