@@ -27,7 +27,6 @@ public class FollowerEventListener extends AbstractEventListener<FollowerEventDt
             FollowerEventDto followerEventDto = objectMapper.readValue(message.getBody(),
                     FollowerEventDto.class);
             sendAnalytics(followerEventDto);
-            throw new IOException();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);

@@ -6,7 +6,7 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public class AnalyticsEventDto extends AbstractEventDto {
+public class AnalyticsEventDto {
     private Long id;
     private Long receiverId;
     private Long actorId;
