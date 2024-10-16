@@ -27,6 +27,7 @@ spring:
         recommendation: recommendation_channel
         like: like_channel
         ad-bought: ad_bought_channel
+        post_view_channel: post_view_channel
 
 server:
   port: 8086
