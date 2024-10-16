@@ -1,6 +1,5 @@
 package faang.school.analytics.dto.event.like;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import faang.school.analytics.model.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
