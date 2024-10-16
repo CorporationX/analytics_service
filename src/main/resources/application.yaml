@@ -39,3 +39,4 @@ redis:
   pubsub:
     topics:
       like-event
+      adBought-event
