@@ -98,5 +98,5 @@ jobs:
           SERVER_PASSWORD: G3wkd9i3_km29s
           SERVER_IP: 83.69.108.170
         run: |
-          sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no target/*.jar $SERVER_USER@$SERVER_IP:/app
+#          sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no target/*.jar $SERVER_USER@$SERVER_IP:/app
           sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker pull bootcampwerewolf/analytic_service && docker stop bootcampwerewolf/analytic_service || true && docker compose up -d"
