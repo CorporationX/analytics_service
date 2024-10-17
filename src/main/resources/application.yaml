@@ -22,10 +22,16 @@ spring:
       port: 6379
       host: localhost
       channels:
-        profile-view-channel:
+        profile-view:
           name: profile_view_channel
+        like-channel:
+          name: like-channel
         follower-event-channel:
           name: follower_event_channel
+        goal-completed-event-channel:
+          name: goal_completed_event_channel
+        comment-event-channel:
+          name: comment_event_channel
         project-view-channel:
           name: project_view_channel
 
