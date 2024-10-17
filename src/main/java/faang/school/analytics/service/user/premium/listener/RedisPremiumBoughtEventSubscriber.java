@@ -1,7 +1,7 @@
-package faang.school.analytics.service.user.listener;
+package faang.school.analytics.service.user.premium.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.dto.user.ProfileViewEventDto;
+import faang.school.analytics.dto.user.premium.PremiumBoughtEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +17,9 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RedisProfileViewEventSubscriber implements MessageListener {
-    @Value("${app.user-redis-config.profile_view_event_topic}")
-    private String profileViewEventTopic;
+public class RedisPremiumBoughtEventSubscriber implements MessageListener {
+    @Value("${app.user-premium-redis-config.premium_bought_event_topic}")
+    private String premiumBoughtEventTopic;
 
     protected final ObjectMapper objectMapper;
     protected final AnalyticsEventMapper analyticsEventMapper;
@@ -27,13 +27,13 @@ public class RedisProfileViewEventSubscriber implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        log.info("Received message from \"{}}\" topic", profileViewEventTopic);
+        log.info("Received message from \"{}}\" topic", premiumBoughtEventTopic);
         try {
-            List<ProfileViewEventDto> profileViewEventDtoList = objectMapper.readValue(message.getBody(),
-                    objectMapper.getTypeFactory().constructCollectionType(List.class, ProfileViewEventDto.class));
+            List<PremiumBoughtEventDto> premiumBoughtEventDtoList = objectMapper.readValue(message.getBody(),
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, PremiumBoughtEventDto.class));
 
-            analyticsEventService.saveAllEvents(analyticsEventMapper.profileViewToAnalyticsEvents(profileViewEventDtoList));
-            log.info("{} user view events saved", profileViewEventDtoList.size());
+            analyticsEventService.saveAllEvents(analyticsEventMapper.premiumBoughtToAnalyticsEvents(premiumBoughtEventDtoList));
+            log.info("{} user premium bought events saved", premiumBoughtEventDtoList.size());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
