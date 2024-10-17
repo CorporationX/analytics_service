@@ -72,7 +72,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: service
+          name: analytics_service
 
 #      - name: List files before Docker build 2
 #        run: ls -la build/libs/
