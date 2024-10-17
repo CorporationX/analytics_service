@@ -5,7 +5,6 @@ import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.LikeEventListener;
 import faang.school.analytics.listener.ProjectViewEventListener;
-import faang.school.analytics.listener.ProjectViewEventListener;
 import faang.school.analytics.listener.PremiumBoughtEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
