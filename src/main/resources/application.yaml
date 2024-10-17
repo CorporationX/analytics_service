@@ -22,7 +22,8 @@ spring:
       port: 6379
       host: localhost
       channel:
-        profile-view: profile_view_channel
+        profileView: profile_view_channel
+        projectViewChannel: project_view_channel
 
 server:
   port: 8086
