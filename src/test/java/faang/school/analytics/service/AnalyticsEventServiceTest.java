@@ -4,6 +4,8 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.TimeInterval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,6 +49,10 @@ class AnalyticsEventServiceTest {
         eventType = EventType.FOLLOWER;
         start = LocalDateTime.now().minusDays(1);
         end = LocalDateTime.now();
+    }
+    @Test
+    void unluckyTest() {
+        Assertions.fail();
     }
 
     @Test
