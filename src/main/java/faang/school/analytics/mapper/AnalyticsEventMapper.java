@@ -1,28 +1,22 @@
 package faang.school.analytics.mapper;
 
-import faang.school.analytics.model.FollowerEvent;
+import faang.school.analytics.model.dto.AnalyticsEventDto;
+import faang.school.analytics.model.dto.AdBoughtEvent;
+import faang.school.analytics.model.dto.ProfileViewEvent;
 import faang.school.analytics.model.dto.SearchAppearanceEvent;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
-
+    AnalyticsEvent toEntity(AnalyticsEventDto analyticEventDto);
+    AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
     AnalyticsEvent fromSearchAppearanceToEntity(SearchAppearanceEvent searchAppearanceEvent);
 
-    @Mapping(target = "actorId", source = "followerId")
-    @Mapping(target = "receiverId", source = "followedUserId")
-    @Mapping(target = "eventType", constant = "FOLLOWER")
-    @Mapping(target = "receivedAt", source = "subscriptionTime")
-    AnalyticsEvent toEntity(FollowerEvent event);
+    AnalyticsEvent fromProfileViewToEntity(ProfileViewEvent profileViewEvent);
 
-    @Mapping(target = "actorId", source = "userId")
-    @Mapping(target = "eventType", constant = "PREMIUM_PURCHASE")
-    @Mapping(target = "receivedAt", source = "purchaseDateTime")
-    @Mapping(target = "amount", source = "amount")
-    @Mapping(target = "subscriptionDuration", source = "subscriptionDuration")
-    AnalyticsEvent fromPremiumBoughtEventToEntity(PremiumBoughtEventDto event);
-}
+    @Mapping(source = "userId", target = "actorId")
+    AnalyticsEvent fromAdBoughtToEntity(AdBoughtEvent adBoughtEvent);
 }
