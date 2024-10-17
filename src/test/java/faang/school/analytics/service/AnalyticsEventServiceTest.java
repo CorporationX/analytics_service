@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,6 +55,18 @@ class AnalyticsEventServiceTest {
 
         verify(analyticsEventRepository, times(1)).save(event1);
         assertEquals(event1, result);
+    }
+    @Test
+    void testSaveAllEvent() {
+        List<AnalyticsEvent> analyticsEvents = new ArrayList<>();
+        analyticsEvents.add(event1);
+        analyticsEvents.add(event2);
+        when(analyticsEventRepository.saveAll(analyticsEvents)).thenReturn(analyticsEvents);
+
+        List<AnalyticsEvent> result = analyticsEventService.saveAllEvents(analyticsEvents);
+
+        verify(analyticsEventRepository, times(1)).saveAll(analyticsEvents);
+        assertEquals(analyticsEvents, result);
     }
 
     @Test
