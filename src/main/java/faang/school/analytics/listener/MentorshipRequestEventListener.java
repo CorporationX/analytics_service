@@ -22,8 +22,9 @@ import java.nio.charset.StandardCharsets;
 public class MentorshipRequestEventListener implements MessageListener {
 
     private final ObjectMapper objectMapper;
-    private MentorshipRequestMapper mentorshipRequestMapper;
-    private AnalyticsEventService analyticsEventService;
+    private final MentorshipRequestMapper mentorshipRequestMapper;
+    private final AnalyticsEventService analyticsEventService;
+    private final int INDEX_TYPE = 16;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
@@ -33,17 +34,14 @@ public class MentorshipRequestEventListener implements MessageListener {
 
             MentorshipRequestMessage mentorshipRequestMessage = objectMapper.readValue(test,
                     MentorshipRequestMessage.class);
-            log.info("the message has been deserialized. MentorshipRequestMessage: {}", mentorshipRequestMessage);
+            log.debug("the message has been deserialized. MentorshipRequestMessage: {}", mentorshipRequestMessage);
 
             AnalyticsEvent analyticsEvent = mentorshipRequestMapper.toAnalyticsEvent(mentorshipRequestMessage);
-            log.info("MentorshipRequestMessage is mapped to AnalyticsEvent. AnalyticsEvent: {}", analyticsEvent);
-
-            analyticsEvent.setEventType(EventType.of(16));
-            log.info("AnalyticsEvent added filed EventType. AnalyticsEvent: {}", analyticsEvent);
-
+            analyticsEvent.setEventType(EventType.of(INDEX_TYPE));
             AnalyticsEventDto analyticsEventDto = analyticsEventService.saveEvent(analyticsEvent);
-            log.info("AnalyticsEvent save DB. AnalyticsEventDto: {}", analyticsEventDto);
+            log.debug("AnalyticsEvent save DB. AnalyticsEventDto: {}", analyticsEventDto);
         } catch (IOException e) {
+            log.error("Error processing message from topic {}, message: {}", message.getChannel(), new String(message.getBody(), StandardCharsets.UTF_8), e);
             throw new RuntimeException(e);
         }
     }
