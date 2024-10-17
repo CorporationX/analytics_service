@@ -2,7 +2,6 @@ package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.user.ProfileViewEventDto;
 import faang.school.analytics.dto.analyticsEvent.AnalyticsEventDto;
-import faang.school.analytics.dto.user.ProfileViewEventDto;
 import faang.school.analytics.dto.user.premium.PremiumBoughtEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.Mapper;
@@ -22,7 +21,7 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "purchaseDate", target = "receivedAt")
     AnalyticsEvent toAnalyticsEvent(PremiumBoughtEventDto premiumBoughtEventDto);
 
-    List<AnalyticsEvent> toAnalyticsEvents(List<ProfileViewEventDto> analyticsEventService);
+    List<AnalyticsEvent> profileViewToAnalyticsEvents(List<ProfileViewEventDto> profileViewEventDtos);
 
-    List<AnalyticsEvent> toAnalyticsEvents(List<PremiumBoughtEventDto> premiumBoughtEventDtos);
+    List<AnalyticsEvent> premiumBoughtToAnalyticsEvents(List<PremiumBoughtEventDto> premiumBoughtEventDtos);
 }

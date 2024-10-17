@@ -32,7 +32,7 @@ public class RedisPremiumBoughtEventSubscriber implements MessageListener {
             List<PremiumBoughtEventDto> premiumBoughtEventDtoList = objectMapper.readValue(message.getBody(),
                     objectMapper.getTypeFactory().constructCollectionType(List.class, PremiumBoughtEventDto.class));
 
-            analyticsEventService.saveAllEvents(analyticsEventMapper.toAnalyticsEvents(premiumBoughtEventDtoList));
+            analyticsEventService.saveAllEvents(analyticsEventMapper.premiumBoughtToAnalyticsEvents(premiumBoughtEventDtoList));
             log.info("{} user premium bought events saved", premiumBoughtEventDtoList.size());
         } catch (IOException e) {
             throw new RuntimeException(e);

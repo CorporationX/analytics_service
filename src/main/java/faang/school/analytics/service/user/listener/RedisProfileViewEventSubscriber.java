@@ -32,7 +32,7 @@ public class RedisProfileViewEventSubscriber implements MessageListener {
             List<ProfileViewEventDto> profileViewEventDtoList = objectMapper.readValue(message.getBody(),
                     objectMapper.getTypeFactory().constructCollectionType(List.class, ProfileViewEventDto.class));
 
-            analyticsEventService.saveAllEvents(analyticsEventMapper.toAnalyticsEvents(profileViewEventDtoList));
+            analyticsEventService.saveAllEvents(analyticsEventMapper.profileViewToAnalyticsEvents(profileViewEventDtoList));
             log.info("{} user view events saved", profileViewEventDtoList.size());
         } catch (IOException e) {
             throw new RuntimeException(e);
