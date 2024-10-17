@@ -24,10 +24,10 @@ jobs:
           cache: 'gradle'
 
       - name: Build
-        run: ./gradlew build --no-daemon
+        run: ./gradlew build
 
       - name: Test
-        run: ./gradlew test --no-daemon
+        run: ./gradlew test
 
 
 
