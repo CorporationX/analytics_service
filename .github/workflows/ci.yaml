@@ -1,0 +1,39 @@
+name: Analytics Service CI
+
+on:
+  push:
+    branches:
+      - kraken-master-stream6
+  pull_request:
+    branches:
+      - kraken-master-stream6
+
+jobs:
+  job_one:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout to remote machine
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17 and cache Gradle dependencies
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Build
+        run: ./gradlew build
+
+      - name: Test
+        run: ./gradlew test
+
+
+
+
+
+
+
+
+
