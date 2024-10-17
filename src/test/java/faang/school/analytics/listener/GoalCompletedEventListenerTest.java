@@ -3,7 +3,7 @@ package faang.school.analytics.listener;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.analyticsevent.AnalyticsEventMapper;
-import faang.school.analytics.model.dto.GoalCompletedEvent;
+import faang.school.analytics.model.event.GoalCompletedEvent;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.service.impl.analyticsevent.AnalyticsEventServiceImpl;

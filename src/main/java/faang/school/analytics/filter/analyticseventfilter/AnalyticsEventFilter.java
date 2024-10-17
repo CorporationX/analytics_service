@@ -1,6 +1,6 @@
 package faang.school.analytics.filter.analyticseventfilter;
 
-import faang.school.analytics.model.dto.event.AnalyticsEventFilterDto;
+import faang.school.analytics.model.dto.AnalyticsEventFilterDto;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 
 import java.util.stream.Stream;
