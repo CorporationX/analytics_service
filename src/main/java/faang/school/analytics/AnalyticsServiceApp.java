@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-@EnableRetry
 @EnableFeignClients("faang.school.analytics.client")
 public class AnalyticsServiceApp {
     public static void main(String[] args) {

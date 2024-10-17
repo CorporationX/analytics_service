@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.List;
+
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -22,8 +22,10 @@ import static org.mockito.Mockito.when;
 class CommentEventListenerTest {
     @Mock
     private AnalyticsEventService analyticsEventService;
+
     @Mock
     private AnalyticsEventMapper analyticsEventMapper;
+
     @Mock
     private ObjectMapper objectMapper;
 
@@ -31,23 +33,24 @@ class CommentEventListenerTest {
 
     @BeforeEach
     void setUp() {
-        commentEventListener = new CommentEventListener(objectMapper,
+        commentEventListener = new CommentEventListener(
+                objectMapper,
                 analyticsEventService,
                 analyticsEventMapper,
-                "testChannel");
+                "testChannel"
+        );
     }
 
     @Test
-    void testSaveBatch() {
+    void testSaveEvent() {
         CommentEvent commentEvent = new CommentEvent(1L, 2L, 3L, LocalDateTime.now());
-        List<CommentEvent> commentEvents = List.of(commentEvent);
-
         AnalyticsEvent analyticsEvent = new AnalyticsEvent();
-        when(analyticsEventMapper.toAnalyticsEvents(commentEvents)).thenReturn(List.of(analyticsEvent));
 
-        commentEventListener.saveBatch(commentEvents);
+        when(analyticsEventMapper.toAnalyticsEvent(commentEvent)).thenReturn(analyticsEvent);
 
-        verify(analyticsEventMapper, times(1)).toAnalyticsEvents(commentEvents);
-        verify(analyticsEventService, times(1)).saveAllEvents(List.of(analyticsEvent));
+        commentEventListener.saveEvent(commentEvent);
+
+        verify(analyticsEventMapper, times(1)).toAnalyticsEvent(commentEvent);
+        verify(analyticsEventService, times(1)).saveEvent(analyticsEvent);
     }
 }

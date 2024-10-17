@@ -9,11 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 
 @Slf4j
 @Component
@@ -34,15 +31,10 @@ public class CommentEventListener extends AbstractEventListener<CommentEvent> {
     }
 
     @Override
-    @Retryable(
-            value = Exception.class,
-            maxAttempts = 3,
-            backoff = @Backoff(delay = 2000)
-    )
-    public void saveBatch(List<CommentEvent> events) {
-        List<AnalyticsEvent> analyticsEvents = analyticsEventMapper.toAnalyticsEvents(events);
-        analyticsEventService.saveAllEvents(analyticsEvents);
-        log.info("Successfully saved batch of {} events", events.size());
+    public void saveEvent(CommentEvent event) {
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(event);
+        analyticsEventService.saveEvent(analyticsEvent);
+        log.info("Event saved: {}", event);
     }
 
     @Override
