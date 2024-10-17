@@ -10,6 +10,5 @@ import org.springframework.stereotype.Component;
 public class ProfileViewEventListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
-
     }
 }

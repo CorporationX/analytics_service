@@ -22,6 +22,7 @@ spring:
       port: 6379
       host: localhost
       channel:
+        follower-event: follower_event_channel
         profile-view: profile_view_channel
         search-appearance: search_appearance_channel
         recommendation: recommendation_channel

@@ -1,10 +1,6 @@
 package faang.school.analytics.config;
 
-import faang.school.analytics.listener.AdBoughtEventListener;
-import faang.school.analytics.listener.LikeEventListener;
-import faang.school.analytics.listener.ProfileViewEventListener;
-import faang.school.analytics.listener.RecommendationEventListener;
-import faang.school.analytics.listener.SearchAppearanceEventListener;
+import faang.school.analytics.listener.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +17,9 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.port}")
     private int redisPort;
+
+    @Value("${spring.data.redis.channel.follower-event}")
+    private String followerEventChannel;
 
     @Value("${spring.data.redis.channel.search-appearance}")
     private String searchAppearanceChannel;
@@ -51,6 +50,11 @@ public class RedisConfig {
     @Bean
     MessageListenerAdapter recommendationEvent(RecommendationEventListener recommendationEventListener) {
         return new MessageListenerAdapter(recommendationEventListener);
+    }
+
+    @Bean
+    MessageListenerAdapter followerEvent (FollowerEventListener followerEventListener) {
+        return new MessageListenerAdapter(followerEventListener);
     }
 
     @Bean
@@ -94,11 +98,17 @@ public class RedisConfig {
     }
 
     @Bean
+    ChannelTopic followerTopic() {
+        return new ChannelTopic(followerEventChannel);
+    }
+
+    @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter searchAppearanceEvent,
                                                  MessageListenerAdapter likeEvent,
                                                  MessageListenerAdapter recommendationEvent,
                                                  MessageListenerAdapter adBoughtEvent,
-                                                 MessageListenerAdapter profileViewEvent) {
+                                                 MessageListenerAdapter profileViewEvent,
+                                                 MessageListenerAdapter followerEvent) {
 
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
@@ -108,6 +118,7 @@ public class RedisConfig {
         container.addMessageListener(searchAppearanceEvent, searchAppearanceTopic());
         container.addMessageListener(adBoughtEvent, adBoughtTopic());
         container.addMessageListener(profileViewEvent, profileViewTopic());
+        container.addMessageListener(followerEvent, followerTopic());
         return container;
     }
 }
