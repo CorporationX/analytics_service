@@ -27,7 +27,7 @@ public class ProfileViewEventListener extends AbstractEventListener<ProfileViewE
     @Override
     public void onMessage(Message message, byte[] pattern) {
         ProfileViewEvent profileViewEvent = handleEvent(message, ProfileViewEvent.class);
-        log.info("Received profile view event: {}", profileViewEvent.getTimestamp());
+        log.debug("Received profile view event: {}", profileViewEvent);
         sendAnalytics(profileViewEvent);
     }
 }
