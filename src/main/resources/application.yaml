@@ -32,6 +32,8 @@ spring:
           name: goal_completed_event_channel
         comment-event-channel:
           name: comment_event_channel
+        project-view-channel:
+          name: project_view_channel
 
 server:
   port: 8086
