@@ -41,13 +41,6 @@ jobs:
           export LANG=ru_RU.UTF-8
           ./gradlew build --no-daemon -x test
 
-#      - name: Verify JAR exists
-#        run: |
-#          if [ ! -f build/libs/service.jar ]; then
-#          echo "JAR file not found!"
-#          exit 1
-#          fi
-
       - name: List files before Docker build
         run: ls -la build/libs/
 
@@ -70,8 +63,8 @@ jobs:
 #    needs: job_unit_tests
 
 #    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+#      - name: Checkout repository
+#        uses: actions/checkout@v4
 
       - name: List files before Docker build 2
         run: ls -la build/libs/
