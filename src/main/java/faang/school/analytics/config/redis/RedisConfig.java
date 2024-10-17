@@ -1,6 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.FollowerEventListener;
+import faang.school.analytics.listener.GoalEventListener;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,18 +27,31 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter goalListener(GoalEventListener goalEventListener) {
+        return new MessageListenerAdapter(goalEventListener);
+    }
+
+    @Bean
     RedisMessageListenerContainer redisMessageListenerContainer(
             FollowerEventListener followerListener,
-            @Qualifier("followerEventTopic") ChannelTopic followerEventTopic) {
+            @Qualifier("followerEventTopic") ChannelTopic followerEventTopic,
+            GoalEventListener goalListener,
+            @Qualifier("goalEventTopic") ChannelTopic goalEventTopic) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener, followerEventTopic);
+        container.addMessageListener(goalListener, goalEventTopic);
 
         return container;
     }
 
     @Bean(value = "followerEventTopic")
     ChannelTopic followerEventTopic(@Value("${spring.data.redis.channels.follower-channel.name}") String name) {
+        return new ChannelTopic(name);
+    }
+
+    @Bean(value = "goalEventTopic")
+    ChannelTopic goalEventTopic(@Value("${spring.data.redis.channels.goal-channel.name}") String name) {
         return new ChannelTopic(name);
     }
 }
