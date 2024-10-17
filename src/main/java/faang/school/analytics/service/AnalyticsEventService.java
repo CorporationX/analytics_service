@@ -24,11 +24,6 @@ public class AnalyticsEventService {
         return analyticsEventRepository.save(event);
     }
 
-    @Transactional
-    public List<AnalyticsEvent> saveAllEvents(List<AnalyticsEvent> events) {
-        return analyticsEventRepository.saveAll(events);
-    }
-
     @Transactional(readOnly = true)
     public List<AnalyticsEvent> getAnalytics(long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to) {
         List<AnalyticsEvent> analyticsEvents = retrieveAnalytics(receiverId, eventType);
