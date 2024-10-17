@@ -41,6 +41,5 @@ public class AnalyticsController {
         List<AnalyticsEventDto> result = analyticsEventServiceImpl.getAnalytics(id, eventTypeRes, intervalRes, startDateRes, endDateRes);
         System.out.printf("result "+result);
         return result;
-
     }
 }
