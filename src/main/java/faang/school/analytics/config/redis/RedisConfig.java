@@ -2,6 +2,7 @@ package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.CommentEventListener;
 import faang.school.analytics.listener.FollowerEventListener;
+import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.LikeEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,8 @@ public class RedisConfig {
     private String likeChannelName;
     @Value("${spring.data.redis.channels.follower-event-channel.name}")
     private String followerEvent;
+    @Value("${spring.data.redis.channels.goal-completed-event-channel.name}")
+    private String goalCompletedEvent;
     @Value("${spring.data.redis.channels.comment-event-channel.name}")
     private String commentEvent;
 
@@ -50,6 +53,11 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter goalCompletedListener(GoalCompletedEventListener goalCompletedEventListener) {
+        return new MessageListenerAdapter(goalCompletedEventListener);
+    }
+
+    @Bean
     MessageListenerAdapter commentListener(CommentEventListener commentEventListener) {
         return new MessageListenerAdapter(commentEventListener);
     }
@@ -57,11 +65,13 @@ public class RedisConfig {
     @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener,
                                                  MessageListenerAdapter likeListener,
+                                                 MessageListenerAdapter goalCompletedListener,
                                                  MessageListenerAdapter commentListener) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener, followerTopic());
+        container.addMessageListener(goalCompletedListener, goalCompletedTopic());
         container.addMessageListener(likeListener, likeTopic());
         container.addMessageListener(commentListener, commentTopic());
         return container;
@@ -77,8 +87,14 @@ public class RedisConfig {
         return new ChannelTopic(likeChannelName);
     }
 
+    @Bean
     ChannelTopic followerTopic() {
         return new ChannelTopic(followerEvent);
+    }
+
+    @Bean
+    ChannelTopic goalCompletedTopic() {
+        return new ChannelTopic(goalCompletedEvent);
     }
 
     @Bean
