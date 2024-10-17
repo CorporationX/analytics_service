@@ -48,6 +48,9 @@ jobs:
           exit 1
           fi
 
+      - name: List files before Docker build
+        run: ls -la build/libs/
+
       - name: Run Tests
         if: always()
         run: |
