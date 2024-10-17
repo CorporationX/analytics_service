@@ -18,11 +18,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-class AnalyticsServiceTest {
+class AnalyticsServiceImplTest {
     private static final EventType EVENT_TYPE = EventType.POST_PUBLISHED;
     private static final Interval INTERVAL = Interval.WEEK;
     @InjectMocks
-    private AnalyticsService service;
+    private AnalyticsServiceImpl service;
     @Mock
     private AnalyticsEventRepository repository;
 
