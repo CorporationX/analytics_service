@@ -26,6 +26,8 @@ spring:
           name: profile_view_channel
         follower-channel:
           name: follower_channel
+        premium-channel:
+          name: premium_channel
 
 
 

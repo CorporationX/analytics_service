@@ -1,7 +1,10 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.FollowerEventListener;
+import faang.school.analytics.listener.PremiumBoughtEventListener;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +16,10 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 @Setter
 @Configuration
+@RequiredArgsConstructor
 public class RedisConfig {
+
+    private final PremiumBoughtEventRedisConfig premiumConfig;
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
@@ -32,7 +38,7 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener, followerEventTopic);
-
+        container.addMessageListener(premiumConfig.premiumAdapter(), premiumConfig.premiumChannel());
         return container;
     }
 
