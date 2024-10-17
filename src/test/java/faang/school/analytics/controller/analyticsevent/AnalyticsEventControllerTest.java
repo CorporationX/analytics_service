@@ -68,7 +68,7 @@ class AnalyticsEventControllerTest {
                         jsonPath("$[0].receiverId").value(2),
                         jsonPath("$[0].actorId").value(3),
                         jsonPath("$[0].eventType").value("PROFILE_VIEW"),
-                        jsonPath("$[0].receivedAt").value("2024-06-01 15:30:00")
+                        jsonPath("$[0].receivedAt").value("2024-06-01T15:30:00")
                 );
 
     }
