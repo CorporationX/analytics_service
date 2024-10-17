@@ -65,11 +65,11 @@ jobs:
           name: User service tests reports
           path: build/reports/tests/test/
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: job_unit_tests
+#  deploy:
+#    runs-on: ubuntu-latest
+#    needs: job_unit_tests
 
-    steps:
+#    steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
