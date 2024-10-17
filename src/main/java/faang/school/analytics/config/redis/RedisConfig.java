@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.CommentEventListener;
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.LikeEventListener;
@@ -28,6 +29,8 @@ public class RedisConfig {
     private String followerEvent;
     @Value("${spring.data.redis.channels.goal-completed-event-channel.name}")
     private String goalCompletedEvent;
+    @Value("${spring.data.redis.channels.comment-event-channel.name}")
+    private String commentEvent;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -55,15 +58,22 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter commentListener(CommentEventListener commentEventListener) {
+        return new MessageListenerAdapter(commentEventListener);
+    }
+
+    @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener,
                                                  MessageListenerAdapter likeListener,
-                                                 MessageListenerAdapter goalCompletedListener) {
+                                                 MessageListenerAdapter goalCompletedListener,
+                                                 MessageListenerAdapter commentListener) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener, followerTopic());
         container.addMessageListener(goalCompletedListener, goalCompletedTopic());
         container.addMessageListener(likeListener, likeTopic());
+        container.addMessageListener(commentListener, commentTopic());
         return container;
     }
 
@@ -85,5 +95,10 @@ public class RedisConfig {
     @Bean
     ChannelTopic goalCompletedTopic() {
         return new ChannelTopic(goalCompletedEvent);
+    }
+
+    @Bean
+    ChannelTopic commentTopic() {
+        return new ChannelTopic(commentEvent);
     }
 }

@@ -1,4 +1,4 @@
-package faang.school.analytics.model.dto;
+package faang.school.analytics.model.event;
 
 import lombok.Builder;
 
