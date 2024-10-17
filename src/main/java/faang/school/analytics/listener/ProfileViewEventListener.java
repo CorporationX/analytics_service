@@ -2,8 +2,8 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
-import faang.school.analytics.model.AnalyticsEventService;
 import faang.school.analytics.model.dto.ProfileViewEvent;
+import faang.school.analytics.service.impl.AnalyticsEventServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.stereotype.Component;
@@ -14,8 +14,8 @@ public class ProfileViewEventListener extends AbstractRedisListener<ProfileViewE
     private final AnalyticsEventMapper mapper;
 
     public ProfileViewEventListener(ObjectMapper objectMapper, AnalyticsEventMapper mapper,
-                                    AnalyticsEventService analyticsEventService) {
-        super(objectMapper, analyticsEventService);
+                                    AnalyticsEventServiceImpl analyticsEventServiceImpl) {
+        super(objectMapper, analyticsEventServiceImpl);
         this.mapper = mapper;
     }
 
