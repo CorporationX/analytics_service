@@ -1,0 +1,41 @@
+name: Analytics Service CI
+
+on:
+  push:
+    branches:
+      # - kraken-master-stream6
+      - feature-BJS2-37859
+  pull_request:
+    branches:
+      # - kraken-master-stream6
+     - feature-BJS2-37859
+
+jobs:
+  job_one:
+    name: job one
+    runs-on: ubuntu-latest
+    steps:
+      - name: step one
+        uses: actions/checkout@4
+
+      - name: step two
+        uses: actions/setup-java@4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: step three
+        run: ./gradlew build --no-daemon
+
+      - name: step four
+        run: ./gradlew test --no-daemon
+
+
+
+
+
+
+
+
+
