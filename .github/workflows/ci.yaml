@@ -41,6 +41,13 @@ jobs:
           export LANG=ru_RU.UTF-8
           ./gradlew build --no-daemon -x test
 
+      - name: Verify JAR exists
+        run: |
+          if [ ! -f build/libs/service.jar ]; then
+          echo "JAR file not found!"
+          exit 1
+          fi
+
       - name: Run Tests
         if: always()
         run: |
