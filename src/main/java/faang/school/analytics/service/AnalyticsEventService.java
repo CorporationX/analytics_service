@@ -57,4 +57,9 @@ public class AnalyticsEventService {
             return DateUtils.isBetweenInclusive(eventDate, from, to);
         }
     }
+
+    @Transactional
+    public List<AnalyticsEvent> saveAllEvents(List<AnalyticsEvent> events) {
+        return analyticsEventRepository.saveAll(events);
+    }
 }
