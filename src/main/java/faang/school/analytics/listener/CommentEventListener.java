@@ -31,6 +31,7 @@ public class CommentEventListener implements MessageListener {
             log.info("Received new analytics data: {}", savedAnalyticsEvent);
 
         } catch (IOException e) {
+            log.error("Error with mapping to CommentEventDto");
             throw new IllegalArgumentException("Error with mapping to CommentEventDto");
         }
 
