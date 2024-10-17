@@ -26,6 +26,8 @@ spring:
           name: profile_view_channel
         follower-channel:
           name: follower_channel
+        goal-channel:
+          name: goal_channel
 
 
 
