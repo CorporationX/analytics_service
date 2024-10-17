@@ -27,10 +27,6 @@ spring:
 server:
   port: 8086
 
-logging:
-  level:
-    root: info
-
 project-service:
   host: localhost
   port: 8082
@@ -38,3 +34,6 @@ project-service:
 app:
   user-redis-config:
     profile_view_event_topic: profileViewEvent
+  quartz-config:
+    user-view-event-save:
+      trigger_interval_sec: 10
