@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.mapper.AnalyticsCommentEventMapper;
+import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.repository.AnalyticsEventRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -20,8 +22,10 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -44,11 +48,14 @@ public class CommentEventListenerTest {
     @Autowired
     private ChannelTopic commentEventTopic;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockBean
     private AnalyticsCommentEventMapper commentEventMapper;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @MockBean
+    private AnalyticsEventRepository analyticsEventRepository;
 
     @Captor
     ArgumentCaptor<CommentEventDto> captor;
@@ -61,6 +68,8 @@ public class CommentEventListenerTest {
                 .postAuthorId(3L)
                 .build();
         String message = objectMapper.writeValueAsString(commentEventDto);
+
+        when(commentEventMapper.toAnalyticsEvent(any(CommentEventDto.class))).thenReturn(new AnalyticsEvent());
 
         redisTemplate.convertAndSend(commentEventTopic.getTopic(), message);
         Thread.sleep(1000);
