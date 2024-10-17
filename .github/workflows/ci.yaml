@@ -16,10 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: step one
-        uses: actions/checkout@4
+        uses: actions/checkout@v4
 
       - name: step two
-        uses: actions/setup-java@4
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
