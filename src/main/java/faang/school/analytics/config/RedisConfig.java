@@ -44,9 +44,7 @@ public class RedisConfig {
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         return template;
-
-
-
+    }
 
     @Bean
     MessageListenerAdapter likeEvent(LikeEventListener likeEventListener) {
@@ -114,13 +112,8 @@ public class RedisConfig {
                                                         MessageListenerAdapter likeEvent,
                                                         MessageListenerAdapter recommendationEvent,
                                                         MessageListenerAdapter adBoughtEvent,
-                                                        MessageListenerAdapter profileViewEvent) {
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter searchAppearanceEvent,
-                                                 MessageListenerAdapter likeEvent,
-                                                 MessageListenerAdapter recommendationEvent,
-                                                 MessageListenerAdapter adBoughtEvent,
-                                                 MessageListenerAdapter profileViewEvent,
-                                                 MessageListenerAdapter postViewEvent) {
+                                                        MessageListenerAdapter profileViewEvent,
+                                                        MessageListenerAdapter postViewEvent) {
 
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(lettuceConnectionFactory);
@@ -133,3 +126,5 @@ public class RedisConfig {
         return container;
     }
 }
+
+
