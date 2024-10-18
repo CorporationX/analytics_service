@@ -4,7 +4,7 @@ import faang.school.analytics.config.context.UserContext;
 import faang.school.analytics.dto.analytics_event.AnalyticsEventDto;
 import faang.school.analytics.dto.analytics_event.AnalyticsEventGetDto;
 import faang.school.analytics.exception.IntervalsNotValidException;
-import faang.school.analytics.mapper.analytics_event.AnalyticsEventMapper;
+import faang.school.analytics.mapper.analytics.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.TimeUnit;
