@@ -1,4 +1,4 @@
-package faang.school.analytics;
+package faang.school.analytics.mapper;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
