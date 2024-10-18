@@ -1,13 +1,15 @@
 name: CI/CD pipeline for analytic_service
+env:
+  BRANCH_NAME: feature-BJS2-27288-ci-pipeline
 
 on:
   pull_request:
     branches:
-      - feature-BJS2-27288-ci-pipeline
+      - $BRANCH_NAME
 
   push:
     branches:
-      - feature-BJS2-27288-ci-pipeline
+      - $BRANCH_NAME
 
 jobs:
   job_unit_tests:
