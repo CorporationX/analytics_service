@@ -21,23 +21,21 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class MentorshipRequestEventListener implements MessageListener {
 
+    private static final EventType EVENT_TYPE = EventType.REQUEST_MENTORSHIP;
+
     private final ObjectMapper objectMapper;
     private final MentorshipRequestMapper mentorshipRequestMapper;
     private final AnalyticsEventService analyticsEventService;
-    private final int INDEX_TYPE = 16;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
-            String test = new String(message.getBody(), StandardCharsets.UTF_8).trim();
-            log.info("A new message has been received from topic {}, message {}", message.getChannel(), test);
-
-            MentorshipRequestMessage mentorshipRequestMessage = objectMapper.readValue(test,
+            MentorshipRequestMessage mentorshipRequestMessage = objectMapper.readValue(message.getBody(),
                     MentorshipRequestMessage.class);
             log.debug("the message has been deserialized. MentorshipRequestMessage: {}", mentorshipRequestMessage);
 
             AnalyticsEvent analyticsEvent = mentorshipRequestMapper.toAnalyticsEvent(mentorshipRequestMessage);
-            analyticsEvent.setEventType(EventType.of(INDEX_TYPE));
+            analyticsEvent.setEventType(EVENT_TYPE);
             AnalyticsEventDto analyticsEventDto = analyticsEventService.saveEvent(analyticsEvent);
             log.debug("AnalyticsEvent save DB. AnalyticsEventDto: {}", analyticsEventDto);
         } catch (IOException e) {
