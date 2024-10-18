@@ -1,6 +1,7 @@
-package faang.school.analytics.dto.event;
+package faang.school.analytics.dto.event.project;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import faang.school.analytics.dto.event.AbstractEvent;
 
 import java.time.LocalDateTime;
 
