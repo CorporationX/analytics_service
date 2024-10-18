@@ -1,6 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.FollowerEventListener;
+import faang.school.analytics.listener.GoalEventListener;
 import faang.school.analytics.listener.ProfileViewEventListener;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,6 +27,11 @@ public class RedisConfig {
         return new MessageListenerAdapter(followerEventListener);
     }
 
+    @Bean
+    MessageListenerAdapter goalListener(GoalEventListener goalEventListener) {
+        return new MessageListenerAdapter(goalEventListener);
+    }
+
     @Bean(value = "profileViewListener")
     public MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
         return new MessageListenerAdapter(profileViewEventListener);
@@ -37,15 +43,25 @@ public class RedisConfig {
             @Qualifier("followerEventTopic") ChannelTopic followerEventTopic,
             @Qualifier("profileViewListener") MessageListenerAdapter profileViewListener,
             @Qualifier("profileViewChannel") ChannelTopic profileViewChannel) {
+            @Qualifier("followerEventTopic") ChannelTopic followerEventTopic,
+            GoalEventListener goalListener,
+            @Qualifier("goalEventTopic") ChannelTopic goalEventTopic) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener, followerEventTopic);
+        container.addMessageListener(goalListener, goalEventTopic);
+
         container.addMessageListener(profileViewListener, profileViewChannel);
         return container;
     }
 
     @Bean(value = "followerEventTopic")
     ChannelTopic followerEventTopic(@Value("${spring.data.redis.channels.follower-channel.name}") String name) {
+        return new ChannelTopic(name);
+    }
+
+    @Bean(value = "goalEventTopic")
+    ChannelTopic goalEventTopic(@Value("${spring.data.redis.channels.goal-channel.name}") String name) {
         return new ChannelTopic(name);
     }
 
