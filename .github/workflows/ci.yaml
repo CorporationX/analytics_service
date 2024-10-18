@@ -1,9 +1,6 @@
 name: Analytics Service CI
 
 on:
-  push:
-    branches:
-      - kraken-master-stream6
   pull_request:
     branches:
       - kraken-master-stream6
@@ -12,6 +9,19 @@ jobs:
   job_one:
     name: Build and test
     runs-on: ubuntu-latest
+    services:
+      master_postgres:
+        image: postgres:13.3
+        environment:
+          - POSTGRES_USER=user
+          - POSTGRES_PASSWORD=password
+          - POSTGRES_DB=postgres
+        ports:
+          - '5432:5432'
+      master_redis:
+        image: redis/redis-stack:latest
+        ports:
+          - '6379:6379'
     steps:
       - name: Checkout to remote machine
         uses: actions/checkout@v4
@@ -28,12 +38,3 @@ jobs:
 
       - name: Test
         run: ./gradlew test
-
-
-
-
-
-
-
-
-
