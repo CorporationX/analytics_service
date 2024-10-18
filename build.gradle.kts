@@ -29,6 +29,7 @@ dependencies {
      */
     implementation("org.liquibase:liquibase-core")
     implementation("redis.clients:jedis:4.3.2")
+    testImplementation("com.h2database:h2:2.2.224")
     runtimeOnly("org.postgresql:postgresql")
 
     /**
@@ -49,6 +50,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
     testImplementation("com.redis.testcontainers:testcontainers-redis-junit-jupiter:1.4.6")
+
 
     /**
      * Tests
