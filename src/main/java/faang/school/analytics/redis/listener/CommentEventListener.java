@@ -6,11 +6,9 @@ import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Component;
-
 
 @Slf4j
 @Component
@@ -18,7 +16,6 @@ public class CommentEventListener extends AbstractEventListener<CommentEvent> {
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper analyticsEventMapper;
 
-    @Autowired
     public CommentEventListener(
             ObjectMapper objectMapper,
             AnalyticsEventService analyticsEventService,
@@ -28,6 +25,10 @@ public class CommentEventListener extends AbstractEventListener<CommentEvent> {
         super(objectMapper, new ChannelTopic(commentEventChannel));
         this.analyticsEventService = analyticsEventService;
         this.analyticsEventMapper = analyticsEventMapper;
+
+        if (commentEventChannel == null) {
+            throw new IllegalArgumentException("Comment event channel cannot be null");
+        }
     }
 
     @Override
