@@ -11,6 +11,7 @@ import faang.school.analytics.model.dto.AnalyticsEventDto;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.model.enums.Interval;
+import faang.school.analytics.service.impl.AnalyticsEventServiceImpl;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
-class AnalyticsEventServiceTest {
+class AnalyticsEventServiceImplTest {
 
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
@@ -33,14 +34,14 @@ class AnalyticsEventServiceTest {
     private AnalyticsEventMapper mapper;
 
     @InjectMocks
-    private AnalyticsEventService analyticsEventService;
+    private AnalyticsEventServiceImpl analyticsEventServiceImpl;
 
     @Test
     void saveEventTest_shouldCallSaveOnRepository() {
         AnalyticsEvent event = new AnalyticsEvent();
         event.setId(1L);
 
-        analyticsEventService.saveEvent(event);
+        analyticsEventServiceImpl.saveEvent(event);
 
         ArgumentCaptor<AnalyticsEvent> captor = ArgumentCaptor.forClass(AnalyticsEvent.class);
         verify(analyticsEventRepository, times(1)).save(captor.capture());
@@ -73,7 +74,7 @@ class AnalyticsEventServiceTest {
         when(mapper.toDto(event1)).thenReturn(eventDto1);
         when(mapper.toDto(event2)).thenReturn(eventDto2);
 
-        List<AnalyticsEventDto> result = analyticsEventService.getAnalytics(receiverId, eventType, interval, from, to);
+        List<AnalyticsEventDto> result = analyticsEventServiceImpl.getAnalytics(receiverId, eventType, interval, from, to);
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -100,7 +101,7 @@ class AnalyticsEventServiceTest {
         AnalyticsEventDto eventDto = new AnalyticsEventDto(event.getId(), event.getReceiverId(), event.getActorId(), eventType, event.getReceivedAt());
         when(mapper.toDto(event)).thenReturn(eventDto);
 
-        List<AnalyticsEventDto> result = analyticsEventService.getAnalytics(receiverId, eventType, interval, from, to);
+        List<AnalyticsEventDto> result = analyticsEventServiceImpl.getAnalytics(receiverId, eventType, interval, from, to);
 
         assertNotNull(result);
         assertEquals(1, result.size());
