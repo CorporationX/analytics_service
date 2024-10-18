@@ -8,18 +8,18 @@ public class GoalEventDto extends AbstractEventDto {
 
     @Override
     @JsonProperty("goalId")
-    void setReceiverId(Long receiverId) {
+    public void setReceiverId(Long receiverId) {
         this.receiverId = receiverId;
     }
 
     @Override
     @JsonProperty("userId")
-    void setActorId(Long actorId) {
+    public void setActorId(Long actorId) {
         this.actorId = actorId;
     }
 
     @Override
-    void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 }

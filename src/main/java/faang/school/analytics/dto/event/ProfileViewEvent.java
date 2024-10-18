@@ -10,19 +10,19 @@ public class ProfileViewEvent extends AbstractEventDto {
 
     @Override
     @JsonProperty("userId")
-    void setReceiverId(Long receiverId) {
+    public void setReceiverId(Long receiverId) {
         this.receiverId = receiverId;
     }
 
     @Override
     @JsonProperty("guestId")
-    void setActorId(Long actorId) {
+    public void setActorId(Long actorId) {
         this.actorId = actorId;
     }
 
     @Override
     @JsonProperty("viewDateTime")
-    void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 }

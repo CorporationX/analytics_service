@@ -40,9 +40,8 @@ public class RedisConfig {
     @Bean
     RedisMessageListenerContainer redisMessageListenerContainer(
             FollowerEventListener followerListener,
-            @Qualifier("followerEventTopic") ChannelTopic followerEventTopic,
             @Qualifier("profileViewListener") MessageListenerAdapter profileViewListener,
-            @Qualifier("profileViewChannel") ChannelTopic profileViewChannel) {
+            @Qualifier("profileViewChannel") ChannelTopic profileViewChannel,
             @Qualifier("followerEventTopic") ChannelTopic followerEventTopic,
             GoalEventListener goalListener,
             @Qualifier("goalEventTopic") ChannelTopic goalEventTopic) {
@@ -50,7 +49,6 @@ public class RedisConfig {
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener, followerEventTopic);
         container.addMessageListener(goalListener, goalEventTopic);
-
         container.addMessageListener(profileViewListener, profileViewChannel);
         return container;
     }
