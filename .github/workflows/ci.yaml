@@ -1,0 +1,40 @@
+name: Analytics Service CI
+
+on:
+  pull_request:
+    branches:
+      - kraken-master-stream6
+
+jobs:
+  job_one:
+    name: Build and test
+    runs-on: ubuntu-latest
+    services:
+      master_postgres:
+        image: postgres:13.3
+        env:
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+      master_redis:
+        image: redis/redis-stack:latest
+        ports:
+          - 6379:6379
+    steps:
+      - name: Checkout to remote machine
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17 and cache Gradle dependencies
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Build
+        run: ./gradlew build
+
+      - name: Test
+        run: ./gradlew test
