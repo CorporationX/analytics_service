@@ -24,6 +24,7 @@ spring:
       channel:
         profile-view: profile_view_channel
         comment: comment_event
+        post-view: post_view_channel
 
 server:
   port: 8086
