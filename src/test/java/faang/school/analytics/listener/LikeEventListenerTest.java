@@ -2,10 +2,10 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
-import faang.school.analytics.model.AnalyticsEventService;
 import faang.school.analytics.model.dto.LikeEventDto;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
+import faang.school.analytics.service.impl.AnalyticsEventServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +19,8 @@ import org.springframework.data.redis.connection.Message;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @Slf4j
@@ -30,7 +31,7 @@ class LikeEventListenerTest {
     private ObjectMapper objectMapper;
 
     @Mock
-    private AnalyticsEventService analyticsEventService;
+    private AnalyticsEventServiceImpl analyticsEventService;
 
     @Spy
     private AnalyticsEventMapper mapper;

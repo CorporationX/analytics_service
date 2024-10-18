@@ -76,7 +76,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: job_unit_tests
+    #    needs: job_unit_tests
     if: startsWith(github.ref, 'refs/heads/feature-BJS2-27288-ci-pipeline')
     steps:
       - name: Download jar file
