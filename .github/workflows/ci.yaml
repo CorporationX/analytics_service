@@ -59,50 +59,50 @@ jobs:
           name: User service tests reports
           path: build/reports/tests/test/
 
-#      - name: Upload jar file
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: analytics_service
-#          path: build/libs/service.jar
-#
-#      - name: Upload Dockerfile
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: Dockerfile
-#          path: Dockerfile
+      - name: Upload jar file
+        uses: actions/upload-artifact@v4
+        with:
+          name: analytics_service
+          path: build/libs/service.jar
 
-#  deploy:
-#    runs-on: ubuntu-latest
-#    needs: job_unit_tests
-#    if: startsWith(github.ref, 'refs/heads/feature-BJS2-27288-ci-pipeline')
-#    steps:
-#      - name: Download jar file
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: analytics_service
-#
-#      - name: Download Dockerfile
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: Dockerfile
-#
-#      - name: Set up Docker Buildx
-#        uses: docker/setup-buildx-action@v2
-#
-#      - name: Build Docker image
-#        run: |
-#          docker build -t analytic_service .
-#          docker tag analytic_service bootcampwerewolf/analytic_service
-#
-#      - name: Login to Docker Hub
-#        run: echo "F!4nc_v92hD12" | docker login -u "bootcampwerewolf" --password-stdin
-#
-#      - name: Push Docker image
-#        run: docker push bootcampwerewolf/analytic_service
-#
-#      - name: Deploy application
-#        env:
-#          SERVER_USER: werewolf
-#          SERVER_PASSWORD: G3wkd9i3_km29s
-#          SERVER_IP: 83.69.108.170
-#        run: sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker pull bootcampwerewolf/analytic_service && docker stop analytics_service_container || true && docker compose up -d"
+      - name: Upload Dockerfile
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dockerfile
+          path: Dockerfile
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: job_unit_tests
+    if: startsWith(github.ref, 'refs/heads/feature-BJS2-27288-ci-pipeline')
+    steps:
+      - name: Download jar file
+        uses: actions/download-artifact@v4
+        with:
+          name: analytics_service
+
+      - name: Download Dockerfile
+        uses: actions/download-artifact@v4
+        with:
+          name: Dockerfile
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: |
+          docker build -t analytic_service .
+          docker tag analytic_service bootcampwerewolf/analytic_service
+
+      - name: Login to Docker Hub
+        run: echo "F!4nc_v92hD12" | docker login -u "bootcampwerewolf" --password-stdin
+
+      - name: Push Docker image
+        run: docker push bootcampwerewolf/analytic_service
+
+      - name: Deploy application
+        env:
+          SERVER_USER: werewolf
+          SERVER_PASSWORD: G3wkd9i3_km29s
+          SERVER_IP: 83.69.108.170
+        run: sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker pull bootcampwerewolf/analytic_service && docker stop analytics_service_container || true && docker compose up -d"
