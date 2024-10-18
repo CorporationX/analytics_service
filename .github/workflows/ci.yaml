@@ -5,11 +5,11 @@ env:
 on:
   pull_request:
     branches:
-      - $BRANCH_NAME
+      $BRANCH_NAME
 
   push:
     branches:
-      - $BRANCH_NAME
+      $BRANCH_NAME
 
 jobs:
   job_unit_tests:
