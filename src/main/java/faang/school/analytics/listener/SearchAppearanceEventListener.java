@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEventService;
 import faang.school.analytics.model.dto.SearchAppearanceEvent;
+import faang.school.analytics.service.impl.AnalyticsEventServiceImpl;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,7 @@ public class SearchAppearanceEventListener extends AbstractRedisListener<SearchA
     private final AnalyticsEventMapper mapper;
 
     public SearchAppearanceEventListener(ObjectMapper objectMapper, AnalyticsEventMapper mapper,
-                                         AnalyticsEventService analyticsEventService) {
+                                         AnalyticsEventServiceImpl analyticsEventService) {
         super(objectMapper, analyticsEventService);
         this.mapper = mapper;
     }
