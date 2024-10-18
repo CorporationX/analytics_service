@@ -1,6 +1,9 @@
 name: Analytics Service CI
 
 on:
+  push:
+    branches:
+      - kraken-master-stream6
   pull_request:
     branches:
       - kraken-master-stream6
