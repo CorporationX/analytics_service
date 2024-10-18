@@ -1,16 +1,23 @@
 package faang.school.analytics.listener;
 
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.model.dto.AdBoughtEvent;
+import faang.school.analytics.service.impl.AnalyticsEventServiceImpl;
 import org.springframework.data.redis.connection.Message;
-import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
-public class AdBoughtEventListener implements MessageListener {
+public class AdBoughtEventListener extends AbstractRedisListener<AdBoughtEvent> {
+    private final AnalyticsEventMapper mapper;
 
-    @Override
+    public AdBoughtEventListener(ObjectMapper objectMapper, AnalyticsEventMapper mapper,
+                                 AnalyticsEventServiceImpl analyticsEventServiceImpl) {
+        super(objectMapper, analyticsEventServiceImpl);
+        this.mapper = mapper;
+    }
+
     public void onMessage(Message message, byte[] pattern) {
-
+        handleEvent(AdBoughtEvent.class, message, mapper::fromAdBoughtToEntity);
     }
 }

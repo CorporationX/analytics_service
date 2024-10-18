@@ -1,47 +1,39 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
-import faang.school.analytics.model.dto.SearchAppearanceEvent;
+import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
+import faang.school.analytics.model.dto.ProfileViewEvent;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.service.impl.AnalyticsEventServiceImpl;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.Message;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-@Slf4j
 @ExtendWith(MockitoExtension.class)
-class SearchAppearanceEventListenerTest {
+class ProfileViewEventListenerTest {
+
     @Mock
     private ObjectMapper objectMapper;
 
     @Mock
-    private AnalyticsEventServiceImpl analyticsEventServiceImpl;
+    private AnalyticsEventServiceImpl analyticsEventService;
+
     @Spy
-    private AnalyticsEventMapper mapper;
+    private AnalyticsEventMapperImpl mapper;
 
     @Captor
     private ArgumentCaptor<AnalyticsEvent> analyticsEventCaptor;
 
     @InjectMocks
-    private SearchAppearanceEventListener listener;
+    private ProfileViewEventListener listener;
 
 
     @Test
@@ -52,8 +44,8 @@ class SearchAppearanceEventListenerTest {
 
         listener.onMessage(message, null);
 
-        verify(objectMapper, times(1)).readValue(body, SearchAppearanceEvent.class);
-        verify(analyticsEventServiceImpl, times(1)).saveEvent(analyticsEventCaptor.capture());
+        verify(objectMapper, times(1)).readValue(body, ProfileViewEvent.class);
+        verify(analyticsEventService, times(1)).saveEvent(analyticsEventCaptor.capture());
         Assertions.assertDoesNotThrow(() -> {
             listener.onMessage(message, null);
         });
@@ -64,13 +56,13 @@ class SearchAppearanceEventListenerTest {
         Message message = mock(Message.class);
         byte[] body = "invalid message".getBytes();
         when(message.getBody()).thenReturn(body);
-        when(objectMapper.readValue(body, SearchAppearanceEvent.class)).thenThrow(new IOException());
+        when(objectMapper.readValue(body, ProfileViewEvent.class)).thenThrow(new IOException());
 
         assertThrows(RuntimeException.class, () -> {
             listener.onMessage(message, null);
         });
 
-        verify(objectMapper, times(1)).readValue(body, SearchAppearanceEvent.class);
-        verifyNoMoreInteractions(mapper, analyticsEventServiceImpl);
+        verify(objectMapper, times(1)).readValue(body, ProfileViewEvent.class);
+        verifyNoMoreInteractions(mapper, analyticsEventService);
     }
 }

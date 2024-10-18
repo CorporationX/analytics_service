@@ -1,7 +1,6 @@
 package faang.school.analytics.config;
 
 import faang.school.analytics.listener.AdBoughtEventListener;
-import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.LikeEventListener;
 import faang.school.analytics.listener.ProfileViewEventListener;
 import faang.school.analytics.listener.RecommendationEventListener;
@@ -40,9 +39,6 @@ public class RedisConfig {
     @Value("${spring.data.redis.channel.profile-view}")
     private String profileViewChannel;
 
-    @Value("${spring.data.redis.channel.goal-completed}")
-    private String goalCompletedEventChannel;
-
     public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(lettuceConnectionFactory);
@@ -77,11 +73,6 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter goalCompletedEvent(GoalCompletedEventListener goalCompletedEventListener) {
-        return new MessageListenerAdapter(goalCompletedEventListener);
-    }
-
-    @Bean
     ChannelTopic likeTopic() {
         return new ChannelTopic(likeChannel);
     }
@@ -107,18 +98,12 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic goalCompletedTopic() {
-        return new ChannelTopic(goalCompletedEventChannel);
-    }
-
-    @Bean
     public RedisMessageListenerContainer redisContainer(LettuceConnectionFactory lettuceConnectionFactory,
                                                         MessageListenerAdapter searchAppearanceEvent,
                                                         MessageListenerAdapter likeEvent,
                                                         MessageListenerAdapter recommendationEvent,
                                                         MessageListenerAdapter adBoughtEvent,
-                                                        MessageListenerAdapter profileViewEvent,
-                                                        MessageListenerAdapter goalCompletedEvent) {
+                                                        MessageListenerAdapter profileViewEvent) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(lettuceConnectionFactory);
         container.addMessageListener(likeEvent, likeTopic());
@@ -126,7 +111,6 @@ public class RedisConfig {
         container.addMessageListener(searchAppearanceEvent, searchAppearanceTopic());
         container.addMessageListener(adBoughtEvent, adBoughtTopic());
         container.addMessageListener(profileViewEvent, profileViewTopic());
-        container.addMessageListener(goalCompletedEvent, goalCompletedTopic());
         return container;
     }
 }
