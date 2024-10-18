@@ -1,7 +1,8 @@
-package faang.school.analytics.listener;
+package faang.school.analytics.listener.project;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.dto.event.ProjectViewEvent;
+import faang.school.analytics.dto.event.project.ProjectViewEvent;
+import faang.school.analytics.listener.AbstractEventListener;
 import faang.school.analytics.mapper.analytics.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -27,7 +28,6 @@ public class ProjectViewEventListener extends AbstractEventListener<ProjectViewE
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        log.info("Got message, trying to handle it");
         handleEvent(message, ProjectViewEvent.class, event -> {
             AnalyticsEvent analyticsEvent = mapEvent(event);
             saveEvent(analyticsEvent);
