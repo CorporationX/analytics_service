@@ -1,4 +1,4 @@
-name: Check unit tests
+name: CI/CD pipeline for analytic_service
 
 on:
   pull_request:
