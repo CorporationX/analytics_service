@@ -12,7 +12,6 @@ import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.model.enums.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
-import faang.school.analytics.service.impl.AnalyticsEventServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -34,7 +33,7 @@ class AnalyticsEventServiceTest {
     private AnalyticsEventMapper mapper;
 
     @InjectMocks
-    private AnalyticsEventServiceImpl analyticsEventService;
+    private AnalyticsEventService analyticsEventService;
 
     @Test
     void saveEventTest_shouldCallSaveOnRepository() {
