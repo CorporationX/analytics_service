@@ -23,6 +23,7 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+        comment: comment_event
         post-view: post_view_channel
 
 server:
@@ -31,6 +32,7 @@ server:
 project-service:
   host: localhost
   port: 8082
+
 
 app:
   user-redis-config:
