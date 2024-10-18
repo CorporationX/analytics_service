@@ -10,18 +10,16 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
-import java.util.List;
-
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfiguration {
     private final RedisConnectionFactory connectionFactory;
-    private final SearchAppearanceEventListener searchAppearanceEventListener;
-    private final ProfileViewEventListener profileViewEventListener;
-    private List<String> topics;
 
     @Bean
-    public RedisMessageListenerContainer redisContainer() {
+    public RedisMessageListenerContainer redisContainer(
+            SearchAppearanceEventListener searchAppearanceEventListener,
+            ProfileViewEventListener profileViewEventListener
+    ) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
 
