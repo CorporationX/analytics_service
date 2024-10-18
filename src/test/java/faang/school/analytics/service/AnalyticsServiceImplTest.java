@@ -17,6 +17,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+
 @ExtendWith(MockitoExtension.class)
 class AnalyticsServiceImplTest {
     private static final EventType EVENT_TYPE = EventType.POST_PUBLISHED;
@@ -57,30 +60,35 @@ class AnalyticsServiceImplTest {
                 new AnalyticsEvent(2L, receiverId, 1L, EVENT_TYPE, LocalDateTime.now().minusDays(2))
         );
 
-        Mockito.when(repository.findByReceiverIdAndEventType(receiverId, EVENT_TYPE))
-                .thenReturn(events.stream());
+        Mockito.lenient().when(repository.getAnalyticsEventByActorIdAndEventTypeAndReceivedAtBetween
+                (anyLong(), any(), any(), any()))
+                .thenReturn(List.of(events.get(0), events.get(1), events.get(2)));
     }
 
     @Test
     void getAnalytics_whenStringEventTypeAndInterval() {
         List<AnalyticsEvent> actual = service.getAnalytics(receiverId, eventTypeString, null, intervalString,
                 null, null, null);
-        Assertions.assertEquals(List.of(events.get(0), events.get(2)),
+
+        Assertions.assertEquals(List.of(events.get(0), events.get(1), events.get(2)),
                 actual);
 
         Mockito.verify(repository, Mockito.times(1))
-                .findByReceiverIdAndEventType(receiverId, EVENT_TYPE);
+                .getAnalyticsEventByActorIdAndEventTypeAndReceivedAtBetween(anyLong(), any(),
+                        any(), any());
     }
 
     @Test
     void getAnalytics_whenIntegerEventTypeAndInterval() {
         List<AnalyticsEvent> actual = service.getAnalytics(receiverId, null, eventTypeInteger, null,
                 intervalInteger, null, null);
-        Assertions.assertEquals(List.of(events.get(0), events.get(2)),
+
+        Assertions.assertEquals(List.of(events.get(0), events.get(1), events.get(2)),
                 actual);
 
         Mockito.verify(repository, Mockito.times(1))
-                .findByReceiverIdAndEventType(receiverId, EVENT_TYPE);
+                .getAnalyticsEventByActorIdAndEventTypeAndReceivedAtBetween(anyLong(), any(),
+                        any(), any());
     }
 
     @Test
@@ -92,7 +100,8 @@ class AnalyticsServiceImplTest {
                 actual);
 
         Mockito.verify(repository, Mockito.times(1))
-                .findByReceiverIdAndEventType(receiverId, EVENT_TYPE);
+                .getAnalyticsEventByActorIdAndEventTypeAndReceivedAtBetween(anyLong(), any(),
+                        any(), any());
     }
 
 }

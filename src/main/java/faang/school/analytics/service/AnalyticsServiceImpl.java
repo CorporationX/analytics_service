@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,12 +20,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     public List<AnalyticsEvent> getAnalytics(long receiverId, String eventTypeString, Integer eventTypeInteger,
                                              String intervalString, Integer intervalInteger, LocalDateTimeInput startDate,
                                              LocalDateTimeInput endDate) {
-        EventType eventType;
-        if (eventTypeString != null) {
-            eventType = EventType.valueOf(eventTypeString);
-        } else {
-            eventType = EventType.of(eventTypeInteger);
-        }
+        EventType eventType = Optional.ofNullable(eventTypeString)
+                .map(EventType::valueOf)
+                .orElseGet(() -> EventType.of(eventTypeInteger));
 
         Interval interval;
         if (intervalString != null) {
@@ -41,24 +38,23 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     private List<AnalyticsEvent> getAnalyticsByInterval(long receiverId, EventType eventType,
                                                         Interval interval) {
         List<AnalyticsEvent> result = List.of();
-        Stream<AnalyticsEvent> stream = eventRepository.findByReceiverIdAndEventType(receiverId, eventType);
+        LocalDateTime current = LocalDateTime.now();
         switch (interval) {
-            case DAY -> result = stream.filter(e -> isEventBetweenStartEndDate(e, LocalDateTime.now().minusDays(1), LocalDateTime.now())).toList();
-            case WEEK -> result = stream.filter(e -> isEventBetweenStartEndDate(e, LocalDateTime.now().minusWeeks(1), LocalDateTime.now())).toList();
-            case MONTH -> result = stream.filter(e -> isEventBetweenStartEndDate(e, LocalDateTime.now().minusMonths(1), LocalDateTime.now())).toList();
-            case YEAR ->  result = stream.filter(e -> isEventBetweenStartEndDate(e, LocalDateTime.now().minusYears(1), LocalDateTime.now())).toList();
+            case DAY -> result = eventRepository
+                    .getAnalyticsEventByActorIdAndEventTypeAndReceivedAtBetween(receiverId, eventType, current.minusDays(1), current);
+            case WEEK -> result = eventRepository
+                    .getAnalyticsEventByActorIdAndEventTypeAndReceivedAtBetween(receiverId, eventType, current.minusWeeks(1), current);
+            case MONTH -> result = eventRepository
+                    .getAnalyticsEventByActorIdAndEventTypeAndReceivedAtBetween(receiverId, eventType, current.minusMonths(1), current);
+            case YEAR -> result = eventRepository
+                    .getAnalyticsEventByActorIdAndEventTypeAndReceivedAtBetween(receiverId, eventType, current.minusYears(1), current);
         }
         return result;
     }
 
-    private boolean isEventBetweenStartEndDate(AnalyticsEvent event, LocalDateTime start, LocalDateTime end) {
-        return event.getReceivedAt().isAfter(start) && event.getReceivedAt().isBefore(end);
-    }
-
-    private List<AnalyticsEvent> getAnalyticsByStartEndDate(long receiverId, EventType eventType,
-                                                            LocalDateTime start, LocalDateTime end) {
-        return eventRepository.findByReceiverIdAndEventType(receiverId, eventType)
-                .filter(e -> isEventBetweenStartEndDate(e, start, end))
-                .toList();
+    private List<AnalyticsEvent> getAnalyticsByStartEndDate
+            (long receiverId, EventType eventType, LocalDateTime start, LocalDateTime end) {
+        return eventRepository.getAnalyticsEventByActorIdAndEventTypeAndReceivedAtBetween
+                (receiverId, eventType, start, end);
     }
 }
