@@ -21,7 +21,7 @@ public class AnalyticsController {
     private final AnalyticControllerValidator analyticControllerValidator;
 
     @GetMapping()
-    @Operation(summary = "Get analytic!!!!!!", description = "Get analytic from DB")
+    @Operation(summary = "Get analytic", description = "Get analytic from DB")
     @ResponseStatus(HttpStatus.OK)
     public List<AnalyticsEventDto> getAnalytics(@RequestParam("id") Long id,
                                                 @RequestParam("eventType") String eventType,
