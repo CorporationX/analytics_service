@@ -30,7 +30,7 @@ public class SearchAppearanceEventListener implements MessageListener {
         try {
             event = objectMapper.readValue(message.getBody(), SearchAppearanceEvent.class);
         } catch (IOException e) {
-            log.error("Error while parsing message");
+            log.error("Error while parsing message: {}", message);
             throw new RuntimeException(e);
         }
         AnalyticsEvent analyticsEvent = mapper.toEntity(event, EventType.PROFILE_APPEARED_IN_SEARCH.name());
