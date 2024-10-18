@@ -27,6 +27,7 @@ spring:
         recommendation: recommendation_channel
         like: like_channel
         ad-bought: ad_bought_channel
+        mentorship-offered: mentorship-offered
 
 server:
   port: 8086
