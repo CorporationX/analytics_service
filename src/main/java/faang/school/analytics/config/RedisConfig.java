@@ -41,7 +41,7 @@ public class RedisConfig {
     private String profileViewChannel;
 
     @Value("${spring.data.redis.channel.goal-completed}")
-    private String goalCompletedChannel;
+    private String goalCompletedEventChannel;
 
     public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
@@ -108,7 +108,7 @@ public class RedisConfig {
 
     @Bean
     ChannelTopic goalCompletedTopic() {
-        return new ChannelTopic(goalCompletedChannel);
+        return new ChannelTopic(goalCompletedEventChannel);
     }
 
     @Bean

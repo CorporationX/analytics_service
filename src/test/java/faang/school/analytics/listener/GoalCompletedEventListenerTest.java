@@ -2,10 +2,10 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
-import faang.school.analytics.model.AnalyticsEventService;
 import faang.school.analytics.model.dto.GoalCompletedEvent;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
+import faang.school.analytics.service.impl.AnalyticsEventServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.Message;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -31,7 +30,7 @@ class GoalCompletedEventListenerTest {
     private ObjectMapper objectMapper;
 
     @Mock
-    private AnalyticsEventService analyticsEventService;
+    private AnalyticsEventServiceImpl analyticsEventService;
 
     @Spy
     private AnalyticsEventMapper mapper;
@@ -41,13 +40,11 @@ class GoalCompletedEventListenerTest {
 
     @Test
     void testOnMessage_Success() throws Exception {
-        // Подготавливаем данные
         Long goalId = 1L;
         Long userId = 2L;
-        LocalDateTime timestamp = LocalDateTime.now();
-        GoalCompletedEvent goalCompletedEvent = new GoalCompletedEvent(goalId, userId, timestamp);
+        GoalCompletedEvent goalCompletedEvent = new GoalCompletedEvent (goalId, userId);
 
-        String messageBody = "{\"goalId\":" + goalId + ", \"userId\":" + userId + ", \"timestamp\":\"" + timestamp + "\"}";
+        String messageBody = "{\"goalId\":" + goalId + ", \"userId\":" + userId + "\"}";
         Message message = mock(Message.class);
         when(message.getBody()).thenReturn(messageBody.getBytes());
 
@@ -62,7 +59,6 @@ class GoalCompletedEventListenerTest {
         assertEquals(goalId, savedEvent.getReceiverId());
         assertEquals(userId, savedEvent.getActorId());
         assertEquals(EventType.GOAL_COMPLETED, savedEvent.getEventType());
-        assertEquals(timestamp, savedEvent.getReceivedAt());
     }
 
     @Test
@@ -72,9 +68,7 @@ class GoalCompletedEventListenerTest {
 
         when(objectMapper.readValue(any(byte[].class), eq(GoalCompletedEvent.class))).thenThrow(new IOException());
 
-        assertThrows(RuntimeException.class, () -> {
-            goalCompletedEventListener.onMessage(message, null);
-        });
+        assertThrows(RuntimeException.class, () -> goalCompletedEventListener.onMessage(message, null));
         verify(objectMapper, times(1)).readValue(message.getBody(), GoalCompletedEvent.class);
         verifyNoMoreInteractions(mapper, analyticsEventService);
     }
