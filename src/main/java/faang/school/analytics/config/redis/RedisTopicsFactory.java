@@ -13,6 +13,14 @@ public class RedisTopicsFactory {
     @Value("${spring.data.redis.channel.post-view}")
     private String postViewEventTopic;
 
+    @Value("${spring.data.redis.channel.mentorship_request_received}")
+    private String mentorshipRequestReceivedTopicName;
+
+    @Bean
+    public ChannelTopic mentorshipRequestReceivedTopicName() {
+        return new ChannelTopic(mentorshipRequestReceivedTopicName);
+    }
+
     @Bean
     public ChannelTopic postViewEventTopic() {
         return new ChannelTopic(postViewEventTopic);
