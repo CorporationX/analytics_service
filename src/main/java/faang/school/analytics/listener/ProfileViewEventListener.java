@@ -17,7 +17,7 @@ import java.io.IOException;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class ProfileViewEventListener implements MessageListener {
+public class ProfileViewEventListener extends AbstractEventListener implements MessageListener {
     private final AnalyticsEventMapper mapper;
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
@@ -34,5 +34,10 @@ public class ProfileViewEventListener implements MessageListener {
         }
         AnalyticsEvent analyticsEvent = mapper.toEntity(event, EventType.PROFILE_VIEW.name());
         analyticsEventService.saveEvent(analyticsEvent);
+    }
+
+    @Override
+    public String getTopic() {
+        return RedisTopics.PROFILE_VIEW.getTopic();
     }
 }
