@@ -1,10 +1,10 @@
 package faang.school.analytics.config.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.LikeEventListener;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
-import faang.school.analytics.service.AnalyticsEventServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,25 +22,37 @@ public class RedisConfig {
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper analyticsEventMapper;
 
-    @Value("${redis.pubsub.topic:like-event}")
+    @Value("${redis.pubsub.topics.like_event}")
     private String likeEventTopic;
-
-    @Bean
-    public MessageListenerAdapter messageListener() {
-        return new MessageListenerAdapter(new LikeEventListener(objectMapper, analyticsEventService, analyticsEventMapper));
-    }
-
-    @Bean
-    public RedisMessageListenerContainer redisContainer(RedisConnectionFactory connectionFactory) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(messageListener(), likeEventTopic());
-        return container;
-    }
+    @Value("${redis.pubsub.topics.goal_completed_event}")
+    private String goalCompletedEventTopic;
 
     @Bean
     public ChannelTopic likeEventTopic() {
         return new ChannelTopic(likeEventTopic);
     }
 
+    @Bean
+    public ChannelTopic goalCompletedTopic() {
+        return new ChannelTopic(goalCompletedEventTopic);
+    }
+
+    @Bean
+    public MessageListenerAdapter likeEventListener() {
+        return new MessageListenerAdapter(new LikeEventListener(objectMapper, analyticsEventService, analyticsEventMapper));
+    }
+
+    @Bean
+    public MessageListenerAdapter goalCompletedEventListener() {
+        return new MessageListenerAdapter(new GoalCompletedEventListener(objectMapper, analyticsEventService, analyticsEventMapper));
+    }
+
+    @Bean
+    public RedisMessageListenerContainer redisContainer(RedisConnectionFactory connectionFactory) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        container.addMessageListener(likeEventListener(), likeEventTopic());
+        container.addMessageListener(goalCompletedEventListener(), likeEventTopic());
+        return container;
+    }
 }
