@@ -15,16 +15,15 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public abstract class AbstractRedisListener<T> implements MessageListener {
     private final ObjectMapper objectMapper;
-    private final AnalyticsEventServiceImpl analyticsEventServiceImpl;
+    private final AnalyticsEventServiceImpl analyticsEventService;
 
     protected void handleEvent(Class<T> type, Message message, Function<T, AnalyticsEvent> function) {
         try {
             T event = objectMapper.readValue(message.getBody(), type);
             AnalyticsEvent analyticsEvent = function.apply(event);
-            analyticsEventServiceImpl.saveEvent(analyticsEvent);
+            analyticsEventService.saveEvent(analyticsEvent);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 }
-

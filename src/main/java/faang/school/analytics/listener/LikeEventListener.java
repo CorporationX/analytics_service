@@ -1,10 +1,10 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.model.AnalyticsEventService;
 import faang.school.analytics.model.dto.LikeEventDto;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
+import faang.school.analytics.service.impl.AnalyticsEventServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LikeEventListener extends AbstractRedisListener<LikeEventDto> {
 
-    public LikeEventListener(ObjectMapper objectMapper, AnalyticsEventService analyticsEventService) {
+    public LikeEventListener(ObjectMapper objectMapper, AnalyticsEventServiceImpl analyticsEventService) {
         super(objectMapper, analyticsEventService);
     }
 

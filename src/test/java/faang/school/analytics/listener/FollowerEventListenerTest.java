@@ -2,6 +2,7 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.model.FollowerEvent;
+import faang.school.analytics.service.AnalyticsEventService;
 import faang.school.analytics.service.FollowerEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

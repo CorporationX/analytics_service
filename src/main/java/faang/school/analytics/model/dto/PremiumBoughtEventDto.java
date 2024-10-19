@@ -23,4 +23,6 @@ public class PremiumBoughtEventDto {
     private Integer subscriptionDuration;
 
     private LocalDateTime purchaseDateTime;
+
+    private String premiumType;
 }

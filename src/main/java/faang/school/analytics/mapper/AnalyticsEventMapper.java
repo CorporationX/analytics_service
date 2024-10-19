@@ -1,5 +1,6 @@
 package faang.school.analytics.mapper;
 
+import faang.school.analytics.model.FollowerEvent;
 import faang.school.analytics.model.dto.AnalyticsEventDto;
 import faang.school.analytics.model.dto.AdBoughtEvent;
 import faang.school.analytics.model.dto.ProfileViewEvent;
@@ -11,12 +12,20 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
-    AnalyticsEvent toEntity(AnalyticsEventDto analyticEventDto);
+
+    @Mapping(source = "followerId", target = "actorId")
+    @Mapping(source = "followedUserId", target = "receiverId")
+    @Mapping(source = "subscriptionTime", target = "receivedAt")
+    @Mapping(target = "eventType", constant = "FOLLOWER_EVENT")
+    @Mapping(target = "id", ignore = true)
+
+    AnalyticsEvent fromFollowerEventToEntity(FollowerEvent followerEvent);
+
     AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
+
     AnalyticsEvent fromSearchAppearanceToEntity(SearchAppearanceEvent searchAppearanceEvent);
 
     AnalyticsEvent fromProfileViewToEntity(ProfileViewEvent profileViewEvent);
 
-    @Mapping(source = "userId", target = "actorId")
     AnalyticsEvent fromAdBoughtToEntity(AdBoughtEvent adBoughtEvent);
 }
