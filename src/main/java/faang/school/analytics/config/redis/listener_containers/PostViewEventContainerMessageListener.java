@@ -1,4 +1,4 @@
-package faang.school.analytics.config.context.redis.listener_containers;
+package faang.school.analytics.config.redis.listener_containers;
 
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.listener.Topic;
@@ -10,8 +10,8 @@ public class PostViewEventContainerMessageListener implements RedisContainerMess
     private final MessageListenerAdapter adapter;
     private final Topic topic;
 
-    public PostViewEventContainerMessageListener(MessageListener listener, Topic postViewEventTopic) {
-        this.adapter = new MessageListenerAdapter(listener);
+    public PostViewEventContainerMessageListener(MessageListener postViewEventListener, Topic postViewEventTopic) {
+        this.adapter = new MessageListenerAdapter(postViewEventListener);
         this.topic = postViewEventTopic;
     }
 
