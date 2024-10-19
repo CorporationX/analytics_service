@@ -25,6 +25,7 @@ spring:
         profile-view: profile_view_channel
         comment: comment_event
         post-view: post_view_channel
+        mentorship_request_received: mentorship_request_received_topic
 
 server:
   port: 8086
