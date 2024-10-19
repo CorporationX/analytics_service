@@ -19,7 +19,6 @@ public class FundRaisedEventListener extends AbstractRedisListener<FundRaisedEve
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        System.out.println(message.toString());
         handleEvent(FundRaisedEvent.class, message, mapper::fromFundRaisedToEntity);
     }
 }
