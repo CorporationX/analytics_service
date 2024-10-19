@@ -33,9 +33,6 @@ public class CommentEventListenerTest extends BaseContextTest {
     @MockBean
     private AnalyticsCommentEventMapper commentEventMapper;
 
-    @MockBean
-    private AnalyticsEventRepository analyticsEventRepository;
-
     @Captor
     ArgumentCaptor<CommentEventDto> captor;
 
