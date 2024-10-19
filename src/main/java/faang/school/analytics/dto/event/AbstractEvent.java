@@ -1,14 +1,18 @@
 package faang.school.analytics.dto.event;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Setter
 @Getter
 public abstract class AbstractEvent {
-    private long actorId;
-    private long receiverId;
-    private LocalDateTime receivedAt;
+    protected long actorId;
+    protected long receiverId;
+    protected LocalDateTime receivedAt;
+
+    public abstract void setActorId(long actorId);
+
+    public abstract void setReceiverId(long receiverId);
+
+    public abstract void setReceivedAt(LocalDateTime receivedAt);
 }

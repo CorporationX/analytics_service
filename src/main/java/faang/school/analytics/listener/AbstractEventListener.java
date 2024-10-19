@@ -27,7 +27,7 @@ public abstract class AbstractEventListener<T> implements MessageListener {
 
     protected abstract EventType getEventType();
 
-    protected AnalyticsEvent mapEvent(AbstractEvent abstractEvent) {
+    protected AnalyticsEvent mapToAnalyticsEvent(AbstractEvent abstractEvent) {
         try {
             return analyticsEventMapper.toAnalyticsEntity(abstractEvent);
         } catch (Exception e) {
