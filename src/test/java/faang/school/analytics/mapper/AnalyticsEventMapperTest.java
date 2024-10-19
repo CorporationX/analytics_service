@@ -26,9 +26,9 @@ class AnalyticsEventMapperTest {
         PostViewEventDto dto = new PostViewEventDto(1L, 2L, 3L, dateTime);
         AnalyticsEvent expected = new AnalyticsEvent(0L, 2L, 3L, EventType.POST_VIEW, dateTime);
         AnalyticsEvent event = mapper.postViewEventDtoToAnalyticsEvent(dto);
-//        assertEquals(expected, event);
-        assertThat(expected)
-                .usingRecursiveComparison()
-                .isEqualTo(event);
+        assertEquals(expected, event);
+//        assertThat(expected)
+//                .usingRecursiveComparison()
+//                .isEqualTo(event);
     }
 }
