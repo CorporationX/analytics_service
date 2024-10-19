@@ -10,18 +10,18 @@ public class ProjectViewEvent extends AbstractEvent {
     @Override
     @JsonProperty("userId")
     public void setActorId(long actorId) {
-        super.setActorId(actorId);
+        this.actorId = actorId;
     }
 
     @Override
     @JsonProperty("projectId")
     public void setReceiverId(long receiverId) {
-        super.setReceiverId(receiverId);
+        this.receiverId = receiverId;
     }
 
     @Override
     @JsonProperty("viewTime")
     public void setReceivedAt(LocalDateTime receivedAt) {
-        super.setReceivedAt(receivedAt);
+        this.receivedAt = receivedAt;
     }
 }

@@ -29,7 +29,7 @@ public class ProjectViewEventListener extends AbstractEventListener<ProjectViewE
     @Override
     public void onMessage(Message message, byte[] pattern) {
         handleEvent(message, ProjectViewEvent.class, event -> {
-            AnalyticsEvent analyticsEvent = mapEvent(event);
+            AnalyticsEvent analyticsEvent = mapToAnalyticsEvent(event);
             saveEvent(analyticsEvent);
         });
     }
