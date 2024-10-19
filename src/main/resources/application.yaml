@@ -23,6 +23,8 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+        comment: comment_event
+        post-view: post_view_channel
 
 server:
   port: 8086
@@ -36,3 +38,6 @@ app:
     profile_view_event_topic: profileViewEvent
   user-premium-redis-config:
     premium_bought_event_topic: premiumBoughtEvent
+  quartz-config:
+    user-view-event-save:
+      trigger_interval_sec: 10
