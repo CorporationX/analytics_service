@@ -17,7 +17,7 @@ import java.io.IOException;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class SearchAppearanceEventListener implements MessageListener {
+public class SearchAppearanceEventListener extends AbstractEventListener implements MessageListener {
 
     private final AnalyticsEventMapper mapper;
     private final ObjectMapper objectMapper;
@@ -35,5 +35,10 @@ public class SearchAppearanceEventListener implements MessageListener {
         }
         AnalyticsEvent analyticsEvent = mapper.toEntity(event, EventType.PROFILE_APPEARED_IN_SEARCH.name());
         analyticsEventService.saveEvent(analyticsEvent);
+    }
+
+    @Override
+    public String getTopic() {
+        return RedisTopics.SEARCH_APPEARANCE.getTopic();
     }
 }
