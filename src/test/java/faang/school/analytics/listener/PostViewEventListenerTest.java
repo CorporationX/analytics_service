@@ -3,7 +3,6 @@ package faang.school.analytics.listener;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.analyticsevent.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.entity.AnalyticsEvent;
-import faang.school.analytics.model.event.LikeEvent;
 import faang.school.analytics.model.event.PostEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @ExtendWith(MockitoExtension.class)
-class PostEventListenerTest {
+class PostViewEventListenerTest {
 
     @Mock
     private AnalyticsEventService analyticsEventService;
@@ -41,7 +40,7 @@ class PostEventListenerTest {
     private Message message;
 
     @InjectMocks
-    private PostEventListener postEventListener;
+    private PostViewEventListener postEventListener;
 
     private PostEvent postEvent;
 

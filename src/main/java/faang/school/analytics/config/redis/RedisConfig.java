@@ -4,7 +4,7 @@ import faang.school.analytics.listener.CommentEventListener;
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.LikeEventListener;
-import faang.school.analytics.listener.PostEventListener;
+import faang.school.analytics.listener.PostViewEventListener;
 import faang.school.analytics.listener.PremiumBoughtEventListener;
 import faang.school.analytics.listener.ProjectViewEventListener;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,8 +38,8 @@ public class RedisConfig {
     private String projectViewTopic;
     @Value("${spring.data.redis.channels.premium-bought-channel.name}")
     private String premiumBoughtTopic;
-    @Value("${spring.data.redis.channels.post-channel.name}")
-    private String postEvent;
+    @Value("${spring.data.redis.channels.post-view-channel.name}")
+    private String postViewEvent;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -82,7 +82,7 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter postListener(PostEventListener postEventListener) {
+    MessageListenerAdapter postViewListener(PostViewEventListener postEventListener) {
         return new MessageListenerAdapter(postEventListener);
     }
 
@@ -103,7 +103,7 @@ public class RedisConfig {
         container.addMessageListener(commentListener, commentTopic());
         container.addMessageListener(projectViewListener, projectViewTopic());
         container.addMessageListener(premiumBoughtListener, premiumBoughtTopic());
-        container.addMessageListener(postListener, postEventTopic());
+        container.addMessageListener(postListener, postViewEventTopic());
 
         return container;
     }
@@ -144,7 +144,7 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic postEventTopic() {
-        return new ChannelTopic(postEvent);
+    ChannelTopic postViewEventTopic() {
+        return new ChannelTopic(postViewEvent);
     }
 }

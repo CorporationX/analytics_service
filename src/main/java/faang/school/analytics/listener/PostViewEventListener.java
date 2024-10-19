@@ -11,8 +11,8 @@ import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PostEventListener extends AbstractEventListener<PostEvent> implements MessageListener {
-    public PostEventListener(AnalyticsEventService analyticsEventService, AnalyticsEventMapper analyticsEventMapper, ObjectMapper objectMapper) {
+public class PostViewEventListener extends AbstractEventListener<PostEvent> implements MessageListener {
+    public PostViewEventListener(AnalyticsEventService analyticsEventService, AnalyticsEventMapper analyticsEventMapper, ObjectMapper objectMapper) {
         super(analyticsEventService, analyticsEventMapper, objectMapper);
     }
 
