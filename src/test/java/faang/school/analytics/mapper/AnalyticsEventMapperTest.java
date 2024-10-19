@@ -9,6 +9,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.time.LocalDateTime;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AnalyticsEventMapperTest {
@@ -25,6 +26,9 @@ class AnalyticsEventMapperTest {
         PostViewEventDto dto = new PostViewEventDto(1L, 2L, 3L, dateTime);
         AnalyticsEvent expected = new AnalyticsEvent(0L, 2L, 3L, EventType.POST_VIEW, dateTime);
         AnalyticsEvent event = mapper.postViewEventDtoToAnalyticsEvent(dto);
-        assertEquals(expected, event);
+
+        assertThat(expected)
+                .usingRecursiveComparison()
+                .isEqualTo(event);
     }
 }
