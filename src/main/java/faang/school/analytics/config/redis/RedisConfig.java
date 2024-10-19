@@ -82,8 +82,8 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter postViewListener(PostViewEventListener postEventListener) {
-        return new MessageListenerAdapter(postEventListener);
+    MessageListenerAdapter postViewListener(PostViewEventListener postViewEventListener) {
+        return new MessageListenerAdapter(postViewEventListener);
     }
 
     @Bean
@@ -93,7 +93,7 @@ public class RedisConfig {
                                                  MessageListenerAdapter commentListener,
                                                  MessageListenerAdapter projectViewListener,
                                                  MessageListenerAdapter premiumBoughtListener,
-                                                 MessageListenerAdapter postListener) {
+                                                 MessageListenerAdapter postViewListener) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
@@ -103,7 +103,7 @@ public class RedisConfig {
         container.addMessageListener(commentListener, commentTopic());
         container.addMessageListener(projectViewListener, projectViewTopic());
         container.addMessageListener(premiumBoughtListener, premiumBoughtTopic());
-        container.addMessageListener(postListener, postViewEventTopic());
+        container.addMessageListener(postViewListener, postViewEventTopic());
 
         return container;
     }

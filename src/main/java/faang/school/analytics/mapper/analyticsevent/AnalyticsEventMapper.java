@@ -6,7 +6,7 @@ import faang.school.analytics.model.event.CommentEvent;
 import faang.school.analytics.model.event.FollowerEvent;
 import faang.school.analytics.model.event.GoalCompletedEvent;
 import faang.school.analytics.model.event.LikeEvent;
-import faang.school.analytics.model.event.PostEvent;
+import faang.school.analytics.model.event.PostViewEvent;
 import faang.school.analytics.model.event.PremiumBoughtEvent;
 import faang.school.analytics.model.event.ProjectViewEvent;
 import org.mapstruct.Mapper;
@@ -50,5 +50,5 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "actorId", source = "authorPostId")
     @Mapping(target = "receiverId", source = "postId")
     @Mapping(target = "receivedAt", source = "viewTime")
-    AnalyticsEvent toEntity(PostEvent postEvent);
+    AnalyticsEvent toEntity(PostViewEvent postViewEvent);
 }

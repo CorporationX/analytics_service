@@ -3,7 +3,7 @@ package faang.school.analytics.listener;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.analyticsevent.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.entity.AnalyticsEvent;
-import faang.school.analytics.model.event.PostEvent;
+import faang.school.analytics.model.event.PostViewEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,22 +42,22 @@ class PostViewEventListenerTest {
     @InjectMocks
     private PostViewEventListener postEventListener;
 
-    private PostEvent postEvent;
+    private PostViewEvent postEvent;
 
     @BeforeEach
     void setUp() {
-        postEvent = PostEvent.builder().build();
+        postEvent = PostViewEvent.builder().build();
     }
 
     @Test
     void testOnMessageOk() throws IOException {
         byte[] messageBody = "{\"postId\":123,\"authorId\":456,\"userId\":789,\"receivedAt\":\"2024-08-16T12:00:00\\\"}".getBytes();
         doReturn(messageBody).when(message).getBody();
-        doReturn(postEvent).when(objectMapper).readValue(messageBody, PostEvent.class);
+        doReturn(postEvent).when(objectMapper).readValue(messageBody, PostViewEvent.class);
 
         postEventListener.onMessage(message, null);
 
-        verify(objectMapper).readValue(messageBody, PostEvent.class);
+        verify(objectMapper).readValue(messageBody, PostViewEvent.class);
         verify(analyticsEventService).saveEvent(any(AnalyticsEvent.class));
         verify(analyticsEventMapper).toEntity(postEvent);
     }
@@ -71,7 +71,7 @@ class PostViewEventListenerTest {
         assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> postEventListener.onMessage(message, null));
 
-        verify(objectMapper).readValue(messageBody, PostEvent.class);
+        verify(objectMapper).readValue(messageBody, PostViewEvent.class);
         verify(analyticsEventService, never()).saveEvent(any(AnalyticsEvent.class));
         verify(analyticsEventMapper, never()).toEntity(postEvent);
         verifyNoMoreInteractions(objectMapper, analyticsEventService);
