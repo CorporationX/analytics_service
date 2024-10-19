@@ -1,6 +1,7 @@
 package faang.school.analytics.mapper.analyticsevents;
 
 import faang.school.analytics.model.event.FollowerEvent;
+import faang.school.analytics.model.event.FundRaisedEvent;
 import faang.school.analytics.model.event.GoalCompletedEvent;
 import faang.school.analytics.model.event.LikeEvent;
 import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventDto;
@@ -33,4 +34,8 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "userId", target = "actorId")
     @Mapping(source = "requestedAt", target = "receivedAt")
     AnalyticsEvent toEntity(MentorshipRequestedEvent mentorshipRequestedEvent);
+
+    @Mapping(source = "userId", target = "actorId")
+    @Mapping(source = "donatedAt", target = "receivedAt")
+    AnalyticsEvent toEntity(FundRaisedEvent fundRaisedEvent);
 }

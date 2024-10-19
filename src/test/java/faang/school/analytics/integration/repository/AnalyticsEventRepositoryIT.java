@@ -14,6 +14,7 @@ class AnalyticsEventRepositoryIT extends IntegrationTestBase {
 
     @Autowired
     AnalyticsEventRepositoryIT(AnalyticsEventRepository analyticsEventRepository) {
+        super();
         this.analyticsEventRepository = analyticsEventRepository;
     }
 
