@@ -93,8 +93,7 @@ public class RedisConfig {
                                                  MessageListenerAdapter goalCompletedListener,
                                                  MessageListenerAdapter commentListener,
                                                  MessageListenerAdapter projectViewListener,
-                                                 MessageListenerAdapter premiumBoughtListener) {
-                                                 MessageListenerAdapter goalCompletedListener,
+                                                 MessageListenerAdapter premiumBoughtListener,
                                                  MessageListenerAdapter mentorshipRequestListener) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
