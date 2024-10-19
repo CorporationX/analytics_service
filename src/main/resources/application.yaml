@@ -30,6 +30,12 @@ spring:
           name: follower_event_channel
         goal-completed-event-channel:
           name: goal_completed_event_channel
+        comment-event-channel:
+          name: comment_event_channel
+        project-view-channel:
+          name: project_view_channel
+        premium-bought-channel:
+          name: premium_bought_channel
         mentorship-request-channel:
           name: mentorship-request-channel
 

@@ -1,9 +1,9 @@
 package faang.school.analytics.service.impl.analyticsevent;
 
 import faang.school.analytics.filter.analyticseventfilter.AnalyticsEventFilter;
-import faang.school.analytics.mapper.analyticsevents.AnalyticsEventMapper;
-import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventDto;
-import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventFilterDto;
+import faang.school.analytics.mapper.analyticsevent.AnalyticsEventMapper;
+import faang.school.analytics.model.dto.AnalyticsEventDto;
+import faang.school.analytics.model.dto.AnalyticsEventFilterDto;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.model.enums.Interval;

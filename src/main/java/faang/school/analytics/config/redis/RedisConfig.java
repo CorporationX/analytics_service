@@ -1,8 +1,11 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.CommentEventListener;
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.LikeEventListener;
+import faang.school.analytics.listener.ProjectViewEventListener;
+import faang.school.analytics.listener.PremiumBoughtEventListener;
 import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +20,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
-
     @Value("${spring.data.redis.host}")
     private String host;
 
@@ -32,6 +34,15 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channels.goal-completed-event-channel.name}")
     private String goalCompletedEvent;
+
+    @Value("${spring.data.redis.channels.comment-event-channel.name}")
+    private String commentEvent;
+
+    @Value("${spring.data.redis.channels.project-view-channel.name}")
+    private String projectViewTopic;
+
+    @Value("${spring.data.redis.channels.premium-bought-channel.name}")
+    private String premiumBoughtTopic;
 
     @Value("${spring.data.redis.channels.mentorship-request-channel.name}")
     private String mentorshipRequestTopic;
@@ -57,13 +68,32 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter premiumBoughtListener(PremiumBoughtEventListener premiumBoughtEventListener) {
+        return new MessageListenerAdapter(premiumBoughtEventListener);
+    }
+
+    @Bean
     MessageListenerAdapter goalCompletedListener(GoalCompletedEventListener goalCompletedEventListener) {
         return new MessageListenerAdapter(goalCompletedEventListener);
     }
 
     @Bean
+    MessageListenerAdapter commentListener(CommentEventListener commentEventListener) {
+        return new MessageListenerAdapter(commentEventListener);
+    }
+
+    @Bean
+    MessageListenerAdapter projectViewListener(ProjectViewEventListener projectViewEventListener) {
+        return new MessageListenerAdapter(projectViewEventListener);
+    }
+
+    @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener,
                                                  MessageListenerAdapter likeListener,
+                                                 MessageListenerAdapter goalCompletedListener,
+                                                 MessageListenerAdapter commentListener,
+                                                 MessageListenerAdapter projectViewListener,
+                                                 MessageListenerAdapter premiumBoughtListener) {
                                                  MessageListenerAdapter goalCompletedListener,
                                                  MessageListenerAdapter mentorshipRequestListener) {
         RedisMessageListenerContainer container
@@ -72,6 +102,10 @@ public class RedisConfig {
         container.addMessageListener(followerListener, followerTopic());
         container.addMessageListener(goalCompletedListener, goalCompletedTopic());
         container.addMessageListener(likeListener, likeTopic());
+        container.addMessageListener(commentListener, commentTopic());
+        container.addMessageListener(projectViewListener, projectViewTopic());
+        container.addMessageListener(premiumBoughtListener, premiumBoughtTopic());
+
         container.addMessageListener(mentorshipRequestListener, mentorshipRequestTopic());
         return container;
     }
@@ -99,6 +133,21 @@ public class RedisConfig {
     @Bean
     ChannelTopic goalCompletedTopic() {
         return new ChannelTopic(goalCompletedEvent);
+    }
+
+    @Bean
+    ChannelTopic commentTopic() {
+        return new ChannelTopic(commentEvent);
+    }
+
+    @Bean
+    ChannelTopic projectViewTopic() {
+        return new ChannelTopic(projectViewTopic);
+    }
+
+    @Bean
+    ChannelTopic premiumBoughtTopic() {
+        return new ChannelTopic(premiumBoughtTopic);
     }
 
     @Bean
