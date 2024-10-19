@@ -3,6 +3,7 @@ package faang.school.analytics.config.redis;
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.GoalEventListener;
 import faang.school.analytics.listener.ProfileViewEventListener;
+import faang.school.analytics.listener.ProjectViewEventListener;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,19 +39,32 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter projectViewListener(ProjectViewEventListener projectViewEventListener) {
+        return new MessageListenerAdapter(projectViewEventListener);
+    }
+
+    @Bean
     RedisMessageListenerContainer redisMessageListenerContainer(
             FollowerEventListener followerListener,
             @Qualifier("profileViewListener") MessageListenerAdapter profileViewListener,
             @Qualifier("profileViewChannel") ChannelTopic profileViewChannel,
             @Qualifier("followerEventTopic") ChannelTopic followerEventTopic,
             GoalEventListener goalListener,
-            @Qualifier("goalEventTopic") ChannelTopic goalEventTopic) {
+            @Qualifier("goalEventTopic") ChannelTopic goalEventTopic,
+            ProjectViewEventListener projectViewListener,
+            @Qualifier("projectViewEventTopic") ChannelTopic projectViewEventTopic) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener, followerEventTopic);
         container.addMessageListener(goalListener, goalEventTopic);
         container.addMessageListener(profileViewListener, profileViewChannel);
+        container.addMessageListener(projectViewListener, projectViewEventTopic);
         return container;
+    }
+
+    @Bean(value = "projectViewEventTopic")
+    ChannelTopic projectViewEventTopic(@Value("${spring.data.redis.channels.project-view-channel.name}")String name) {
+        return new ChannelTopic(name);
     }
 
     @Bean(value = "followerEventTopic")
