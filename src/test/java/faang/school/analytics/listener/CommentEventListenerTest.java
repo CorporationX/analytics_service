@@ -1,11 +1,11 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.mapper.AnalyticsCommentEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import faang.school.analytics.util.BaseContextTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -14,12 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,28 +22,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@ActiveProfiles("test")
-@Testcontainers
-public class CommentEventListenerTest {
-
-    @Container
-    public static GenericContainer<?> redisContainer = new GenericContainer<>("redis:latest")
-            .withExposedPorts(6379);
-
-    @DynamicPropertySource
-    static void redisProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.redis.host", () -> redisContainer.getHost());
-        registry.add("spring.data.redis.port", () -> redisContainer.getMappedPort(6379));
-    }
+public class CommentEventListenerTest extends BaseContextTest {
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
     @Autowired
     private ChannelTopic commentEventTopic;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @MockBean
     private AnalyticsCommentEventMapper commentEventMapper;
