@@ -38,5 +38,5 @@ project-service:
 redis:
   pubsub:
     topics:
-      like_event: like_event
-      goal_completed_event: goal_completed
+      like_event: like-event
+      goal_completed_event: goal-completed
