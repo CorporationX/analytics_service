@@ -1,7 +1,6 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.model.dto.AnalyticsEventDto;
-import faang.school.analytics.model.dto.PremiumBoughtEventDto;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.model.enums.Interval;
@@ -14,8 +13,6 @@ public interface AnalyticsEventService {
 
     @Transactional
     void saveEvent(AnalyticsEvent event);
-
-    void savePremiumBoughtEvent(PremiumBoughtEventDto event);
 
     @Transactional(readOnly = true)
     List<AnalyticsEventDto> getAnalytics(Long receiverId,

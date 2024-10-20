@@ -1,5 +1,7 @@
 package faang.school.analytics.model.dto;
 
+import faang.school.analytics.model.enums.EventType;
+import faang.school.analytics.model.enums.PremiumPeriod;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,9 +22,11 @@ public class PremiumBoughtEventDto {
     private BigDecimal amount;
 
     @NotNull(message = "subscriptionDuration cannot be null")
-    private Integer subscriptionDuration;
+    private PremiumPeriod subscriptionDuration;
 
-    private LocalDateTime purchaseDateTime;
+    private LocalDateTime receivedAt;
 
     private String premiumType;
+
+    private EventType eventType = EventType.PREMIUM_BOUGHT;
 }

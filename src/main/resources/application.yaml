@@ -28,6 +28,7 @@ spring:
         recommendation: recommendation_channel
         like: like_channel
         ad-bought: ad_bought_channel
+        premium-bought: premium_bought_channel
 
 server:
   port: 8086

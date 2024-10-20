@@ -1,8 +1,10 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.dto.PremiumBoughtEventDto;
-import faang.school.analytics.service.PremiumBoughtEventHandler;
+import faang.school.analytics.model.entity.AnalyticsEvent;
+import faang.school.analytics.service.impl.AnalyticsEventServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,7 +20,10 @@ class PremiumBoughtEventListenerTest {
     private ObjectMapper objectMapper;
 
     @Mock
-    private PremiumBoughtEventHandler premiumBoughtEventHandler;
+    private AnalyticsEventMapper analyticsEventMapper;
+
+    @Mock
+    private AnalyticsEventServiceImpl analyticsEventService;
 
     @InjectMocks
     private PremiumBoughtEventListener premiumBoughtEventListener;
@@ -37,13 +42,17 @@ class PremiumBoughtEventListenerTest {
 
         PremiumBoughtEventDto expectedEvent = new PremiumBoughtEventDto();
         expectedEvent.setUserId(123L);
-        expectedEvent.setPremiumType("premium");
+        expectedEvent.setPremiumType("gold");
 
         when(objectMapper.readValue(message.getBody(), PremiumBoughtEventDto.class)).thenReturn(expectedEvent);
 
+        AnalyticsEvent analyticsEvent = new AnalyticsEvent();
+        when(analyticsEventMapper.fromPremiumBoughtToEntity(expectedEvent)).thenReturn(analyticsEvent);
+
         premiumBoughtEventListener.onMessage(message, pattern);
 
-        verify(premiumBoughtEventHandler, times(1)).handlePremiumBoughtEvent(expectedEvent);
+        verify(analyticsEventMapper).fromPremiumBoughtToEntity(expectedEvent);
+        verify(analyticsEventService).saveEvent(analyticsEvent);
     }
 
     @Test
@@ -51,11 +60,13 @@ class PremiumBoughtEventListenerTest {
         byte[] pattern = new byte[0];
         Message message = mock(Message.class);
         when(message.getBody()).thenReturn("invalid message".getBytes());
+
         when(objectMapper.readValue(message.getBody(), PremiumBoughtEventDto.class))
                 .thenThrow(new RuntimeException("Parsing error"));
 
         premiumBoughtEventListener.onMessage(message, pattern);
 
-        verify(premiumBoughtEventHandler, never()).handlePremiumBoughtEvent(any());
+       verify(analyticsEventMapper, never()).fromPremiumBoughtToEntity(any());
+        verify(analyticsEventService, never()).saveEvent(any());
     }
 }

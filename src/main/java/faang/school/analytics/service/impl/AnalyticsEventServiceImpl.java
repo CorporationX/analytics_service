@@ -2,12 +2,11 @@ package faang.school.analytics.service.impl;
 
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.dto.AnalyticsEventDto;
-import faang.school.analytics.model.dto.PremiumBoughtEventDto;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.model.enums.Interval;
-import faang.school.analytics.service.AnalyticsEventService;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -58,20 +57,5 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
 
         log.info("Returning {} analytics event(s)", result.size());
         return result;
-    }
-
-    @Override
-    @Transactional
-    public void savePremiumBoughtEvent(PremiumBoughtEventDto event) {
-        AnalyticsEvent analyticsEvent = new AnalyticsEvent();
-
-        analyticsEvent.setReceiverId(event.getUserId());
-        analyticsEvent.setEventType(EventType.PREMIUM_BOUGHT);
-        analyticsEvent.setReceivedAt(event.getPurchaseDateTime() != null ? event.getPurchaseDateTime() : LocalDateTime.now());
-
-        saveEvent(analyticsEvent);
-
-        log.info("Handled PremiumBoughtEvent for user: {}, amount: {}, duration: {} months",
-                event.getUserId(), event.getAmount(), event.getSubscriptionDuration());
     }
 }
