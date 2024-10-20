@@ -9,12 +9,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 @RequiredArgsConstructor
+@Component
 @Slf4j
-public class GoalCompletedEventListener implements MessageListener {
+public class GoalCompletedEventListener extends AbstractEventListener implements MessageListener {
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper analyticsEventMapper;
@@ -32,4 +34,9 @@ public class GoalCompletedEventListener implements MessageListener {
         }
     }
 
+
+    @Override
+    public String getTopic() {
+        return "";
+    }
 }
