@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
 public interface LikeEventMapper {
 
     @Mapping(source = "postAuthorId", target = "receiverId")
-    @Mapping(source = "likerId", target = "actorId")
+    @Mapping(source = "likeAuthorId", target = "actorId")
     @Mapping(source = "createdAt", target = "receivedAt")
     AnalyticsEvent fromLikeEventDtoToEntity(LikeEventDto likeEventDto);
 }

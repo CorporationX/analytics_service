@@ -16,7 +16,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class LikeEventDto {
     private Long postAuthorId;
-    private Long likerId;
+    private Long likeAuthorId;
+    private Long postId;
     private EventType eventType;
     private LocalDateTime createdAt;
 }
