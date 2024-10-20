@@ -40,6 +40,8 @@ spring:
           name: post_view_channel
         mentorship-request-channel:
           name: mentorship-request-channel
+        fund-raised-channel:
+          name: fund-raised-channel
 
 server:
   port: 8086

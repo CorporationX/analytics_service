@@ -4,6 +4,7 @@ import faang.school.analytics.model.dto.AnalyticsEventDto;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.event.CommentEvent;
 import faang.school.analytics.model.event.FollowerEvent;
+import faang.school.analytics.model.event.FundRaisedEvent;
 import faang.school.analytics.model.event.GoalCompletedEvent;
 import faang.school.analytics.model.event.LikeEvent;
 import faang.school.analytics.model.event.MentorshipRequestedEvent;
@@ -44,6 +45,10 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "receivedAt", source = "visitTime")
     AnalyticsEvent toEntity(ProjectViewEvent event);
 
+    @Mapping(source = "userId", target = "actorId")
+    @Mapping(source = "requestedAt", target = "receivedAt")
+    AnalyticsEvent toEntity(MentorshipRequestedEvent mentorshipRequestedEvent);
+
     @Mapping(target = "actorId", source = "userId")
     @Mapping(target = "receivedAt", source = "observeTime")
     AnalyticsEvent toEntity(PremiumBoughtEvent premiumBoughtEvent);
@@ -54,6 +59,6 @@ public interface AnalyticsEventMapper {
     AnalyticsEvent toEntity(PostViewEvent postViewEvent);
 
     @Mapping(source = "userId", target = "actorId")
-    @Mapping(source = "requestedAt", target = "receivedAt")
-    AnalyticsEvent toEntity(MentorshipRequestedEvent mentorshipRequestedEvent);
+    @Mapping(source = "donatedAt", target = "receivedAt")
+    AnalyticsEvent toEntity(FundRaisedEvent fundRaisedEvent);
 }

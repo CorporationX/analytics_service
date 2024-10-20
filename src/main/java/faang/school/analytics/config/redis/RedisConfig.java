@@ -2,6 +2,7 @@ package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.CommentEventListener;
 import faang.school.analytics.listener.FollowerEventListener;
+import faang.school.analytics.listener.FundRaisedEventListener;
 import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.LikeEventListener;
 import faang.school.analytics.listener.MentorshipRequestedEventListener;
@@ -51,6 +52,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.mentorship-request-channel.name}")
     private String mentorshipRequestTopic;
 
+    @Value("${spring.data.redis.channels.fund-raised-channel.name}")
+    private String fundRaisedChannel;
+
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
@@ -75,7 +79,8 @@ public class RedisConfig {
                                                  MessageListenerAdapter projectViewListener,
                                                  MessageListenerAdapter premiumBoughtListener,
                                                  MessageListenerAdapter postViewListener,
-                                                 MessageListenerAdapter mentorshipRequestListener) {
+                                                 MessageListenerAdapter mentorshipRequestListener,
+                                                 MessageListenerAdapter fundRaisedListener) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
@@ -87,6 +92,9 @@ public class RedisConfig {
         container.addMessageListener(premiumBoughtListener, premiumBoughtTopic());
         container.addMessageListener(postViewListener, postViewEventTopic());
         container.addMessageListener(mentorshipRequestListener, mentorshipRequestTopic());
+
+        container.addMessageListener(mentorshipRequestListener, mentorshipRequestTopic());
+        container.addMessageListener(fundRaisedListener, fundRaisedTopic());
         return container;
     }
 
@@ -131,6 +139,11 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter fundRaisedListener(FundRaisedEventListener fundRaisedEventListener) {
+        return new MessageListenerAdapter(fundRaisedEventListener);
+    }
+
+    @Bean
     ChannelTopic likeTopic() {
         return new ChannelTopic(likeChannelName);
     }
@@ -168,5 +181,10 @@ public class RedisConfig {
     @Bean
     public ChannelTopic mentorshipRequestTopic() {
         return new ChannelTopic(mentorshipRequestTopic);
+    }
+
+    @Bean
+    public ChannelTopic fundRaisedTopic() {
+        return new ChannelTopic(fundRaisedChannel);
     }
 }
