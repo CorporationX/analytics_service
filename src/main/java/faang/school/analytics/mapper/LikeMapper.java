@@ -13,19 +13,14 @@ import org.mapstruct.factory.Mappers;
 public interface LikeMapper {
     LikeMapper INSTANCE = Mappers.getMapper(LikeMapper.class);
 
-    @Mapping(target = "receiverId", source = "likedEntityId")
-    @Mapping(target = "actorId", source = "authorId")
+    @Mapping(target = "receiverId", source = "authorId")
+    @Mapping(target = "actorId", source = "userExciterId")
     @Mapping(target = "receivedAt", source = "createdAt")
-    @Mapping(target = "eventType", expression = "java(mapEventType(postLikeEventDto))")
     AnalyticsEvent toAnalyticsEvent(PostLikeEventDto postLikeEventDto);
 
-    @Mapping(target = "likedEntityId", source = "receiverId")
-    @Mapping(target = "authorId", source = "actorId")
+    @Mapping(target = "authorId", source = "receiverId")
+    @Mapping(target = "userExciterId", source = "actorId")
     @Mapping(target = "createdAt", source = "receivedAt")
     PostLikeEventDto toPostLikeEventDto(AnalyticsEventDto analyticsEventDto);
 
-
-    default EventType mapEventType(PostLikeEventDto postLikeEventDto) {
-        return EventType.fromEvent(postLikeEventDto);
-    }
 }

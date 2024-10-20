@@ -4,19 +4,19 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.config.redis.RedisProperties;
 import faang.school.analytics.dto.event.type.service.post.like.PostLikeEventDto;
+import faang.school.analytics.exception.MessageProcessingException;
 import faang.school.analytics.mapper.LikeMapper;
-import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.Message;
 
 import java.time.LocalDateTime;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.eq;
@@ -65,12 +65,14 @@ public class PostLikeEventDtoListenerTest {
     void testOnMessageHandlesJsonMappingException() throws Exception {
         String invalidJsonMessage = "{\"type\":\"like\"";
         when(message.getBody()).thenReturn(invalidJsonMessage.getBytes());
-        when(redisProperties.getPostLikeEventChannelName()).thenReturn("testChannel");
         when(objectMapper.readValue(any(byte[].class), eq(PostLikeEventDto.class)))
-                .thenThrow(new JsonMappingException("Invalid JSON"));
+                .thenThrow(new MessageProcessingException("Failed to map JSON to PostLikeEventDto", new Exception()));
 
-        postLikeEventListener.onMessage(message, null);
+        MessageProcessingException exception = assertThrows(MessageProcessingException.class, () -> {
+            postLikeEventListener.onMessage(message, null);
+        });
 
+        assertEquals("Failed to map JSON to PostLikeEventDto", exception.getMessage());
         verify(analyticsEventService, never()).saveEvent(any());
     }
 
