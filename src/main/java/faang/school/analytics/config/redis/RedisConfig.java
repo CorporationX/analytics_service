@@ -22,7 +22,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
-
     @Value("${spring.data.redis.host}")
     private String host;
 
@@ -49,6 +48,9 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channels.post-view-channel.name}")
     private String postViewEvent;
+
+    @Value("${spring.data.redis.channels.mentorship-request-channel.name}")
+    private String mentorshipRequestTopic;
 
     @Value("${spring.data.redis.channels.mentorship-request-channel.name}")
     private String mentorshipRequestTopic;
@@ -92,6 +94,7 @@ public class RedisConfig {
         container.addMessageListener(projectViewListener, projectViewTopic());
         container.addMessageListener(premiumBoughtListener, premiumBoughtTopic());
         container.addMessageListener(postViewListener, postViewEventTopic());
+        container.addMessageListener(mentorshipRequestListener, mentorshipRequestTopic());
 
         container.addMessageListener(mentorshipRequestListener, mentorshipRequestTopic());
         container.addMessageListener(fundRaisedListener, fundRaisedTopic());

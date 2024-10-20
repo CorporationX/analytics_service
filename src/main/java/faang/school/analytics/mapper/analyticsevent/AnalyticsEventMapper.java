@@ -59,6 +59,10 @@ public interface AnalyticsEventMapper {
     AnalyticsEvent toEntity(PostViewEvent postViewEvent);
 
     @Mapping(source = "userId", target = "actorId")
+    @Mapping(source = "requestedAt", target = "receivedAt")
+    AnalyticsEvent toEntity(MentorshipRequestedEvent mentorshipRequestedEvent);
+
+    @Mapping(source = "userId", target = "actorId")
     @Mapping(source = "donatedAt", target = "receivedAt")
     AnalyticsEvent toEntity(FundRaisedEvent fundRaisedEvent);
 }
