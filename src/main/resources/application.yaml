@@ -36,6 +36,8 @@ spring:
           name: project_view_channel
         premium-bought-channel:
           name: premium_bought_channel
+        search-appearance-channel:
+          name: search_appearance_event
 
 server:
   port: 8086
