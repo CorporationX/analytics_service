@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.listener.AbstractEventListener;
 import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.LikeEventListener;
+import faang.school.analytics.listener.RedisTopics;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         for (AbstractEventListener listener : listeners) {
-            container.addMessageListener(listener.createListenerAdapter(), );
+            container.addMessageListener(listener.createListenerAdapter(), new ChannelTopic(listener.getTopic()));
         }
         return container;
     }
