@@ -12,6 +12,11 @@ public interface AnalyticsEventService {
 
     void saveEvent(AnalyticsEvent entity);
 
-    List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval,
-                                         LocalDateTime from, LocalDateTime to);
+    List<AnalyticsEventDto> getAnalytics(
+            long receiverId,
+            EventType eventType,
+            Interval interval,
+            LocalDateTime from,
+            LocalDateTime to
+    );
 }
