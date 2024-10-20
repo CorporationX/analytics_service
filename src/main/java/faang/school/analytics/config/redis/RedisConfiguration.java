@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.like.LikeEventListener;
 import faang.school.analytics.listener.project.ProjectViewEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,10 +17,17 @@ public class RedisConfiguration {
     private final RedisProperties redisProperties;
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter projectViewEvent) {
+    JedisConnectionFactory jedisConnectionFactory() {
+        return new JedisConnectionFactory();
+    }
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter projectViewEvent,
+                                                 MessageListenerAdapter likeEventAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(projectViewEvent, projectViewEventTopic());
+        container.addMessageListener(likeEventAdapter, likeEventsTopic());
         return container;
     }
 
@@ -29,12 +37,17 @@ public class RedisConfiguration {
     }
 
     @Bean
+    public ChannelTopic likeEventsTopic() {
+        return new ChannelTopic(redisProperties.getChannel().getLikeEvents());
+    }
+
+    @Bean
     MessageListenerAdapter projectViewEvent(ProjectViewEventListener projectViewEventListener) {
         return new MessageListenerAdapter(projectViewEventListener);
     }
 
     @Bean
-    JedisConnectionFactory jedisConnectionFactory() {
-        return new JedisConnectionFactory();
+    public MessageListenerAdapter likeEventAdapter(LikeEventListener likeEventListener) {
+        return new MessageListenerAdapter(likeEventListener);
     }
 }

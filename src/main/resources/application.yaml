@@ -24,6 +24,7 @@ spring:
       channel:
         profileView: profile_view_channel
         projectViewChannel: project_view_channel
+        likeEvents: like_event_channel
 
 server:
   port: 8086

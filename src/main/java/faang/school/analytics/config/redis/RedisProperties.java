@@ -18,5 +18,6 @@ public class RedisProperties {
     protected static class Channel {
         private String profileView;
         private String projectViewChannel;
+        private String likeEvents;
     }
 }
