@@ -1,5 +1,6 @@
 package faang.school.analytics.service;
 
+import faang.school.analytics.dto.LikeEvent;
 import faang.school.analytics.listener.event.SearchAppearanceEvent;
 import faang.school.analytics.listener.event.ProfileVeiwEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -36,7 +37,9 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     @Override
     public void saveProfileViewEvent(ProfileVeiwEvent event) {
         AnalyticsEvent analyticsEvent = mapper.toEntity(event, EventType.PROFILE_VIEW.name());
-    public void saveEvent(AnalyticsEvent analyticsEvent) {
+    }
+    public void saveLikeEvent(LikeEvent event) {
+        AnalyticsEvent analyticsEvent = mapper.toEntity(event);
         analyticsEventRepository.save(analyticsEvent);
     }
 

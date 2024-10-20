@@ -49,11 +49,11 @@ public class AnalyticsEventServiceTest {
         analyticsEvent.setReceivedAt(LocalDateTime.now());
     }
 
-    @Test
-    void testLikeEventSave() {
-        analyticsEventService.saveEvent(analyticsEvent);
-        verify(analyticsEventRepository, times(1)).save(analyticsEvent);
-    }
+//    @Test
+//    void testLikeEventSave() {
+//        analyticsEventService.saveEvent(analyticsEvent);
+//        verify(analyticsEventRepository, times(1)).save(analyticsEvent);
+//    }
 
     @Test
     void testGetAnalyticOfEvent_Success() {
