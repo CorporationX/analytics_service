@@ -1,7 +1,7 @@
 package faang.school.analytics.controller;
 
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.service.AnalyticsEventServiceImpl;
+import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AnalyticController {
 
-    private final AnalyticsEventServiceImpl analyticsEventService;
+    private final AnalyticsEventService analyticsEventService;
 
     @GetMapping("/analytic/{entityId}")
     public AnalyticsEvent getAnalytic(@PathVariable Long entityId,
