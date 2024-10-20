@@ -27,6 +27,8 @@ spring:
         recommendation: recommendation_channel
         like: like_channel
         ad-bought: ad_bought_channel
+        fund-raised: fund_raised_channel
+        project-view: project_view_channel
 
 server:
   port: 8086
@@ -37,4 +39,3 @@ logging:
 
 project-service:
   host: localhost
-  port: 8082
