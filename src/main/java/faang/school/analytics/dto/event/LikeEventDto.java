@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public class LikeEventDto extends AbstractEventDto {
 
     @Override
-    @JsonProperty("postId")
+    @JsonProperty("postAuthorId")
     public void setReceiverId(Long receiverId) {
         this.receiverId = receiverId;
     }

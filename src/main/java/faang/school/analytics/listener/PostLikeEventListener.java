@@ -9,8 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-
 @Slf4j
 @Component
 public class PostLikeEventListener extends AbstractEventListener<LikeEventDto> {
@@ -28,13 +26,9 @@ public class PostLikeEventListener extends AbstractEventListener<LikeEventDto> {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        try {
-            LikeEventDto likeEventDto = objectMapper.readValue(message.getBody(),
-                    LikeEventDto.class);
-            sendAnalytics(likeEventDto);
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
+        LikeEventDto likeEventDto = handleEvent(message, LikeEventDto.class);
+        log.debug("Received event: {}", likeEventDto);
+        sendAnalytics(likeEventDto);
+        log.debug("Sent event: {}", likeEventDto);
     }
 }
