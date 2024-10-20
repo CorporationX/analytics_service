@@ -36,6 +36,8 @@ spring:
           name: project_view_channel
         premium-bought-channel:
           name: premium_bought_channel
+        ad-bought-channel:
+          name: ad_bought_channel
 
 server:
   port: 8086
