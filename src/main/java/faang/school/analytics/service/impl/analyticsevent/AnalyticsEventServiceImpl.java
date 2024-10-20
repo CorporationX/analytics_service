@@ -31,7 +31,7 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     @Transactional
     public void saveEvent(AnalyticsEvent event) {
         analyticsEventRepository.save(event);
-        log.info("Saved follower event: {}", event);
+        log.info("Saved event: {}", event);
     }
 
     @Override

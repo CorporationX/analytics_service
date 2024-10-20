@@ -40,4 +40,9 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "actorId", source = "userId")
     @Mapping(target = "receivedAt", source = "observeTime")
     AnalyticsEvent toEntity(PremiumBoughtEvent premiumBoughtEvent);
+
+    @Mapping(target = "receiverId", source = "postId")
+    @Mapping(target = "actorId", source = "userId")
+    @Mapping(target = "receivedAt", source = "boughtAt")
+    AnalyticsEvent toEntity(AdBoughtEvent adBoughtEvent);
 }
