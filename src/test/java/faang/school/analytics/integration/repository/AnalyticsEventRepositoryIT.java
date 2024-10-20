@@ -8,13 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 class AnalyticsEventRepositoryIT extends IntegrationTestBase {
     private final AnalyticsEventRepository analyticsEventRepository;
 
     @Autowired
     AnalyticsEventRepositoryIT(AnalyticsEventRepository analyticsEventRepository) {
-        super();
         this.analyticsEventRepository = analyticsEventRepository;
     }
 
