@@ -34,6 +34,18 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.goal-completed-event-channel.name}")
     private String goalCompletedEvent;
 
+    @Value("${spring.data.redis.channels.comment-event-channel.name}")
+    private String commentEvent;
+
+    @Value("${spring.data.redis.channels.project-view-channel.name}")
+    private String projectViewTopic;
+
+    @Value("${spring.data.redis.channels.premium-bought-channel.name}")
+    private String premiumBoughtTopic;
+
+    @Value("${spring.data.redis.channels.post-view-channel.name}")
+    private String postViewEvent;
+
     @Value("${spring.data.redis.channels.mentorship-request-channel.name}")
     private String mentorshipRequestTopic;
 
@@ -55,20 +67,15 @@ public class RedisConfig {
         return redisTemplate;
     }
 
-    @Bean
-    MessageListenerAdapter followerListener(FollowerEventListener followerEventListener) {
-        return new MessageListenerAdapter(followerEventListener);
-    }
-
-    @Bean
-    MessageListenerAdapter goalCompletedListener(GoalCompletedEventListener goalCompletedEventListener) {
-        return new MessageListenerAdapter(goalCompletedEventListener);
-    }
 
     @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener,
                                                  MessageListenerAdapter likeListener,
                                                  MessageListenerAdapter goalCompletedListener,
+                                                 MessageListenerAdapter commentListener,
+                                                 MessageListenerAdapter projectViewListener,
+                                                 MessageListenerAdapter premiumBoughtListener,
+                                                 MessageListenerAdapter postViewListener,
                                                  MessageListenerAdapter mentorshipRequestListener,
                                                  MessageListenerAdapter fundRaisedListener) {
         RedisMessageListenerContainer container
@@ -77,9 +84,44 @@ public class RedisConfig {
         container.addMessageListener(followerListener, followerTopic());
         container.addMessageListener(goalCompletedListener, goalCompletedTopic());
         container.addMessageListener(likeListener, likeTopic());
+        container.addMessageListener(commentListener, commentTopic());
+        container.addMessageListener(projectViewListener, projectViewTopic());
+        container.addMessageListener(premiumBoughtListener, premiumBoughtTopic());
+        container.addMessageListener(postViewListener, postViewEventTopic());
+
         container.addMessageListener(mentorshipRequestListener, mentorshipRequestTopic());
         container.addMessageListener(fundRaisedListener, fundRaisedTopic());
         return container;
+    }
+
+    @Bean
+    MessageListenerAdapter followerListener(FollowerEventListener followerEventListener) {
+        return new MessageListenerAdapter(followerEventListener);
+    }
+
+    @Bean
+    MessageListenerAdapter premiumBoughtListener(PremiumBoughtEventListener premiumBoughtEventListener) {
+        return new MessageListenerAdapter(premiumBoughtEventListener);
+    }
+
+    @Bean
+    MessageListenerAdapter goalCompletedListener(GoalCompletedEventListener goalCompletedEventListener) {
+        return new MessageListenerAdapter(goalCompletedEventListener);
+    }
+
+    @Bean
+    MessageListenerAdapter commentListener(CommentEventListener commentEventListener) {
+        return new MessageListenerAdapter(commentEventListener);
+    }
+
+    @Bean
+    MessageListenerAdapter projectViewListener(ProjectViewEventListener projectViewEventListener) {
+        return new MessageListenerAdapter(projectViewEventListener);
+    }
+
+    @Bean
+    MessageListenerAdapter postViewListener(PostViewEventListener postViewEventListener) {
+        return new MessageListenerAdapter(postViewEventListener);
     }
 
     @Bean
@@ -110,6 +152,26 @@ public class RedisConfig {
     @Bean
     ChannelTopic goalCompletedTopic() {
         return new ChannelTopic(goalCompletedEvent);
+    }
+
+    @Bean
+    ChannelTopic commentTopic() {
+        return new ChannelTopic(commentEvent);
+    }
+
+    @Bean
+    ChannelTopic projectViewTopic() {
+        return new ChannelTopic(projectViewTopic);
+    }
+
+    @Bean
+    ChannelTopic premiumBoughtTopic() {
+        return new ChannelTopic(premiumBoughtTopic);
+    }
+
+    @Bean
+    ChannelTopic postViewEventTopic() {
+        return new ChannelTopic(postViewEvent);
     }
 
     @Bean
