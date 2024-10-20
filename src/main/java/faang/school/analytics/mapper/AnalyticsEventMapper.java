@@ -29,4 +29,5 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "subscriptionDuration.days", target = "receiverId")
     @Mapping(source = "userId", target = "actorId")
     AnalyticsEvent fromPremiumBoughtToEntity(PremiumBoughtEventDto premiumBoughtEventDto);
+
 }
