@@ -1,5 +1,7 @@
 package faang.school.analytics.model;
 
+import faang.school.analytics.dto.event.type.service.post.like.PostLikeEventDto;
+
 public enum EventType {
     PROFILE_VIEW,
     PROJECT_VIEW,
@@ -17,13 +19,4 @@ public enum EventType {
     ACHIEVEMENT_RECEIVED,
     PROFILE_APPEARED_IN_SEARCH,
     PROJECT_APPEARED_IN_SEARCH;
-
-    public static EventType of(int type) {
-        for (EventType eventType : EventType.values()) {
-            if (eventType.ordinal() == type) {
-                return eventType;
-            }
-        }
-        throw new IllegalArgumentException("Unknown event type: " + type);
-    }
 }
