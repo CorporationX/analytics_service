@@ -7,7 +7,8 @@ import lombok.Getter;
 @Getter
 public enum RedisTopics {
     PROFILE_VIEW("profile-view"),
-    SEARCH_APPEARANCE("search-appearance");
+    SEARCH_APPEARANCE("search-appearance"),
+    LIKE_EVENT("like_channel");
 
     private final String topic;
 }
