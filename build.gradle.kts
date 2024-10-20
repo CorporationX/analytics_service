@@ -74,7 +74,9 @@ tasks.bootJar {
  * JaCoCo settings
  */
 val jacocoInclude = listOf(
-    "**/service/**"
+    "**/service/**",
+    "**/listener/**",
+    "**/redis.listener/**"
 )
 
 val jacocoExclude = listOf(
@@ -83,10 +85,8 @@ val jacocoExclude = listOf(
     "**/controller/**",
     "**/dto/**",
     "**/exception/**",
-    "**/listener/**",
     "**/mapper/**",
     "**/model/**",
-    "**/redis.listener/**",
     "**/repository/**",
     "**/utils/**"
 )
@@ -134,12 +134,4 @@ tasks.jacocoTestCoverageVerification {
             exclude(jacocoExclude)
         }
     )
-}
-
-tasks.check {
-    dependsOn(tasks.jacocoTestCoverageVerification)
-}
-
-tasks.build {
-    dependsOn(tasks.jacocoTestCoverageVerification)
 }

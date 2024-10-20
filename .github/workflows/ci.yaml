@@ -48,6 +48,9 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build testClasses -x test -x jacocoTestReport -x check --no-daemon
 
+      - name: Build with Gradle and verify coverage
+        run: ./gradlew build jacocoTestCoverageVerification --no-daemon
+
       - name: Test with Gradle
         run: ./gradlew test -x testClasses --no-daemon --continue
 
