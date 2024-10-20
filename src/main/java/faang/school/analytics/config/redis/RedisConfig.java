@@ -2,6 +2,7 @@ package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.GoalEventListener;
+import faang.school.analytics.listener.PostLikeEventListener;
 import faang.school.analytics.listener.ProfileViewEventListener;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,6 +38,11 @@ public class RedisConfig {
         return new MessageListenerAdapter(profileViewEventListener);
     }
 
+    @Bean(value = "postLikeListener")
+    public MessageListenerAdapter postLikeListener(PostLikeEventListener postLikeEventListener) {
+        return new MessageListenerAdapter(postLikeEventListener);
+    }
+
     @Bean
     RedisMessageListenerContainer redisMessageListenerContainer(
             FollowerEventListener followerListener,
@@ -44,12 +50,15 @@ public class RedisConfig {
             @Qualifier("profileViewChannel") ChannelTopic profileViewChannel,
             @Qualifier("followerEventTopic") ChannelTopic followerEventTopic,
             GoalEventListener goalListener,
-            @Qualifier("goalEventTopic") ChannelTopic goalEventTopic) {
+            @Qualifier("goalEventTopic") ChannelTopic goalEventTopic,
+            @Qualifier("postLikeChannel") ChannelTopic postLikeChannel,
+            @Qualifier("postLikeListener") MessageListenerAdapter postLikeListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener, followerEventTopic);
         container.addMessageListener(goalListener, goalEventTopic);
         container.addMessageListener(profileViewListener, profileViewChannel);
+        container.addMessageListener(postLikeListener, postLikeChannel);
         return container;
     }
 
@@ -67,5 +76,11 @@ public class RedisConfig {
     public ChannelTopic profileViewChannel(
             @Value("${spring.data.redis.channels.profile-view-channel.name}") String profileViewChannelName) {
         return new ChannelTopic(profileViewChannelName);
+    }
+
+    @Bean(value = "postLikeChannel")
+    public ChannelTopic postLikeChannel(
+            @Value("${spring.data.redis.channels.like-channel.name}") String postLikeChannelName) {
+        return new ChannelTopic(postLikeChannelName);
     }
 }
