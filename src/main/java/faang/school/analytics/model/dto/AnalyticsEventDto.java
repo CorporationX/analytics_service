@@ -8,6 +8,8 @@ import lombok.Builder;
 
 import java.time.LocalDateTime;
 
+import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
+
 @Builder
 public record AnalyticsEventDto(
         @Positive(message = "Id can't be least than zero")
@@ -22,7 +24,7 @@ public record AnalyticsEventDto(
         @NotNull
         EventType eventType,
 
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
+        @JsonFormat(shape = STRING)
         LocalDateTime receivedAt
 ) {
 }

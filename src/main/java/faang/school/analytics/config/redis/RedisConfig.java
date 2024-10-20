@@ -4,6 +4,7 @@ import faang.school.analytics.listener.CommentEventListener;
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.LikeEventListener;
+import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.PostViewEventListener;
 import faang.school.analytics.listener.PremiumBoughtEventListener;
 import faang.school.analytics.listener.ProjectViewEventListener;
@@ -20,26 +21,35 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
-
     @Value("${spring.data.redis.host}")
     private String host;
+
     @Value("${spring.data.redis.port}")
     private int port;
 
     @Value("${spring.data.redis.channels.like-channel.name}")
     private String likeChannelName;
+
     @Value("${spring.data.redis.channels.follower-event-channel.name}")
     private String followerEvent;
+
     @Value("${spring.data.redis.channels.goal-completed-event-channel.name}")
     private String goalCompletedEvent;
+
     @Value("${spring.data.redis.channels.comment-event-channel.name}")
     private String commentEvent;
+
     @Value("${spring.data.redis.channels.project-view-channel.name}")
     private String projectViewTopic;
+
     @Value("${spring.data.redis.channels.premium-bought-channel.name}")
     private String premiumBoughtTopic;
+
     @Value("${spring.data.redis.channels.post-view-channel.name}")
     private String postViewEvent;
+
+    @Value("${spring.data.redis.channels.mentorship-request-channel.name}")
+    private String mentorshipRequestTopic;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -54,6 +64,30 @@ public class RedisConfig {
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         return redisTemplate;
+    }
+
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener,
+                                                 MessageListenerAdapter likeListener,
+                                                 MessageListenerAdapter goalCompletedListener,
+                                                 MessageListenerAdapter commentListener,
+                                                 MessageListenerAdapter projectViewListener,
+                                                 MessageListenerAdapter premiumBoughtListener,
+                                                 MessageListenerAdapter postViewListener,
+                                                 MessageListenerAdapter mentorshipRequestListener) {
+        RedisMessageListenerContainer container
+                = new RedisMessageListenerContainer();
+        container.setConnectionFactory(jedisConnectionFactory());
+        container.addMessageListener(followerListener, followerTopic());
+        container.addMessageListener(goalCompletedListener, goalCompletedTopic());
+        container.addMessageListener(likeListener, likeTopic());
+        container.addMessageListener(commentListener, commentTopic());
+        container.addMessageListener(projectViewListener, projectViewTopic());
+        container.addMessageListener(premiumBoughtListener, premiumBoughtTopic());
+        container.addMessageListener(postViewListener, postViewEventTopic());
+        container.addMessageListener(mentorshipRequestListener, mentorshipRequestTopic());
+        return container;
     }
 
     @Bean
@@ -87,30 +121,13 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener,
-                                                 MessageListenerAdapter likeListener,
-                                                 MessageListenerAdapter goalCompletedListener,
-                                                 MessageListenerAdapter commentListener,
-                                                 MessageListenerAdapter projectViewListener,
-                                                 MessageListenerAdapter premiumBoughtListener,
-                                                 MessageListenerAdapter postViewListener) {
-        RedisMessageListenerContainer container
-                = new RedisMessageListenerContainer();
-        container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(followerListener, followerTopic());
-        container.addMessageListener(goalCompletedListener, goalCompletedTopic());
-        container.addMessageListener(likeListener, likeTopic());
-        container.addMessageListener(commentListener, commentTopic());
-        container.addMessageListener(projectViewListener, projectViewTopic());
-        container.addMessageListener(premiumBoughtListener, premiumBoughtTopic());
-        container.addMessageListener(postViewListener, postViewEventTopic());
-
-        return container;
+    MessageListenerAdapter likeListener(LikeEventListener likeEventListener) {
+        return new MessageListenerAdapter(likeEventListener);
     }
 
     @Bean
-    MessageListenerAdapter likeListener(LikeEventListener likeEventListener) {
-        return new MessageListenerAdapter(likeEventListener);
+    MessageListenerAdapter mentorshipRequestListener(MentorshipRequestedEventListener mentorshipRequestedEventListener) {
+        return new MessageListenerAdapter(mentorshipRequestedEventListener);
     }
 
     @Bean
@@ -146,5 +163,10 @@ public class RedisConfig {
     @Bean
     ChannelTopic postViewEventTopic() {
         return new ChannelTopic(postViewEvent);
+    }
+
+    @Bean
+    public ChannelTopic mentorshipRequestTopic() {
+        return new ChannelTopic(mentorshipRequestTopic);
     }
 }

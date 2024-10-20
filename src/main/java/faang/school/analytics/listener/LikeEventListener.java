@@ -5,6 +5,7 @@ import faang.school.analytics.mapper.analyticsevent.AnalyticsEventMapper;
 import faang.school.analytics.model.event.LikeEvent;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
+import faang.school.analytics.model.event.LikeEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -21,8 +22,8 @@ public class LikeEventListener extends AbstractEventListener<LikeEvent> implemen
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        LikeEvent dto = handleEvent(message, LikeEvent.class);
-        AnalyticsEvent entity = analyticsEventMapper.toEntity(dto);
+        LikeEvent likeEvent = handleEvent(message, LikeEvent.class);
+        AnalyticsEvent entity = analyticsEventMapper.toEntity(likeEvent);
         entity.setEventType(EventType.POST_LIKE);
         analyticsEventService.saveEvent(entity);
     }
