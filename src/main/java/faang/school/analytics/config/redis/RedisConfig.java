@@ -52,9 +52,6 @@ public class RedisConfig {
     @Value("${spring.data.redis.channels.mentorship-request-channel.name}")
     private String mentorshipRequestTopic;
 
-    @Value("${spring.data.redis.channels.mentorship-request-channel.name}")
-    private String mentorshipRequestTopic;
-
     @Value("${spring.data.redis.channels.fund-raised-channel.name}")
     private String fundRaisedChannel;
 
