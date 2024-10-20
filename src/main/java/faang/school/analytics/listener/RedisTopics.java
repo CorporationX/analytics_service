@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum RedisTopics {
     PROFILE_VIEW("profile-view"),
     SEARCH_APPEARANCE("search-appearance"),
-    LIKE_EVENT("like_channel");
+    LIKE_EVENT("like_channel"),
+    GOAL_COMPLETED("goal-completed");
 
     private final String topic;
 }

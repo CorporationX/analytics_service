@@ -19,16 +19,13 @@ import java.io.IOException;
 public class GoalCompletedEventListener extends AbstractEventListener implements MessageListener {
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
-    private final AnalyticsEventMapper analyticsEventMapper;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
             GoalCompletedEvent goalCompletedEvent = objectMapper.readValue(message.getBody(), GoalCompletedEvent.class);
-            AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(goalCompletedEvent);
-
-            log.info("Goal completed event received: {}", analyticsEvent);
-            analyticsEventService.saveEvent(analyticsEvent);
+            log.info("Goal completed event received: {}", goalCompletedEvent);
+            analyticsEventService.saveGoalCompletedEvent(goalCompletedEvent);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -37,6 +34,6 @@ public class GoalCompletedEventListener extends AbstractEventListener implements
 
     @Override
     public String getTopic() {
-        return "";
+        return RedisTopics.GOAL_COMPLETED.getTopic();
     }
 }

@@ -1,5 +1,6 @@
 package faang.school.analytics.service;
 
+import faang.school.analytics.dto.GoalCompletedEvent;
 import faang.school.analytics.dto.LikeEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.listener.event.ProfileVeiwEvent;
@@ -17,4 +18,6 @@ public interface AnalyticsEventService {
     void saveSearchAppearanceEvent(SearchAppearanceEvent analyticsEvent);
 
     void saveProfileViewEvent(ProfileVeiwEvent analyticsEvent);
+
+    void saveGoalCompletedEvent(GoalCompletedEvent event);
 }
