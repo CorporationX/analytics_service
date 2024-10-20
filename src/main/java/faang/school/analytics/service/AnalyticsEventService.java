@@ -6,4 +6,10 @@ public interface AnalyticsEventService {
 
     void saveEvent(AnalyticsEvent analyticsEvent);
 
+    AnalyticsEvent getAnalyticOfEvent(Long entityId,
+                                             Long eventTypeId,
+                                             Long intervalId,
+                                             String startDateTime,
+                                             String endDateTime);
+
 }
