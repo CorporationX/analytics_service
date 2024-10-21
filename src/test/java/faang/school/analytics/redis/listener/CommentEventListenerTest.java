@@ -13,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 
-
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -22,10 +21,8 @@ import static org.mockito.Mockito.when;
 class CommentEventListenerTest {
     @Mock
     private AnalyticsEventService analyticsEventService;
-
     @Mock
     private AnalyticsEventMapper analyticsEventMapper;
-
     @Mock
     private ObjectMapper objectMapper;
 

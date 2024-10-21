@@ -12,7 +12,7 @@ import org.springframework.data.redis.listener.Topic;
 @Slf4j
 @AllArgsConstructor
 public abstract class AbstractEventListener<T> implements MessageListener {
-    protected final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
     @Getter
     private final Topic topic;
 
@@ -27,9 +27,13 @@ public abstract class AbstractEventListener<T> implements MessageListener {
             T event = objectMapper.readValue(messageBody, getEventType());
             saveEvent(event);
         } catch (JsonProcessingException e) {
-            log.error("Error parsing JSON message: {}", messageBody, e);
+            handleJsonParsingError(messageBody, e);
         } catch (Exception e) {
             log.error("Unexpected error processing message: {}", messageBody, e);
         }
+    }
+
+    protected void handleJsonParsingError(String messageBody, JsonProcessingException e) {
+        log.error("Error parsing JSON message: {}", messageBody, e);
     }
 }
