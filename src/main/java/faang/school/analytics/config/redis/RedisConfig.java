@@ -5,7 +5,6 @@ import faang.school.analytics.listener.GoalEventListener;
 import faang.school.analytics.listener.ProfileViewEventListener;
 import faang.school.analytics.listener.ProjectViewEventListener;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +12,8 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+
+import java.util.Map;
 
 @Setter
 @Configuration
@@ -33,7 +34,7 @@ public class RedisConfig {
         return new MessageListenerAdapter(goalEventListener);
     }
 
-    @Bean(value = "profileViewListener")
+    @Bean
     MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
         return new MessageListenerAdapter(profileViewEventListener);
     }
@@ -45,26 +46,19 @@ public class RedisConfig {
 
     @Bean
     RedisMessageListenerContainer redisMessageListenerContainer(
-            FollowerEventListener followerListener,
-            @Qualifier("followerEventTopic") ChannelTopic followerEventTopic,
-            GoalEventListener goalListener,
-            @Qualifier("goalEventTopic") ChannelTopic goalEventTopic,
-            ProjectViewEventListener projectViewListener,
-            @Qualifier("projectViewEventTopic") ChannelTopic projectViewEventTopic,
-            @Qualifier("profileViewListener") MessageListenerAdapter profileViewListener,
-            @Qualifier("profileViewChannel") ChannelTopic profileViewChannel
-            ) {
+            Map<String, MessageListenerAdapter> listenerAdapters,
+            Map<String, ChannelTopic> channelTopics) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(followerListener, followerEventTopic);
-        container.addMessageListener(goalListener, goalEventTopic);
-        container.addMessageListener(profileViewListener, profileViewChannel);
-        container.addMessageListener(projectViewListener, projectViewEventTopic);
+        container.addMessageListener(listenerAdapters.get("followerListener"), channelTopics.get("followerEventTopic"));
+        container.addMessageListener(listenerAdapters.get("goalListener"), channelTopics.get("goalEventTopic"));
+        container.addMessageListener(listenerAdapters.get("profileViewListener"), channelTopics.get("profileViewChannel"));
+        container.addMessageListener(listenerAdapters.get("projectViewListener"), channelTopics.get("projectViewEventTopic"));
         return container;
     }
 
     @Bean(value = "projectViewEventTopic")
-    ChannelTopic projectViewEventTopic(@Value("${spring.data.redis.channels.project-view-channel.name}")String name) {
+    ChannelTopic projectViewEventTopic(@Value("${spring.data.redis.channels.project-view-channel.name}") String name) {
         return new ChannelTopic(name);
     }
 
