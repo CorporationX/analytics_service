@@ -7,12 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import faang.school.analytics.dto.PostViewEventDto;
 import faang.school.analytics.dto.user.ProfileViewEventDto;
-import faang.school.analytics.dto.PostViewEventDto;
 import faang.school.analytics.dto.analyticsEvent.AnalyticsEventDto;
-import faang.school.analytics.dto.user.ProfileViewEventDto;
-import faang.school.analytics.model.AnalyticsEvent;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
@@ -24,7 +19,7 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "eventType", expression = "java(EventType.POST_COMMENT)")
     @Mapping(source = "timestamp", target = "receivedAt")
     AnalyticsEvent toAnalyticsEvent(CommentEvent commentEvent);
-    
+
     List<AnalyticsEventDto> toDtoList(List<AnalyticsEvent> events);
 
     AnalyticsEvent toAnalyticsEvent(ProfileViewEventDto analyticsEventService);
