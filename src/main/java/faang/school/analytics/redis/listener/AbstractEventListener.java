@@ -1,5 +1,6 @@
 package faang.school.analytics.redis.listener;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,12 +22,14 @@ public abstract class AbstractEventListener<T> implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
+        String messageBody = new String(message.getBody());
         try {
-            String messageBody = new String(message.getBody());
             T event = objectMapper.readValue(messageBody, getEventType());
             saveEvent(event);
+        } catch (JsonProcessingException e) {
+            log.error("Error parsing JSON message: {}", messageBody, e);
         } catch (Exception e) {
-            log.error("Error processing message: {}", new String(message.getBody()), e);
+            log.error("Unexpected error processing message: {}", messageBody, e);
         }
     }
 }
