@@ -27,9 +27,9 @@ public abstract class AbstractEventListener<T> implements MessageListener {
             T event = objectMapper.readValue(messageBody, getEventType());
             saveEvent(event);
         } catch (JsonProcessingException e) {
-            log.error("Error parsing JSON message: {}", messageBody, e);
+            throw new RuntimeException("Failed to convert message to event", e);
         } catch (Exception e) {
-            log.error("Unexpected error processing message: {}", messageBody, e);
+            throw new RuntimeException("Failed to save event", e);
         }
     }
 }
