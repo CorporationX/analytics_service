@@ -5,8 +5,8 @@ import faang.school.analytics.model.dto.AnalyticsEventDto;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.model.enums.Interval;
-import faang.school.analytics.service.AnalyticsEventService;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -45,6 +45,7 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
         } else {
             startDate = from;
         }
+
         LocalDateTime finalTo = to;
         List<AnalyticsEvent> filteredEvents = events.filter(event ->
                         event.getReceivedAt().isAfter(startDate) && event.getReceivedAt().isBefore(finalTo))

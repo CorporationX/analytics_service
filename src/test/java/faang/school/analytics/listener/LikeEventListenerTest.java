@@ -79,4 +79,3 @@ class LikeEventListenerTest {
         verifyNoMoreInteractions(mapper, analyticsEventService);
     }
 }
-
