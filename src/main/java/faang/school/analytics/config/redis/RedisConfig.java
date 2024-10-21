@@ -34,7 +34,7 @@ public class RedisConfig {
     }
 
     @Bean(value = "profileViewListener")
-    public MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
+    MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
         return new MessageListenerAdapter(profileViewEventListener);
     }
 
@@ -46,13 +46,14 @@ public class RedisConfig {
     @Bean
     RedisMessageListenerContainer redisMessageListenerContainer(
             FollowerEventListener followerListener,
-            @Qualifier("profileViewListener") MessageListenerAdapter profileViewListener,
-            @Qualifier("profileViewChannel") ChannelTopic profileViewChannel,
             @Qualifier("followerEventTopic") ChannelTopic followerEventTopic,
             GoalEventListener goalListener,
             @Qualifier("goalEventTopic") ChannelTopic goalEventTopic,
             ProjectViewEventListener projectViewListener,
-            @Qualifier("projectViewEventTopic") ChannelTopic projectViewEventTopic) {
+            @Qualifier("projectViewEventTopic") ChannelTopic projectViewEventTopic,
+            @Qualifier("profileViewListener") MessageListenerAdapter profileViewListener,
+            @Qualifier("profileViewChannel") ChannelTopic profileViewChannel
+            ) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener, followerEventTopic);
@@ -78,7 +79,7 @@ public class RedisConfig {
     }
 
     @Bean(value = "profileViewChannel")
-    public ChannelTopic profileViewChannel(
+    ChannelTopic profileViewChannel(
             @Value("${spring.data.redis.channels.profile-view-channel.name}") String profileViewChannelName) {
         return new ChannelTopic(profileViewChannelName);
     }
