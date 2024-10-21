@@ -33,10 +33,11 @@ project-service:
   host: localhost
   port: 8082
 
-
 app:
   user-redis-config:
     profile_view_event_topic: profileViewEvent
+  user-premium-redis-config:
+    premium_bought_event_topic: premiumBoughtEvent
   quartz-config:
     user-view-event-save:
       trigger_interval_sec: 10

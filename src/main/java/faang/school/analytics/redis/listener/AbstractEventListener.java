@@ -7,7 +7,6 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.listener.Topic;
 
-
 @Slf4j
 public abstract class AbstractEventListener<T> implements MessageListener {
     private final ObjectMapper objectMapper;
