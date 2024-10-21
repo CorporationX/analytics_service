@@ -1,0 +1,13 @@
+spring:
+  data:
+    redis:
+      channel:
+        comment: comment_event_test
+        post-view: post_view_channel_test
+        profile-view: profile_view_channel_test
+        profile-view-list: profile_view_list_channel_test
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
