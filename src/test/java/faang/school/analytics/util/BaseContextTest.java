@@ -36,7 +36,7 @@ public class BaseContextTest {
     protected ObjectMapper objectMapper;
 
     @Container
-    public static PostgreSQLContainer<?> POSTGRESQL_CONTAINER =
+    private static PostgreSQLContainer<?> POSTGRESQL_CONTAINER =
             new PostgreSQLContainer<>("postgres:13.6");
     @Container
     private static final RedisContainer REDIS_CONTAINER =
