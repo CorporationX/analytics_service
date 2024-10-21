@@ -30,9 +30,9 @@ public abstract class AbstractListEventListener<T> implements MessageListener {
                     objectMapper.getTypeFactory().constructCollectionType(List.class, getEventType()));
             saveEvents(events);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to convert message to event", e);
+            log.error("Error parsing JSON message: {}", messageBody, e);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to save event", e);
+            log.error("Unexpected error processing message: {}", messageBody, e);
         }
     }
 }
