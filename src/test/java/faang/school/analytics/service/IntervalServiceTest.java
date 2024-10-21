@@ -45,6 +45,22 @@ class IntervalServiceTest {
     }
 
     @Test
+    void testGetFrom_lastThreeMonths() {
+        LocalDateTime expected = LocalDateTime.of(LocalDate.now().minusMonths(3), LocalTime.MIN);
+        LocalDateTime result = intervalService.getFrom(Interval.LAST_THREE_MONTHS);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testGetFrom_lastSixMonths() {
+        LocalDateTime expected = LocalDateTime.of(LocalDate.now().minusMonths(6), LocalTime.MIN);
+        LocalDateTime result = intervalService.getFrom(Interval.LAST_SIX_MONTHS);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
     void testGetFrom_yearToDate() {
         LocalDateTime expected = LocalDateTime.of(LocalDate.now().getYear(), 1, 1, 0, 0);
         LocalDateTime result = intervalService.getFrom(Interval.YEAR_TO_DATE);

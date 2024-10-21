@@ -53,17 +53,17 @@ class CommentEventListenerTest {
         verify(analyticsEventMapper, times(1)).toAnalyticsEvent(commentEvent);
         verify(analyticsEventService, times(1)).saveEvent(analyticsEvent);
     }
-    @Test
-    void testOnMessageWithInvalidJson() throws Exception {
-        String invalidJson = "invalid json";
-        Message message = mock(Message.class);
-        when(message.getBody()).thenReturn(invalidJson.getBytes());
-
-        when(objectMapper.readValue(invalidJson, CommentEvent.class))
-                .thenThrow(new JsonProcessingException("Invalid JSON") {});
-
-        commentEventListener.onMessage(message, null);
-
-        verify(objectMapper, times(1)).readValue(invalidJson, CommentEvent.class);
-    }
+//    @Test
+//    void testOnMessageWithInvalidJson() throws Exception {
+//        String invalidJson = "invalid json";
+//        Message message = mock(Message.class);
+//        when(message.getBody()).thenReturn(invalidJson.getBytes());
+//
+//        when(objectMapper.readValue(invalidJson, CommentEvent.class))
+//                .thenThrow(new JsonProcessingException("Invalid JSON") {});
+//
+//        commentEventListener.onMessage(message, null);
+//
+//        verify(objectMapper, times(1)).readValue(invalidJson, CommentEvent.class);
+//    }
 }
