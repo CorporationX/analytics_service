@@ -14,7 +14,10 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class PremiumBoughtEventListener extends AbstractEventListener<PremiumBoughtEvent> implements MessageListener {
-    public PremiumBoughtEventListener(ObjectMapper objectMapper, AnalyticsEventMapper analyticsEventMapper, AnalyticsEventService analyticsEventService) {
+    public PremiumBoughtEventListener(ObjectMapper objectMapper, AnalyticsEventMapper analyticsEventMapper,
+                                      AnalyticsEventService analyticsEventService
+
+    ) {
         super(objectMapper, analyticsEventMapper, analyticsEventService);
     }
 
