@@ -1,10 +1,10 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.dto.PostViewEventDto;
+import faang.school.analytics.dto.user.ProfileViewEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.redis.listener.PostViewEventListener;
+import faang.school.analytics.redis.listener.ProfileViewEventListener;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class PostViewEventListenerTest {
+class ProfileViewEventListenerTest {
     @Mock
     private AnalyticsEventService analyticsEventService;
     @Mock
@@ -27,28 +27,28 @@ class PostViewEventListenerTest {
     @Mock
     private ObjectMapper objectMapper;
 
-    private PostViewEventListener postViewEventListener;
+    private ProfileViewEventListener profileViewEventListener;
 
     @BeforeEach
     void setUp() {
-        postViewEventListener = new PostViewEventListener(
+        profileViewEventListener = new ProfileViewEventListener(
                 objectMapper,
                 analyticsEventService,
                 analyticsEventMapper,
-                "testPostViewChannel"
+                "testProfileViewChannel"
         );
     }
 
     @Test
     void testSaveEvent() {
-        PostViewEventDto postViewEventDto = new PostViewEventDto(1L, 2L, 3L, LocalDateTime.now());
+        ProfileViewEventDto profileViewEventDto = new ProfileViewEventDto(1L, 2L, LocalDateTime.now());
         AnalyticsEvent analyticsEvent = new AnalyticsEvent();
 
-        when(analyticsEventMapper.postViewEventDtoToAnalyticsEvent(postViewEventDto)).thenReturn(analyticsEvent);
+        when(analyticsEventMapper.toAnalyticsEvent(profileViewEventDto)).thenReturn(analyticsEvent);
 
-        postViewEventListener.saveEvent(postViewEventDto);
+        profileViewEventListener.saveEvent(profileViewEventDto);
 
-        verify(analyticsEventMapper, times(1)).postViewEventDtoToAnalyticsEvent(postViewEventDto);
+        verify(analyticsEventMapper, times(1)).toAnalyticsEvent(profileViewEventDto);
         verify(analyticsEventService, times(1)).saveEvent(analyticsEvent);
     }
 }
