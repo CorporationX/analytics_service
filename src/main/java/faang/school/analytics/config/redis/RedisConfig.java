@@ -2,6 +2,7 @@ package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.ProjectViewEventListener;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -29,11 +30,11 @@ public class RedisConfig {
     @Bean
     public RedisMessageListenerContainer container(
             RedisConnectionFactory connectionFactory,
-            MessageListenerAdapter messageListenerAdapter,
+            MessageListenerAdapter messageListener,
             ChannelTopic channelTopic) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(messageListenerAdapter, channelTopic);
+        container.addMessageListener(messageListener, channelTopic);
         return container;
     }
 }
