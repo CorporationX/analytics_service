@@ -13,6 +13,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -46,6 +47,10 @@ class AnalyticsControllerIntegrationTest {
                     .withPassword("admin")
                     .withInitScript("schema_for_AnalyticController.sql");
 
+    @Container
+    public static GenericContainer<?> redisContainer = new GenericContainer<>("redis:latest")
+            .withExposedPorts(6379);
+
     @DynamicPropertySource
     static void overrideSourceProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", postgresContainer::getJdbcUrl);
@@ -53,6 +58,8 @@ class AnalyticsControllerIntegrationTest {
         registry.add("spring.datasource.password", postgresContainer::getPassword);
         registry.add("spring.datasource.driver-class-name", postgresContainer::getDriverClassName);
         registry.add("spring.liquibase.enabled", () -> false);
+        registry.add("spring.data.redis.host", redisContainer::getHost);
+        registry.add("spring.data.redis.port", redisContainer::getFirstMappedPort);
     }
 
     @Test
