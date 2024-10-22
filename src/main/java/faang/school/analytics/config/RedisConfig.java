@@ -1,6 +1,11 @@
 package faang.school.analytics.config;
 
-import faang.school.analytics.listener.*;
+import faang.school.analytics.listener.AdBoughtEventListener;
+import faang.school.analytics.listener.FundRaisedEventListener;
+import faang.school.analytics.listener.LikeEventListener;
+import faang.school.analytics.listener.ProfileViewEventListener;
+import faang.school.analytics.listener.RecommendationEventListener;
+import faang.school.analytics.listener.SearchAppearanceEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +39,9 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.profile-view}")
     private String profileViewChannel;
+
+    @Value("${spring.data.redis.channel.fund-raised}")
+    private String fundRaisedChannel;
 
     @Value("${spring.data.redis.channel.premium-bought}")
     private String premiumBoughtChannel;
@@ -73,6 +81,11 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter fundRaisedEvent(FundRaisedEventListener fundRaisedEventListener) {
+        return new MessageListenerAdapter(fundRaisedEventListener);
+    }
+
+    @Bean
     MessageListenerAdapter premiumBoughtEvent (PremiumBoughtEventListener premiumBoughtEventListener) {
         return new MessageListenerAdapter(premiumBoughtEventListener);
     }
@@ -103,6 +116,11 @@ public class RedisConfig {
     }
 
     @Bean
+    ChannelTopic fundRaisedTopic() {
+        return new ChannelTopic(fundRaisedChannel);
+    }
+
+    @Bean
     ChannelTopic premiumBoughtTopic() {
         return new ChannelTopic(premiumBoughtChannel);
     }
@@ -113,6 +131,8 @@ public class RedisConfig {
                                                         MessageListenerAdapter likeEvent,
                                                         MessageListenerAdapter recommendationEvent,
                                                         MessageListenerAdapter adBoughtEvent,
+                                                        MessageListenerAdapter profileViewEvent,
+                                                        MessageListenerAdapter fundRaisedEvent) {
                                                         MessageListenerAdapter premiumBoughtEvent,
                                                         MessageListenerAdapter profileViewEvent) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
@@ -122,8 +142,10 @@ public class RedisConfig {
         container.addMessageListener(searchAppearanceEvent, searchAppearanceTopic());
         container.addMessageListener(adBoughtEvent, adBoughtTopic());
         container.addMessageListener(profileViewEvent, profileViewTopic());
+        container.addMessageListener(fundRaisedEvent, fundRaisedTopic());
         container.addMessageListener(premiumBoughtEvent, premiumBoughtTopic());
 
         return container;
+    }
     }
 }
