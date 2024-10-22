@@ -11,7 +11,6 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostViewEvent extends BaseEvent {

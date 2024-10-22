@@ -16,7 +16,7 @@ public class RedisConfiguration {
     private final RedisProperties redisProperties;
 
     @Bean
-    ChannelTopic postViewEventTopic() {
+    public ChannelTopic postViewEventTopic() {
         return new ChannelTopic(redisProperties.getChannels().getPostViewEvent());
     }
 
