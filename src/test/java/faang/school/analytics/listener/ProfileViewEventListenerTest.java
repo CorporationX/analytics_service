@@ -41,7 +41,7 @@ class ProfileViewEventListenerTest {
 
     @Test
     void testSaveEvent() {
-        ProfileViewEventDto profileViewEventDto = new ProfileViewEventDto(1L, 2L, LocalDateTime.now());
+        ProfileViewEventDto profileViewEventDto = new ProfileViewEventDto(1L, "name", 2L, "name", LocalDateTime.now());
         AnalyticsEvent analyticsEvent = new AnalyticsEvent();
 
         when(analyticsEventMapper.toAnalyticsEvent(profileViewEventDto)).thenReturn(analyticsEvent);

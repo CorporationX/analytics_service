@@ -42,8 +42,9 @@ class ProfileViewListEventListenerTest {
     @Test
     void testSaveEvents() {
         List<ProfileViewEventDto> profileViewEventDtos = List.of(
-                new ProfileViewEventDto(1L, 2L, LocalDateTime.now()),
-                new ProfileViewEventDto(3L, 4L, LocalDateTime.now())
+                new ProfileViewEventDto(1L, "name", 2L, "name", LocalDateTime.now()),
+                new ProfileViewEventDto(3L, "name", 4L, "name", LocalDateTime.now()),
+                new ProfileViewEventDto(5L, "name", 6L, "name", LocalDateTime.now())
         );
         List<AnalyticsEvent> analyticsEvents = List.of(new AnalyticsEvent(), new AnalyticsEvent());
 

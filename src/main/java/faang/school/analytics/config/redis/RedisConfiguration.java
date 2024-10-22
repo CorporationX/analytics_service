@@ -31,4 +31,3 @@ public class RedisConfiguration {
         return container;
     }
 }
-

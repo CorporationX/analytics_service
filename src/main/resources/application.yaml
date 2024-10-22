@@ -26,6 +26,7 @@ spring:
          post-view: post_view_channel
          profile-view: post_view_channel
          profile-view-list: profile_view_list_channel
+         premium_bought: premium_bought_event_channel
 
 
 server:
@@ -34,7 +35,6 @@ server:
 project-service:
   host: localhost
   port: 8082
-
 
 app:
   quartz-config:

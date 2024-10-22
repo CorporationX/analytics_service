@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Component;
+
 @Slf4j
 @Component
 public class ProfileViewEventListener extends AbstractEventListener<ProfileViewEventDto> {

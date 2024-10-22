@@ -55,9 +55,9 @@ public class ProfileViewListEventIntegrationTest {
         String profileViewListEventChannel = environment.getProperty(REDIS_CHANNEL_PROFILE_VIEW_LIST);
 
         List<ProfileViewEventDto> profileViewEvents = List.of(
-                new ProfileViewEventDto(1L, 2L, LocalDateTime.now()),
-                new ProfileViewEventDto(3L, 4L, LocalDateTime.now()),
-                new ProfileViewEventDto(5L, 6L, LocalDateTime.now())
+                new ProfileViewEventDto(1L, "name", 2L, "name", LocalDateTime.now()),
+                new ProfileViewEventDto(3L, "name", 4L, "name", LocalDateTime.now()),
+                new ProfileViewEventDto(5L, "name", 6L, "name", LocalDateTime.now())
         );
 
         String message = objectMapper.writeValueAsString(profileViewEvents);

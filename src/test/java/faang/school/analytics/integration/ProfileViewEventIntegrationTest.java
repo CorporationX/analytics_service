@@ -52,7 +52,7 @@ public class ProfileViewEventIntegrationTest {
     public void testProfileViewEventProcessing() throws Exception {
         String profileViewEventChannel = environment.getProperty(REDIS_CHANNEL_PROFILE_VIEW);
 
-        ProfileViewEventDto profileViewEvent = new ProfileViewEventDto(1L, 2L, LocalDateTime.now());
+        ProfileViewEventDto profileViewEvent = new ProfileViewEventDto(1L, "name", 2L, "name", LocalDateTime.now());
         String message = objectMapper.writeValueAsString(profileViewEvent);
 
         redisTemplate.convertAndSend(Objects.requireNonNull(profileViewEventChannel), message);

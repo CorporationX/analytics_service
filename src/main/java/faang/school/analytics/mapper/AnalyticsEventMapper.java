@@ -8,6 +8,7 @@ import org.mapstruct.Mapping;
 import faang.school.analytics.dto.PostViewEventDto;
 import faang.school.analytics.dto.user.ProfileViewEventDto;
 import faang.school.analytics.dto.analyticsEvent.AnalyticsEventDto;
+import faang.school.analytics.dto.user.premium.PremiumBoughtEventDto;
 import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
@@ -28,4 +29,10 @@ public interface AnalyticsEventMapper {
 
     @Mapping(target = "id", source = "postId", ignore = true)
     AnalyticsEvent postViewEventDtoToAnalyticsEvent(PostViewEventDto dto);
+
+    @Mapping(source = "userId", target = "receiverId")
+    @Mapping(source = "userId", target = "actorId")
+    @Mapping(source = "purchaseDate", target = "receivedAt")
+    AnalyticsEvent toAnalyticsEvent(PremiumBoughtEventDto premiumBoughtEventDto);
+
 }
