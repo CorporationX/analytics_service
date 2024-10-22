@@ -22,12 +22,14 @@ spring:
       port: 6379
       host: localhost
       channel:
+        follower-event: follower_event_channel
         profile-view: profile_view_channel
         search-appearance: search_appearance_channel
         recommendation: recommendation_channel
         like: like_channel
         ad-bought: ad_bought_channel
         fund-raised: fund_raised_channel
+        premium-bought: premium_bought_channel
 
 server:
   port: 8086
