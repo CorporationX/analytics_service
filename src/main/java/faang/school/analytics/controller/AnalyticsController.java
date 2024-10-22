@@ -5,6 +5,7 @@ import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.model.enums.Interval;
 import faang.school.analytics.service.impl.AnalyticsEventServiceImpl;
 import faang.school.analytics.validator.AnalyticControllerValidator;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ public class AnalyticsController {
     private final AnalyticControllerValidator analyticControllerValidator;
 
     @GetMapping()
+    @Operation(summary = "Get analytic!", description = "Get analytic from DB")
     @ResponseStatus(HttpStatus.OK)
     public List<AnalyticsEventDto> getAnalytics(@RequestParam("id") Long id,
                                                 @RequestParam("eventType") String eventType,
@@ -39,7 +41,7 @@ public class AnalyticsController {
         }
         EventType eventTypeRes = EventType.valueOf(eventType.toUpperCase());
         List<AnalyticsEventDto> result = analyticsEventServiceImpl.getAnalytics(id, eventTypeRes, intervalRes, startDateRes, endDateRes);
-        System.out.printf("result "+result);
+        System.out.printf("result " + result);
         return result;
     }
 }
