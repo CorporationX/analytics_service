@@ -1,11 +1,6 @@
 package faang.school.analytics.config;
 
-import faang.school.analytics.listener.AdBoughtEventListener;
-import faang.school.analytics.listener.FundRaisedEventListener;
-import faang.school.analytics.listener.LikeEventListener;
-import faang.school.analytics.listener.ProfileViewEventListener;
-import faang.school.analytics.listener.RecommendationEventListener;
-import faang.school.analytics.listener.SearchAppearanceEventListener;
+import faang.school.analytics.listener.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -132,9 +127,8 @@ public class RedisConfig {
                                                         MessageListenerAdapter recommendationEvent,
                                                         MessageListenerAdapter adBoughtEvent,
                                                         MessageListenerAdapter profileViewEvent,
-                                                        MessageListenerAdapter fundRaisedEvent) {
-                                                        MessageListenerAdapter premiumBoughtEvent,
-                                                        MessageListenerAdapter profileViewEvent) {
+                                                        MessageListenerAdapter fundRaisedEvent,
+                                                        MessageListenerAdapter premiumBoughtEvent) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(lettuceConnectionFactory);
         container.addMessageListener(likeEvent, likeTopic());
@@ -146,6 +140,5 @@ public class RedisConfig {
         container.addMessageListener(premiumBoughtEvent, premiumBoughtTopic());
 
         return container;
-    }
     }
 }
