@@ -1,31 +1,32 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.PremiumBoughtEventListener;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 @Configuration
-public class PremiumBoughtEventRedisConfig {
-    private final ChannelTopic topic;
-    private final MessageListenerAdapter adapter;
+public class PremiumBoughtEventRedisConfig extends AbstractEventRedisConfig {
 
     public PremiumBoughtEventRedisConfig(
             @Value("${spring.data.redis.channels.premium-channel.name}") String topicName,
-            PremiumBoughtEventListener eventListener
+            @Qualifier("premiumBoughtEventListener") MessageListener eventListener
     ) {
-        this.topic = new ChannelTopic(topicName);
-        this.adapter =  new MessageListenerAdapter(eventListener);
+        super(topicName, eventListener);
     }
     @Bean(name = "premiumChannel")
-    public ChannelTopic premiumChannel() {
+    @Override
+    public ChannelTopic getTopic() {
         return topic;
     }
 
     @Bean(name = "premiumAdapter")
-    public MessageListenerAdapter premiumAdapter() {
+    @Override
+    public MessageListenerAdapter getAdapter() {
         return adapter;
     }
 }

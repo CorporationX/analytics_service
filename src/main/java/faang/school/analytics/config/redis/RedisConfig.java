@@ -1,10 +1,8 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.FollowerEventListener;
-import faang.school.analytics.listener.PremiumBoughtEventListener;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +11,8 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+
+import java.util.List;
 
 @Setter
 @Configuration
@@ -34,11 +34,15 @@ public class RedisConfig {
     @Bean
     RedisMessageListenerContainer redisMessageListenerContainer(
             FollowerEventListener followerListener,
-            @Qualifier("followerEventTopic") ChannelTopic followerEventTopic) {
+            @Qualifier("followerEventTopic") ChannelTopic followerEventTopic,
+            List<EventRedisConfig> eventRedisConfigs
+    ) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener, followerEventTopic);
-        container.addMessageListener(premiumConfig.premiumAdapter(), premiumConfig.premiumChannel());
+        eventRedisConfigs.forEach(
+            config -> container.addMessageListener(config.getAdapter(), config.getTopic())
+        );
         return container;
     }
 

@@ -11,7 +11,9 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Service;
 
-@Service
+import java.io.IOException;
+
+@Service("premiumBoughtEventListener")
 @Slf4j
 public class PremiumBoughtEventListener extends AbstractEventListener<PremiumBoughtEvent> implements MessageListener {
     public PremiumBoughtEventListener(ObjectMapper objectMapper, AnalyticsEventMapper analyticsEventMapper,
@@ -24,9 +26,9 @@ public class PremiumBoughtEventListener extends AbstractEventListener<PremiumBou
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
-            PremiumBoughtEvent event = objectMapper.readValue(message.toString(), PremiumBoughtEvent.class);
+            PremiumBoughtEvent event = objectMapper.readValue(message.getBody(), PremiumBoughtEvent.class);
             sendAnalytics(event);
-        } catch (JsonProcessingException e) {
+        } catch (IOException e ) {
             log.error("Message could not be parsed: {}", message, e);
             throw new RuntimeException(e);
         }
