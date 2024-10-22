@@ -28,6 +28,7 @@ spring:
         like: like_channel
         ad-bought: ad_bought_channel
         fund-raised: fund_raised_channel
+        project-view: project_view_channel
 
 server:
   port: 8086
