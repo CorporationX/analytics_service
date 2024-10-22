@@ -3,11 +3,11 @@ name: CI/CD pipeline for analytic_service
 on:
   pull_request:
     branches:
-      - feature-ci-pipeline
+      - werewolf-master-stream6
 
   push:
     branches:
-      - feature-ci-pipeline
+      - werewolf-master-stream6
 
 jobs:
   job_unit_tests:
@@ -74,7 +74,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: job_unit_tests
-    if: startsWith(github.ref, 'refs/heads/feature-ci-pipeline')
+    if: startsWith(github.ref, 'refs/heads/werewolf-master-stream6')
     steps:
       - name: Download jar file
         uses: actions/download-artifact@v4
