@@ -18,7 +18,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/analytics")
+@RequestMapping("/v1/analytics")
 @Tag(name = "Analytics Controller",
         description = "Gives capability to get various analytics from other services")
 public class AnalyticsEventController {

@@ -21,8 +21,11 @@ spring:
     redis:
       port: 6379
       host: localhost
-      channels:
-        profileViewEvent: profile_view_channel
+      channel:
+        profileView: profile_view_channel
+        projectViewChannel: project_view_channel
+        likeEvents: like_event_channel
+        mentorship-request-topic: mentorship_request_topic
         postViewEvent: post_view_channel
 
 server:

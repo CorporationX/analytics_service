@@ -11,12 +11,14 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "spring.data.redis")
 public class RedisProperties {
 
-    private Channels channels;
+    private Channel channel;
 
     @Getter
     @Setter
-    protected static class Channels {
-        private String profileViewEvent;
+    protected static class Channel {
+        private String profileView;
+        private String projectViewChannel;
+        private String likeEvents;
         private String postViewEvent;
     }
 }
