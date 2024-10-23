@@ -45,7 +45,7 @@ public class LikeEventListenerTest {
     void setUp() {
         likeEventDto = LikeEventDto.builder()
                 .postAuthorId(POST_AUTHOR_ID_ONE)
-                .likerId(LIKER_ID)
+                .likeAuthorId(LIKER_ID)
                 .eventType(EventType.POST_LIKE)
                 .build();
         message = mock(Message.class);

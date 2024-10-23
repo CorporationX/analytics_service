@@ -2,7 +2,7 @@ package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.like.LikeEventListener;
 import faang.school.analytics.listener.project.ProjectViewEventListener;
-import faang.school.analytics.listener.PostViewEventListener;
+import faang.school.analytics.listener.post.PostViewEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,13 +40,13 @@ public class RedisConfiguration {
     }
 
     @Bean
-    public ChannelTopic likeEventsTopic() {
-        return new ChannelTopic(redisProperties.getChannel().getLikeEvents());
+    MessageListenerAdapter projectViewEvent(ProjectViewEventListener projectViewEventListener) {
+        return new MessageListenerAdapter(projectViewEventListener);
     }
 
     @Bean
-    MessageListenerAdapter projectViewEvent(ProjectViewEventListener projectViewEventListener) {
-        return new MessageListenerAdapter(projectViewEventListener);
+    public ChannelTopic likeEventsTopic() {
+        return new ChannelTopic(redisProperties.getChannel().getLikeEvents());
     }
 
     @Bean
@@ -55,7 +55,7 @@ public class RedisConfiguration {
     }
     @Bean
     public ChannelTopic postViewEventTopic() {
-        return new ChannelTopic(redisProperties.getChannels().getPostViewEvent());
+        return new ChannelTopic(redisProperties.getChannel().getPostViewEvent());
     }
 
     @Bean

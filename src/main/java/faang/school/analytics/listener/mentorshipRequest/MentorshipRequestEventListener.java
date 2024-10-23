@@ -1,9 +1,9 @@
-package faang.school.analytics.listener;
+package faang.school.analytics.listener.mentorshipRequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.analytics_event.AnalyticsEventDto;
 import faang.school.analytics.dto.message.MentorshipRequestMessage;
-import faang.school.analytics.mapper.MentorshipRequestMapper;
+import faang.school.analytics.mapper.mentorshipRequest.MentorshipRequestMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.analytics_event.AnalyticsEventService;
