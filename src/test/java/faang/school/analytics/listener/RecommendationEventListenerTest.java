@@ -46,7 +46,6 @@ public class RecommendationEventListenerTest {
         recommendationEventDto = RecommendationEventDto.builder().build();
         String timeToString = LocalDateTime.now().toString();
         String json = "{\"authorId\":1, \"receiverId\":2,\"recommendedAt\":" + timeToString + "}";
-        //message = mock(Message.class);
         when(message.getBody()).thenReturn(json.getBytes(StandardCharsets.UTF_8));
     }
     @Test
