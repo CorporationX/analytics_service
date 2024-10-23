@@ -42,6 +42,8 @@ spring:
           name: mentorship-request-channel
         fund-raised-channel:
           name: fund-raised-channel
+        ad-bought-channel:
+          name: ad_bought_channel
 
 server:
   port: 8086
