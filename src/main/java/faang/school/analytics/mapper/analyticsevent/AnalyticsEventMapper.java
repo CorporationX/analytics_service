@@ -2,10 +2,14 @@ package faang.school.analytics.mapper.analyticsevent;
 
 import faang.school.analytics.model.dto.AnalyticsEventDto;
 import faang.school.analytics.model.entity.AnalyticsEvent;
+import faang.school.analytics.model.event.AdBoughtEvent;
 import faang.school.analytics.model.event.CommentEvent;
 import faang.school.analytics.model.event.FollowerEvent;
+import faang.school.analytics.model.event.FundRaisedEvent;
 import faang.school.analytics.model.event.GoalCompletedEvent;
 import faang.school.analytics.model.event.LikeEvent;
+import faang.school.analytics.model.event.MentorshipRequestedEvent;
+import faang.school.analytics.model.event.PostViewEvent;
 import faang.school.analytics.model.event.PremiumBoughtEvent;
 import faang.school.analytics.model.event.ProjectViewEvent;
 import org.mapstruct.Mapper;

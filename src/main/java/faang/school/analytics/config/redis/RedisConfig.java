@@ -1,7 +1,6 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.AdBoughtEventListener;
-import faang.school.analytics.listener.AdBoughtEventListener;
 import faang.school.analytics.listener.CommentEventListener;
 import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.FundRaisedEventListener;
