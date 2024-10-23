@@ -13,6 +13,6 @@ public class RedisProperties {
     @Value("${spring.data.redis.host}")
     private String host;
 
-    @Value("${spring.data.redis.channels.post-service.post-view-channel.name}")
+    @Value("${spring.data.redis.channels.post-service.post_view_event_channel.name}")
     private String postViewChannelName;
 }

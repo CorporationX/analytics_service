@@ -29,7 +29,7 @@ spring:
             name: comment_event_channel
           post-like-channel:
             name: post_like_event_channel
-          post_view_channel:
+          post_view_event_channel:
             name: post_view
 
 server:
