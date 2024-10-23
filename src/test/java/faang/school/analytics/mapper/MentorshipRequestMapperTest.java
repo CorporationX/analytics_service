@@ -1,6 +1,7 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.message.MentorshipRequestMessage;
+import faang.school.analytics.mapper.mentorshipRequest.MentorshipRequestMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

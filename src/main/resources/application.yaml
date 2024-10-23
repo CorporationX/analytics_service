@@ -26,6 +26,7 @@ spring:
         projectViewChannel: project_view_channel
         likeEvents: like_post_channel
         mentorshipRequestTopic: mentorship_request_topic
+        postViewEvent: post_view_channel
 
 server:
   port: 8086

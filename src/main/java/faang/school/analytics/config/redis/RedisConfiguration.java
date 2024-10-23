@@ -1,7 +1,8 @@
 package faang.school.analytics.config.redis;
 
-import faang.school.analytics.listener.MentorshipRequestEventListener;
+import faang.school.analytics.listener.mentorshipRequest.MentorshipRequestEventListener;
 import faang.school.analytics.listener.like.LikeEventListener;
+import faang.school.analytics.listener.post.PostViewEventListener;
 import faang.school.analytics.listener.project.ProjectViewEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,12 +26,14 @@ public class RedisConfiguration {
     @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter projectViewEvent,
                                                  MessageListenerAdapter likeEventAdapter,
-                                                 MessageListenerAdapter mentorshipRequestListener) {
+                                                 MessageListenerAdapter mentorshipRequestListener,
+                                                 MessageListenerAdapter postViewEvent) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(projectViewEvent, projectViewEventTopic());
         container.addMessageListener(likeEventAdapter, likeEventsTopic());
         container.addMessageListener(mentorshipRequestListener, mentorshipRequestTopic());
+        container.addMessageListener(postViewEvent, postViewEventTopic());
         return container;
     }
 
@@ -40,13 +43,13 @@ public class RedisConfiguration {
     }
 
     @Bean
-    public ChannelTopic likeEventsTopic() {
-        return new ChannelTopic(redisProperties.getChannel().getLikeEvents());
+    MessageListenerAdapter projectViewEvent(ProjectViewEventListener projectViewEventListener) {
+        return new MessageListenerAdapter(projectViewEventListener);
     }
 
     @Bean
-    MessageListenerAdapter projectViewEvent(ProjectViewEventListener projectViewEventListener) {
-        return new MessageListenerAdapter(projectViewEventListener);
+    public ChannelTopic likeEventsTopic() {
+        return new ChannelTopic(redisProperties.getChannel().getLikeEvents());
     }
 
     @Bean
@@ -62,5 +65,15 @@ public class RedisConfiguration {
     @Bean
     public MessageListenerAdapter mentorshipRequestListener(MentorshipRequestEventListener mentorshipRequestEventListener) {
         return new MessageListenerAdapter(mentorshipRequestEventListener);
+    }
+
+    @Bean
+    public ChannelTopic postViewEventTopic() {
+        return new ChannelTopic(redisProperties.getChannel().getPostViewEvent());
+    }
+
+    @Bean
+    MessageListenerAdapter postViewEvent(PostViewEventListener postViewEventListener) {
+        return new MessageListenerAdapter(postViewEventListener);
     }
 }
