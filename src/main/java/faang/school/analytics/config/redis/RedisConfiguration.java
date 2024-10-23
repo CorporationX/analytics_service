@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.MentorshipRequestEventListener;
 import faang.school.analytics.listener.like.LikeEventListener;
 import faang.school.analytics.listener.project.ProjectViewEventListener;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +24,13 @@ public class RedisConfiguration {
 
     @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter projectViewEvent,
-                                                 MessageListenerAdapter likeEventAdapter) {
+                                                 MessageListenerAdapter likeEventAdapter,
+                                                 MessageListenerAdapter mentorshipRequestListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(projectViewEvent, projectViewEventTopic());
         container.addMessageListener(likeEventAdapter, likeEventsTopic());
+        container.addMessageListener(mentorshipRequestListener, mentorshipRequestTopic());
         return container;
     }
 
@@ -49,5 +52,15 @@ public class RedisConfiguration {
     @Bean
     public MessageListenerAdapter likeEventAdapter(LikeEventListener likeEventListener) {
         return new MessageListenerAdapter(likeEventListener);
+    }
+
+    @Bean
+    public ChannelTopic mentorshipRequestTopic() {
+        return new ChannelTopic(redisProperties.getChannel().getMentorshipRequestTopic());
+    }
+
+    @Bean
+    public MessageListenerAdapter mentorshipRequestListener(MentorshipRequestEventListener mentorshipRequestEventListener) {
+        return new MessageListenerAdapter(mentorshipRequestEventListener);
     }
 }
