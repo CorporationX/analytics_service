@@ -3,7 +3,7 @@ package faang.school.analytics.listener;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.analyticsevent.AnalyticsEventMapper;
-import faang.school.analytics.model.event.FollowerEvent;
+import faang.school.analytics.model.event.GoalCompletedEvent;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.service.impl.analyticsevent.AnalyticsEventServiceImpl;
@@ -18,7 +18,7 @@ import org.springframework.data.redis.connection.Message;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class FollowerEventListenerTest {
+class GoalCompletedEventListenerTest {
 
     @Mock
     private AnalyticsEventServiceImpl analyticsEventService;
@@ -41,15 +41,15 @@ class FollowerEventListenerTest {
     private AnalyticsEventMapper analyticsEventMapper;
 
     @InjectMocks
-    private FollowerEventListener followerEventListener;
+    private GoalCompletedEventListener goalCompletedEventListener;
 
     private Message message;
-    private FollowerEvent followerEventDto;
+    private GoalCompletedEvent goalCompletedEventDto;
 
     @BeforeEach
     void setUp() {
-        followerEventDto = FollowerEvent.builder().build();
-        String json = "{\"followerId\":1, \"followeeId\":2}";
+        goalCompletedEventDto = GoalCompletedEvent.builder().build();
+        String json = "{\"userId\":1, \"goalId\":2}";
         message = mock(Message.class);
         when(message.getBody()).thenReturn(json.getBytes(StandardCharsets.UTF_8));
     }
@@ -57,24 +57,25 @@ class FollowerEventListenerTest {
     @Test
     void onMessage_shouldHandleEventSuccessfully() throws IOException {
         // given
-        AnalyticsEvent analyticsEvent = new AnalyticsEvent();
-        when(objectMapper.readValue(any(byte[].class), eq(FollowerEvent.class))).thenReturn(followerEventDto);
-        when(analyticsEventMapper.toEntity(followerEventDto)).thenReturn(analyticsEvent);
+        var analyticsEvent = new AnalyticsEvent();
+        when(objectMapper.readValue(any(byte[].class), eq(GoalCompletedEvent.class))).thenReturn(goalCompletedEventDto);
+        when(analyticsEventMapper.toEntity(goalCompletedEventDto)).thenReturn(analyticsEvent);
         // when
-        followerEventListener.onMessage(message, null);
+        goalCompletedEventListener.onMessage(message, null);
         // then
-        verify(analyticsEventMapper, times(1)).toEntity(followerEventDto);
+        verify(analyticsEventMapper, times(1)).toEntity(goalCompletedEventDto);
         verify(analyticsEventService, times(1)).saveEvent(analyticsEvent);
-        verify(analyticsEventService).saveEvent(argThat(event -> event.getEventType() == EventType.FOLLOWER));
+        verify(analyticsEventService).saveEvent(argThat(event -> event.getEventType() == EventType.GOAL_COMPLETED));
     }
 
     @Test
     void onMessage_shouldThrowRuntimeException_whenDeserializationFails() throws IOException {
         // given
-        when(objectMapper.readValue(any(byte[].class), eq(FollowerEvent.class)))
-                .thenThrow(new JsonProcessingException("Test exception") {});
+        when(objectMapper.readValue(any(byte[].class), eq(GoalCompletedEvent.class)))
+                .thenThrow(new JsonProcessingException("Test exception") {
+                });
         // when & then
-        assertThrows(RuntimeException.class, () -> followerEventListener.onMessage(message, null));
+        assertThrows(RuntimeException.class, () -> goalCompletedEventListener.onMessage(message, null));
         verify(analyticsEventService, never()).saveEvent(any());
     }
 }

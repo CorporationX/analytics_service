@@ -1,6 +1,6 @@
 package faang.school.analytics.controller.analyticsevent;
 
-import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventDto;
+import faang.school.analytics.model.dto.AnalyticsEventDto;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.model.enums.Interval;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -68,7 +68,7 @@ class AnalyticsEventControllerTest {
                         jsonPath("$[0].receiverId").value(2),
                         jsonPath("$[0].actorId").value(3),
                         jsonPath("$[0].eventType").value("PROFILE_VIEW"),
-                        jsonPath("$[0].receivedAt").value("2024-06-01 15:30:00")
+                        jsonPath("$[0].receivedAt").value("2024-06-01T15:30:00")
                 );
 
     }

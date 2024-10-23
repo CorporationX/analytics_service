@@ -21,6 +21,7 @@ class AnalyticsEventControllerIT extends IntegrationTestBase {
 
     @Autowired
     AnalyticsEventControllerIT(AnalyticsEventController analyticsEventController) {
+        super();
         this.analyticsEventController = analyticsEventController;
     }
 

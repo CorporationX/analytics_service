@@ -2,8 +2,8 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.analyticsevent.AnalyticsEventMapperImpl;
-import faang.school.analytics.model.event.LikeEvent;
 import faang.school.analytics.model.entity.AnalyticsEvent;
+import faang.school.analytics.model.event.PostViewEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +25,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @ExtendWith(MockitoExtension.class)
-class LikeEventListenerTest {
+class PostViewEventListenerTest {
+
     @Mock
     private AnalyticsEventService analyticsEventService;
 
@@ -39,26 +40,26 @@ class LikeEventListenerTest {
     private Message message;
 
     @InjectMocks
-    private LikeEventListener likeEventListener;
-    private LikeEvent likeEvent;
+    private PostViewEventListener postEventListener;
+
+    private PostViewEvent postEvent;
 
     @BeforeEach
     void setUp() {
-        likeEvent = LikeEvent.builder().build();
+        postEvent = PostViewEvent.builder().build();
     }
 
     @Test
-    @DisplayName("On Message Test - Success")
-    void testOnMessage() throws IOException {
+    void testOnMessageOk() throws IOException {
         byte[] messageBody = "{\"postId\":123,\"authorId\":456,\"userId\":789,\"receivedAt\":\"2024-08-16T12:00:00\\\"}".getBytes();
         doReturn(messageBody).when(message).getBody();
-        doReturn(likeEvent).when(objectMapper).readValue(messageBody, LikeEvent.class);
+        doReturn(postEvent).when(objectMapper).readValue(messageBody, PostViewEvent.class);
 
-        likeEventListener.onMessage(message, null);
+        postEventListener.onMessage(message, null);
 
-        verify(objectMapper).readValue(messageBody, LikeEvent.class);
+        verify(objectMapper).readValue(messageBody, PostViewEvent.class);
         verify(analyticsEventService).saveEvent(any(AnalyticsEvent.class));
-        verify(analyticsEventMapper).toEntity(likeEvent);
+        verify(analyticsEventMapper).toEntity(postEvent);
     }
 
     @Test
@@ -68,11 +69,11 @@ class LikeEventListenerTest {
         doReturn(messageBody).when(message).getBody();
 
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> likeEventListener.onMessage(message, null));
+                .isThrownBy(() -> postEventListener.onMessage(message, null));
 
-        verify(objectMapper).readValue(messageBody, LikeEvent.class);
+        verify(objectMapper).readValue(messageBody, PostViewEvent.class);
         verify(analyticsEventService, never()).saveEvent(any(AnalyticsEvent.class));
-        verify(analyticsEventMapper, never()).toEntity(likeEvent);
+        verify(analyticsEventMapper, never()).toEntity(postEvent);
         verifyNoMoreInteractions(objectMapper, analyticsEventService);
     }
 }

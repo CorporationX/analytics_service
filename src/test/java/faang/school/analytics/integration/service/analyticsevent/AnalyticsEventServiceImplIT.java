@@ -1,7 +1,7 @@
 package faang.school.analytics.integration.service.analyticsevent;
 
 import faang.school.analytics.integration.IntegrationTestBase;
-import faang.school.analytics.model.dto.analyticsevent.AnalyticsEventDto;
+import faang.school.analytics.model.dto.AnalyticsEventDto;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.model.enums.Interval;
@@ -22,6 +22,7 @@ public class AnalyticsEventServiceImplIT extends IntegrationTestBase {
 
     @Autowired
     public AnalyticsEventServiceImplIT(AnalyticsEventService analyticsEventService, AnalyticsEventRepository analyticsEventRepository) {
+        super();
         this.analyticsEventService = analyticsEventService;
         this.analyticsEventRepository = analyticsEventRepository;
     }

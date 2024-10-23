@@ -8,6 +8,7 @@ public enum EventType {
     POST_VIEW,
     POST_LIKE,
     POST_COMMENT,
+    POST_AD_BOUGHT,
     SKILL_RECEIVED,
     RECOMMENDATION_RECEIVED,
     ADDED_TO_FAVOURITES,
@@ -16,7 +17,10 @@ public enum EventType {
     GOAL_COMPLETED,
     ACHIEVEMENT_RECEIVED,
     PROFILE_APPEARED_IN_SEARCH,
-    PROJECT_APPEARED_IN_SEARCH;
+    PROJECT_APPEARED_IN_SEARCH,
+    PREMIUM_BOUGHT,
+    MENTORSHIP_REQUEST,
+    FUND_RAISED;
 
     public static EventType of(int type) {
         for (EventType eventType : EventType.values()) {

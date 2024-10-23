@@ -30,6 +30,22 @@ spring:
           name: like-channel
         follower-event-channel:
           name: follower_event_channel
+        goal-completed-event-channel:
+          name: goal_completed_event_channel
+        comment-event-channel:
+          name: comment_event_channel
+        project-view-channel:
+          name: project_view_channel
+        premium-bought-channel:
+          name: premium_bought_channel
+        post-view-channel:
+          name: post_view_channel
+        mentorship-request-channel:
+          name: mentorship-request-channel
+        fund-raised-channel:
+          name: fund-raised-channel
+        ad-bought-channel:
+          name: ad_bought_channel
 
 server:
   port: 8086
