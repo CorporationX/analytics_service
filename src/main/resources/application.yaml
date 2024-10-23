@@ -36,6 +36,12 @@ spring:
           name: project_view_channel
         premium-bought-channel:
           name: premium_bought_channel
+        post-view-channel:
+          name: post_view_channel
+        mentorship-request-channel:
+          name: mentorship-request-channel
+        fund-raised-channel:
+          name: fund-raised-channel
         ad-bought-channel:
           name: ad_bought_channel
 

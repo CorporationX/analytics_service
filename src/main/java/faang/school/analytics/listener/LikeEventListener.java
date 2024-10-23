@@ -21,8 +21,8 @@ public class LikeEventListener extends AbstractEventListener<LikeEvent> implemen
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        LikeEvent dto = handleEvent(message, LikeEvent.class);
-        AnalyticsEvent entity = analyticsEventMapper.toEntity(dto);
+        LikeEvent likeEvent = handleEvent(message, LikeEvent.class);
+        AnalyticsEvent entity = analyticsEventMapper.toEntity(likeEvent);
         entity.setEventType(EventType.POST_LIKE);
         analyticsEventService.saveEvent(entity);
     }

@@ -22,6 +22,7 @@ public class AnalyticsEventServiceImplIT extends IntegrationTestBase {
 
     @Autowired
     public AnalyticsEventServiceImplIT(AnalyticsEventService analyticsEventService, AnalyticsEventRepository analyticsEventRepository) {
+        super();
         this.analyticsEventService = analyticsEventService;
         this.analyticsEventRepository = analyticsEventRepository;
     }
