@@ -19,5 +19,6 @@ public class RedisProperties {
         private String profileView;
         private String projectViewChannel;
         private String likeEvents;
+        private String mentorshipRequestTopic;
     }
 }
