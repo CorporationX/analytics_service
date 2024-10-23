@@ -1,5 +1,6 @@
 package faang.school.analytics.mapper;
 
+import faang.school.analytics.dto.AdBoughtEvent;
 import faang.school.analytics.dto.LikeEvent;
 import faang.school.analytics.listener.event.ProfileVeiwEvent;
 import faang.school.analytics.listener.event.SearchAppearanceEvent;
@@ -20,4 +21,6 @@ public interface AnalyticsEventMapper {
     AnalyticsEvent toEntity(SearchAppearanceEvent searchAppearanceEvent, String eventType);
 
     AnalyticsEvent toEntity(ProfileVeiwEvent profileVeiwEvent, String eventType);
+
+    AnalyticsEvent toEntity(AdBoughtEvent adBoughtEvent, String eventType);
 }
