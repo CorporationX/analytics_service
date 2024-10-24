@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-public class ProfileViewEvent extends AbstractEventDto {
+public class ProfileViewEventDto extends AbstractEventDto {
 
     @Override
     @JsonProperty("userId")

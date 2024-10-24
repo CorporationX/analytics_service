@@ -4,8 +4,8 @@ import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.GoalEventListener;
 import faang.school.analytics.listener.PostLikeEventListener;
 import faang.school.analytics.listener.ProfileViewEventListener;
+import faang.school.analytics.listener.ProjectViewEventListener;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +13,8 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+
+import java.util.Map;
 
 @Setter
 @Configuration
@@ -33,33 +35,38 @@ public class RedisConfig {
         return new MessageListenerAdapter(goalEventListener);
     }
 
-    @Bean(value = "profileViewListener")
-    public MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
+    @Bean
+    MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
         return new MessageListenerAdapter(profileViewEventListener);
     }
 
-    @Bean(value = "postLikeListener")
-    public MessageListenerAdapter postLikeListener(PostLikeEventListener postLikeEventListener) {
+    @Bean
+    MessageListenerAdapter projectViewListener(ProjectViewEventListener projectViewEventListener) {
+        return new MessageListenerAdapter(projectViewEventListener);
+    }
+
+    @Bean
+    MessageListenerAdapter postLikeListener(PostLikeEventListener postLikeEventListener) {
         return new MessageListenerAdapter(postLikeEventListener);
     }
 
     @Bean
     RedisMessageListenerContainer redisMessageListenerContainer(
-            FollowerEventListener followerListener,
-            @Qualifier("profileViewListener") MessageListenerAdapter profileViewListener,
-            @Qualifier("profileViewChannel") ChannelTopic profileViewChannel,
-            @Qualifier("followerEventTopic") ChannelTopic followerEventTopic,
-            GoalEventListener goalListener,
-            @Qualifier("goalEventTopic") ChannelTopic goalEventTopic,
-            @Qualifier("postLikeChannel") ChannelTopic postLikeChannel,
-            @Qualifier("postLikeListener") MessageListenerAdapter postLikeListener) {
+            Map<String, MessageListenerAdapter> listenerAdapters,
+            Map<String, ChannelTopic> channelTopics) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(followerListener, followerEventTopic);
-        container.addMessageListener(goalListener, goalEventTopic);
-        container.addMessageListener(profileViewListener, profileViewChannel);
-        container.addMessageListener(postLikeListener, postLikeChannel);
+        container.addMessageListener(listenerAdapters.get("followerListener"), channelTopics.get("followerEventTopic"));
+        container.addMessageListener(listenerAdapters.get("goalListener"), channelTopics.get("goalEventTopic"));
+        container.addMessageListener(listenerAdapters.get("profileViewListener"), channelTopics.get("profileViewTopic"));
+        container.addMessageListener(listenerAdapters.get("projectViewListener"), channelTopics.get("projectViewEventTopic"));
+        container.addMessageListener(listenerAdapters.get("postLikeListener"), channelTopics.get("postLikeTopic"));
         return container;
+    }
+
+    @Bean(value = "projectViewEventTopic")
+    ChannelTopic projectViewEventTopic(@Value("${spring.data.redis.channels.project-view-channel.name}") String name) {
+        return new ChannelTopic(name);
     }
 
     @Bean(value = "followerEventTopic")
@@ -72,14 +79,14 @@ public class RedisConfig {
         return new ChannelTopic(name);
     }
 
-    @Bean(value = "profileViewChannel")
-    public ChannelTopic profileViewChannel(
+    @Bean(value = "profileViewTopic")
+    ChannelTopic profileViewTopic(
             @Value("${spring.data.redis.channels.profile-view-channel.name}") String profileViewChannelName) {
         return new ChannelTopic(profileViewChannelName);
     }
 
-    @Bean(value = "postLikeChannel")
-    public ChannelTopic postLikeChannel(
+    @Bean(value = "postLikeTopic")
+    ChannelTopic postLikeTopic(
             @Value("${spring.data.redis.channels.like-channel.name}") String postLikeChannelName) {
         return new ChannelTopic(postLikeChannelName);
     }
