@@ -10,7 +10,7 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
+@Component("profileViewEventListener")
 public class ProfileViewEventListener extends AbstractEventListener<ProfileViewEventDto> {
 
     public ProfileViewEventListener(ObjectMapper objectMapper,

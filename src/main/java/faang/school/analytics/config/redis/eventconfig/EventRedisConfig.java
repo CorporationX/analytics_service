@@ -1,4 +1,4 @@
-package faang.school.analytics.config.redis;
+package faang.school.analytics.config.redis.eventconfig;
 
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.listener.ChannelTopic;

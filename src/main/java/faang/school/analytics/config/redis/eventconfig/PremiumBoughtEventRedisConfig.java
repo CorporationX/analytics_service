@@ -1,6 +1,5 @@
-package faang.school.analytics.config.redis;
+package faang.school.analytics.config.redis.eventconfig;
 
-import faang.school.analytics.listener.PremiumBoughtEventListener;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

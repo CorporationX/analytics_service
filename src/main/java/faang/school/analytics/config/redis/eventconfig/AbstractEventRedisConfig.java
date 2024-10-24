@@ -1,7 +1,5 @@
-package faang.school.analytics.config.redis;
+package faang.school.analytics.config.redis.eventconfig;
 
-import faang.school.analytics.listener.PremiumBoughtEventListener;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
