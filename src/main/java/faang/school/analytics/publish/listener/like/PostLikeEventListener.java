@@ -27,7 +27,6 @@ public class PostLikeEventListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
-            System.out.println(message.toString());
             PostLikeEventDto postLikeEventDto = objectMapper.readValue(message.getBody(), PostLikeEventDto.class);
             analyticsEventService.saveEvent(likeMapper.toAnalyticsEvent(postLikeEventDto));
             log.info("{}: Message saved: {}", redisProperties.getPostLikeEventChannelName(), message.toString());
