@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@Component
+@Component("goalEventListener")
 @Slf4j
 public class GoalEventListener extends AbstractEventListener<GoalEventDto> implements MessageListener {
 

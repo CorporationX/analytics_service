@@ -32,8 +32,8 @@ spring:
           name: project_view_channel
         like-channel:
           name: like_channel
-
-
+        premium-channel:
+          name: premium_channel
 
 server:
   port: 8086

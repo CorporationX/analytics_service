@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("projectViewEventListener")
 @Slf4j
 public class ProjectViewEventListener extends AbstractEventListener<ProjectViewEventDto> {
 

@@ -10,7 +10,7 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
+@Component("postLikeEventListener")
 public class PostLikeEventListener extends AbstractEventListener<LikeEventDto> {
 
     public PostLikeEventListener(ObjectMapper objectMapper,
