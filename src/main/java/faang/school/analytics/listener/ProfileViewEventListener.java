@@ -1,7 +1,7 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.dto.event.ProfileViewEvent;
+import faang.school.analytics.dto.event.ProfileViewEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ProfileViewEventListener extends AbstractEventListener<ProfileViewEvent> {
+public class ProfileViewEventListener extends AbstractEventListener<ProfileViewEventDto> {
 
     public ProfileViewEventListener(ObjectMapper objectMapper,
                                     AnalyticsEventMapper analyticsEventMapper,
@@ -26,8 +26,8 @@ public class ProfileViewEventListener extends AbstractEventListener<ProfileViewE
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        ProfileViewEvent profileViewEvent = handleEvent(message, ProfileViewEvent.class);
-        log.debug("Received profile view event: {}", profileViewEvent);
-        sendAnalytics(profileViewEvent);
+        ProfileViewEventDto profileViewEventDto = handleEvent(message, ProfileViewEventDto.class);
+        log.debug("Received profile view event: {}", profileViewEventDto);
+        sendAnalytics(profileViewEventDto);
     }
 }

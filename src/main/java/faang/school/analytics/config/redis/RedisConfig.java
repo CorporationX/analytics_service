@@ -45,8 +45,8 @@ public class RedisConfig {
         return new MessageListenerAdapter(projectViewEventListener);
     }
 
-    @Bean(value = "postLikeListener")
-    public MessageListenerAdapter postLikeListener(PostLikeEventListener postLikeEventListener) {
+    @Bean
+    MessageListenerAdapter postLikeListener(PostLikeEventListener postLikeEventListener) {
         return new MessageListenerAdapter(postLikeEventListener);
     }
 
@@ -58,9 +58,9 @@ public class RedisConfig {
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(listenerAdapters.get("followerListener"), channelTopics.get("followerEventTopic"));
         container.addMessageListener(listenerAdapters.get("goalListener"), channelTopics.get("goalEventTopic"));
-        container.addMessageListener(listenerAdapters.get("profileViewListener"), channelTopics.get("profileViewChannel"));
+        container.addMessageListener(listenerAdapters.get("profileViewListener"), channelTopics.get("profileViewTopic"));
         container.addMessageListener(listenerAdapters.get("projectViewListener"), channelTopics.get("projectViewEventTopic"));
-        container.addMessageListener(listenerAdapters.get("postLikeListener"), channelTopics.get("postLikeChannel"));
+        container.addMessageListener(listenerAdapters.get("postLikeListener"), channelTopics.get("postLikeTopic"));
         return container;
     }
 
@@ -79,14 +79,14 @@ public class RedisConfig {
         return new ChannelTopic(name);
     }
 
-    @Bean(value = "profileViewChannel")
-    ChannelTopic profileViewChannel(
+    @Bean(value = "profileViewTopic")
+    ChannelTopic profileViewTopic(
             @Value("${spring.data.redis.channels.profile-view-channel.name}") String profileViewChannelName) {
         return new ChannelTopic(profileViewChannelName);
     }
 
-    @Bean(value = "postLikeChannel")
-    ChannelTopic postLikeChannel(
+    @Bean(value = "postLikeTopic")
+    ChannelTopic postLikeTopic(
             @Value("${spring.data.redis.channels.like-channel.name}") String postLikeChannelName) {
         return new ChannelTopic(postLikeChannelName);
     }

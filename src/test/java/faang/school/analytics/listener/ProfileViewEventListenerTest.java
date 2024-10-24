@@ -1,7 +1,7 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.dto.event.ProfileViewEvent;
+import faang.school.analytics.dto.event.ProfileViewEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -41,51 +41,51 @@ public class ProfileViewEventListenerTest {
     private ProfileViewEventListener profileViewEventListener;
 
     private Message message;
-    private ProfileViewEvent profileViewEvent;
+    private ProfileViewEventDto profileViewEventDto;
 
     @BeforeEach
     public void setUp() {
         String event = "{\"userId\":1,\"guestId\":2,\"viewDateTime\":\"2024-10-17T12:34:56\"}";
         message = new DefaultMessage("profile_view_channel".getBytes(), event.getBytes());
-        profileViewEvent = new ProfileViewEvent();
-        profileViewEvent.setReceiverId(1L);
-        profileViewEvent.setActorId(2L);
-        profileViewEvent.setTimestamp(LocalDateTime.of(2024, 10, 17, 12, 34, 56));
+        profileViewEventDto = new ProfileViewEventDto();
+        profileViewEventDto.setReceiverId(1L);
+        profileViewEventDto.setActorId(2L);
+        profileViewEventDto.setTimestamp(LocalDateTime.of(2024, 10, 17, 12, 34, 56));
     }
 
     @Test
     public void testHandleEventFail() {
         message = new DefaultMessage("testChannel".getBytes(), "Test".getBytes());
         try {
-            when(objectMapper.readValue(message.getBody(), ProfileViewEvent.class))
+            when(objectMapper.readValue(message.getBody(), ProfileViewEventDto.class))
                     .thenThrow(RuntimeException.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        assertThrows(RuntimeException.class, () -> profileViewEventListener.handleEvent(message, ProfileViewEvent.class));
+        assertThrows(RuntimeException.class, () -> profileViewEventListener.handleEvent(message, ProfileViewEventDto.class));
     }
 
     @Test
     public void testHandleEventSuccess() {
         try {
-            when(objectMapper.readValue(message.getBody(), ProfileViewEvent.class))
-                    .thenReturn(profileViewEvent);
+            when(objectMapper.readValue(message.getBody(), ProfileViewEventDto.class))
+                    .thenReturn(profileViewEventDto);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        ProfileViewEvent testProfileViewEvent = profileViewEventListener.handleEvent(message, ProfileViewEvent.class);
-        Assertions.assertNotNull(testProfileViewEvent);
-        Assertions.assertEquals(profileViewEvent.getReceiverId(), testProfileViewEvent.getReceiverId());
-        Assertions.assertEquals(profileViewEvent.getActorId(), testProfileViewEvent.getActorId());
-        Assertions.assertEquals(profileViewEvent.getTimestamp(), testProfileViewEvent.getTimestamp());
+        ProfileViewEventDto testProfileViewEventDto = profileViewEventListener.handleEvent(message, ProfileViewEventDto.class);
+        Assertions.assertNotNull(testProfileViewEventDto);
+        Assertions.assertEquals(profileViewEventDto.getReceiverId(), testProfileViewEventDto.getReceiverId());
+        Assertions.assertEquals(profileViewEventDto.getActorId(), testProfileViewEventDto.getActorId());
+        Assertions.assertEquals(profileViewEventDto.getTimestamp(), testProfileViewEventDto.getTimestamp());
     }
 
     @Test
     public void testSendAnalyticsSuccess() {
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(profileViewEvent);
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(profileViewEventDto);
         analyticsEvent.setEventType(EventType.PROFILE_VIEW);
-        profileViewEventListener.sendAnalytics(profileViewEvent);
+        profileViewEventListener.sendAnalytics(profileViewEventDto);
 
         verify(analyticsEventService).saveEvent(analyticsEvent);
     }

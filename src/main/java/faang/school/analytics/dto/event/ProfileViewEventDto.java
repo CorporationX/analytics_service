@@ -1,10 +1,12 @@
 package faang.school.analytics.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-public class ProjectViewEvent extends AbstractEventDto {
+@NoArgsConstructor
+public class ProfileViewEventDto extends AbstractEventDto {
 
     @Override
     @JsonProperty("userId")

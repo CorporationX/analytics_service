@@ -1,7 +1,7 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.dto.event.ProjectViewEvent;
+import faang.school.analytics.dto.event.ProjectViewEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ProjectViewEventListenerTest {
+public class ProjectViewEventDtoListenerTest {
     @Mock
     private ObjectMapper objectMapper;
 
@@ -40,51 +40,51 @@ public class ProjectViewEventListenerTest {
     private ProjectViewEventListener projectViewEventListener;
 
     private Message message;
-    private ProjectViewEvent projectViewEvent;
+    private ProjectViewEventDto projectViewEventDto;
 
     @BeforeEach
     public void setUp() {
         String event = "{\"userId\":1,\"guestId\":2,\"viewDateTime\":\"2024-10-19T14:30:50\"}";
         message = new DefaultMessage("project_view_channel".getBytes(), event.getBytes());
-        projectViewEvent = new ProjectViewEvent();
-        projectViewEvent.setReceiverId(1L);
-        projectViewEvent.setActorId(2L);
-        projectViewEvent.setTimestamp(LocalDateTime.of(2024, 10, 19, 14, 30, 50));
+        projectViewEventDto = new ProjectViewEventDto();
+        projectViewEventDto.setReceiverId(1L);
+        projectViewEventDto.setActorId(2L);
+        projectViewEventDto.setTimestamp(LocalDateTime.of(2024, 10, 19, 14, 30, 50));
     }
 
     @Test
     public void testHandleEventFail() {
         message = new DefaultMessage("testChannel".getBytes(), "Test".getBytes());
         try {
-            when(objectMapper.readValue(message.getBody(), ProjectViewEvent.class))
+            when(objectMapper.readValue(message.getBody(), ProjectViewEventDto.class))
                     .thenThrow(RuntimeException.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        assertThrows(RuntimeException.class, () -> projectViewEventListener.handleEvent(message, ProjectViewEvent.class));
+        assertThrows(RuntimeException.class, () -> projectViewEventListener.handleEvent(message, ProjectViewEventDto.class));
     }
 
     @Test
     public void testHandleEventSuccess() {
         try {
-            when(objectMapper.readValue(message.getBody(), ProjectViewEvent.class))
-                    .thenReturn(projectViewEvent);
+            when(objectMapper.readValue(message.getBody(), ProjectViewEventDto.class))
+                    .thenReturn(projectViewEventDto);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        ProjectViewEvent testProjectViewEvent = projectViewEventListener.handleEvent(message, ProjectViewEvent.class);
-        Assertions.assertNotNull(testProjectViewEvent);
-        Assertions.assertEquals(projectViewEvent.getReceiverId(), testProjectViewEvent.getReceiverId());
-        Assertions.assertEquals(projectViewEvent.getActorId(), testProjectViewEvent.getActorId());
-        Assertions.assertEquals(projectViewEvent.getTimestamp(), testProjectViewEvent.getTimestamp());
+        ProjectViewEventDto testProjectViewEventDto = projectViewEventListener.handleEvent(message, ProjectViewEventDto.class);
+        Assertions.assertNotNull(testProjectViewEventDto);
+        Assertions.assertEquals(projectViewEventDto.getReceiverId(), testProjectViewEventDto.getReceiverId());
+        Assertions.assertEquals(projectViewEventDto.getActorId(), testProjectViewEventDto.getActorId());
+        Assertions.assertEquals(projectViewEventDto.getTimestamp(), testProjectViewEventDto.getTimestamp());
     }
 
     @Test
     public void testSendAnalyticsSuccess() {
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(projectViewEvent);
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(projectViewEventDto);
         analyticsEvent.setEventType(EventType.PROJECT_VIEW);
-        projectViewEventListener.sendAnalytics(projectViewEvent);
+        projectViewEventListener.sendAnalytics(projectViewEventDto);
 
         verify(analyticsEventService).saveEvent(analyticsEvent);
     }
