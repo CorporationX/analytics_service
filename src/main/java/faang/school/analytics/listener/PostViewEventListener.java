@@ -21,7 +21,7 @@ public class PostViewEventListener extends AbstractEventListener<PostViewEventDt
     @Override
     public void onMessage(Message message, byte[] pattern) {
         PostViewEventDto event = handleEvent(message, PostViewEventDto.class);
-        log.debug("Received profile view event: {}", event);
+        log.debug("Received post view event: {}", event);
         sendAnalytics(event);
     }
 
