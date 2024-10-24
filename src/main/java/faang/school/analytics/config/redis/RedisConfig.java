@@ -27,27 +27,15 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter followerListener(FollowerEventListener followerEventListener) {
-        return new MessageListenerAdapter(followerEventListener);
-    }
-
-    @Bean
     RedisMessageListenerContainer redisMessageListenerContainer(
-            FollowerEventListener followerListener,
-            @Qualifier("followerEventTopic") ChannelTopic followerEventTopic,
             List<EventRedisConfig> eventRedisConfigs
     ) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(followerListener, followerEventTopic);
         eventRedisConfigs.forEach(
             config -> container.addMessageListener(config.getAdapter(), config.getTopic())
         );
         return container;
     }
 
-    @Bean(value = "followerEventTopic")
-    ChannelTopic followerEventTopic(@Value("${spring.data.redis.channels.follower-channel.name}") String name) {
-        return new ChannelTopic(name);
-    }
 }

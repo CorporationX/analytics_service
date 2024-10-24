@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Slf4j
-@Component
+@Component("followerEventListener")
 public class FollowerEventListener extends AbstractEventListener<FollowerEventDto> implements MessageListener {
     public FollowerEventListener(ObjectMapper objectMapper,
                                  AnalyticsEventMapper analyticsEventMapper,
