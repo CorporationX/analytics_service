@@ -5,6 +5,7 @@ import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.mapper.AnalyticsCommentEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import faang.school.analytics.service.AnalyticsEventService;
 import faang.school.analytics.util.BaseContextTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -17,6 +18,7 @@ import org.springframework.data.redis.listener.ChannelTopic;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,6 +35,9 @@ public class CommentEventListenerTest extends BaseContextTest {
     @MockBean
     private AnalyticsCommentEventMapper commentEventMapper;
 
+    @MockBean
+    private AnalyticsEventService analyticsEventService;
+
     @Captor
     ArgumentCaptor<CommentEventDto> captor;
 
@@ -46,6 +51,7 @@ public class CommentEventListenerTest extends BaseContextTest {
         String message = objectMapper.writeValueAsString(commentEventDto);
 
         when(commentEventMapper.toAnalyticsEvent(any(CommentEventDto.class))).thenReturn(new AnalyticsEvent());
+        when(analyticsEventService.saveEvent(any(AnalyticsEvent.class))).thenReturn(new AnalyticsEvent());
 
         redisTemplate.convertAndSend(commentEventTopic.getTopic(), message);
         Thread.sleep(1000);

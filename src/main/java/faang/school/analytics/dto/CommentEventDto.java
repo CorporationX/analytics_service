@@ -1,6 +1,7 @@
 package faang.school.analytics.dto;
 
 
+import faang.school.analytics.model.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,4 +25,5 @@ public class CommentEventDto {
     private Long postAuthorId;
     private String commentContent;
     private LocalDateTime receivedAt;
+    private final EventType eventType = EventType.POST_COMMENT;
 }
