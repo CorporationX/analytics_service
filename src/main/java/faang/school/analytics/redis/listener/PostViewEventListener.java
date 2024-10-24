@@ -1,7 +1,7 @@
 package faang.school.analytics.redis.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.dto.user.ProfileViewEventDto;
+import faang.school.analytics.dto.PostViewEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -12,34 +12,34 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ProfileViewEventListener extends AbstractEventListener<ProfileViewEventDto> {
+public class PostViewEventListener extends AbstractEventListener<PostViewEventDto> {
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper analyticsEventMapper;
 
-    public ProfileViewEventListener(
+    public PostViewEventListener(
             ObjectMapper objectMapper,
             AnalyticsEventService analyticsEventService,
             AnalyticsEventMapper analyticsEventMapper,
-            @Value("${spring.data.redis.channel.profile-view}") String profileViewEventChannel) {
+            @Value("${spring.data.redis.channel.post-view}") String postViewEventChannel) {
 
-        super(objectMapper, new ChannelTopic(profileViewEventChannel));
+        super(objectMapper, new ChannelTopic(postViewEventChannel));
         this.analyticsEventService = analyticsEventService;
         this.analyticsEventMapper = analyticsEventMapper;
 
-        if (profileViewEventChannel == null) {
-            throw new IllegalArgumentException("ProfileView event channel cannot be null");
+        if (postViewEventChannel == null) {
+            throw new IllegalArgumentException("PostView event channel cannot be null");
         }
     }
 
     @Override
-    public void saveEvent(ProfileViewEventDto event) {
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(event);
+    public void saveEvent(PostViewEventDto event) {
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.postViewEventDtoToAnalyticsEvent(event);
         analyticsEventService.saveEvent(analyticsEvent);
         log.info("Event saved: {}", event);
     }
 
     @Override
-    public Class<ProfileViewEventDto> getEventType() {
-        return ProfileViewEventDto.class;
+    public Class<PostViewEventDto> getEventType() {
+        return PostViewEventDto.class;
     }
 }

@@ -5,20 +5,22 @@ import faang.school.analytics.dto.user.premium.PremiumBoughtEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.Topic;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class PremiumBoughtEventListener extends AbstractEventListenerList<PremiumBoughtEventDto> {
+public class PremiumBoughtEventListener extends AbstractEventListener<PremiumBoughtEventDto> {
     private final AnalyticsEventMapper analyticsEventMapper;
     private final AnalyticsEventService analyticsEventService;
 
-    public PremiumBoughtEventListener(ObjectMapper javaTimeModuleObjectMapper,
-                                      Topic premiumBoughtEventTopic,
+    public PremiumBoughtEventListener(ObjectMapper objectMapper,
                                       AnalyticsEventService analyticsEventService,
-                                      AnalyticsEventMapper analyticsEventMapper) {
-        super(javaTimeModuleObjectMapper, premiumBoughtEventTopic);
+                                      AnalyticsEventMapper analyticsEventMapper,
+                                      @Value("${spring.data.redis.channel.premium_bought}") String premiumBoughtEventTopic) {
+        super(objectMapper, new ChannelTopic(premiumBoughtEventTopic));
         this.analyticsEventMapper = analyticsEventMapper;
         this.analyticsEventService = analyticsEventService;
     }
@@ -33,8 +35,4 @@ public class PremiumBoughtEventListener extends AbstractEventListenerList<Premiu
         return PremiumBoughtEventDto.class;
     }
 
-    @Override
-    protected String getEventTypeName() {
-        return "Premium bought events";
-    }
 }
