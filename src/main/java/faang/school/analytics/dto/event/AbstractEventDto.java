@@ -12,9 +12,9 @@ public abstract class AbstractEventDto {
     protected Long actorId;
     protected LocalDateTime timestamp;
 
-    abstract void setReceiverId(Long receiverId);
+    public abstract void setReceiverId(Long receiverId);
 
-    abstract void setActorId(Long actorId);
+    public abstract void setActorId(Long actorId);
 
-    abstract void setTimestamp(LocalDateTime timestamp);
+    public abstract void setTimestamp(LocalDateTime timestamp);
 }

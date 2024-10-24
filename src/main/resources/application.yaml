@@ -26,10 +26,14 @@ spring:
           name: profile_view_channel
         follower-channel:
           name: follower_channel
+        goal-channel:
+          name: goal_channel
+        project-view-channel:
+          name: project_view_channel
+        like-channel:
+          name: like_channel
         premium-channel:
           name: premium_channel
-
-
 
 server:
   port: 8086
