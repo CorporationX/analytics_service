@@ -1,10 +1,12 @@
 package faang.school.analytics.service.impl;
 
+import faang.school.analytics.mapper.AnalyticsCommentEventMapper;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.dto.AnalyticsEventDto;
 import faang.school.analytics.model.entity.AnalyticsEvent;
 import faang.school.analytics.model.enums.EventType;
 import faang.school.analytics.model.enums.Interval;
+import faang.school.analytics.model.event.CommentEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +24,12 @@ import java.util.stream.Stream;
 @Slf4j
 public class AnalyticsEventServiceImpl implements AnalyticsEventService {
 
-    private final AnalyticsEventRepository analyticsEventRepository;
+    private final AnalyticsEventRepository repository;
     private final AnalyticsEventMapper mapper;
 
     @Transactional
     public void saveEvent(AnalyticsEvent event) {
-        analyticsEventRepository.save(event);
+        repository.save(event);
         log.info("Saved event: {}", event);
     }
 
@@ -37,7 +39,7 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
                                                 Interval interval,
                                                 LocalDateTime from,
                                                 LocalDateTime to) {
-        Stream<AnalyticsEvent> events = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
+        Stream<AnalyticsEvent> events = repository.findByReceiverIdAndEventType(receiverId, eventType);
         LocalDateTime startDate;
         if (interval != null) {
             startDate = Interval.getFromDate(interval);

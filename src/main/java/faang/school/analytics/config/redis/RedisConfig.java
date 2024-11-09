@@ -1,28 +1,22 @@
-package faang.school.analytics.config;
+package faang.school.analytics.config.redis;
 
-import faang.school.analytics.listener.AdBoughtEventListener;
-import faang.school.analytics.listener.FundRaisedEventListener;
-import faang.school.analytics.listener.LikeEventListener;
-import faang.school.analytics.listener.PostViewEventListener;
-import faang.school.analytics.listener.PremiumBoughtEventListener;
-import faang.school.analytics.listener.ProfileViewEventListener;
-import faang.school.analytics.listener.ProjectViewEventListener;
-import faang.school.analytics.listener.RecommendationEventListener;
-import faang.school.analytics.listener.SearchAppearanceEventListener;
 import faang.school.analytics.listener.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@RequiredArgsConstructor
 public class RedisConfig {
+
+    private final RedisProperties redisProperties;
+
     @Value("${spring.data.redis.host}")
     private String redisHost;
 
@@ -56,19 +50,15 @@ public class RedisConfig {
     @Value("${spring.data.redis.channel.post_view_channel}")
     private String postViewChannel;
 
-
     @Value("${spring.data.redis.channel.user-follower}")
     private String userFollowerChannel;
 
     @Value("${spring.data.redis.channel.project-follower}")
     private String projectFollowerChannel;
-
-    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(lettuceConnectionFactory);
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-        return template;
+    @Bean
+    public LettuceConnectionFactory connectionFactory() {
+        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(redisProperties.getHost(), redisProperties.getPort());
+        return new LettuceConnectionFactory(configuration);
     }
 
     @Bean
@@ -182,6 +172,16 @@ public class RedisConfig {
     }
 
     @Bean
+    public MessageListenerAdapter commentEventListener(CommentCreateListener commentCreateListener) {
+        return new MessageListenerAdapter(commentCreateListener);
+    }
+
+    @Bean
+    public ChannelTopic postCommentChannelTopic() {
+        return new ChannelTopic(redisProperties.getChannels().get("post-comment"));
+    }
+
+    @Bean
     public RedisMessageListenerContainer redisContainer(LettuceConnectionFactory lettuceConnectionFactory,
                                                         MessageListenerAdapter searchAppearanceEvent,
                                                         MessageListenerAdapter likeEvent,
@@ -193,7 +193,8 @@ public class RedisConfig {
                                                         MessageListenerAdapter projectViewEvent,
                                                         MessageListenerAdapter postViewEvent,
                                                         MessageListenerAdapter userFollowerEvent,
-                                                        MessageListenerAdapter projectFollowerEvent) {
+                                                        MessageListenerAdapter projectFollowerEvent,
+                                                        CommentCreateListener commentCreateListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(lettuceConnectionFactory);
         container.addMessageListener(likeEvent, likeTopic());
@@ -207,6 +208,7 @@ public class RedisConfig {
         container.addMessageListener(projectViewEvent, projectViewTopic());
         container.addMessageListener(userFollowerEvent, userFollowerEventTopic());
         container.addMessageListener(projectFollowerEvent, projectFollowerEventTopic());
+        container.addMessageListener(commentEventListener(commentCreateListener), postCommentChannelTopic());
         return container;
     }
 }
