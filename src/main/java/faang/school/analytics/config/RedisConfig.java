@@ -24,7 +24,7 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
-    @Value("${spring.data.redis.channels.recommendation-topic}")
+    @Value("${spring.data.redis.channels.recommendation_topic}")
     private String recommendationChannel;
 
     @Bean
@@ -38,6 +38,7 @@ public class RedisConfig {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(jedisConnectionFactory());
         template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
         return template;
     }
 
