@@ -1,4 +1,4 @@
-package faang.school.analytics.event;
+package faang.school.analytics.event.follower;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -17,9 +17,10 @@ import java.time.LocalDateTime;
 public class FollowerEvent {
 
     @NotNull
-    private Long followerId;
+    private Long actorId;
 
     @NotNull
-    private Long followeeId;
-    private LocalDateTime subscriptionTime;
+    private Long receiverId;
+
+    private LocalDateTime receivedAt;
 }
