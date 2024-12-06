@@ -1,7 +1,7 @@
-package faang.school.analytics.listener;
+package faang.school.analytics.message.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.event.ProfileViewEvent;
+import faang.school.analytics.message.event.ProfileViewEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

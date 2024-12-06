@@ -1,6 +1,6 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.event.ProfileViewEvent;
+import faang.school.analytics.message.event.event.ProfileViewEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;

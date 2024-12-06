@@ -1,4 +1,4 @@
-package faang.school.analytics.event;
+package faang.school.analytics.message.event;
 
 import lombok.Builder;
 
