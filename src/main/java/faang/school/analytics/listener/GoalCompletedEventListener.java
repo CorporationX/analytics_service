@@ -1,6 +1,7 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.dto.goal.GoalCompletedEvent;
 import faang.school.analytics.dto.recommendation.RecommendationEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;

@@ -70,7 +70,7 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(recommendationListener, recommendationTopic());
-        container.addMessageListener(goalCompletedListener, recommendationTopic());
+        container.addMessageListener(goalCompletedListener, goalTopic());
         return container;
     }
 
