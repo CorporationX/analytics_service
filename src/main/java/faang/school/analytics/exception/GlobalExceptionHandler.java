@@ -15,7 +15,6 @@ public class GlobalExceptionHandler {
     public static final String DATA_VALIDATION_ERROR = "DataValidationException occurred: ";
     public static final String ILLEGAL_ARGUMENT = "IllegalArgumentException occurred: ";
     public static final String UNEXPECTED_ERROR = "An unexpected error occurred: ";
-    public static final String PAYMENT_ERROR = "PaymentException occurred: ";
     private static final String ENTITY_NOT_FOUND = "EntityNotFoundException: ";
 
     @ExceptionHandler(DataValidationException.class)
@@ -43,7 +42,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleGenericException(Exception ex) {
         log.error(UNEXPECTED_ERROR, ex);
-        return new ErrorResponse("An unexpected error occurred");
+        return new ErrorResponse(ex.getMessage());
     }
 }
 
