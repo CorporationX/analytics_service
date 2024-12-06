@@ -1,6 +1,6 @@
 package faang.school.analytics.config;
 
-import faang.school.analytics.messaging.RecommendationEventListener;
+import faang.school.analytics.listener.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
