@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import static faang.school.analytics.exception.DataValidationException.DATA_VALIDATION_ERROR;
+
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
 
-    public static final String DATA_VALIDATION_ERROR = "DataValidationException occurred: ";
     public static final String ILLEGAL_ARGUMENT = "IllegalArgumentException occurred: ";
     public static final String UNEXPECTED_ERROR = "An unexpected error occurred: ";
     private static final String ENTITY_NOT_FOUND = "EntityNotFoundException: ";

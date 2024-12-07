@@ -2,6 +2,8 @@ package faang.school.analytics.exception;
 
 public class DataValidationException extends RuntimeException {
 
+    public static final String DATA_VALIDATION_ERROR = "DataValidationException occurred: ";
+
     public DataValidationException() {
         super();
     }
