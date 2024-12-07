@@ -1,4 +1,4 @@
-package faang.school.analytics.model;
+package faang.school.analytics.domain.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

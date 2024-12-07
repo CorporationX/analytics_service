@@ -1,8 +1,8 @@
-package faang.school.analytics.service;
+package faang.school.analytics.service.events;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.dto.AnalyticsEventFilterDto;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.domain.dto.events.AnalyticsEventDto;
+import faang.school.analytics.domain.dto.events.AnalyticsEventFilterDto;
+import faang.school.analytics.mapper.events.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;

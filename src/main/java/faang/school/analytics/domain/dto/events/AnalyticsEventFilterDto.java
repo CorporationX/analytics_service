@@ -1,7 +1,7 @@
-package faang.school.analytics.dto;
+package faang.school.analytics.domain.dto.events;
 
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.model.Interval;
+import faang.school.analytics.domain.enums.Interval;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
