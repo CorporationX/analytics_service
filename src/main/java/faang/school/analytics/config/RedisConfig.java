@@ -47,7 +47,7 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter recommendationListener(RecommendationEventListener recommendationEventListener) {
+    public MessageListenerAdapter recommendationListener(RecommendationEventListener recommendationEventListener) {
         return new MessageListenerAdapter(recommendationEventListener);
     }
 
@@ -57,15 +57,15 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic recommendationTopic() {
+    public ChannelTopic recommendationTopic() {
         return new ChannelTopic(recommendationChannel);
     }
 
     @Bean
-    ChannelTopic goalTopic() {return new ChannelTopic(goalCompletedChannel);}
+    public ChannelTopic goalTopic() {return new ChannelTopic(goalCompletedChannel);}
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationListener,
+    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationListener,
                                                  MessageListenerAdapter goalCompletedListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
