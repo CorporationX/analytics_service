@@ -1,6 +1,7 @@
 package faang.school.analytics.dto.recommendation;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.model.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -13,8 +14,4 @@ public class RecommendationEvent {
     private Long authorId;
     private Long receiverId;
     private LocalDateTime createdAt;
-
-    public AnalyticsEventDto toAnalyticsEventDto () {
-        return new AnalyticsEventDto(id, receiverId, authorId, 8, createdAt);
-    }
 }
