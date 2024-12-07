@@ -25,8 +25,7 @@ public class AnalyticsEventService {
 
     public AnalyticsEventDto saveEvent(AnalyticsEventDto eventDto) {
         if (eventDto.getId() != null) {
-            log.warn("Attempt save event with id");
-            throw new DataValidationException("Event don't have id for save");
+            throw new DataValidationException("The event must not have id for save");
         }
 
         eventDto.setReceivedAt(LocalDateTime.now());
