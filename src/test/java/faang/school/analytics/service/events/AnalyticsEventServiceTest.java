@@ -2,15 +2,13 @@ package faang.school.analytics.service.events;
 
 import faang.school.analytics.domain.dto.events.AnalyticsEventDto;
 import faang.school.analytics.domain.dto.events.AnalyticsEventFilterDto;
+import faang.school.analytics.domain.enums.Interval;
 import faang.school.analytics.mapper.events.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -20,11 +18,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 
@@ -34,6 +31,8 @@ class AnalyticsEventServiceTest {
     AnalyticsEventMapper analyticsEventMapper;
     @Mock
     AnalyticsEventRepository analyticsEventRepository;
+    @Mock
+    AnalyticsEventFilter analyticsEventFilter;
     @InjectMocks
     AnalyticsEventService analyticsEventService;
 
@@ -52,15 +51,12 @@ class AnalyticsEventServiceTest {
     }
 
     @Test
-    void testGetEvents() {
+    void testGetEventsWithoutFilter() {
         Mockito.when(analyticsEventMapper.toDto(any())).thenReturn(provideEventDto(1L, LocalDateTime.now()));
 
-        Mockito.when(analyticsEventRepository.findByReceiverIdAndEventType(anyLong(), any())).thenReturn(
-                Stream.of(
-                        provideEvent(1L, LocalDateTime.now()),
-                        provideEvent(2L, LocalDateTime.now())
-                )
-        );
+        Stream<AnalyticsEvent> events = Stream.of(provideEvent(1L, LocalDateTime.now()), provideEvent(2L, LocalDateTime.now()));
+        Mockito.when(analyticsEventRepository.findByReceiverIdAndEventType(anyLong(), any())).thenReturn(events);
+
 
         AnalyticsEventFilterDto filter = AnalyticsEventFilterDto.builder()
                 .receiverId(1L)
@@ -71,151 +67,54 @@ class AnalyticsEventServiceTest {
 
         assertEquals(2, res.size());
         Mockito.verify(analyticsEventMapper, times(2)).toDto(any());
+        Mockito.verify(analyticsEventFilter, times(0)).filterByDates(any(), any(), any());
+        Mockito.verify(analyticsEventFilter, times(0)).filterByInterval(any(), anyInt());
     }
 
     @Test
-    void testFilterByInterval() {
-        Stream<AnalyticsEvent> events = Stream.of(
-                provideEvent(1L, LocalDateTime.now().minusDays(4)),
-                provideEvent(2L, LocalDateTime.now().minusDays(1)),
-                provideEvent(3L, LocalDateTime.now().minusDays(2)),
-                provideEvent(4L, LocalDateTime.now().minusDays(5))
-        );
+    void testGetEventsWithFilterByInterval() {
+        Mockito.when(analyticsEventMapper.toDto(any())).thenReturn(provideEventDto(1L, LocalDateTime.now()));
 
-        Stream<AnalyticsEvent> filteredEvents = analyticsEventService.filterByInterval(events, 3);
-        List<AnalyticsEvent> eventsList = filteredEvents.toList();
-        assertAll(
-                () -> assertEquals(2, eventsList.size()),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 2)),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 3))
-        );
+        Stream<AnalyticsEvent> events = Stream.of(provideEvent(1L, LocalDateTime.now()), provideEvent(2L, LocalDateTime.now()));
+        Mockito.when(analyticsEventRepository.findByReceiverIdAndEventType(anyLong(), any())).thenReturn(events);
+        Mockito.when(analyticsEventFilter.filterByInterval(any(), anyInt())).thenReturn(events);
+
+
+        AnalyticsEventFilterDto filter = AnalyticsEventFilterDto.builder()
+                .receiverId(1L)
+                .interval(Interval.DAY_1)
+                .eventType(EventType.FOLLOWER)
+                .build();
+
+        List<AnalyticsEventDto> res = analyticsEventService.getAnalytics(filter);
+
+        assertEquals(2, res.size());
+        Mockito.verify(analyticsEventMapper, times(2)).toDto(any());
+        Mockito.verify(analyticsEventFilter, times(0)).filterByDates(any(), any(), any());
+        Mockito.verify(analyticsEventFilter, times(1)).filterByInterval(any(), anyInt());
     }
 
     @Test
-    void testFilterByDates() {
-        LocalDateTime now = LocalDateTime.now();
+    void testGetEventsWithFilterByDates() {
+        Mockito.when(analyticsEventMapper.toDto(any())).thenReturn(provideEventDto(1L, LocalDateTime.now()));
 
-        Stream<AnalyticsEvent> events = Stream.of(
-                provideEvent(1L, now.minusDays(5)),
-                provideEvent(2L, now),
-                provideEvent(3L, now.minusDays(2)),
-                provideEvent(4L, now.minusDays(1)),
-                provideEvent(5L, now.minusDays(4))
-        );
+        Stream<AnalyticsEvent> events = Stream.of(provideEvent(1L, LocalDateTime.now()), provideEvent(2L, LocalDateTime.now()));
+        Mockito.when(analyticsEventRepository.findByReceiverIdAndEventType(anyLong(), any())).thenReturn(events);
+        Mockito.when(analyticsEventFilter.filterByDates(any(), any(), any())).thenReturn(events);
 
-        LocalDateTime from = now.minusDays(4);
-        LocalDateTime to = now.minusDays(1);
 
-        Stream<AnalyticsEvent> filteredEvents = analyticsEventService.filterByDates(events, from, to);
-        List<AnalyticsEvent> eventsList = filteredEvents.toList();
-        assertAll(
-                () -> assertEquals(3, eventsList.size()),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 3)),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 4)),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 5))
-        );
-    }
+        AnalyticsEventFilterDto filter = AnalyticsEventFilterDto.builder()
+                .receiverId(1L)
+                .to(LocalDateTime.now())
+                .eventType(EventType.FOLLOWER)
+                .build();
 
-    @Test
-    void testFilterByDatesWithFromAt() {
-        LocalDateTime now = LocalDateTime.now();
+        List<AnalyticsEventDto> res = analyticsEventService.getAnalytics(filter);
 
-        Stream<AnalyticsEvent> events = Stream.of(
-                provideEvent(1L, now.minusDays(5)),
-                provideEvent(2L, now),
-                provideEvent(3L, now.minusDays(2)),
-                provideEvent(4L, now.minusDays(1)),
-                provideEvent(5L, now.minusDays(4))
-        );
-
-        LocalDateTime from = now.minusDays(4);
-        LocalDateTime to = null;
-
-        Stream<AnalyticsEvent> filteredEvents = analyticsEventService.filterByDates(events, from, to);
-        List<AnalyticsEvent> eventsList = filteredEvents.toList();
-        assertAll(
-                () -> assertEquals(4, eventsList.size()),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 2)),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 3)),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 4)),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 5))
-        );
-    }
-
-    @Test
-    void testFilterByDatesWithToAt() {
-        LocalDateTime now = LocalDateTime.now();
-
-        Stream<AnalyticsEvent> events = Stream.of(
-                provideEvent(1L, now.minusDays(5)),
-                provideEvent(2L, now),
-                provideEvent(3L, now.minusDays(2)),
-                provideEvent(4L, now.minusDays(1)),
-                provideEvent(5L, now.minusDays(4))
-        );
-
-        LocalDateTime from = null;
-        LocalDateTime to = now.minusDays(1);
-
-        Stream<AnalyticsEvent> filteredEvents = analyticsEventService.filterByDates(events, from, to);
-        List<AnalyticsEvent> eventsList = filteredEvents.toList();
-        assertAll(
-                () -> assertEquals(4, eventsList.size()),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 1)),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 3)),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 4)),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 5))
-        );
-    }
-
-    @Test
-    void testFilterByDatesWithNullAt() {
-        LocalDateTime now = LocalDateTime.now();
-
-        Stream<AnalyticsEvent> events = Stream.of(
-                provideEvent(1L, now.minusDays(5)),
-                provideEvent(2L, now),
-                provideEvent(3L, now.minusDays(2)),
-                provideEvent(4L, now.minusDays(1)),
-                provideEvent(5L, now.minusDays(4))
-        );
-
-        LocalDateTime from = null;
-        LocalDateTime to = null;
-
-        Stream<AnalyticsEvent> filteredEvents = analyticsEventService.filterByDates(events, from, to);
-        List<AnalyticsEvent> eventsList = filteredEvents.toList();
-        assertAll(
-                () -> assertEquals(5, eventsList.size()),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 1)),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 2)),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 3)),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 4)),
-                () -> assertTrue(eventsList.stream().anyMatch(e -> e.getId() == 5))
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideDateCases")
-    void testCheckDate(LocalDateTime date, LocalDateTime from, LocalDateTime to, boolean expected) {
-        boolean res = analyticsEventService.checkDate(date, from, to);
-        assertEquals(expected, res);
-    }
-
-    private static Stream<Arguments> provideDateCases() {
-        LocalDateTime now = LocalDateTime.now();
-        return Stream.of(
-                Arguments.of(now, now.minusDays(1), now.plusDays(1), true),
-                Arguments.of(now, now, now, true),
-                Arguments.of(now, null, now, true),
-                Arguments.of(now, now, null, true),
-                Arguments.of(now, null, null, true),
-                Arguments.of(now, now.plusDays(1), now.plusDays(2), false),
-                Arguments.of(now, now.plusDays(1), null, false),
-                Arguments.of(now, now.minusDays(2), now.minusDays(1), false),
-                Arguments.of(now, null, now.minusDays(1), false),
-                Arguments.of(now, now.plusDays(1), now.minusDays(1), false)
-        );
+        assertEquals(2, res.size());
+        Mockito.verify(analyticsEventMapper, times(2)).toDto(any());
+        Mockito.verify(analyticsEventFilter, times(1)).filterByDates(any(), any(), any());
+        Mockito.verify(analyticsEventFilter, times(0)).filterByInterval(any(), anyInt());
     }
 
     private AnalyticsEventDto provideEventDto(Long id, LocalDateTime date) {
