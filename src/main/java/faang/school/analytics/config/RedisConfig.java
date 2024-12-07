@@ -52,7 +52,7 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter goalCompletedListener(GoalCompletedEventListener listener) {
+    public MessageListenerAdapter goalCompletedListener(GoalCompletedEventListener listener) {
         return new MessageListenerAdapter(listener);
     }
 
