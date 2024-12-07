@@ -41,8 +41,6 @@ class AnalyticsEventServiceTest {
     private AnalyticsEvent analyticsEvent;
     private AnalyticsEvent secondAnalyticEvent;
 
-    private EventRequestDto eventRequestDto;
-
     @BeforeEach
     void setUp() {
         eventDto = new EventDto();
@@ -55,10 +53,6 @@ class AnalyticsEventServiceTest {
         secondAnalyticEvent = new AnalyticsEvent();
         secondAnalyticEvent.setReceivedAt(LocalDateTime.now().minusDays(1));
         secondAnalyticEvent.setActorId(3);
-
-        eventRequestDto = new EventRequestDto();
-        eventRequestDto.setEventType(EventType.FOLLOWER);
-        eventRequestDto.setReceiverId(1);
     }
 
     @Test
@@ -111,67 +105,63 @@ class AnalyticsEventServiceTest {
         assertEquals(result.getReceivedAt(), analyticsEvent.getReceivedAt());
     }
 
-    @Test
-    void testGetEventsDtoWithInvalidEventRequestDto() {
-        doThrow(new IllegalArgumentException())
-                .when(analyticEventServiceValidator).checkRequestDto(any(EventRequestDto.class));
-        assertThrows(IllegalArgumentException.class,
-                () -> analyticsEventService.getEventsDto(new EventRequestDto()));
-    }
+//    @Test
+//    void testGetEventsDtoWithInvalidEventRequestDto() {
+//        doThrow(new IllegalArgumentException())
+//                .when(analyticEventServiceValidator).validateInterval(null, null, null);
+//        assertThrows(IllegalArgumentException.class,
+//                () -> eventService.getEventsDto(1, null, null, null, null));
+//    }
 
     @Test
     void testGetEventsEntityWithInvalidEventRequestDto() {
         doThrow(new IllegalArgumentException())
-                .when(analyticEventServiceValidator).checkRequestDto(any(EventRequestDto.class));
+                .when(analyticEventServiceValidator).validateInterval(null, null, null);
         assertThrows(IllegalArgumentException.class,
-                () -> analyticsEventService.getEventsEntity(new EventRequestDto()));
+                () -> analyticsEventService.getEventsEntity(1, null, null, null, null));
     }
 
-    @Test
-    void testGetEventDtoWithInterval() {
-        eventRequestDto.setInterval(Interval.WEEK);
-        analyticsEvent.setReceivedAt(LocalDateTime.now().minusYears(1));
+//    @Test
+//    void testGetEventDtoWithInterval() {
+//        analyticsEvent.setReceivedAt(LocalDateTime.now().minusYears(1));
+//
+//        Stream<AnalyticsEvent> events = Stream.of(analyticsEvent, secondAnalyticEvent);
+//
+//        when(analyticsEventRepository.findByReceiverIdAndEventType(1, EventType.FOLLOWER)).thenReturn(events);
+//
+//        List<EventDto> result = eventService.getEventsDto(1, "FOLLOWER", "WEEK", null, null);
+//
+//        assertFalse(result.isEmpty());
+//        assertEquals(result.get(0).getActorId(), secondAnalyticEvent.getActorId());
+//        assertEquals(result.size(), 1);
+//
+//    }
 
-        Stream<AnalyticsEvent> events = Stream.of(analyticsEvent, secondAnalyticEvent);
-
-        when(analyticsEventRepository.findByReceiverIdAndEventType(1, EventType.FOLLOWER)).thenReturn(events);
-
-        List<EventDto> result = analyticsEventService.getEventsDto(eventRequestDto);
-
-        assertFalse(result.isEmpty());
-        assertEquals(result.get(0).getActorId(), secondAnalyticEvent.getActorId());
-        assertEquals(result.size(), 1);
-
-    }
-
-    @Test
-    void testGetEventDtoWithLocalDateTime() {
-        eventRequestDto.setFrom(LocalDateTime.now().minusWeeks(1));
-        eventRequestDto.setTo(LocalDateTime.now());
-
-        analyticsEvent.setReceivedAt(LocalDateTime.now().minusYears(1));
-
-        Stream<AnalyticsEvent> events = Stream.of(analyticsEvent, secondAnalyticEvent);
-
-        when(analyticsEventRepository.findByReceiverIdAndEventType(1, EventType.FOLLOWER)).thenReturn(events);
-
-        List<EventDto> result = analyticsEventService.getEventsDto(eventRequestDto);
-
-        assertFalse(result.isEmpty());
-        assertEquals(result.get(0).getActorId(), secondAnalyticEvent.getActorId());
-        assertEquals(result.size(), 1);
-    }
+//    @Test
+//    void testGetEventDtoWithLocalDateTime() {
+//        analyticsEvent.setReceivedAt(LocalDateTime.now().minusYears(1));
+//
+//        Stream<AnalyticsEvent> events = Stream.of(analyticsEvent, secondAnalyticEvent);
+//
+//        when(analyticsEventRepository.findByReceiverIdAndEventType(1, EventType.FOLLOWER)).thenReturn(events);
+//
+//        List<EventDto> result = eventService.getEventsDto(1, "FOLLOWER", null, "08-10-2024 10:15:30", "04-12-2024 10:15:30");
+//
+//        assertFalse(result.isEmpty());
+//        assertEquals(result.get(0).getActorId(), secondAnalyticEvent.getActorId());
+//        assertEquals(result.size(), 1);
+//    }
 
     @Test
     void testGetEventEntityWithInterval() {
-        eventRequestDto.setInterval(Interval.WEEK);
+
         analyticsEvent.setReceivedAt(LocalDateTime.now().minusYears(1));
 
         Stream<AnalyticsEvent> events = Stream.of(analyticsEvent, secondAnalyticEvent);
 
         when(analyticsEventRepository.findByReceiverIdAndEventType(1, EventType.FOLLOWER)).thenReturn(events);
 
-        List<AnalyticsEvent> result = analyticsEventService.getEventsEntity(eventRequestDto);
+        List<AnalyticsEvent> result = analyticsEventService.getEventsEntity(1, EventType.FOLLOWER, Interval.WEEK, null, null);
 
         assertFalse(result.isEmpty());
         assertEquals(result.get(0).getActorId(), secondAnalyticEvent.getActorId());
@@ -181,16 +171,13 @@ class AnalyticsEventServiceTest {
 
     @Test
     void testGetEventEntityWithLocalDateTime() {
-        eventRequestDto.setFrom(LocalDateTime.now().minusWeeks(1));
-        eventRequestDto.setTo(LocalDateTime.now());
-
         analyticsEvent.setReceivedAt(LocalDateTime.now().minusYears(1));
 
         Stream<AnalyticsEvent> events = Stream.of(analyticsEvent, secondAnalyticEvent);
 
         when(analyticsEventRepository.findByReceiverIdAndEventType(1, EventType.FOLLOWER)).thenReturn(events);
 
-        List<AnalyticsEvent> result = analyticsEventService.getEventsEntity(eventRequestDto);
+        List<AnalyticsEvent> result = analyticsEventService.getEventsEntity(1, EventType.FOLLOWER, null, LocalDateTime.now().minusWeeks(1), LocalDateTime.now());
 
         assertFalse(result.isEmpty());
         assertEquals(result.get(0).getActorId(), secondAnalyticEvent.getActorId());

@@ -3,16 +3,17 @@ package faang.school.analytics.controller.event;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.event.EventDto;
-import faang.school.analytics.dto.event.EventRequestDto;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.dto.event.Interval;
 import faang.school.analytics.service.event.AnalyticsEventService;
+import faang.school.analytics.service.event.EventParamService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,6 +36,9 @@ class AnalyticsEventControllerTest {
     @Mock
     private AnalyticsEventService analyticsEventService;
 
+    @Mock
+    private EventParamService eventParamService;
+
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
 
@@ -55,7 +59,7 @@ class AnalyticsEventControllerTest {
 
         when(analyticsEventService.addNewEvent(eventDto)).thenReturn(eventDto);
 
-        mockMvc.perform(post("/api/v1/event")
+        mockMvc.perform(post("/api/v1/events")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(eventDto)))
                 .andExpect(status().isOk())
@@ -78,15 +82,12 @@ class AnalyticsEventControllerTest {
             array.add(event);
         });
 
-        EventRequestDto eventRequestDto = new EventRequestDto();
-        eventRequestDto.setEventType(EventType.FOLLOWER);
-        eventRequestDto.setInterval(Interval.DAY);
+        when(eventParamService.getEventsDto(1, "FOLLOWER", "DAY", null, null)).thenReturn(array);
 
-        when(analyticsEventService.getEventsDto(eventRequestDto)).thenReturn(array);
-
-        mockMvc.perform(post("/api/v1/event/get")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(eventRequestDto)))
+        mockMvc.perform(get("/api/v1/events/get")
+                        .param("receiverId", "1")
+                        .param("eventType", "FOLLOWER")
+                        .param("interval", "DAY"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].eventType", is("FOLLOWER")))
