@@ -3,6 +3,7 @@ package faang.school.analytics.service.events;
 import faang.school.analytics.domain.dto.events.AnalyticsEventDto;
 import faang.school.analytics.domain.dto.events.AnalyticsEventFilterDto;
 import faang.school.analytics.domain.enums.Interval;
+import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.mapper.events.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -20,6 +21,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -37,6 +39,12 @@ class AnalyticsEventServiceTest {
     AnalyticsEventService analyticsEventService;
 
     @Test
+    void testSaveEventWithId() {
+        AnalyticsEventDto dto = provideEventDto(1L, LocalDateTime.now());
+        assertThrows(DataValidationException.class, () -> analyticsEventService.saveEvent(dto));
+    }
+
+    @Test
     void testSaveEvent() {
         Mockito.when(analyticsEventRepository.save(any())).thenReturn(new AnalyticsEvent());
         Mockito.when(analyticsEventMapper.toEntity(any())).thenReturn(provideEvent(1L, LocalDateTime.now()));
@@ -48,6 +56,17 @@ class AnalyticsEventServiceTest {
         Mockito.verify(analyticsEventMapper, times(1)).toEntity(any());
         Mockito.verify(analyticsEventRepository, times(1)).save(any());
         Mockito.verify(analyticsEventMapper, times(1)).toDto(any());
+    }
+
+    @Test
+    void testGetEventWithIncorrectFilters() {
+        AnalyticsEventFilterDto filterDto = AnalyticsEventFilterDto.builder()
+                .receiverId(1L)
+                .eventType(EventType.FOLLOWER)
+                .interval(Interval.DAY_1)
+                .to(LocalDateTime.now())
+                .build();
+        assertThrows(DataValidationException.class, () -> analyticsEventService.getAnalytics(filterDto));
     }
 
     @Test

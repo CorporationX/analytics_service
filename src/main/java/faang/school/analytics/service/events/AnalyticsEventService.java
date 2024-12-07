@@ -2,10 +2,12 @@ package faang.school.analytics.service.events;
 
 import faang.school.analytics.domain.dto.events.AnalyticsEventDto;
 import faang.school.analytics.domain.dto.events.AnalyticsEventFilterDto;
+import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.mapper.events.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AnalyticsEventService {
@@ -21,6 +24,11 @@ public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
 
     public AnalyticsEventDto saveEvent(AnalyticsEventDto eventDto) {
+        if (eventDto.getId() != null) {
+            log.warn("Attempt save event with id");
+            throw new DataValidationException("Event don't have id for save");
+        }
+
         eventDto.setReceivedAt(LocalDateTime.now());
         AnalyticsEvent event = analyticsEventMapper.toEntity(eventDto);
         event = analyticsEventRepository.save(event);
@@ -29,6 +37,11 @@ public class AnalyticsEventService {
 
     @Transactional(readOnly = true)
     public List<AnalyticsEventDto> getAnalytics(AnalyticsEventFilterDto filter) {
+        if (filter.getInterval() != null && (filter.getFrom() != null || filter.getTo() != null)) {
+            log.warn("Incorrect filter for get events: interval = {}, fromAt = {}, toAt = {}", filter.getInterval(), filter.getFrom(), filter.getTo());
+            throw new DataValidationException("Search filter required 'Interval' or 'Dates'");
+        }
+
         Stream<AnalyticsEvent> events = analyticsEventRepository.findByReceiverIdAndEventType(filter.getReceiverId(), filter.getEventType());
         events = filterEvents(events, filter);
         return events
