@@ -13,15 +13,14 @@ class AnalyticsEventMapperTest {
 
     @Test
     void mapMentorshipRequestEventToAnalyticsEvent() {
-        MentorshipRequestEvent mentorshipRequestEvent = new MentorshipRequestEvent(1L,2L,null);
+        MentorshipRequestEvent mentorshipRequestEvent = new MentorshipRequestEvent(1L, 2L, null);
 
         AnalyticsEvent result = mapper.toAnalyticsEventMentorshipRequest(mentorshipRequestEvent);
 
-
-        assertNotNull(result );
+        assertNotNull(result);
         assertEquals(EventType.RECOMMENDATION_RECEIVED, result.getEventType());
-        assertEquals(1L,result.getReceiverId());
+        assertEquals(1L, result.getReceiverId());
         assertEquals(2L, result.getActorId());
-        assertNull( result.getReceivedAt());
+        assertNull(result.getReceivedAt());
     }
 }

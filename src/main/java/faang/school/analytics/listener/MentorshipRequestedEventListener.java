@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -18,17 +20,20 @@ public class MentorshipRequestedEventListener implements MessageListener {
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
 
+    @Retryable(
+            value = {RuntimeException.class},
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 2000, multiplier = 2.0)
+    )
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
             MentorshipRequestEvent mentorshipRequestEvent = objectMapper.readValue(message.getBody(), MentorshipRequestEvent.class);
             analyticsEventService.saveMentorshipRequestEvent(mentorshipRequestEvent);
-        } catch (IOException e) {
-            log.error("Error occurred while deserializing mentorship request event.", e);
-            throw new RuntimeException("Failed to deserialize mentorship request event.", e);
-        } catch (Exception e) {
-            log.error("Unexpected error while processing mentorship request event.", e);
-            throw new RuntimeException("Unexpected error while processing mentorship request event.", e);
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to deserialize mentorship request event.", ex);
+        } catch (Exception ex) {
+            throw new RuntimeException("Unexpected error while processing mentorship request event.", ex);
         }
     }
 }

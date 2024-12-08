@@ -199,7 +199,6 @@ class AnalyticsEventServiceTest {
         verify(analyticsEventRepository, times(1)).save(analyticsEventMentorshipRequest);
     }
 
-
     @Test
     void saveMentorshipRequestEvent_ShouldThrowExceptionWhenRepositoryFails() {
         when(analyticsEventMapper.toAnalyticsEventMentorshipRequest(mentorshipRequestEvent))

@@ -43,7 +43,7 @@ class MentorshipRequestedEventListenerTest {
     }
 
     @Test
-    void onMessage_ShouldProcessMessageSuccessfully() throws Exception {
+    void onMessageSuccessfully() throws Exception {
         MentorshipRequestEvent event = new MentorshipRequestEvent(1L, 2L, null);
         AnalyticsEvent analyticsEvent = new AnalyticsEvent();
 
@@ -78,7 +78,7 @@ class MentorshipRequestedEventListenerTest {
     }
 
     @Test
-    void onMessage_ShouldHandleUnexpectedException() throws Exception {
+    void onMessageUnexpectedException() throws Exception {
         when(message.getBody()).thenReturn(messageBody);
         when(objectMapper.readValue(messageBody, MentorshipRequestEvent.class))
                 .thenThrow(new RuntimeException("Unexpected error"));

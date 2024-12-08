@@ -40,21 +40,16 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter mentorshipRequestedEventListener(MentorshipRequestedEventListener listener) {
-        return new MessageListenerAdapter(listener);
-    }
-
-    @Bean
     ChannelTopic mentorshipRequestedTopic() {
         return new ChannelTopic(mentorshipRequestedTopicName);
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter mentorshipRequestListner) {
+    RedisMessageListenerContainer redisContainer(MentorshipRequestedEventListener listener) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(mentorshipRequestListner, mentorshipRequestedTopic());
+        container.addMessageListener(listener, mentorshipRequestedTopic());
         return container;
     }
 }
