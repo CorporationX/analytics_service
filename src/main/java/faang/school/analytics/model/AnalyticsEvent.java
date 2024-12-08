@@ -33,4 +33,16 @@ public class AnalyticsEvent {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "received_at", nullable = false)
     private LocalDateTime receivedAt;
+
+    public boolean isBetween(LocalDateTime from, LocalDateTime to) {
+        return receivedAt.isAfter(from) && receivedAt.isBefore(to);
+    }
+
+    public static int compareByReceivedAt(AnalyticsEvent e1, AnalyticsEvent e2) {
+        return e2.getReceivedAt().compareTo(e1.getReceivedAt());
+    }
+
+    public boolean isType(EventType eventType) {
+        return this.eventType.equals(eventType);
+    }
 }
