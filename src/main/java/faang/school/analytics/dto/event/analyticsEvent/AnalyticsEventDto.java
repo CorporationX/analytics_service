@@ -1,4 +1,4 @@
-package faang.school.analytics.dto.analyticsEvent;
+package faang.school.analytics.dto.event.analyticsEvent;
 
 import faang.school.analytics.model.EventType;
 import jakarta.validation.constraints.NotNull;

@@ -1,7 +1,7 @@
 package faang.school.analytics.event.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.event.model.LikeEvent;
+import faang.school.analytics.dto.event.likeEvent.LikeEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;

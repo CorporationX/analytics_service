@@ -1,7 +1,7 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.dto.analyticsEvent.AnalyticsEventDto;
-import faang.school.analytics.dto.analyticsEvent.AnalyticsEventRequestDto;
+import faang.school.analytics.dto.event.analyticsEvent.AnalyticsEventDto;
+import faang.school.analytics.dto.event.analyticsEvent.AnalyticsEventRequestDto;
 import faang.school.analytics.dto.interval.IntervalDto;
 import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
