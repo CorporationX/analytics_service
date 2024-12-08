@@ -1,6 +1,6 @@
 package faang.school.analytics.config.redis;
 
-import faang.school.analytics.event.listener.LikeEventListener;
+import faang.school.analytics.listener.LikeEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
