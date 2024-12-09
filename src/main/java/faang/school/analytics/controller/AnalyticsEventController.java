@@ -1,7 +1,7 @@
 package faang.school.analytics.controller;
 
 import faang.school.analytics.dto.analytic.AnalyticsEventDto;
-import faang.school.analytics.service.analytic.AnalyticsEventService;
+import faang.school.analytics.service.events.AnalyticsEventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

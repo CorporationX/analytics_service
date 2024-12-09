@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AnalyticsEventDto {
+    private Long id;
 
     @NotNull
     private Long receiverId;
