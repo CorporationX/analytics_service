@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LikeEventListener implements MessageListener {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper analyticsEventMapper;
 

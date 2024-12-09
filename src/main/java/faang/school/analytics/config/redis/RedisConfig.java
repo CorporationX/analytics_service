@@ -1,6 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.LikeEventListener;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,9 +11,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+@RequiredArgsConstructor
 @Configuration
 public class RedisConfig {
 
@@ -21,6 +23,8 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.port}")
     private int redisPort;
+
+    private final RedisSerializer<Object> redisSerializer;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -35,7 +39,7 @@ public class RedisConfig {
 
     @Bean
     public ChannelTopic topic() {
-        return new ChannelTopic("analyticsEventTopic");
+        return new ChannelTopic("likeEventTopic");
     }
 
     @Bean
@@ -51,7 +55,9 @@ public class RedisConfig {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(jedisConnectionFactory());
         template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.setValueSerializer(redisSerializer);
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(redisSerializer);
         return template;
     }
 }
