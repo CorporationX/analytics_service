@@ -1,7 +1,7 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.dto.GoalCompletedEvent;
+import faang.school.analytics.event.GoalCompletedEvent;
 import faang.school.analytics.dto.analyticsEvent.AnalyticsEventResponseDto;
 import faang.school.analytics.exception.MessageProcessingException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -57,13 +57,14 @@ public class GoalCompletedEventListenerTest {
                 .build();
         analyticsEvent = new AnalyticsEvent();
 
-        byte[] messageBody = "{\"userId\":1,\"goalId\":2,\"completedAt\":\"2024-12-09T12:00:00\"}".getBytes(StandardCharsets.UTF_8);
+        byte[] messageBody = "{\"userId\":1,\"goalId\":2,\"completedAt\":\"2024-12-09T12:00:00\"}"
+                .getBytes(StandardCharsets.UTF_8);
         redisMessage = mock(Message.class);
         when(redisMessage.getBody()).thenReturn(messageBody);
     }
 
     @Test
-    public void testOnMessage_Success() throws IOException {
+    public void testOnMessageSuccess() throws IOException {
         when(objectMapper.readValue(redisMessage.getBody(), GoalCompletedEvent.class)).thenReturn(goalCompletedEvent);
         when(analyticsEventMapper.toEntity(any(AnalyticsEventResponseDto.class))).thenReturn(analyticsEvent);
 
@@ -80,7 +81,7 @@ public class GoalCompletedEventListenerTest {
     }
 
     @Test
-    public void testOnMessage_IOException() throws IOException {
+    public void testOnMessageIOException() throws IOException {
         when(objectMapper.readValue(redisMessage.getBody(), GoalCompletedEvent.class))
                 .thenThrow(new IOException("Test Exception"));
 
