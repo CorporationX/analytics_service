@@ -9,4 +9,6 @@ import org.mapstruct.ReportingPolicy;
 public interface AnalyticsEventMapper {
 
     AnalyticsEventResponseDto entityToResponseDto(AnalyticsEvent event);
+
+    AnalyticsEvent toEntity(AnalyticsEventResponseDto dto);
 }
