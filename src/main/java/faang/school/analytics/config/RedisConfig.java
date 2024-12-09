@@ -15,7 +15,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 public class RedisConfig {
     private final GoalCompletedEventListener goalCompletedEventListener;
 
-    @Value("${spring.data.redis.channel.goal-completed}")
+    @Value("${spring.data.redis.channels.goal-completed}")
     private String goalCompletedTopic;
 
     @Bean
