@@ -29,7 +29,7 @@ public class AdBoughtEventListener extends AbstractListener<AdBoughtEventRespons
 
 
     @Override
-    protected Class<AdBoughtEventResponseDto> getEventType() {
+    protected Class<AdBoughtEventResponseDto> eventType() {
         return AdBoughtEventResponseDto.class;
     }
 

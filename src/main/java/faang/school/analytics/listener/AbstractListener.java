@@ -24,14 +24,14 @@ public abstract class AbstractListener<T> implements MessageListener {
         }
     }
 
-    protected abstract Class<T> getEventType();
+    protected abstract Class<T> eventType();
 
     protected abstract void saveEvent(T event);
 
     @Override
     public void onMessage(@NonNull Message message, byte[] pattern) {
         try {
-            T event = listenEvent(message, getEventType());
+            T event = listenEvent(message, eventType());
             log.info(eventHandlers.toString());
             eventHandlers.forEach(handler -> handler.handle(event));
             log.info("Data successfully processed for event {}", event);
