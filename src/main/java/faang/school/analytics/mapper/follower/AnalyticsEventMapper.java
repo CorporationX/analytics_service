@@ -10,5 +10,8 @@ import org.mapstruct.ReportingPolicy;
 public interface AnalyticsEventMapper {
 
     @Mapping(target = "eventType", constant = "FOLLOWER")
+    @Mapping(target = "actorId", source = "followerId")
+    @Mapping(target = "receiverId", source = "followeeId")
+    @Mapping(target = "receivedAt", expression = "java(java.time.LocalDateTime.now())")
     AnalyticsEvent followerEventToAnalyticsEvent(FollowerEvent followerEvent);
 }

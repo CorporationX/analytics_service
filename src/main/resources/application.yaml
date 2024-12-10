@@ -23,7 +23,7 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
-        follower-event-channel: follower_event
+        follower-event: follower_channel
 
 server:
   port: 8086
