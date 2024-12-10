@@ -1,7 +1,7 @@
 package faang.school.analytics.serviceTests;
 
 import faang.school.analytics.event.SearchAppearanceEvent;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapperToLog;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 class AnalyticsEventServiceTest {
 
     @Mock
-    private AnalyticsEventMapper mapper;
+    private AnalyticsEventMapperToLog mapper;
 
     @InjectMocks
     private AnalyticsEventService service;
