@@ -77,7 +77,7 @@ public class AdBoughtEventListenerTest {
         expectedAnalyticsEvent.setEventType(EventType.AD_BOUGHT);
         when(analyticsEventMapper.dtoToEntity(expectedEvent)).thenReturn(expectedAnalyticsEvent);
 
-        listener.saveEvent(expectedEvent);
+        listener.handleEvent(expectedEvent);
 
         verify(analyticsEventService).saveEvent(expectedAnalyticsEvent);
     }

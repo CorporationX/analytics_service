@@ -26,23 +26,21 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer redisContainer(JedisConnectionFactory jedisConnectionFactory,
-                                                        AdBoughtEventListener adBoughtEventListener) {
+    public RedisMessageListenerContainer redisContainer(AdBoughtEventListener adBoughtEventListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(jedisConnectionFactory);
+        container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(adBoughtEventListener, adBoughtTopic());
         return container;
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(connectionFactory);
+        redisTemplate.setConnectionFactory(jedisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new GenericToStringSerializer<>(AdBoughtEventListener.class));
+        redisTemplate.setValueSerializer(new GenericToStringSerializer<>(Object.class));
         return redisTemplate;
     }
-
 
     @Bean
     public ChannelTopic adBoughtTopic() {

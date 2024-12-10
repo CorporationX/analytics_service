@@ -21,7 +21,7 @@ public interface AnalyticsEventMapper {
                 .receiverId(event.getActorId())
                 .paymentAmount(event.getPaymentAmount())
                 .adDuration(event.getAdDuration())
-                .receivedAt(LocalDateTime.now())
+                .receivedAt(event.getReceivedAt())
                 .build();
     }
 }

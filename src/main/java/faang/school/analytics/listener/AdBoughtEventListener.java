@@ -27,14 +27,13 @@ public class AdBoughtEventListener extends AbstractListener<AdBoughtEventRespons
         this.analyticsEventMapper = analyticsEventMapper;
     }
 
-
     @Override
     protected Class<AdBoughtEventResponseDto> eventType() {
         return AdBoughtEventResponseDto.class;
     }
 
     @Override
-    protected void saveEvent(AdBoughtEventResponseDto event) {
+    protected void handleEvent(AdBoughtEventResponseDto event) {
         AnalyticsEvent analyticsEvent = analyticsEventMapper.dtoToEntity(event);
         analyticsEvent.setEventType(EventType.AD_BOUGHT);
         analyticsEventService.saveEvent(analyticsEvent);

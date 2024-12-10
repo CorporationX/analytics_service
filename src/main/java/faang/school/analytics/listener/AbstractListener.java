@@ -26,7 +26,7 @@ public abstract class AbstractListener<T> implements MessageListener {
 
     protected abstract Class<T> eventType();
 
-    protected abstract void saveEvent(T event);
+    protected abstract void handleEvent(T event);
 
     @Override
     public void onMessage(@NonNull Message message, byte[] pattern) {
@@ -36,7 +36,7 @@ public abstract class AbstractListener<T> implements MessageListener {
             eventHandlers.forEach(handler -> handler.handle(event));
             log.info("Data successfully processed for event {}", event);
 
-            saveEvent(event);
+            handleEvent(event);
 
         } catch (IOException e) {
             log.warn("Unsuccessful mapping", e);
