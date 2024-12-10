@@ -4,7 +4,7 @@ import faang.school.analytics.event.SearchAppearanceEvent;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AnalyticsEventMapper {
+public class AnalyticsEventMapperToLog {
 
     public String mapToLog(SearchAppearanceEvent event) {
         return String.format(

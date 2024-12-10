@@ -3,6 +3,7 @@ package faang.school.analytics.analyticsEventService;
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.AnalyticsFilterDto;
 import faang.school.analytics.filter.AnalyticsFilterI;
+import faang.school.analytics.mapper.AnalyticsEventMapperToLog;
 import faang.school.analytics.mappers.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
@@ -35,6 +36,9 @@ public class AnalyticsEventServiceTest {
 
     @Mock
     private AnalyticsEventMapper analyticsEventMapper;
+
+    @Mock
+    private AnalyticsEventMapperToLog analyticsEventMapperToLog;
 
     @InjectMocks
     private AnalyticsEventService analyticsEventService;
@@ -78,7 +82,7 @@ public class AnalyticsEventServiceTest {
 
         AnalyticsFilterI analyticsFilterIMock = Mockito.mock(AnalyticsFilterI.class);
         List<AnalyticsFilterI> analyticsFilters = List.of(analyticsFilterIMock);
-        analyticsEventService = new AnalyticsEventService(analyticsEventRepository, analyticsEventMapper, analyticsFilters);
+        analyticsEventService = new AnalyticsEventService(analyticsEventRepository, analyticsEventMapper, analyticsFilters, analyticsEventMapperToLog);
 
         Mockito.when(analyticsFilterIMock.isApplicable(any(AnalyticsFilterDto.class))).thenReturn(true);
         Mockito.when(analyticsFilterIMock.apply(any(Stream.class), any(AnalyticsFilterDto.class))).thenReturn(Stream.of(event));
@@ -109,7 +113,7 @@ public class AnalyticsEventServiceTest {
 
         AnalyticsFilterI analyticsFilterIMock = Mockito.mock(AnalyticsFilterI.class);
         List<AnalyticsFilterI> analyticsFilters = List.of(analyticsFilterIMock);
-        analyticsEventService = new AnalyticsEventService(analyticsEventRepository, analyticsEventMapper, analyticsFilters);
+        analyticsEventService = new AnalyticsEventService(analyticsEventRepository, analyticsEventMapper, analyticsFilters, analyticsEventMapperToLog);
 
         Mockito.when(analyticsFilterIMock.isApplicable(any(AnalyticsFilterDto.class))).thenReturn(false);
         AnalyticsFilterDto analyticsFilterDto = new AnalyticsFilterDto();

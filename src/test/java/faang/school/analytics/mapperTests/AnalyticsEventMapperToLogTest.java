@@ -1,16 +1,16 @@
 package faang.school.analytics.mapperTests;
 
 import faang.school.analytics.event.SearchAppearanceEvent;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapperToLog;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class AnalyticsEventMapperTest {
+class AnalyticsEventMapperToLogTest {
 
-    private final AnalyticsEventMapper mapper = new AnalyticsEventMapper();
+    private final AnalyticsEventMapperToLog mapper = new AnalyticsEventMapperToLog();
 
     @Test
     void mapToLog() {
