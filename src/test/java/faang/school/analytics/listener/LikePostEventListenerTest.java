@@ -66,7 +66,7 @@ public class LikePostEventListenerTest {
     }
 
     @Test
-    void testOnMessage_Success() throws Exception {
+    void onMessageSuccessTest() throws Exception {
 
         Message message = mock(Message.class);
         String jsonMessage = "{\"authorPostId\":1,\"likedUserId\":2,\"postId\":1}";
@@ -101,21 +101,4 @@ public class LikePostEventListenerTest {
                 })
         );
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
