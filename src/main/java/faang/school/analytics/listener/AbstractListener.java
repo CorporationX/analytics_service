@@ -16,14 +16,22 @@ public abstract class AbstractListener<T> implements MessageListener {
     protected final ObjectMapper objectMapper;
     private final List<EventHandler<T>> eventHandlers;
 
-    protected abstract T listenEvent(Message message) throws IOException;
+    protected T listenEvent(Message message, Class<T> eventType) throws IOException {
+        try {
+            return objectMapper.readValue(message.getBody(), eventType);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to map message to event type", e);
+        }
+    }
+
+    protected abstract Class<T> getEventType();
 
     protected abstract void saveEvent(T event);
 
     @Override
     public void onMessage(@NonNull Message message, byte[] pattern) {
         try {
-            T event = listenEvent(message);
+            T event = listenEvent(message, getEventType());
             log.info(eventHandlers.toString());
             eventHandlers.forEach(handler -> handler.handle(event));
             log.info("Data successfully processed for event {}", event);

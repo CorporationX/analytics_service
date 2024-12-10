@@ -7,10 +7,8 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.connection.Message;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.List;
 
 @Component
@@ -31,12 +29,8 @@ public class AdBoughtEventListener extends AbstractListener<AdBoughtEventRespons
 
 
     @Override
-    protected AdBoughtEventResponseDto listenEvent(Message message) {
-        try {
-            return objectMapper.readValue(message.getBody(), AdBoughtEventResponseDto.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    protected Class<AdBoughtEventResponseDto> getEventType() {
+        return AdBoughtEventResponseDto.class;
     }
 
     @Override

@@ -57,7 +57,7 @@ public class AdBoughtEventListenerTest {
 
         when(objectMapper.readValue(messageBody, AdBoughtEventResponseDto.class)).thenReturn(expectedEvent);
 
-        AdBoughtEventResponseDto actualEvent = listener.listenEvent(message);
+        AdBoughtEventResponseDto actualEvent = listener.listenEvent(message, AdBoughtEventResponseDto.class);
 
         assertEquals(expectedEvent, actualEvent);
     }
