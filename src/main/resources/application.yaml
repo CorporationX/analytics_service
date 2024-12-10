@@ -22,7 +22,9 @@ spring:
       port: 6379
       host: localhost
       channel:
+        ad_bought: ad_bought_channel
         profile-view: profile_view_channel
+
 
 server:
   port: 8086
