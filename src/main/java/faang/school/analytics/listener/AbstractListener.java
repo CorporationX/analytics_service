@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.scheduling.annotation.Async;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,6 +22,7 @@ public abstract class AbstractListener<T> implements MessageListener {
     protected abstract void saveEvent(T event);
 
     @Override
+    @Async("doniyorTaskExecutor")
     public void onMessage(@NonNull Message message, byte[] pattern) {
         try {
             T event = listenEvent(message);

@@ -25,6 +25,11 @@ spring:
         ad_bought: ad_bought_channel
         profile-view: profile_view_channel
 
+async:
+  core-pool-size: 4
+  max-pool-size: 10
+  queue-capacity: 100
+  thread-name-prefix: AnalyticsService-Async-
 
 server:
   port: 8086
