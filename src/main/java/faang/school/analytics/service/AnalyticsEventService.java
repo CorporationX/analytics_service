@@ -26,9 +26,11 @@ public class AnalyticsEventService {
     private final AnalyticsEventMapper analyticsEventMapper;
     private final AnalyticsEventValidator analyticsEventValidator;
 
-    public void saveEvent(AnalyticsEvent event) {
+    public AnalyticsEvent saveEvent(AnalyticsEvent event) {
         AnalyticsEvent savedEvent = analyticsEventRepository.save(event);
-        log.info("Analytics event {} saved successfully.", savedEvent.getId());
+        log.info("Analytics event #{} saved successfully.", savedEvent.getId());
+
+        return savedEvent;
     }
 
     public List<AnalyticsEventResponseDto> getAnalytics(
