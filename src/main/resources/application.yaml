@@ -21,8 +21,8 @@ spring:
     redis:
       port: 6379
       host: localhost
-      channel:
-        profile-view: profile_view_channel
+      topic:
+        search-appearance: search_appearance_topic
 
 server:
   port: 8086
