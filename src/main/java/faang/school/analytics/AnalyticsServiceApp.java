@@ -14,7 +14,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @SpringBootApplication
 @EnableFeignClients("faang.school.analytics.client")
 @EnableConfigurationProperties(RedisConfigProperties.class)
-@EnableAsync
+@EnableAsync(proxyTargetClass = true)
 public class AnalyticsServiceApp {
     public static void main(String[] args) {
         new SpringApplicationBuilder(AnalyticsServiceApp.class)
