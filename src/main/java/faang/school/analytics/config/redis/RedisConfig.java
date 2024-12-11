@@ -18,8 +18,12 @@ public class RedisConfig {
     public RedisMessageListenerContainer redisContainer(RedisConnectionFactory connectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(subscriptionEventListener,
-                new ChannelTopic(redisProperties.getChannel().getSubscriptionChannel()));
+        container.addMessageListener(subscriptionEventListener, getSubscriptionChannelTopic());
         return container;
+    }
+
+    @Bean
+    ChannelTopic getSubscriptionChannelTopic() {
+        return new ChannelTopic(redisProperties.getChannel().getSubscriptionChannel());
     }
 }
