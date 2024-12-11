@@ -12,21 +12,23 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
-    EventType recommendation_received = EventType.RECOMMENDATION_RECEIVED;
-    EventType goal_completed = EventType.GOAL_COMPLETED;
+
+    static EventType getRecommendationReceived() {return EventType.RECOMMENDATION_RECEIVED;}
+
+    static EventType getGoalCompleted() {return EventType.GOAL_COMPLETED;}
 
     AnalyticsEventDto toDto(AnalyticsEvent event);
     AnalyticsEvent toEntity(AnalyticsEventDto eventDto);
 
     @Mapping(source = "authorId", target = "actorId")
     @Mapping(source = "createdAt", target = "receivedAt")
-    @Mapping(target = "eventType", expression = "java(map(recommendation_received))")
+    @Mapping(target = "eventType", expression = "java(map(AnalyticsEventMapper.getRecommendationReceived()))")
     AnalyticsEventDto recommendationToAnalyticsDto(RecommendationEvent recommendationEvent);
 
     @Mapping(source = "completingUserId", target = "actorId")
     @Mapping(source = "id", target = "receiverId")
     @Mapping(source = "date", target = "receivedAt")
-    @Mapping(target = "eventType", expression = "java(map(goal_completed))")
+    @Mapping(target = "eventType", expression = "java(map(AnalyticsEventMapper.getGoalCompleted()))")
     AnalyticsEventDto goalCompletedToAnalyticsDto(GoalCompletedEvent goalCompletedEvent);
 
     default Integer map(EventType type) {

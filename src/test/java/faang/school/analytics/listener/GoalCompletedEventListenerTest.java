@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.goal.GoalCompletedEvent;
 import faang.school.analytics.dto.recommendation.RecommendationEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.service.AnalyticsEventService;
 
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ public class GoalCompletedEventListenerTest {
     @Mock
     private AnalyticsEventService analyticsEventService;
     @Spy
-    private AnalyticsEventMapper mapper;
+    private AnalyticsEventMapperImpl mapper;
 
     @InjectMocks
     GoalCompletedEventListener eventListener;
