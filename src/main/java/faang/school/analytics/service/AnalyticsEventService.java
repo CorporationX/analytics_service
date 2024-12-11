@@ -10,12 +10,25 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class AnalyticsEventService {
+    private static final Map<Interval, LocalDateTime> INTERVAL_MAP = new EnumMap<>(Interval.class);
+
+    static {
+        INTERVAL_MAP.put(Interval.HOUR, LocalDateTime.now().minusHours(1));
+        INTERVAL_MAP.put(Interval.DAY, LocalDateTime.now().minusDays(1));
+        INTERVAL_MAP.put(Interval.WEEK, LocalDateTime.now().minusDays(7));
+        INTERVAL_MAP.put(Interval.MONTH, LocalDateTime.now().minusMonths(1));
+        INTERVAL_MAP.put(Interval.YEAR, LocalDateTime.now().minusYears(1));
+    }
+
 
     private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventMapper analyticsEventMapper;
@@ -30,36 +43,24 @@ public class AnalyticsEventService {
                                                 LocalDateTime from,
                                                 LocalDateTime to) {
 
-        List<AnalyticsEvent> events = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType).toList();
+        Stream<AnalyticsEvent> events = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
 
-        List<AnalyticsEvent> filteredEvents = events.stream()
-                .filter(event -> {
-                    if (interval != null) {
-                        return event.getReceivedAt().isAfter(dateForInterval(interval));
-                    } else {
-                        return event.getReceivedAt().isAfter(from) && event.getReceivedAt().isBefore(to);
-                    }
-                })
+        return events
+                .filter(event -> filterEvent(event, interval, from, to))
                 .sorted((e1, e2) -> e2.getReceivedAt().compareTo(e1.getReceivedAt()))
-                .toList();
-
-        return filteredEvents.stream()
                 .map(analyticsEventMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    private LocalDateTime dateForInterval(Interval interval) {
-        if (interval.equals(Interval.HOUR)) {
-            return LocalDateTime.now().minusHours(1);
-        } else if (interval.equals(Interval.DAY)) {
-            return LocalDateTime.now().minusDays(1);
-        } else if (interval.equals(Interval.WEEK)) {
-            return LocalDateTime.now().minusDays(7);
-        } else if (interval.equals(Interval.MONTH)) {
-            return LocalDateTime.now().minusMonths(1);
-        } else if (interval.equals(Interval.YEAR)) {
-            return LocalDateTime.now().minusYears(1);
+    private boolean filterEvent(AnalyticsEvent event, Interval interval, LocalDateTime from, LocalDateTime to) {
+        if (interval != null) {
+            return event.getReceivedAt().isAfter(dateForInterval(interval));
+        } else {
+            return event.getReceivedAt().isAfter(from) && event.getReceivedAt().isBefore(to);
         }
-        return LocalDateTime.now();
+    }
+
+    private LocalDateTime dateForInterval(Interval interval) {
+        return INTERVAL_MAP.getOrDefault(interval, LocalDateTime.now());
     }
 }
