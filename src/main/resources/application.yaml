@@ -23,6 +23,7 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+        mentorship_request: "mentorship_request_channel"
 
 server:
   port: 8086
@@ -37,6 +38,4 @@ project-service:
   host: localhost
   port: 8082
 
-redis:
-  topic:
-    mentorship-requested: mentorshipRequestedEventTopic
+

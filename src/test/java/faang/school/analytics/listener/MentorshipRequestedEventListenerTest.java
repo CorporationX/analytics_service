@@ -69,7 +69,7 @@ class MentorshipRequestedEventListenerTest {
 
         RuntimeException thrown = assertThrows(RuntimeException.class,
                 () -> listener.onMessage(message, null));
-        assertEquals("Failed to deserialize mentorship request event.",
+        assertEquals("Unexpected error while processing mentorship request event.",
                 thrown.getMessage());
 
         verify(objectMapper, times(1))

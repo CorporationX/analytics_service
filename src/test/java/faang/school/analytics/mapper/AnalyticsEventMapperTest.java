@@ -18,7 +18,6 @@ class AnalyticsEventMapperTest {
         AnalyticsEvent result = mapper.toAnalyticsEventMentorshipRequest(mentorshipRequestEvent);
 
         assertNotNull(result);
-        assertEquals(EventType.RECOMMENDATION_RECEIVED, result.getEventType());
         assertEquals(1L, result.getReceiverId());
         assertEquals(2L, result.getActorId());
         assertNull(result.getReceivedAt());
