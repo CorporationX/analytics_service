@@ -5,7 +5,7 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record LikeEvent (
+public record PostLikeEvent(
     Long postId,
     Long authorId,
     Long userId,
