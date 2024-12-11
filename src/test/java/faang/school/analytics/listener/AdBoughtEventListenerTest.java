@@ -1,11 +1,12 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.dto.analyticsEvent.AdBoughtEventResponseDto;
+import faang.school.analytics.dto.event.AdBoughtEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,6 +20,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,7 +33,7 @@ public class AdBoughtEventListenerTest {
     private ObjectMapper objectMapper;
 
     @Mock
-    private List<EventHandler<AdBoughtEventResponseDto>> eventHandlers;
+    private List<EventHandler<AdBoughtEvent>> eventHandlers;
 
     @Mock
     private AnalyticsEventService analyticsEventService;
@@ -43,42 +46,68 @@ public class AdBoughtEventListenerTest {
 
     @Test
     public void testListenEvent() throws IOException {
-        byte[] messageBody = "{\"postId\":1,\"actorId\":1,\"paymentAmount\":100,\"adDuration\":30,\"timestamp\":null}".getBytes();
+        byte[] messageBody = getInvalidJsonString().getBytes();
         Message message = mock(Message.class);
         when(message.getBody()).thenReturn(messageBody);
 
-        AdBoughtEventResponseDto expectedEvent = AdBoughtEventResponseDto.builder()
-                .postId(1L)
-                .actorId(1L)
-                .paymentAmount(BigDecimal.valueOf(100))
-                .adDuration(30L)
-                .receivedAt(LocalDateTime.now())
-                .build();
+        AdBoughtEvent expectedEvent = createAdBoughtEvent(BigDecimal.valueOf(100));
 
-        when(objectMapper.readValue(messageBody, AdBoughtEventResponseDto.class)).thenReturn(expectedEvent);
+        when(objectMapper.readValue(messageBody, AdBoughtEvent.class)).thenReturn(expectedEvent);
 
-        AdBoughtEventResponseDto actualEvent = listener.listenEvent(message, AdBoughtEventResponseDto.class);
+        AdBoughtEvent actualEvent = listener.listenEvent(message, AdBoughtEvent.class);
 
         assertEquals(expectedEvent, actualEvent);
     }
 
+
+
     @Test
     public void testSaveEvent() {
-        AdBoughtEventResponseDto expectedEvent = AdBoughtEventResponseDto.builder()
-                .postId(1L)
-                .actorId(1L)
-                .paymentAmount(BigDecimal.valueOf(100))
-                .adDuration(30L)
-                .receivedAt(LocalDateTime.now())
-                .build();
-
-
+        AdBoughtEvent expectedEvent = createAdBoughtEvent(BigDecimal.valueOf(100));
         AnalyticsEvent expectedAnalyticsEvent = new AnalyticsEvent();
         expectedAnalyticsEvent.setEventType(EventType.AD_BOUGHT);
+
         when(analyticsEventMapper.dtoToEntity(expectedEvent)).thenReturn(expectedAnalyticsEvent);
 
         listener.handleEvent(expectedEvent);
 
         verify(analyticsEventService).saveEvent(expectedAnalyticsEvent);
+    }
+
+    @Test
+    public void testSaveEventException() {
+        AdBoughtEvent expectedEvent = createAdBoughtEvent(BigDecimal.valueOf(100));
+        AnalyticsEvent expectedAnalyticsEvent = new AnalyticsEvent();
+        expectedAnalyticsEvent.setEventType(EventType.AD_BOUGHT);
+
+        when(analyticsEventMapper.dtoToEntity(expectedEvent)).thenReturn(expectedAnalyticsEvent);
+        doThrow(new RuntimeException("Database error")).when(analyticsEventService).saveEvent(expectedAnalyticsEvent);
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> listener.handleEvent(expectedEvent));
+        assertEquals("Database error", exception.getMessage());
+    }
+
+    @Test
+    public void testListenEventEmptyMessage() {
+        Message message = mock(Message.class);
+        when(message.getBody()).thenReturn("".getBytes());
+
+        IOException exception = assertThrows(IOException.class, () -> listener.listenEvent(message, AdBoughtEvent.class));
+        assertEquals("Message body is empty", exception.getMessage());
+    }
+
+
+    private AdBoughtEvent createAdBoughtEvent(BigDecimal paymentAmount) {
+        return AdBoughtEvent.builder()
+                .postId(1L)
+                .actorId(1L)
+                .paymentAmount(paymentAmount)
+                .adDuration(30L)
+                .receivedAt(LocalDateTime.now())
+                .build();
+    }
+
+    private static @NotNull String getInvalidJsonString() {
+        return "{\"postId\":1,\"userId\":1,\"paymentAmount\":100,\"adDuration\":30,\"receivedAt\":\"2022-01-01T12:00:00\"\"";
     }
 }

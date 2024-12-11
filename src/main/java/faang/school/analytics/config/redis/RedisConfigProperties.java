@@ -8,6 +8,6 @@ public record RedisConfigProperties(
         int port,
         Channel channel
 ) {
-    public record Channel(String ad_bought, String profile_view) {
+    public record Channel(String adBought, String profileView) {
     }
 }

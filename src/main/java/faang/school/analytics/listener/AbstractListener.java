@@ -17,9 +17,17 @@ public abstract class AbstractListener<T> implements MessageListener {
     private final List<EventHandler<T>> eventHandlers;
 
     protected T listenEvent(Message message, Class<T> eventType) throws IOException {
+        if (message.getBody().length == 0) {
+            log.error("Message body is empty {}", message.getBody());
+            throw new IOException("Message body is empty");
+        } else {
+            message.getBody();
+        }
+
         try {
             return objectMapper.readValue(message.getBody(), eventType);
         } catch (IOException e) {
+            log.error("Failed to map message to event type", e);
             throw new RuntimeException("Failed to map message to event type", e);
         }
     }
@@ -32,15 +40,20 @@ public abstract class AbstractListener<T> implements MessageListener {
     public void onMessage(@NonNull Message message, byte[] pattern) {
         try {
             T event = listenEvent(message, eventType());
-            log.info(eventHandlers.toString());
-            eventHandlers.forEach(handler -> handler.handle(event));
-            log.info("Data successfully processed for event {}", event);
 
+            if (eventHandlers != null && eventHandlers.isEmpty()) {
+                log.info("Processing event with handlers: {}", eventHandlers);
+                eventHandlers.forEach(handler -> handler.handle(event));
+            } else {
+                log.warn("No event handlers available for event: {}", event);
+            }
+
+            log.info("Data successfully processed for event {}", event);
             handleEvent(event);
 
         } catch (IOException e) {
-            log.warn("Unsuccessful mapping", e);
-            throw new RuntimeException(e);
+            log.error("Failed to process event", e);
+            throw new EventProcessingException("Failed to process event");
         }
     }
 }

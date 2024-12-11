@@ -1,7 +1,7 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.dto.analyticsEvent.AdBoughtEventResponseDto;
+import faang.school.analytics.dto.event.AdBoughtEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -13,13 +13,13 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class AdBoughtEventListener extends AbstractListener<AdBoughtEventResponseDto> {
+public class AdBoughtEventListener extends AbstractListener<AdBoughtEvent> {
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper analyticsEventMapper;
 
     public AdBoughtEventListener(
             ObjectMapper objectMapper,
-            List<EventHandler<AdBoughtEventResponseDto>> eventHandlers,
+            List<EventHandler<AdBoughtEvent>> eventHandlers,
             AnalyticsEventService analyticsEventService,
             AnalyticsEventMapper analyticsEventMapper) {
         super(objectMapper, eventHandlers);
@@ -28,12 +28,12 @@ public class AdBoughtEventListener extends AbstractListener<AdBoughtEventRespons
     }
 
     @Override
-    protected Class<AdBoughtEventResponseDto> eventType() {
-        return AdBoughtEventResponseDto.class;
+    protected Class<AdBoughtEvent> eventType() {
+        return AdBoughtEvent.class;
     }
 
     @Override
-    protected void handleEvent(AdBoughtEventResponseDto event) {
+    protected void handleEvent(AdBoughtEvent event) {
         AnalyticsEvent analyticsEvent = analyticsEventMapper.dtoToEntity(event);
         analyticsEvent.setEventType(EventType.AD_BOUGHT);
         analyticsEventService.saveEvent(analyticsEvent);
