@@ -65,7 +65,7 @@ class AnalyticsEventServiceImplTest {
     @Test
     @DisplayName("Get Analytics Test")
     void testGetAnalytics() {
-//        fail("test failed 2");
+        fail("test failed 2");
         var analyticsEvent = AnalyticsEvent.builder()
                 .id(1L)
                 .receiverId(1L)
