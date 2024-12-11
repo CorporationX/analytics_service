@@ -1,25 +1,17 @@
 package faang.school.analytics.config.redis;
 
-<<<<<<< HEAD
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.redis.listener.RedisListener;
 import lombok.RequiredArgsConstructor;
-=======
 import faang.school.analytics.redis.listener.RedisContainerMessageListener;
->>>>>>> Manticore-master-stream7
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-<<<<<<< HEAD
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-=======
-import org.springframework.data.redis.listener.RedisMessageListenerContainer;
->>>>>>> Manticore-master-stream7
 
 import java.util.List;
 
@@ -32,8 +24,6 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.port}")
     private int redisPort;
-
-    private final List<RedisListener> listeners;
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
@@ -49,7 +39,8 @@ public class RedisConfig {
         container.setConnectionFactory(jedisConnectionFactory());
         eventListeners.forEach(listener ->
                 container.addMessageListener(listener.getAdapter(), listener.getChannelTopic()));
-        }
+        return container;
+    }
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(ObjectMapper objectMapper) {
@@ -58,14 +49,5 @@ public class RedisConfig {
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new Jackson2JsonRedisSerializer<>(objectMapper, Object.class));
         return template;
-    }
-
-    @Bean
-    RedisMessageListenerContainer redisContainer() {
-        final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(jedisConnectionFactory());
-        listeners.forEach(redisListener ->
-                container.addMessageListener(redisListener.getAdapter(), redisListener.getTopic()));
-        return container;
     }
 }

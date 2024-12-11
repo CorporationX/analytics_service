@@ -8,7 +8,6 @@ import faang.school.analytics.service.AnalyticsEventService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.data.redis.listener.Topic;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -33,7 +32,7 @@ public class ProfileViewListener extends AbstractEventListener<ProfileViewEvent>
     }
 
     @Override
-    public Topic getTopic() {
+    public ChannelTopic getChannelTopic() {
         return new ChannelTopic(channelName);
     }
 }
