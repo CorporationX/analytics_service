@@ -13,7 +13,7 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 public abstract class AbstractEventListener<T>
-        implements MessageListener, RedisContainerMessageListener { //todo поправить
+        implements MessageListener, RedisContainerMessageListener {
 
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
