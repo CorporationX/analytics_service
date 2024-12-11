@@ -1,17 +1,25 @@
 package faang.school.analytics.config.redis;
 
+<<<<<<< HEAD
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.redis.listener.RedisListener;
 import lombok.RequiredArgsConstructor;
+=======
+import faang.school.analytics.redis.listener.RedisContainerMessageListener;
+>>>>>>> Manticore-master-stream7
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+<<<<<<< HEAD
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+=======
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+>>>>>>> Manticore-master-stream7
 
 import java.util.List;
 
@@ -32,6 +40,16 @@ public class RedisConfig {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, redisPort);
         return new JedisConnectionFactory(config);
     }
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(
+            List<RedisContainerMessageListener> eventListeners) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+
+        container.setConnectionFactory(jedisConnectionFactory());
+        eventListeners.forEach(listener ->
+                container.addMessageListener(listener.getAdapter(), listener.getChannelTopic()));
+        }
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(ObjectMapper objectMapper) {

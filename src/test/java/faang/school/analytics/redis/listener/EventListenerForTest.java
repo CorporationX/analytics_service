@@ -3,7 +3,7 @@ package faang.school.analytics.redis.listener;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.springframework.data.redis.connection.Message;
-import org.springframework.data.redis.listener.Topic;
+import org.springframework.data.redis.listener.ChannelTopic;
 
 public class EventListenerForTest extends AbstractEventListener<EventForTest> {
 
@@ -12,13 +12,13 @@ public class EventListenerForTest extends AbstractEventListener<EventForTest> {
         super(objectMapper, analyticsEventService);
     }
 
-
     @Override
-    public void onMessage(Message message, byte[] pattern) {
+    public ChannelTopic getChannelTopic() {
+        return null;
     }
 
     @Override
-    public Topic getTopic() {
-        return null;
+    public void onMessage(Message message, byte[] pattern) {
+
     }
 }

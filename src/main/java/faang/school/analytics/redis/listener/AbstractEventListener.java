@@ -13,7 +13,7 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 public abstract class AbstractEventListener<T>
-        implements MessageListener, RedisListener {
+        implements MessageListener, RedisContainerMessageListener { //todo поправить
 
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
@@ -22,7 +22,7 @@ public abstract class AbstractEventListener<T>
         try {
             return objectMapper.readValue(message.getBody(), eventType);
         } catch (IOException e) {
-            log.error("Failed to deserialize profile view event", e);
+            log.error("Failed to deserialize event", e);
             throw new IllegalArgumentException("Failed to deserialize message body", e);
         }
     }
