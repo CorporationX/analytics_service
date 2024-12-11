@@ -6,6 +6,7 @@ import faang.school.analytics.mapper.recommendation.RecommendationMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.event.AnalyticsEventService;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -27,10 +28,9 @@ public class RecommendationEventListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
-            log.info(objectMapper.writeValueAsString(message));
-
             RecommendationEvent recommendationEvent = objectMapper
                     .readValue(message.getBody(), RecommendationEvent.class);
+            System.out.println(recommendationEvent);
             log.info(objectMapper.writeValueAsString(recommendationEvent));
 
             AnalyticsEvent analyticsEvent = recommendationMapper.toAnalyticsEvent(recommendationEvent);
