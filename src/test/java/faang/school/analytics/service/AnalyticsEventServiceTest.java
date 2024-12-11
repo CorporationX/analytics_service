@@ -6,6 +6,7 @@ import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.model.dto.AnalyticsEventDto;
 import faang.school.analytics.model.mapper.AnalyticsEventMapper;
+import faang.school.analytics.model.mapper.IntervalMapProvider;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,12 +34,15 @@ public class AnalyticsEventServiceTest {
     @Spy
     private AnalyticsEventMapper analyticsEventMapper = Mappers.getMapper(AnalyticsEventMapper.class);
 
+    @Spy
+    private IntervalMapProvider intervalMapProvider;
+
     @InjectMocks
     private AnalyticsEventService analyticsEventService;
 
     @BeforeEach
     public void setUp() {
-        analyticsEventService = new AnalyticsEventService(analyticsEventRepository, analyticsEventMapper);
+        analyticsEventService = new AnalyticsEventService(intervalMapProvider, analyticsEventRepository, analyticsEventMapper);
     }
 
     @Test
@@ -66,15 +70,6 @@ public class AnalyticsEventServiceTest {
         analytics.forEach(System.out::println);
         assertThat(analytics).hasSize(1);
         assertThat(analytics.get(0).eventType()).isEqualTo("POST_COMMENT");
-    }
-
-    private AnalyticsEvent createAnalyticsEvent(long id, long receiverId, EventType eventType, LocalDateTime receivedAt) {
-        AnalyticsEvent event = new AnalyticsEvent();
-        event.setId(id);
-        event.setReceiverId(receiverId);
-        event.setEventType(eventType);
-        event.setReceivedAt(receivedAt);
-        return event;
     }
 
     @Test
@@ -111,5 +106,14 @@ public class AnalyticsEventServiceTest {
         List<AnalyticsEventDto> analytics = analyticsEventService.getAnalytics(receiverId, eventType, null, from, to);
 
         assertThat(analytics).isEmpty();
+    }
+
+    private AnalyticsEvent createAnalyticsEvent(long id, long receiverId, EventType eventType, LocalDateTime receivedAt) {
+        AnalyticsEvent event = new AnalyticsEvent();
+        event.setId(id);
+        event.setReceiverId(receiverId);
+        event.setEventType(eventType);
+        event.setReceivedAt(receivedAt);
+        return event;
     }
 }
