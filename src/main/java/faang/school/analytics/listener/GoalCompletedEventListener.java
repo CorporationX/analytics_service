@@ -31,8 +31,11 @@ public class GoalCompletedEventListener implements MessageListener {
             event.setEventType(EventType.GOAL_COMPLETED);
             analyticsEventService.saveEvent(event);
         } catch (IOException e) {
-            log.error("Exception occurred while parsing the message", e);
-            throw new MessageProcessingException("Failed to process message: " + message, e);
+            log.error("Failed to parse or read message body", e);
+            throw new MessageProcessingException("Message parsing failed", e);
+        } catch (Exception e) {
+            log.error("An unexpected error occurred while processing the message", e);
+            throw new MessageProcessingException("Unexpected failure", e);
         }
     }
 }
