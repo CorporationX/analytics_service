@@ -6,11 +6,12 @@ import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.model.dto.AnalyticsEventDto;
 import faang.school.analytics.model.mapper.AnalyticsEventMapper;
-import faang.school.analytics.model.mapper.IntervalMapProvider;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -34,15 +35,14 @@ public class AnalyticsEventServiceTest {
     @Spy
     private AnalyticsEventMapper analyticsEventMapper = Mappers.getMapper(AnalyticsEventMapper.class);
 
-    @Spy
-    private IntervalMapProvider intervalMapProvider;
+
 
     @InjectMocks
     private AnalyticsEventService analyticsEventService;
 
     @BeforeEach
     public void setUp() {
-        analyticsEventService = new AnalyticsEventService(intervalMapProvider, analyticsEventRepository, analyticsEventMapper);
+        analyticsEventService = new AnalyticsEventService(analyticsEventRepository, analyticsEventMapper);
     }
 
     @Test
@@ -53,23 +53,28 @@ public class AnalyticsEventServiceTest {
         verify(analyticsEventRepository).save(event);
     }
 
-    @Test
-    public void getAnalyticsEventByIntervalSuccessTest() {
-        long receiverId = 1L;
-        EventType eventType = EventType.POST_COMMENT;
-        Interval interval = Interval.HOUR;
+    @ParameterizedTest
+    @CsvSource({
+            "1, POST_COMMENT, HOUR",
+            "2, POST_LIKE, DAY",
+            "3, SKILL_RECEIVED, WEEK"
+    })
+    public void getAnalyticsEventByIntervalParameterizedTest(long receiverId, String eventType, String interval) {
+        EventType eventTypeEnum = EventType.valueOf(eventType);
+        Interval intervalEnum = Interval.valueOf(interval);
 
         List<AnalyticsEvent> mockEvents = new ArrayList<>();
-        LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
-        mockEvents.add(createAnalyticsEvent(1L, receiverId, eventType, oneDayAgo));
-        mockEvents.add(createAnalyticsEvent(2L, receiverId, eventType, LocalDateTime.now()));
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)).thenReturn(mockEvents.stream());
+        LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
+        mockEvents.add(createAnalyticsEvent(3L, receiverId, eventTypeEnum, oneWeekAgo));
+        mockEvents.add(createAnalyticsEvent(2L, receiverId, eventTypeEnum, LocalDateTime.now()));
 
-        List<AnalyticsEventDto> analytics = analyticsEventService.getAnalytics(receiverId, eventType, interval, null, null);
+        when(analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventTypeEnum)).thenReturn(mockEvents.stream());
+
+        List<AnalyticsEventDto> analytics = analyticsEventService.getAnalytics(receiverId, eventTypeEnum, intervalEnum, null, null);
         analytics.forEach(System.out::println);
         assertThat(analytics).hasSize(1);
-        assertThat(analytics.get(0).eventType()).isEqualTo("POST_COMMENT");
+        assertThat(analytics.get(0).eventType()).isEqualTo(eventType);
     }
 
     @Test
