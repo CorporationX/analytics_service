@@ -8,6 +8,7 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doReturn;
@@ -57,6 +59,7 @@ class AnalyticsEventServiceImplTest {
         analyticsEventService.saveEvent(analyticsEvent);
         verify(analyticsEventRepository).save(any(AnalyticsEvent.class));
         verifyNoMoreInteractions(analyticsEventRepository);
+        Assertions.fail("failed test");
     }
 
     @Test
