@@ -49,17 +49,12 @@ public class AnalyticsEventService {
     }
 
     private LocalDateTime dateForInterval(Interval interval) {
-        if (interval.equals(Interval.HOUR)) {
-            return LocalDateTime.now().minusHours(1);
-        } else if (interval.equals(Interval.DAY)) {
-            return LocalDateTime.now().minusDays(1);
-        } else if (interval.equals(Interval.WEEK)) {
-            return LocalDateTime.now().minusWeeks(1);
-        } else if (interval.equals(Interval.MONTH)) {
-            return LocalDateTime.now().minusMonths(1);
-        } else if (interval.equals(Interval.YEAR)) {
-            return LocalDateTime.now().minusYears(1);
-        }
-        return LocalDateTime.now();
+        return switch (interval) {
+            case HOUR -> LocalDateTime.now().minusHours(1);
+            case DAY -> LocalDateTime.now().minusDays(1);
+            case WEEK -> LocalDateTime.now().minusWeeks(1);
+            case MONTH -> LocalDateTime.now().minusMonths(1);
+            case YEAR -> LocalDateTime.now().minusYears(1);
+        };
     }
 }
