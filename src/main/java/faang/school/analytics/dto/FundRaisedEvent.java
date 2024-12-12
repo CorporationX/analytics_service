@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FundRaisedDto {
-    private Long id;
+public class FundRaisedEvent {
+    private Long userId;
     private Long projectId;
     private Long paymentAmount;
     private LocalDateTime localDateTime;
