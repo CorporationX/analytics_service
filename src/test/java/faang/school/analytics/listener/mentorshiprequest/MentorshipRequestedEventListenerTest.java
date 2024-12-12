@@ -36,7 +36,7 @@ public class MentorshipRequestedEventListenerTest {
     MentorshipRequestedEventListener eventListener;
 
     @Test
-    public void onMessagePositiveTest() throws IOException {
+    public void testOnMessagePositiveTest() throws IOException {
         MentorshipRequestedEvent event = prepareEvent();
         AnalyticsEventDto mappedEvent = mapper.mentorshipRequestedToAnalyticsDto(event);
 
@@ -52,7 +52,7 @@ public class MentorshipRequestedEventListenerTest {
     }
 
     @Test
-    public void onMessageExceptionTest() throws IOException {
+    public void testOnMessageExceptionTest() throws IOException {
         MentorshipRequestedEvent event = prepareEvent();
         Message message = mock(Message.class);
         byte[] messageBody = objectMapper.writeValueAsBytes(event);
