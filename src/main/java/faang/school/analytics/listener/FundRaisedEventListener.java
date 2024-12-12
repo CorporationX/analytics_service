@@ -21,7 +21,6 @@ import java.io.IOException;
 public class FundRaisedEventListener implements MessageListener {
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
-    private final EventMapper eventMapper;
     private final FundRaisedEventMapper fundRaisedEventMapper;
 
     @Override
@@ -29,8 +28,7 @@ public class FundRaisedEventListener implements MessageListener {
         try {
             FundRaisedEvent fundRaisedEvent = objectMapper.readValue(message.getBody(), FundRaisedEvent.class);
             EventDto eventDto = fundRaisedEventMapper.toEventDto(fundRaisedEvent);
-            AnalyticsEvent analyticsEvent = eventMapper.toEntity(eventDto);
-            analyticsEventService.addNewEvent(analyticsEvent);
+            analyticsEventService.addNewEvent(eventDto);
         } catch (IOException e) {
             log.error("Error processing FundRaisedEvent", e);
             throw new RuntimeException(e);
