@@ -28,7 +28,7 @@ public class GoalCompletedEventListener implements MessageListener {
     public void onMessage(@Nullable Message message, byte[] pattern) {
         if (message == null) {
             log.error("Received message is null in GoalCompletedEventListener");
-            throw new MessageProcessingException("Received message is null");
+            return;
         }
         try {
             GoalCompletedEvent goalCompletedEvent = objectMapper.readValue(message.getBody(), GoalCompletedEvent.class);
