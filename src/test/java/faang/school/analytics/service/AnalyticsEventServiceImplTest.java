@@ -19,7 +19,6 @@ import faang.school.analytics.repository.AnalyticsEventRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,7 +56,6 @@ class AnalyticsEventServiceImplTest {
     analyticsEventService.saveEvent(analyticsEvent);
     verify(analyticsEventRepository).save(any(AnalyticsEvent.class));
     verifyNoMoreInteractions(analyticsEventRepository);
-    Assertions.fail("failed test");
   }
 
   @Test
