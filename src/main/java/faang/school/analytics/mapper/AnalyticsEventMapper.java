@@ -16,8 +16,17 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "eventTypeNumber", target = "eventType", qualifiedByName = "mapToEventType")
     AnalyticsEvent toEntity(AnalyticsEventDto analyticsEventDto);
 
+    EventType recommendation_received = EventType.RECOMMENDATION_RECEIVED;
+
     @Mapping(source = "eventType", target = "eventTypeNumber", qualifiedByName = "mapToEventTypeNumber")
     AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
+
+    @Mapping(source = "authorId", target = "actorId")
+    @Mapping(source = "createdAt", target = "receivedAt")
+    @Mapping(target = "eventType", expression = "java(map(recommendation_received))")
+    AnalyticsEventDto recommendationToAnalyticsDto(RecommendationEvent recommendationEvent);
+
+
 
     @Named("mapToEventTypeNumber")
     default int map(EventType eventType) {
