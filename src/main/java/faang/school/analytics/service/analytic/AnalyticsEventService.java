@@ -51,4 +51,9 @@ public class AnalyticsEventService {
                 .mapToInt(Integer::intValue)
                 .sum();
     }
+
+    public AnalyticsEventDto savePostView(AnalyticsEventDto analyticsEventDto) {
+        AnalyticsEvent event = analyticsEventMapper.toEntity(analyticsEventDto);
+        return analyticsEventMapper.toDto(analyticsEventRepository.save(event));
+    }
 }
