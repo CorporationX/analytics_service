@@ -28,7 +28,7 @@ public class AnalyticsEventService {
 
     public void saveEvent(AnalyticsEvent event) {
         AnalyticsEvent savedEvent = analyticsEventRepository.save(event);
-        log.info("Analytics event {} saved successfully.", savedEvent.getId());
+        log.info("Analytics {} event saved successfully: {}", savedEvent.getEventType(), savedEvent.toString());
     }
 
     public List<AnalyticsEventResponseDto> getAnalytics(

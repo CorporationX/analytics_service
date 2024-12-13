@@ -22,7 +22,12 @@ spring:
       port: 6379
       host: localhost
       channel:
-        profile-view: profile_view_channel
+        comment-channel: comment_channel
+  retry:
+    maxAttempts: 3
+    initialDelay: 1000
+    multiplier: 2.0
+    maxDelay: 10000
 
 server:
   port: 8086
