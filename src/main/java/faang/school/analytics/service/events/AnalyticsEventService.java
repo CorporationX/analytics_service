@@ -5,7 +5,7 @@ import faang.school.analytics.domain.dto.events.AnalyticsEventFilterDto;
 import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.mapper.events.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.repository.AnalyticsEventRepository;
+import faang.school.analytics.repository.analytic.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

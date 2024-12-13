@@ -7,7 +7,7 @@ import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.mapper.events.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.repository.AnalyticsEventRepository;
+import faang.school.analytics.repository.analytic.AnalyticsEventRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
