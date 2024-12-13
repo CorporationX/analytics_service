@@ -1,6 +1,7 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.analytic.AnalyticsEventDto;
+import faang.school.analytics.dto.recommendation.RecommendationEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.mapstruct.Mapper;
@@ -23,7 +24,7 @@ public interface AnalyticsEventMapper {
 
     @Mapping(source = "authorId", target = "actorId")
     @Mapping(source = "createdAt", target = "receivedAt")
-    @Mapping(target = "eventType", expression = "java(map(recommendation_received))")
+    @Mapping(target = "eventTypeNumber", expression = "java(map(recommendation_received))")
     AnalyticsEventDto recommendationToAnalyticsDto(RecommendationEvent recommendationEvent);
 
 

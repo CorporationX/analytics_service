@@ -1,11 +1,11 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.analytic.AnalyticsEventDto;
 import faang.school.analytics.dto.recommendation.RecommendationEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.service.AnalyticsEventService;
+import faang.school.analytics.service.analytic.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -28,7 +28,7 @@ public class RecommendationEventListener implements MessageListener {
         try {
             RecommendationEvent event = objectMapper.readValue(message.getBody(), RecommendationEvent.class);
             AnalyticsEventDto eventDto = mapper.recommendationToAnalyticsDto(event);
-            analyticsEventService.saveEvent(eventDto);
+            analyticsEventService.saveAction(eventDto);
         } catch (IOException e) {
             log.error("Error reading value");
             throw new RuntimeException(e);
