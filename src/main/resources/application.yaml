@@ -22,7 +22,9 @@ spring:
       port: 6379
       host: localhost
       channel:
+        post-view: post_view_channel
         profile-view: profile_view_channel
+        recommendation_topic: recommendation_topic
 
 server:
   port: 8086
@@ -34,3 +36,14 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+user-service:
+  name: UserService
+  host: localhost
+  port: 8080
+
+rating:
+  growth-intensive: 0.05
+  half-max-rank: 50.0
+  max-user-rating: 100.0
+  min-user-rating: 0.0

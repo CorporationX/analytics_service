@@ -6,6 +6,7 @@ import faang.school.analytics.service.events.AnalyticsEventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ import java.util.List;
 public class AnalyticsEventController {
     private final AnalyticsEventService analyticsEventService;
 
-    @PostMapping
+    @PostMapping("/save-event")
     public AnalyticsEventDto saveEvent(@Valid @RequestBody AnalyticsEventDto event) {
         log.info("Save event. Type = {}. ReceiverId = {}. ActorId = {}.", event.getEventType(), event.getReceivedAt(), event.getActorId());
         return analyticsEventService.saveEvent(event);
@@ -33,5 +34,10 @@ public class AnalyticsEventController {
         log.info("Requested events with filter: interval = {}, fromAt = {}, toAt = {}",
                 filterDto.getInterval(), filterDto.getFrom(), filterDto.getTo());
         return analyticsEventService.getAnalytics(filterDto);
+    }
+
+    @PostMapping("/save-action")
+    public ResponseEntity<Void> saveAction(@RequestBody @Valid AnalyticsEventDto analyticsEventDto) {
+        return analyticsEventService.saveAction(analyticsEventDto);
     }
 }

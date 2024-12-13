@@ -1,19 +1,27 @@
 package faang.school.analytics.service.events;
 
+import faang.school.analytics.client.user.UserServiceClient;
+import faang.school.analytics.config.context.UserContext;
 import faang.school.analytics.domain.dto.events.AnalyticsEventDto;
 import faang.school.analytics.domain.dto.events.AnalyticsEventFilterDto;
 import faang.school.analytics.domain.enums.Interval;
+import faang.school.analytics.dto.user.UserDto;
 import faang.school.analytics.exception.DataValidationException;
-import faang.school.analytics.mapper.events.AnalyticsEventMapper;
+import faang.school.analytics.mapper.events.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.repository.AnalyticsEventRepository;
+import faang.school.analytics.repository.analytic.AnalyticsEventRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,17 +34,39 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AnalyticsEventServiceTest {
-    @Mock
-    AnalyticsEventMapper analyticsEventMapper;
+    @Spy
+    AnalyticsEventMapperImpl analyticsEventMapper;
     @Mock
     AnalyticsEventRepository analyticsEventRepository;
     @Mock
     AnalyticsEventFilter analyticsEventFilter;
+    @Mock
+    UserServiceClient userServiceClient;
+    @Mock
+    private UserContext userContext;
     @InjectMocks
     AnalyticsEventService analyticsEventService;
+
+    private AnalyticsEventDto analyticsEventDto;
+    private final AnalyticsEventDto analyticsEventDtoWithWrongEventTypeNumber2 =
+            AnalyticsEventDto.builder()
+                    .eventType(-1)
+                    .build();
+
+    @BeforeEach
+    void setUp() {
+        analyticsEventDto = AnalyticsEventDto.builder()
+                .actorId(1L)
+                .receiverId(2L)
+                .eventType(EventType.FOLLOWER.ordinal())
+                .receivedAt(LocalDateTime.now())
+                .build();
+    }
 
     @Test
     void testSaveEventWithId() {
@@ -156,4 +186,37 @@ class AnalyticsEventServiceTest {
                 .build();
     }
 
+    @Test
+    public void saveAction_WithCorrectDto_ReturnOK() {
+        ArgumentCaptor<AnalyticsEvent> analyticsEventArgumentCaptor = ArgumentCaptor.forClass(AnalyticsEvent.class);
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(analyticsEventDto);
+        when(analyticsEventRepository.save(analyticsEventArgumentCaptor.capture()))
+                .thenReturn(analyticsEvent);
+        when(userServiceClient.getUser(2L))
+                .thenReturn(ResponseEntity.ok().body(UserDto.builder().build()));
+
+        ResponseEntity<Void> response = analyticsEventService.saveAction(analyticsEventDto);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(analyticsEventRepository, times(1)).save(analyticsEventArgumentCaptor.capture());
+    }
+
+    @Test
+    public void saveAction_WithWrongDto_ThrowIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class,
+                () -> analyticsEventMapper.toEntity(analyticsEventDtoWithWrongEventTypeNumber2));
+    }
+
+    @Test
+    void getSumOfUsersActionsByEventTypeTest_ReturnTen() {
+        int res = analyticsEventService.getSumOfUsersActionsByEventType(List.of(1, 2, 3, 4));
+
+        assertEquals(10, res);
+    }
+
+    @Test
+    void getSumOfUsersActionsByEventTypeTest_ReturnZero() {
+        int res = analyticsEventService.getSumOfUsersActionsByEventType(List.of());
+
+        assertEquals(0, res);
+    }
 }
