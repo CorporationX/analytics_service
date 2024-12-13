@@ -1,6 +1,7 @@
-package faang.school.analytics.mapper.follower;
+package faang.school.analytics.mapper;
 
 import faang.school.analytics.event.follower.FollowerEvent;
+import faang.school.analytics.event.mentorship.MentorshipRequestedEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,4 +15,9 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "receiverId", source = "followeeId")
     @Mapping(target = "receivedAt", expression = "java(java.time.LocalDateTime.now())")
     AnalyticsEvent followerEventToAnalyticsEvent(FollowerEvent followerEvent);
+
+    @Mapping(target = "eventType", constant = "MENTORSHIP_REQUESTED")
+    @Mapping(target = "actorId", source = "requesterId")
+    @Mapping(target = "receivedAt", source = "requestedAt")
+    AnalyticsEvent mentorshipRequestedEventToAnalyticsEvent(MentorshipRequestedEvent followerEvent);
 }
