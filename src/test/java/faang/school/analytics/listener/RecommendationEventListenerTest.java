@@ -2,11 +2,10 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.dto.analytic.AnalyticsEventDto;
+import faang.school.analytics.domain.dto.events.AnalyticsEventDto;
 import faang.school.analytics.dto.recommendation.RecommendationEvent;
-import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
-import faang.school.analytics.service.analytic.AnalyticsEventService;
-
+import faang.school.analytics.mapper.events.AnalyticsEventMapper;
+import faang.school.analytics.service.events.AnalyticsEventService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,7 +30,7 @@ public class RecommendationEventListenerTest {
     @Mock
     private AnalyticsEventService analyticsEventService;
     @Spy
-    private AnalyticsEventMapperImpl mapper;
+    private AnalyticsEventMapper mapper;
 
     @InjectMocks
     RecommendationEventListener eventListener;

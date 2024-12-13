@@ -7,7 +7,7 @@ import faang.school.analytics.mapper.user.UpdateUsersRankMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.analytic.AnalyticsEventRepository;
-import faang.school.analytics.service.analytic.AnalyticsEventService;
+import faang.school.analytics.service.events.AnalyticsEventService;
 import faang.school.analytics.service.analytic.AverageValueOfActionCalculator;
 import faang.school.analytics.service.analytic.StandardDeviationCalculator;
 import org.junit.jupiter.api.Test;
