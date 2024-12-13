@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.PostViewEventListener;
 import faang.school.analytics.listener.SearchAppearanceEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +11,7 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -21,6 +23,8 @@ public class RedisConfig {
     private int redisPort;
     @Value("${spring.data.redis.topic.search-appearance}")
     private String searchAppearanceTopicName;
+    @Value("${spring.data.redis.topic.view-appearance}")
+    private String postViewTopicName;
 
     @Bean
     public LettuceConnectionFactory lettuceConnectionFactory() {
@@ -29,17 +33,32 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory,
-                                                                       SearchAppearanceEventListener eventListener,
-                                                                       ChannelTopic searchAppearanceTopic) {
+    public RedisMessageListenerContainer redisMessageListenerContainer(
+            RedisConnectionFactory connectionFactory,
+            MessageListenerAdapter postViewEventListenerAdapter,
+            SearchAppearanceEventListener searchAppearanceEventListener,
+            ChannelTopic postViewTopic,
+            ChannelTopic searchAppearanceTopic) {
+
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(eventListener, searchAppearanceTopic);
+        container.addMessageListener(postViewEventListenerAdapter, postViewTopic);
+        container.addMessageListener(searchAppearanceEventListener, searchAppearanceTopic);
         return container;
     }
 
     @Bean
     public ChannelTopic searchAppearanceTopic() {
         return new ChannelTopic(searchAppearanceTopicName);
+    }
+
+    @Bean
+    public ChannelTopic postViewTopic() {
+        return new ChannelTopic(postViewTopicName);
+    }
+
+    @Bean
+    public MessageListenerAdapter postViewEventListenerAdapter(PostViewEventListener listener) {
+        return new MessageListenerAdapter(listener, "onMessage");
     }
 }

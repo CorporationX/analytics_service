@@ -23,6 +23,7 @@ spring:
       host: localhost
       topic:
         search-appearance: search_appearance_topic
+        view-appearance: post_view_appearance_topic
 
 server:
   port: 8086
