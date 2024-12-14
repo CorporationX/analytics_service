@@ -12,6 +12,8 @@ public interface AnalyticsEventMapper {
 
     AnalyticsEventResponseDto entityToResponseDto(AnalyticsEvent event);
 
+    AnalyticsEvent toEntity(AnalyticsEventResponseDto dto);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "time", target = "receivedAt")
     AnalyticsEvent toAnalyticsEventMentorshipRequest(MentorshipRequestEvent mentorshipRequestEvent);

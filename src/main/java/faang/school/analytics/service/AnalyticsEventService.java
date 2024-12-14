@@ -1,6 +1,6 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.Validator.AnalyticsEventValidator;
+import faang.school.analytics.validator.AnalyticsEventValidator;
 import faang.school.analytics.dto.MentorshipRequestEvent;
 import faang.school.analytics.dto.analyticsEvent.AnalyticsEventResponseDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -66,4 +66,3 @@ public class AnalyticsEventService {
                 analyticsEvent.getReceiverId(), analyticsEvent.getActorId());
     }
 }
-

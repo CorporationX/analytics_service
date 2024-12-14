@@ -1,4 +1,4 @@
-package faang.school.analytics.config.context;
+package faang.school.analytics.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

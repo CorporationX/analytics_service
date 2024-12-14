@@ -68,7 +68,7 @@ class MentorshipRequestedEventListenerTest {
 
         RuntimeException thrown = assertThrows(RuntimeException.class,
                 () -> listener.onMessage(message, null));
-        assertEquals("Unexpected error while processing mentorship request event.",
+        assertEquals("IO error occurred while processing mentorship request event.",
                 thrown.getMessage());
 
         verify(objectMapper, times(1))

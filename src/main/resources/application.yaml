@@ -22,8 +22,11 @@ spring:
       port: 6379
       host: localhost
       channel:
-        profile-view: profile_view_channel
         mentorshipRequest: "mentorship_request_channel"
+      channels:
+        profile-view: profile_view_channel
+        goal-completed: goal_completed_channel
+
 
 server:
   port: 8086
@@ -37,5 +40,3 @@ logging:
 project-service:
   host: localhost
   port: 8082
-
-

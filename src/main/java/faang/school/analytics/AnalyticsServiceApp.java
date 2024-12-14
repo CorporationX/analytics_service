@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.retry.annotation.EnableRetry;
 
 @SpringBootApplication
-@EnableFeignClients("school.faang.analytics.client")
+@EnableFeignClients("faang.school.analytics.client")
 @EnableRetry
 @Slf4j
 public class AnalyticsServiceApp {
