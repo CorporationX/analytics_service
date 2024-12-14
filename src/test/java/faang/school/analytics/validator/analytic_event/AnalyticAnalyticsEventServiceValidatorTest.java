@@ -12,13 +12,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class AnalyticAnalyticsEventServiceValidatorTest {
     private AnalyticEventServiceValidator analyticEventServiceValidator;
     private AnalyticsEvent analyticsEvent;
-    private EventRequestDto eventRequestDto;
 
     @BeforeEach
     void setUp() {
         analyticEventServiceValidator = new AnalyticEventServiceValidator();
         analyticsEvent = new AnalyticsEvent();
-        eventRequestDto = new EventRequestDto();
     }
 
     @Test
@@ -37,15 +35,24 @@ class AnalyticAnalyticsEventServiceValidatorTest {
     }
 
     @Test
-    void testInvalidEventRequestDto() {
+    void testInvalidInterval() {
         assertThrows(IllegalArgumentException.class,
-                () -> analyticEventServiceValidator.checkRequestDto(eventRequestDto));
+                () -> analyticEventServiceValidator.validateInterval(null, null, null));
     }
 
     @Test
-    void testCorrectEventRequestDto() {
-        eventRequestDto.setInterval(Interval.WEEK);
+    void testCorrectInterval() {
+        assertDoesNotThrow(() -> analyticEventServiceValidator.validateInterval(Interval.WEEK, null, null));
+    }
 
-        assertDoesNotThrow(() -> analyticEventServiceValidator.checkRequestDto(eventRequestDto));
+    @Test
+    void testInvalidCheckIdAndEvent() {
+        assertThrows(IllegalArgumentException.class,
+                () -> analyticEventServiceValidator.checkIdAndEvent(-12, null));
+    }
+
+    @Test
+    void testCorrectCheckIdAndEvent() {
+        assertDoesNotThrow(() -> analyticEventServiceValidator.checkIdAndEvent(1, EventType.FOLLOWER));
     }
 }

@@ -23,7 +23,10 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
-        recommendation_topic: recommendation_topic
+        recommendation_topic:
+          name: recommendation_topic
+        goal_completed_topic:
+          name: goal_complete
 
 server:
   port: 8086
