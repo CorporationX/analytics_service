@@ -2,9 +2,9 @@ package faang.school.analytics.service.analytic;
 
 import faang.school.analytics.client.user.UserServiceClient;
 import faang.school.analytics.config.context.UserContext;
-import faang.school.analytics.dto.analytic.AnalyticsEventDto;
-import faang.school.analytics.dto.user.UserDto;
-import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
+import faang.school.analytics.domain.dto.events.analytic.AnalyticsEventDto;
+import faang.school.analytics.domain.dto.user.UserDto;
+import faang.school.analytics.mapper.events.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.analytic.AnalyticsEventRepository;
@@ -61,26 +61,6 @@ public class AnalyticsEventServiceTest {
                 .eventTypeNumber(EventType.FOLLOWER.ordinal())
                 .receivedAt(LocalDateTime.now())
                 .build();
-    }
-
-    @Test
-    public void saveAction_WithCorrectDto_ReturnOK() {
-        ArgumentCaptor<AnalyticsEvent> analyticsEventArgumentCaptor = ArgumentCaptor.forClass(AnalyticsEvent.class);
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(analyticsEventDto);
-        when(analyticsEventRepository.save(analyticsEventArgumentCaptor.capture()))
-                .thenReturn(analyticsEvent);
-        when(userServiceClient.getUser(2L))
-                .thenReturn(ResponseEntity.ok().body(UserDto.builder().build()));
-
-        ResponseEntity<Void> response = analyticsEventService.saveAction(analyticsEventDto);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(analyticsEventRepository, times(1)).save(analyticsEventArgumentCaptor.capture());
-    }
-
-    @Test
-    public void saveAction_WithWrongDto_ThrowIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class,
-                () -> analyticsEventMapper.toEntity(analyticsEventDtoWithWrongEventTypeNumber));
     }
 
     @Test

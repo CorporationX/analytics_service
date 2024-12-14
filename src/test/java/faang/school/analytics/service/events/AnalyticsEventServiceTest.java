@@ -1,13 +1,16 @@
 package faang.school.analytics.service.events;
 
-import faang.school.analytics.domain.dto.events.AnalyticsEventDto;
-import faang.school.analytics.domain.dto.events.AnalyticsEventFilterDto;
+import faang.school.analytics.client.user.UserServiceClient;
+import faang.school.analytics.config.context.UserContext;
+import faang.school.analytics.domain.dto.events.analytic.AnalyticsEventDto;
+import faang.school.analytics.domain.dto.events.analytic.AnalyticsEventFilterDto;
 import faang.school.analytics.domain.enums.Interval;
 import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.mapper.events.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.analytic.AnalyticsEventRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,13 +33,33 @@ import static org.mockito.Mockito.times;
 @ExtendWith(MockitoExtension.class)
 class AnalyticsEventServiceTest {
     @Mock
-    AnalyticsEventMapper analyticsEventMapper;
+    private AnalyticsEventMapper analyticsEventMapper;
     @Mock
-    AnalyticsEventRepository analyticsEventRepository;
+    private AnalyticsEventRepository analyticsEventRepository;
     @Mock
-    AnalyticsEventFilter analyticsEventFilter;
+    private AnalyticsEventFilter analyticsEventFilter;
+    @Mock
+    private UserServiceClient userServiceClient;
+    @Mock
+    private UserContext userContext;
     @InjectMocks
-    AnalyticsEventService analyticsEventService;
+    private AnalyticsEventService analyticsEventService;
+
+    private AnalyticsEventDto analyticsEventDto;
+    private final AnalyticsEventDto analyticsEventDtoWithWrongEventTypeNumber =
+            AnalyticsEventDto.builder()
+                    .eventTypeNumber(-1)
+                    .build();
+
+    @BeforeEach
+    void setUp() {
+        analyticsEventDto = AnalyticsEventDto.builder()
+                .actorId(1L)
+                .receiverId(2L)
+                .eventTypeNumber(EventType.FOLLOWER.ordinal())
+                .receivedAt(LocalDateTime.now())
+                .build();
+    }
 
     @Test
     void testSaveEventWithId() {
@@ -136,10 +159,24 @@ class AnalyticsEventServiceTest {
         Mockito.verify(analyticsEventFilter, times(0)).filterByInterval(any(), anyInt());
     }
 
+    @Test
+    void getSumOfUsersActionsByEventTypeTest_ReturnTen() {
+        int res = analyticsEventService.getSumOfUsersActionsByEventType(List.of(1, 2, 3, 4));
+
+        assertEquals(10, res);
+    }
+
+    @Test
+    void getSumOfUsersActionsByEventTypeTest_ReturnZero() {
+        int res = analyticsEventService.getSumOfUsersActionsByEventType(List.of());
+
+        assertEquals(0, res);
+    }
+
     private AnalyticsEventDto provideEventDto(Long id, LocalDateTime date) {
         return AnalyticsEventDto.builder()
                 .id(id)
-                .eventType(1)
+                .eventTypeNumber(1)
                 .receiverId(1L)
                 .receivedAt(date)
                 .actorId(1L)

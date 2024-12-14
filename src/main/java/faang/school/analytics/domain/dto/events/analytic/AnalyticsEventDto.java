@@ -1,4 +1,4 @@
-package faang.school.analytics.dto.analytic;
+package faang.school.analytics.domain.dto.events.analytic;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class AnalyticsEventDto {
     private Long id;
 
@@ -22,8 +22,9 @@ public class AnalyticsEventDto {
     @NotNull
     private Long actorId;
 
+    @NotNull
     @JsonProperty(defaultValue = "-1")
-    private int eventTypeNumber;
+    private Integer eventTypeNumber;
 
     private LocalDateTime receivedAt;
 }

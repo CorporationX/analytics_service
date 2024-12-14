@@ -1,5 +1,7 @@
-package faang.school.analytics.config;
+package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.mentorshiprequest.MentorshipRequestedEventListener;
+import faang.school.analytics.listener.recommendation.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +28,7 @@ public class RedisConfig {
     @Value("${spring.data.redis.channel.mentorship-requested-topic}")
     private String mentorshipRequestedChannel;
 
-    @Value("${spring.data.redis.channels.recommendation_topic}")
+    @Value("${spring.data.redis.channel.recommendation_topic}")
     private String recommendationChannel;
 
     @Bean
@@ -45,8 +47,11 @@ public class RedisConfig {
     }
 
     @Bean
-    public MessageListenerAdapter mentorshipRequestedListener(MentorshipRequestedEventListener listener) {
-        return new MessageListenerAdapter(listener);
+    public MessageListenerAdapter mentorshipRequestedListener(MentorshipRequestedEventListener mentorshipRequestedEventListener) {
+        return new MessageListenerAdapter(mentorshipRequestedEventListener);
+    }
+
+    @Bean
     public MessageListenerAdapter recommendationListener(RecommendationEventListener recommendationEventListener) {
         return new MessageListenerAdapter(recommendationEventListener);
     }
@@ -54,13 +59,16 @@ public class RedisConfig {
     @Bean
     public ChannelTopic recommendationTopic() {
         return new ChannelTopic(recommendationChannel);
-    ChannelTopic mentorshipRequestedTopic() {
+    }
+
+    @Bean
+    public ChannelTopic mentorshipRequestedTopic() {
         return new ChannelTopic(mentorshipRequestedChannel);
     }
 
     @Bean
-    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter mentorshipRequestedListener) {
-    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationListener) {
+    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter mentorshipRequestedListener,
+                                                        MessageListenerAdapter recommendationListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(mentorshipRequestedListener, mentorshipRequestedTopic());

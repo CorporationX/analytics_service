@@ -1,4 +1,4 @@
-package faang.school.analytics.dto.analytic.mentorshiprequest;
+package faang.school.analytics.domain.dto.events.mentorshiprequest;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

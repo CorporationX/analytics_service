@@ -1,7 +1,7 @@
 package faang.school.analytics.controller.events;
 
-import faang.school.analytics.domain.dto.events.AnalyticsEventDto;
-import faang.school.analytics.domain.dto.events.AnalyticsEventFilterDto;
+import faang.school.analytics.domain.dto.events.analytic.AnalyticsEventDto;
+import faang.school.analytics.domain.dto.events.analytic.AnalyticsEventFilterDto;
 import faang.school.analytics.service.events.AnalyticsEventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +20,12 @@ import java.util.List;
 @RequestMapping("/analytics/events")
 @RequiredArgsConstructor
 public class AnalyticsEventController {
+
     private final AnalyticsEventService analyticsEventService;
 
     @PostMapping
     public AnalyticsEventDto saveEvent(@Valid @RequestBody AnalyticsEventDto event) {
-        log.info("Save event. Type = {}. ReceiverId = {}. ActorId = {}.", event.getEventType(), event.getReceivedAt(), event.getActorId());
+        log.info("Save event. Type = {}. ReceiverId = {}. ActorId = {}.", event.getEventTypeNumber(), event.getReceivedAt(), event.getActorId());
         return analyticsEventService.saveEvent(event);
     }
 

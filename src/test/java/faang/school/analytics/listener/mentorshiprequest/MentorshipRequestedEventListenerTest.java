@@ -2,8 +2,8 @@ package faang.school.analytics.listener.mentorshiprequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.dto.analytic.AnalyticsEventDto;
-import faang.school.analytics.dto.analytic.mentorshiprequest.MentorshipRequestedEvent;
+import faang.school.analytics.domain.dto.events.analytic.AnalyticsEventDto;
+import faang.school.analytics.domain.dto.events.mentorshiprequest.MentorshipRequestedEvent;
 
 import faang.school.analytics.mapper.mentorshiprequest.MentorshipRequestEventMapperImpl;
 import faang.school.analytics.service.events.AnalyticsEventService;

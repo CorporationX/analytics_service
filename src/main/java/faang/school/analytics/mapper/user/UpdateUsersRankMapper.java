@@ -1,8 +1,7 @@
 package faang.school.analytics.mapper.user;
 
-import faang.school.analytics.dto.user.UpdateUsersRankDto;
+import faang.school.analytics.domain.dto.user.UpdateUsersRankDto;
 import faang.school.analytics.model.EventType;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
