@@ -4,6 +4,7 @@ import faang.school.analytics.filter.Interval;
 import faang.school.analytics.model.EventType;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class AnalyticsFilterDto {
     @NotNull
     private long receiverId;
