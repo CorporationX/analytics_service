@@ -2,7 +2,6 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.MentorshipRequestEvent;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +55,7 @@ class MentorshipRequestedEventListenerTest {
         verify(objectMapper, times(1))
                 .readValue(messageBody, MentorshipRequestEvent.class);
         verify(analyticsEventService, times(1))
-                .saveMentorshipRequestEvent(event);
+                .saveAnalyticsEvent(event);
     }
 
     @Test

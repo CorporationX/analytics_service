@@ -42,7 +42,7 @@ public class RedisConfig {
 
     @Bean
     ChannelTopic mentorshipRequestedTopic() {
-        return new ChannelTopic(redisProperties.getChannel().getMentorship_request());
+        return new ChannelTopic(redisProperties.getChannel().getMentorshipRequest());
     }
 
     @Bean

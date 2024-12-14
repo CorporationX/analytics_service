@@ -193,7 +193,7 @@ class AnalyticsEventServiceTest {
         when(analyticsEventMapper.toAnalyticsEventMentorshipRequest(mentorshipRequestEvent))
                 .thenReturn(analyticsEventMentorshipRequest);
 
-        analyticsEventService.saveMentorshipRequestEvent(mentorshipRequestEvent);
+        analyticsEventService.saveAnalyticsEvent(mentorshipRequestEvent);
 
         verify(analyticsEventMapper, times(1)).toAnalyticsEventMentorshipRequest(mentorshipRequestEvent);
         verify(analyticsEventRepository, times(1)).save(analyticsEventMentorshipRequest);
@@ -206,7 +206,7 @@ class AnalyticsEventServiceTest {
         doThrow(new RuntimeException("Database error")).when(analyticsEventRepository).save(analyticsEventMentorshipRequest);
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            analyticsEventService.saveMentorshipRequestEvent(mentorshipRequestEvent);
+            analyticsEventService.saveAnalyticsEvent(mentorshipRequestEvent);
         });
 
         assertEquals("Database error", exception.getMessage());

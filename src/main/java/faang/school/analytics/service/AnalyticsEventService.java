@@ -57,7 +57,7 @@ public class AnalyticsEventService {
         return result;
     }
 
-    public void saveMentorshipRequestEvent(MentorshipRequestEvent mentorshipRequestEvent) {
+    public void saveAnalyticsEvent(MentorshipRequestEvent mentorshipRequestEvent) {
         AnalyticsEvent analyticsEvent =  analyticsEventMapper.toAnalyticsEventMentorshipRequest(mentorshipRequestEvent);
         analyticsEvent.setEventType(EventType.RECOMMENDATION_RECEIVED);
         analyticsEventRepository.save(analyticsEvent);

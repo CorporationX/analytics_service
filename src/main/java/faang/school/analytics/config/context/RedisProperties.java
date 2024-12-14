@@ -13,6 +13,6 @@ public class RedisProperties {
     private Channel channel;
     @Data
     public static class Channel {
-        private String mentorship_request;
+        private String mentorshipRequest;
     }
 }
