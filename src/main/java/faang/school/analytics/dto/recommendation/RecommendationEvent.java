@@ -16,5 +16,5 @@ public class RecommendationEvent {
 
     private Long receiverId;
 
-    //private LocalDateTime receivedAt;
+    private LocalDateTime receivedAt;
 }
