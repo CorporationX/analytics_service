@@ -30,7 +30,6 @@ public class RecommendationEventListener implements MessageListener {
         try {
             RecommendationEvent recommendationEvent = objectMapper
                     .readValue(message.getBody(), RecommendationEvent.class);
-            System.out.println(recommendationEvent);
             log.info(objectMapper.writeValueAsString(recommendationEvent));
 
             AnalyticsEvent analyticsEvent = recommendationMapper.toAnalyticsEvent(recommendationEvent);

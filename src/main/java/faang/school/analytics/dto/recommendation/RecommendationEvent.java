@@ -11,10 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class RecommendationEvent {
     private Long id;
-
     private Long actorId;
-
     private Long receiverId;
-
     private LocalDateTime receivedAt;
 }
