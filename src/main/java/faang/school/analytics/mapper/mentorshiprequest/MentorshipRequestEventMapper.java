@@ -16,7 +16,7 @@ public interface MentorshipRequestEventMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "requesterId", target = "actorId")
     @Mapping(source = "receiverId", target = "receiverId")
-    @Mapping(target = "eventTypeNumber", expression = "java(map(EventType.MENTORSHIP_REQUESTED))")
+    @Mapping(target = "eventTypeNumber", expression = "java(EventType.MENTORSHIP_REQUESTED)")
     AnalyticsEventDto mentorshipRequestedToAnalyticsDto(MentorshipRequestedEvent mentorshipRequestedEvent);
 
     @Named("mapToEventTypeNumber")
