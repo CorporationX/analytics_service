@@ -1,4 +1,4 @@
-package faang.school.analytics.domain.dto.events;
+package faang.school.analytics.domain.dto.events.analytic;
 
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.domain.enums.Interval;

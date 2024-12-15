@@ -1,4 +1,4 @@
-package faang.school.analytics.dto.user;
+package faang.school.analytics.domain.dto.user;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;

@@ -3,7 +3,7 @@ package faang.school.analytics.controller.events;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.config.context.UserContext;
 import faang.school.analytics.controller.advices.DataValidationControllerAdvice;
-import faang.school.analytics.domain.dto.events.AnalyticsEventDto;
+import faang.school.analytics.domain.dto.events.analytic.AnalyticsEventDto;
 import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.service.events.AnalyticsEventService;
 import org.junit.jupiter.api.Test;
@@ -47,14 +47,14 @@ class AnalyticsEventControllerTest {
         AnalyticsEventDto dto = AnalyticsEventDto.builder()
                 .actorId(1L)
                 .receiverId(1L)
-                .eventType(1)
+                .eventTypeNumber(1)
                 .build();
 
         AnalyticsEventDto dtoAfterSave = AnalyticsEventDto.builder()
                 .id(1L)
                 .actorId(1L)
                 .receiverId(1L)
-                .eventType(1)
+                .eventTypeNumber(1)
                 .receivedAt(LocalDateTime.now())
                 .build();
         Mockito.when(analyticsEventService.saveEvent(any())).thenReturn(dtoAfterSave);
@@ -68,7 +68,7 @@ class AnalyticsEventControllerTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.actorId").value(1))
                 .andExpect(jsonPath("$.receiverId").value(1))
-                .andExpect(jsonPath("$.eventType").value(1))
+                .andExpect(jsonPath("$.eventTypeNumber").value(1))
                 .andExpect(jsonPath("$.receivedAt").exists());
     }
 
@@ -78,7 +78,7 @@ class AnalyticsEventControllerTest {
                 .id(1L)
                 .actorId(1L)
                 .receiverId(1L)
-                .eventType(1)
+                .eventTypeNumber(1)
                 .build();
 
         Mockito.doThrow(new DataValidationException("Error message")).when(analyticsEventService).saveEvent(any());
@@ -107,7 +107,7 @@ class AnalyticsEventControllerTest {
                 .id(1L)
                 .actorId(1L)
                 .receiverId(1L)
-                .eventType(1)
+                .eventTypeNumber(1)
                 .receivedAt(LocalDateTime.now())
                 .build();
         Mockito.when(analyticsEventService.getAnalytics(any())).thenReturn(List.of(event));
@@ -120,7 +120,7 @@ class AnalyticsEventControllerTest {
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].actorId").value(1))
                 .andExpect(jsonPath("$[0].receiverId").value(1))
-                .andExpect(jsonPath("$[0].eventType").value(1))
+                .andExpect(jsonPath("$[0].eventTypeNumber").value(1))
                 .andExpect(jsonPath("$[0].receivedAt").exists());
     }
 
