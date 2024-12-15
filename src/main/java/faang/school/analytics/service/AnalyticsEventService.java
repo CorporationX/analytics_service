@@ -1,7 +1,7 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.dto.analyticsEvent.AnalyticsEventDto;
-import faang.school.analytics.dto.analyticsEvent.AnalyticsEventRequestDto;
+import faang.school.analytics.dto.event.analyticsEvent.AnalyticsEventDto;
+import faang.school.analytics.dto.event.analyticsEvent.AnalyticsEventRequestDto;
 import faang.school.analytics.dto.interval.IntervalDto;
 import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -65,13 +65,14 @@ public class AnalyticsEventService {
     private boolean isEventInInterval(AnalyticsEvent event, Interval interval, LocalDateTime from, LocalDateTime to) {
         if (interval != null) {
             return interval.contains(event.getReceivedAt());
-        } if (from == null || to == null) {
+        } else if (from == null || to == null) {
             log.warn("Interval or both from and to must be provided while getting analytics");
             throw new DataValidationException("Interval or both from and to must be provided");
         } else {
             return event.isBetween(from, to);
         }
     }
+
     private List<AnalyticsEvent> filterEvents(List<AnalyticsEvent> events, Interval interval,
                                               LocalDateTime from, LocalDateTime to, EventType eventType) {
         return events.stream()

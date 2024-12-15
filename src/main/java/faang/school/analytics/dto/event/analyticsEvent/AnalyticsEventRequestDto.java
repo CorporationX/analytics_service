@@ -1,4 +1,4 @@
-package faang.school.analytics.dto.analyticsEvent;
+package faang.school.analytics.dto.event.analyticsEvent;
 
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;
