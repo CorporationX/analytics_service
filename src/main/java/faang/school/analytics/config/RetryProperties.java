@@ -18,7 +18,7 @@ public class RetryProperties {
     @Min(1000)
     private long initialDelay;
     @Min(1)
-    private int multiplier;
+    private double multiplier;
     @Min(1000)
     private long maxDelay;
 }

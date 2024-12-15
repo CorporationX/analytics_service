@@ -6,6 +6,7 @@ import faang.school.analytics.event.NewCommentEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,14 +38,24 @@ class NewCommentEventListenerTest {
     @InjectMocks
     private NewCommentEventListener newCommentEventListener;
 
+    private String json;
+    private Message message;
+    private AnalyticsEvent analyticsEvent;
+
+    @BeforeEach
+    void setUp() {
+        json = "{\"postId\": 1, \"authorId\": 2, \"commentId\": 3, \"createdAt\": \"2024-12-13T12:00:00\"}";
+        message = mock(Message.class);
+        analyticsEvent = mock(AnalyticsEvent.class);
+    }
+
     @Test
     @DisplayName("Test deserialization of JSON message")
     void testDeserializationOfJsonMessage() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        String json = "{\"postId\": 1, \"authorId\": 2, \"commentId\": 3, \"createdAt\": \"2024-12-13T12:00:00\"}";
+        ObjectMapper realObjectMapper = new ObjectMapper();
+        realObjectMapper.registerModule(new JavaTimeModule());
 
-        NewCommentEvent result = objectMapper.readValue(json.getBytes(), NewCommentEvent.class);
+        NewCommentEvent result = realObjectMapper.readValue(json.getBytes(), NewCommentEvent.class);
 
         assertNotNull(result);
         assertEquals(1, result.getPostId());
@@ -57,9 +68,6 @@ class NewCommentEventListenerTest {
     @Test
     @DisplayName("Event handled and saved success")
     void testOnMessage_Success() throws Exception {
-        Message message = mock(Message.class);
-        AnalyticsEvent analyticsEvent = mock(AnalyticsEvent.class);
-        String json = "{\"postId\": 1, \"authorId\": 2, \"commentId\": 3, \"createdAt\": \"2024-12-13T12:00:00\"}";
         NewCommentEvent event = new NewCommentEvent(1L, 2L, 3L, LocalDateTime.of(2024, 12, 13, 12, 0));
 
         when(message.getBody()).thenReturn(json.getBytes());
@@ -76,8 +84,7 @@ class NewCommentEventListenerTest {
     @Test
     @DisplayName("Event handled and saved fail: deserialization error")
     void testOnMessage_Fail_DeserializationError() throws Exception {
-        Message message = mock(Message.class);
-        String json = "{\"postId\": 1, \"authorId\": 2, \"commentId\": 3, \"createdAt\": \"2024-12-13T12:00:00\"}";
+
         when(message.getBody()).thenReturn(json.getBytes());
         when(objectMapper.readValue(any(byte[].class), eq(NewCommentEvent.class))).thenThrow(new IOException("Deserialization error"));
 

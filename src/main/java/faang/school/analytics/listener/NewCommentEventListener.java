@@ -2,6 +2,7 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.event.NewCommentEvent;
+import faang.school.analytics.exception.MessageProcessingException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -41,7 +42,10 @@ public class NewCommentEventListener implements MessageListener {
         } catch (IOException e) {
             String errorMessage = new String(message.getBody(), StandardCharsets.UTF_8);
             log.error("Error while deserializing {} from Redis. Error: {}", errorMessage, e.getMessage());
-            throw new RuntimeException("Error while deserializing", e);
+            throw new MessageProcessingException("Error while deserializing", e);
+        } catch (Exception e) {
+            log.error("An unexpected error occurred while processing the message", e);
+            throw e;
         }
     }
 
