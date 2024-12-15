@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.comment.CommentEventListener;
 import faang.school.analytics.listener.mentorshiprequest.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.recommendation.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
@@ -59,6 +60,11 @@ public class RedisConfig {
     }
 
     @Bean
+    public MessageListenerAdapter commentEventListener(CommentEventListener commentEventListener) {
+        return new MessageListenerAdapter(commentEventListener);
+    }
+
+    @Bean
     public ChannelTopic recommendationTopic() {
         return new ChannelTopic(recommendationChannel);
     }
@@ -74,12 +80,13 @@ public class RedisConfig {
 
     @Bean
     public RedisMessageListenerContainer redisContainer(MessageListenerAdapter mentorshipRequestedListener,
-                                                        MessageListenerAdapter recommendationListener) {
+                                                        MessageListenerAdapter recommendationListener,
+                                                        MessageListenerAdapter commentEventListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(mentorshipRequestedListener, mentorshipRequestedTopic());
         container.addMessageListener(recommendationListener, recommendationTopic());
-        container.addMessageListener(recommendationListener, commentTopic());
+        container.addMessageListener(commentEventListener, commentTopic());
         return container;
     }
 
