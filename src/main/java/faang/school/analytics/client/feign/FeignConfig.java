@@ -1,4 +1,4 @@
-package faang.school.analytics.client;
+package faang.school.analytics.client.feign;
 
 
 import faang.school.analytics.config.context.UserContext;

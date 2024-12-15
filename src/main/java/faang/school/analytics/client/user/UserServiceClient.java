@@ -1,7 +1,7 @@
 package faang.school.analytics.client.user;
 
-import faang.school.analytics.dto.user.UpdateUsersRankDto;
-import faang.school.analytics.dto.user.UserDto;
+import faang.school.analytics.domain.dto.user.UpdateUsersRankDto;
+import faang.school.analytics.domain.dto.user.UserDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.cloud.openfeign.FeignClient;

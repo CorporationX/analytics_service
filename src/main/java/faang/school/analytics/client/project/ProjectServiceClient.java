@@ -1,4 +1,4 @@
-package faang.school.analytics.client;
+package faang.school.analytics.client.project;
 
 
 import org.springframework.cloud.openfeign.FeignClient;

@@ -2,7 +2,7 @@ package faang.school.analytics.scheduler.analytic;
 
 import faang.school.analytics.client.user.UserServiceClient;
 import faang.school.analytics.config.context.UserContext;
-import faang.school.analytics.dto.user.UpdateUsersRankDto;
+import faang.school.analytics.domain.dto.user.UpdateUsersRankDto;
 import faang.school.analytics.mapper.user.UpdateUsersRankMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
