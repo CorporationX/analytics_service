@@ -1,7 +1,7 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.event.GoalCompletedEvent;
-import faang.school.analytics.event.NewCommentEvent;
+import faang.school.analytics.event.CommentEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +18,7 @@ class AnalyticsEventMapperTest {
 
     private AnalyticsEventMapper mapper;
 
-    private NewCommentEvent newCommentEvent;
+    private CommentEvent commentEvent;
     private GoalCompletedEvent goalCompletedEvent;
 
     @BeforeEach
@@ -29,9 +29,9 @@ class AnalyticsEventMapperTest {
     @Test
     @DisplayName("Mapping new comment event Success")
     void testNewCommentEventToEntity_Success() {
-        newCommentEvent = new NewCommentEvent(1L, 1L, 1L, LocalDateTime.of(2024, 12, 13, 0, 0));
+        commentEvent = new CommentEvent(1L, 1L, 1L, 1L, LocalDateTime.of(2024, 12, 13, 0, 0));
 
-        AnalyticsEvent result = mapper.newCommentEventToEntity(newCommentEvent);
+        AnalyticsEvent result = mapper.newCommentEventToEntity(commentEvent);
 
         assertEquals(1L, result.getReceiverId());
         assertEquals(1L, result.getActorId());
@@ -42,9 +42,9 @@ class AnalyticsEventMapperTest {
     @Test
     @DisplayName("Mapping new comment event: null event")
     void testNewCommentEventToEntity_NullEvent() {
-        newCommentEvent = null;
+        commentEvent = null;
 
-        AnalyticsEvent result = mapper.newCommentEventToEntity(newCommentEvent);
+        AnalyticsEvent result = mapper.newCommentEventToEntity(commentEvent);
 
         assertNull(result);
     }

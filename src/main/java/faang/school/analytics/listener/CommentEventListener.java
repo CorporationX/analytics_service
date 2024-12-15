@@ -1,7 +1,7 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.event.NewCommentEvent;
+import faang.school.analytics.event.CommentEvent;
 import faang.school.analytics.exception.MessageProcessingException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class NewCommentEventListener implements MessageListener {
+public class CommentEventListener implements MessageListener {
     private final ObjectMapper objectMapper;
     private final AnalyticsEventMapper analyticsEventMapper;
     private final AnalyticsEventService analyticsEventService;
@@ -37,7 +37,7 @@ public class NewCommentEventListener implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         try {
             log.info("Received message from Redis: {}", new String(message.getBody(), StandardCharsets.UTF_8));
-            NewCommentEvent event = objectMapper.readValue(message.getBody(), NewCommentEvent.class);
+            CommentEvent event = objectMapper.readValue(message.getBody(), CommentEvent.class);
             handleEvent(event);
         } catch (IOException e) {
             String errorMessage = new String(message.getBody(), StandardCharsets.UTF_8);
@@ -49,7 +49,7 @@ public class NewCommentEventListener implements MessageListener {
         }
     }
 
-    private void handleEvent(NewCommentEvent event) {
+    private void handleEvent(CommentEvent event) {
         AnalyticsEvent analyticsEvent = analyticsEventMapper.newCommentEventToEntity(event);
         analyticsEventService.saveEvent(analyticsEvent);
     }
