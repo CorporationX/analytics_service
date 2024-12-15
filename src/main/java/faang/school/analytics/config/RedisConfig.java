@@ -26,6 +26,8 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channels.recommendation_topic}")
     private String recommendationChannel;
+    @Value("${spring.data.redis.channel.comment}")
+    private String commentChannel;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -52,11 +54,16 @@ public class RedisConfig {
         return new ChannelTopic(recommendationChannel);
     }
 
+    @Bean ChannelTopic commentTopic() {
+        return new ChannelTopic(commentChannel);
+    }
+
     @Bean
     public RedisMessageListenerContainer redisContainer(MessageListenerAdapter recommendationListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(recommendationListener, recommendationTopic());
+        container.addMessageListener(recommendationListener, commentTopic());
         return container;
     }
 
