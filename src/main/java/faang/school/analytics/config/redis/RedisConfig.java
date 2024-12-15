@@ -1,9 +1,9 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.mentorshiprequest.MentorshipRequestedEventListener;
+import faang.school.analytics.listener.postview.PostViewEventListener;
 import faang.school.analytics.listener.recommendation.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +30,9 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.recommendation_topic}")
     private String recommendationChannel;
+
+    @Value("${spring.data.redis.channel.post-view}")
+    private String postViewChannel;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -65,15 +68,21 @@ public class RedisConfig {
     public ChannelTopic mentorshipRequestedTopic() {
         return new ChannelTopic(mentorshipRequestedChannel);
     }
+    
+    @Bean
+    public ChannelTopic postViewTopic() {
+        return new ChannelTopic(postViewChannel);
+    }
 
     @Bean
     public RedisMessageListenerContainer redisContainer(MessageListenerAdapter mentorshipRequestedListener,
-                                                        MessageListenerAdapter recommendationListener) {
+                                                        MessageListenerAdapter recommendationListener,
+                                                        PostViewEventListener postViewEventListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(mentorshipRequestedListener, mentorshipRequestedTopic());
         container.addMessageListener(recommendationListener, recommendationTopic());
+        container.addMessageListener(postViewEventListener, postViewTopic());
         return container;
     }
-
 }

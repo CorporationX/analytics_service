@@ -77,6 +77,12 @@ public class AnalyticsEventService {
                 .sum();
     }
 
+    public AnalyticsEventDto savePostView(AnalyticsEventDto analyticsEventDto) {
+        log.info("saving view, post id: {}", analyticsEventDto.getReceiverId());
+        AnalyticsEvent event = analyticsEventMapper.toEntity(analyticsEventDto);
+        return analyticsEventMapper.toDto(analyticsEventRepository.save(event));
+    }
+
     private Stream<AnalyticsEvent> filterEvents(Stream<AnalyticsEvent> events, AnalyticsEventFilterDto filter) {
         if (filter.getInterval() == null && filter.getFrom() == null && filter.getTo() == null) {
             return events;

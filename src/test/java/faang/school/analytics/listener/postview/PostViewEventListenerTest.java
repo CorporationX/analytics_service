@@ -2,7 +2,7 @@ package faang.school.analytics.listener.postview;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.domain.dto.events.AnalyticsEventDto;
+import faang.school.analytics.domain.dto.events.analytic.AnalyticsEventDto;
 import faang.school.analytics.service.events.AnalyticsEventService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

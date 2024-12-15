@@ -6,7 +6,6 @@ import faang.school.analytics.service.events.AnalyticsEventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +37,7 @@ public class AnalyticsEventController {
     }
 
     @PostMapping("/save-action")
-    public ResponseEntity<Void> saveAction(@RequestBody @Valid AnalyticsEventDto analyticsEventDto) {
-        return analyticsEventService.saveAction(analyticsEventDto);
+    public AnalyticsEventDto saveAction(@RequestBody @Valid AnalyticsEventDto analyticsEventDto) {
+        return analyticsEventService.saveEvent(analyticsEventDto);
     }
 }

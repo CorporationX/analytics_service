@@ -24,7 +24,8 @@ public enum EventType {
     ACHIEVEMENT_RECEIVED(0.5),
     PROFILE_APPEARED_IN_SEARCH(0.3),
     PROJECT_APPEARED_IN_SEARCH(0.4),
-    MENTORSHIP_REQUESTED(0.1);
+    MENTORSHIP_REQUESTED(0.1),
+    PROJECT_DONATION(0.6);
 
     private final double weight;
 
