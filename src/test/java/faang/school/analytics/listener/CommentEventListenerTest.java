@@ -1,11 +1,12 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import faang.school.analytics.dto.analytic.AnalyticsEventDto;
+import faang.school.analytics.domain.dto.events.analytic.AnalyticsEventDto;
+import faang.school.analytics.domain.dto.events.recommendation.RecommendationEvent;
 import faang.school.analytics.dto.comment.CommentEvent;
-import faang.school.analytics.dto.recommendation.RecommendationEvent;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
-import faang.school.analytics.service.analytic.AnalyticsEventService;
+import faang.school.analytics.listener.comment.CommentEventListener;
+import faang.school.analytics.mapper.events.AnalyticsEventMapper;
+import faang.school.analytics.service.events.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,7 +54,7 @@ class CommentEventListenerTest {
 
         commentEventListener.onMessage(message, null);
 
-        verify(analyticsEventService).saveAction(mappedEvent);
+        verify(analyticsEventService).saveCommentEvent(mappedEvent);
     }
 
     @Test
