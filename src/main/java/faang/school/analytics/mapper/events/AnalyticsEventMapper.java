@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
 
+    EventType recommendation_received = EventType.RECOMMENDATION_RECEIVED;
+
     @Mapping(source = "eventTypeNumber", target = "eventType", qualifiedByName = "mapToEventType")
     AnalyticsEvent toEntity(AnalyticsEventDto analyticsEventDto);
 
@@ -22,10 +24,8 @@ public interface AnalyticsEventMapper {
 
     @Mapping(source = "authorId", target = "actorId")
     @Mapping(source = "createdAt", target = "receivedAt")
-    @Mapping(target = "eventTypeNumber", expression = "java(EventType.RECOMMENDATION_RECEIVED)")
+    @Mapping(target = "eventTypeNumber", expression = "java(map(recommendation_received))")
     AnalyticsEventDto recommendationToAnalyticsDto(RecommendationEvent recommendationEvent);
-
-
 
     @Named("mapToEventTypeNumber")
     default int map(EventType eventType) {

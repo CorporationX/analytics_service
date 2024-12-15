@@ -13,10 +13,12 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MentorshipRequestEventMapper {
 
+    EventType recommendation_received = EventType.RECOMMENDATION_RECEIVED;
+
     @Mapping(source = "id", target = "id")
     @Mapping(source = "requesterId", target = "actorId")
     @Mapping(source = "receiverId", target = "receiverId")
-    @Mapping(target = "eventTypeNumber", expression = "java(EventType.MENTORSHIP_REQUESTED)")
+    @Mapping(target = "eventTypeNumber", expression = "java(map(recommendation_received))")
     AnalyticsEventDto mentorshipRequestedToAnalyticsDto(MentorshipRequestedEvent mentorshipRequestedEvent);
 
     @Named("mapToEventTypeNumber")
