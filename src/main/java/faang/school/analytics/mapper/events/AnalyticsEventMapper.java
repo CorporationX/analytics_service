@@ -29,7 +29,7 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "eventTypeNumber", expression = "java(map(recommendation_received))")
     AnalyticsEventDto recommendationToAnalyticsDto(RecommendationEvent recommendationEvent);
 
-    @Mapping(source = "commentId", target = "id")
+    @Mapping(source = "commentId", target = "receiverId")
     @Mapping(source = "authorId", target = "actorId")
     @Mapping(source = "date", target = "receivedAt")
     @Mapping(target = "eventTypeNumber", expression = "java(map(comment_received))")
