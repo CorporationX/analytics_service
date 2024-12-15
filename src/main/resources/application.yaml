@@ -22,6 +22,8 @@ spring:
       port: 6379
       host: localhost
       channel:
+        profile-view: profile_view_channel
+        goal-completed: goal_completed_channel
         comment-channel: comment_channel
   retry:
     maxAttempts: 3

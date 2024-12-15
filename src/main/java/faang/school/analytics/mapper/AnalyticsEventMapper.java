@@ -12,6 +12,8 @@ public interface AnalyticsEventMapper {
 
     AnalyticsEventResponseDto entityToResponseDto(AnalyticsEvent event);
 
+    AnalyticsEvent toEntity(AnalyticsEventResponseDto dto);
+
     @Mapping(source = "postId", target = "receiverId")
     @Mapping(source = "authorId", target = "actorId")
     @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.POST_COMMENT)")
