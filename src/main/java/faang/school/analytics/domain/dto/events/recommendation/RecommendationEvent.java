@@ -1,4 +1,4 @@
-package faang.school.analytics.dto.recommendation;
+package faang.school.analytics.domain.dto.events.recommendation;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
