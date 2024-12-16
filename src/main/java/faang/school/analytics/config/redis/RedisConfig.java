@@ -25,14 +25,10 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.port}")
     private int redisPort;
-
     @Value("${spring.data.redis.channel.mentorship-requested-topic}")
     private String mentorshipRequestedChannel;
-
     @Value("${spring.data.redis.channel.recommendation_topic}")
     private String recommendationChannel;
-    @Value("${spring.data.redis.channel.comment}")
-    private String commentChannel;
     @Value("${spring.data.redis.channel.post-view}")
     private String postViewChannel;
 
@@ -64,10 +60,6 @@ public class RedisConfig {
     @Bean
     public ChannelTopic recommendationTopic() {
         return new ChannelTopic(recommendationChannel);
-    }
-
-    @Bean ChannelTopic commentTopic() {
-        return new ChannelTopic(commentChannel);
     }
 
     @Bean
