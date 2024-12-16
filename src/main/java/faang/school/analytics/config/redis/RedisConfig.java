@@ -1,6 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.AdBoughtEventListener;
+import faang.school.analytics.listener.GoalCompletedEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,15 +23,21 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer redisContainer(AdBoughtEventListener adBoughtEventListener) {
+    public RedisMessageListenerContainer redisContainer(AdBoughtEventListener adBoughtEventListener, GoalCompletedEventListener goalCompletedEventListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(adBoughtEventListener, adBoughtTopic());
+        container.addMessageListener(goalCompletedEventListener, goalCompletedTopic());
         return container;
     }
 
     @Bean
     public ChannelTopic adBoughtTopic() {
         return new ChannelTopic(redisConfigProperties.channel().adBought());
+    }
+
+    @Bean
+    public ChannelTopic goalCompletedTopic() {
+        return new ChannelTopic(redisConfigProperties.channel().goalCompleted());
     }
 }
