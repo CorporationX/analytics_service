@@ -1,6 +1,5 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.validator.AnalyticsEventValidator;
 import faang.school.analytics.dto.analyticsEvent.AnalyticsEventResponseDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
@@ -8,6 +7,7 @@ import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.specification.AnalyticsEventSpecification;
+import faang.school.analytics.validator.AnalyticsEventValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -28,7 +28,8 @@ public class AnalyticsEventService {
 
     public AnalyticsEvent saveEvent(AnalyticsEvent event) {
         AnalyticsEvent savedEvent = analyticsEventRepository.save(event);
-        log.info("Analytics event #{} saved successfully.", savedEvent.getId());
+        log.info("Analytics event successfully saved. ID: {}, Type: {}",
+                savedEvent.getId(), savedEvent.getEventType());
 
         return savedEvent;
     }

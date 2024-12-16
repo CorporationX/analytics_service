@@ -17,5 +17,6 @@ public class RedisProperties {
         private String mentorshipChannel;
         private String subscriptionChannel;
         private String recommendationChannel;
+        private String goalCompleted;
     }
 }

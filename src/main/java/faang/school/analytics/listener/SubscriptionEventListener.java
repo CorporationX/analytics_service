@@ -24,14 +24,19 @@ public class SubscriptionEventListener implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
+        String messageBody = new String(message.getBody(), StandardCharsets.UTF_8);
+        SubscriptionEvent subscriptionEvent;
+
         try {
-            SubscriptionEvent subscriptionEvent = objectMapper.readValue(message.getBody(), SubscriptionEvent.class);
-            AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(subscriptionEvent);
-            AnalyticsEvent savedEvent = analyticsEventService.saveEvent(analyticsEvent);
-            log.info("Successfully processed message: AnalyticsEvent #{} saved.", savedEvent.getId());
+            subscriptionEvent = objectMapper.readValue(message.getBody(), SubscriptionEvent.class);
         } catch (IOException e) {
-            String messageBody = new String(message.getBody(), StandardCharsets.UTF_8);
-            log.error("Error occurred while deserializing message body: '{}'. Error: {}", messageBody, e.getMessage(), e);
+            log.error("Failed to deserialize message body: {}. Error: {}", messageBody, e.getMessage(), e);
+            return;
         }
+
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(subscriptionEvent);
+        AnalyticsEvent savedEvent = analyticsEventService.saveEvent(analyticsEvent);
+        log.info("Successfully processed subscription event. AnalyticsEvent ID: {}, Source Message: {}",
+                savedEvent.getId(), messageBody);
     }
 }

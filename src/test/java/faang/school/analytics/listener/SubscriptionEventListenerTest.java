@@ -74,7 +74,7 @@ class SubscriptionEventListenerTest {
     }
 
     @Test
-    void testDeserializeJsonToSubscriptionEvent_ThrowsExceptionWithInvalidData() throws Exception {
+    void testDeserializeJsonToSubscriptionEvent_ThrowsExceptionWithInvalidData() {
         objectMapper = new ObjectMapper();
 
         assertThatThrownBy(() -> objectMapper.readValue(invalidJson, SubscriptionEvent.class))
@@ -108,7 +108,7 @@ class SubscriptionEventListenerTest {
         assertDoesNotThrow(() -> subscriptionEventListener.onMessage(message, null));
 
         verify(objectMapper, times(1)).readValue(invalidJson.getBytes(StandardCharsets.UTF_8), SubscriptionEvent.class);
-        verify(analyticsEventMapper, never()).toEntity(any());
+        verify(analyticsEventMapper, never()).toEntity(any(SubscriptionEvent.class));
         verify(analyticsEventService, never()).saveEvent(any());
     }
 }
