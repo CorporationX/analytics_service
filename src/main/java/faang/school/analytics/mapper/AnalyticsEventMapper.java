@@ -17,4 +17,6 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "subscribedAt", target = "receivedAt")
     @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.FOLLOWER)")
     AnalyticsEvent toEntity(SubscriptionEvent event);
+
+    AnalyticsEvent toEntity(AnalyticsEventResponseDto dto);
 }
