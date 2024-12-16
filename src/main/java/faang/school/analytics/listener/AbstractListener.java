@@ -8,6 +8,7 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 @Slf4j
@@ -20,19 +21,20 @@ public abstract class AbstractListener<T> implements MessageListener {
         if (message.getBody().length == 0) {
             log.error("Message body is empty {}", message.getBody());
             throw new IOException("Message body is empty");
-        } else {
-            message.getBody();
         }
 
         try {
             return objectMapper.readValue(message.getBody(), eventType);
         } catch (IOException e) {
             log.error("Failed to map message to event type", e);
-            throw new RuntimeException("Failed to map message to event type", e);
+            throw new EventDeserializationException("Failed to map message to event type");
         }
     }
 
-    protected abstract Class<T> eventType();
+    protected Class<T> eventType() {
+        ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
+        return (Class<T>) type.getActualTypeArguments()[0];
+    }
 
     protected abstract void handleEvent(T event);
 
@@ -41,7 +43,7 @@ public abstract class AbstractListener<T> implements MessageListener {
         try {
             T event = listenEvent(message, eventType());
 
-            if (eventHandlers != null && eventHandlers.isEmpty()) {
+            if (eventHandlers != null && !eventHandlers.isEmpty()) {
                 log.info("Processing event with handlers: {}", eventHandlers);
                 eventHandlers.forEach(handler -> handler.handle(event));
             } else {
@@ -53,7 +55,7 @@ public abstract class AbstractListener<T> implements MessageListener {
 
         } catch (IOException e) {
             log.error("Failed to process event", e);
-            throw new EventProcessingException("Failed to process event");
+            throw new EventProcessingException("Failed to process event", e);
         }
     }
 }

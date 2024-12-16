@@ -35,6 +35,7 @@ public class AdBoughtEventListener extends AbstractListener<AdBoughtEvent> {
     @Override
     protected void handleEvent(AdBoughtEvent event) {
         AnalyticsEvent analyticsEvent = analyticsEventMapper.dtoToEntity(event);
+        log.info("Processing AdBoughtEvent with postId: {}", event.getPostId());
         analyticsEvent.setEventType(EventType.AD_BOUGHT);
         analyticsEventService.saveEvent(analyticsEvent);
     }
