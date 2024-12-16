@@ -8,7 +8,10 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
+
     AnalyticsEventResponseDto entityToResponseDto(AnalyticsEvent event);
+
+    AnalyticsEvent toEntity(AnalyticsEventResponseDto dto);
 
     default AnalyticsEvent dtoToEntity(AdBoughtEvent event) {
         return AnalyticsEvent.builder()

@@ -1,4 +1,4 @@
-package faang.school.analytics.Validator;
+package faang.school.analytics.validator;
 
 import faang.school.analytics.exception.DataValidationException;
 import org.junit.jupiter.api.BeforeEach;
