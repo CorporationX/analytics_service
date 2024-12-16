@@ -1,9 +1,11 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.comment.CommentEventListener;
 import faang.school.analytics.listener.mentorshiprequest.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.postview.PostViewEventListener;
 import faang.school.analytics.listener.recommendation.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +32,8 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.recommendation_topic}")
     private String recommendationChannel;
+    @Value("${spring.data.redis.channel.comment}")
+    private String commentChannel;
 
     @Value("${spring.data.redis.channel.post-view}")
     private String postViewChannel;
@@ -60,15 +64,24 @@ public class RedisConfig {
     }
 
     @Bean
+    public MessageListenerAdapter commentEventListener(CommentEventListener commentEventListener) {
+        return new MessageListenerAdapter(commentEventListener);
+    }
+
+    @Bean
     public ChannelTopic recommendationTopic() {
         return new ChannelTopic(recommendationChannel);
+    }
+
+    @Bean ChannelTopic commentTopic() {
+        return new ChannelTopic(commentChannel);
     }
 
     @Bean
     public ChannelTopic mentorshipRequestedTopic() {
         return new ChannelTopic(mentorshipRequestedChannel);
     }
-    
+
     @Bean
     public ChannelTopic postViewTopic() {
         return new ChannelTopic(postViewChannel);
@@ -77,11 +90,13 @@ public class RedisConfig {
     @Bean
     public RedisMessageListenerContainer redisContainer(MessageListenerAdapter mentorshipRequestedListener,
                                                         MessageListenerAdapter recommendationListener,
+                                                        MessageListenerAdapter commentEventListener,
                                                         PostViewEventListener postViewEventListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(mentorshipRequestedListener, mentorshipRequestedTopic());
         container.addMessageListener(recommendationListener, recommendationTopic());
+        container.addMessageListener(commentEventListener, commentTopic());
         container.addMessageListener(postViewEventListener, postViewTopic());
         return container;
     }

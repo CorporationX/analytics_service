@@ -90,4 +90,16 @@ public class AnalyticsEventService {
         return filter.getInterval() != null ? analyticsEventFilter.filterByInterval(events, filter.getInterval().getDays()) :
                 analyticsEventFilter.filterByDates(events, filter.getFrom(), filter.getTo());
     }
+
+    public AnalyticsEventDto saveCommentEvent(AnalyticsEventDto eventDto) {
+        if (eventDto.getId() != null) {
+            throw new DataValidationException("The event must not have id for save");
+        }
+
+        AnalyticsEvent event = analyticsEventMapper.toEntity(eventDto);
+        event = analyticsEventRepository.save(event);
+        log.info("success saved action of userId: {}", eventDto.getReceiverId());
+        return analyticsEventMapper.toDto(event);
+    }
+
 }
