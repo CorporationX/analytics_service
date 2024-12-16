@@ -34,7 +34,6 @@ public class RedisConfig {
     private String recommendationChannel;
     @Value("${spring.data.redis.channel.comment}")
     private String commentChannel;
-
     @Value("${spring.data.redis.channel.post-view}")
     private String postViewChannel;
 
@@ -64,7 +63,7 @@ public class RedisConfig {
     }
 
     @Bean
-    public MessageListenerAdapter commentEventListener(CommentEventListener commentEventListener) {
+    public MessageListenerAdapter commentListener(CommentEventListener commentEventListener) {
         return new MessageListenerAdapter(commentEventListener);
     }
 
@@ -90,13 +89,13 @@ public class RedisConfig {
     @Bean
     public RedisMessageListenerContainer redisContainer(MessageListenerAdapter mentorshipRequestedListener,
                                                         MessageListenerAdapter recommendationListener,
-                                                        MessageListenerAdapter commentEventListener,
+                                                        MessageListenerAdapter commentListener,
                                                         PostViewEventListener postViewEventListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(mentorshipRequestedListener, mentorshipRequestedTopic());
         container.addMessageListener(recommendationListener, recommendationTopic());
-        container.addMessageListener(commentEventListener, commentTopic());
+        container.addMessageListener(commentListener, commentTopic());
         container.addMessageListener(postViewEventListener, postViewTopic());
         return container;
     }
