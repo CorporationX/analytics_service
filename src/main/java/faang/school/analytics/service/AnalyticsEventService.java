@@ -44,6 +44,10 @@ public class AnalyticsEventService {
     @Transactional
     public List<AnalyticsEventDto> getAnalytics(AnalyticsFilterDto analyticsFilterDto) {
 
+        if (analyticsFilterDto.getInterval() != null && (analyticsFilterDto.getTo() != null && analyticsFilterDto.getFrom() != null)) {
+            throw new IllegalArgumentException("You can't use both interval and from/to");
+        }
+
         Stream<AnalyticsEvent> eventsStream = analyticsEventRepository.findByReceiverIdAndEventType(
                 analyticsFilterDto.getReceiverId(), analyticsFilterDto.getEventType());
 
