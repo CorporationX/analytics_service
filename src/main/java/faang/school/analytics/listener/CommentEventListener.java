@@ -1,10 +1,10 @@
-package faang.school.analytics.listener.comment;
+package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.domain.dto.events.analytic.AnalyticsEventDto;
+import faang.school.analytics.dto.analytic.AnalyticsEventDto;
 import faang.school.analytics.dto.comment.CommentEvent;
-import faang.school.analytics.mapper.events.AnalyticsEventMapper;
-import faang.school.analytics.service.events.AnalyticsEventService;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.service.analytic.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -30,7 +30,7 @@ public class CommentEventListener implements MessageListener {
             CommentEvent commentEvent = objectMapper.readValue(message.getBody(), CommentEvent.class);
             AnalyticsEventDto analyticsEvent = analyticsEventMapper.commentToAnalyticsDto(commentEvent);
             log.info("Saving comment event: {}", analyticsEvent);
-            analyticsEventService.saveCommentEvent(analyticsEvent);
+            analyticsEventService.saveAction(analyticsEvent);
         } catch (IOException e) {
             log.error("Error reading value");
             throw new RuntimeException(e);
