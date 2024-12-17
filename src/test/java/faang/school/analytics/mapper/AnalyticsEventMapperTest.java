@@ -21,7 +21,11 @@ class AnalyticsEventMapperTest {
 
     @Test
     void testSubscriptionEventToEntityMapping_CorrectValues() {
-        SubscriptionEvent subscriptionEvent = new SubscriptionEvent(1L, 2L, LocalDateTime.now());
+        SubscriptionEvent subscriptionEvent = SubscriptionEvent.builder()
+                .followerId(1L)
+                .followeeId(2L)
+                .subscribedAt(LocalDateTime.now())
+                .build();
         AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(subscriptionEvent);
         EventType eventType = EventType.FOLLOWER;
 

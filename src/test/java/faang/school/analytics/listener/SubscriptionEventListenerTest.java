@@ -48,14 +48,18 @@ class SubscriptionEventListenerTest {
 
     private SubscriptionEvent subscriptionEvent;
     private AnalyticsEvent analyticsEvent;
-    ArgumentCaptor<AnalyticsEvent> analyticsEventCaptor;
-    String json;
-    String invalidJson;
+    private ArgumentCaptor<AnalyticsEvent> analyticsEventCaptor;
+    private String json;
+    private String invalidJson;
 
     @BeforeEach
     void setUp() {
         analyticsEvent = AnalyticsEvent.builder().id(100L).build();
-        subscriptionEvent = new SubscriptionEvent(1L, 2L, null);
+        subscriptionEvent = SubscriptionEvent.builder()
+                .followerId(1L)
+                .followeeId(2L)
+                .subscribedAt(null)
+                .build();
         analyticsEventCaptor = ArgumentCaptor.forClass(AnalyticsEvent.class);
         json = "{\"followerId\":1,\"followeeId\":2,\"subscribedAt\":\"2024-12-10T12:00:00\"}";
         invalidJson = "{\"followerId\":\"invalid_id\",\"followeeId\":2,\"subscribedAt\":\"invalid_date\"}";
