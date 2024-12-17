@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class FollowerEventListener extends AbstractEventListener<FollowerEvent> {
 
-    @Value("${spring.data.redis.channel.follower-event-channel}")
+    @Value("${spring.data.redis.channel.follower-event}")
     private String followerEventChannel;
 
     private final AnalyticsEventMapper analyticsEventMapper;

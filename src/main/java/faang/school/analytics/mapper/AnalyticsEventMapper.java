@@ -18,5 +18,8 @@ public interface AnalyticsEventMapper {
     AnalyticsEvent profileViewEventToAnalyticsEvent(ProfileViewEvent profileViewEvent);
 
     @Mapping(target = "eventType", constant = "FOLLOWER")
+    @Mapping(target = "actorId", source = "followerId")
+    @Mapping(target = "receiverId", source = "followeeId")
+    @Mapping(target = "receivedAt", expression = "java(java.time.LocalDateTime.now())")
     AnalyticsEvent followerEventToAnalyticsEvent(FollowerEvent followerEvent);
 }
