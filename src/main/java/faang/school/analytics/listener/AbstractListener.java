@@ -19,8 +19,8 @@ public abstract class AbstractListener<T> implements MessageListener {
 
     protected T listenEvent(Message message, Class<T> eventType) throws IOException {
         if (message.getBody().length == 0) {
-            log.error("Message body is empty {}", message.getBody());
-            throw new IOException("Message body is empty");
+            log.error("Message body is empty: {}", message.getBody());
+            throw new InvalidMessageException("Message body is empty");
         }
 
         try {
@@ -31,6 +31,7 @@ public abstract class AbstractListener<T> implements MessageListener {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected Class<T> eventType() {
         ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
         return (Class<T>) type.getActualTypeArguments()[0];
