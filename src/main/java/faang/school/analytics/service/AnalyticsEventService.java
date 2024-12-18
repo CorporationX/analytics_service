@@ -1,7 +1,8 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.event.SearchAppearanceEvent;
+import faang.school.analytics.dto.PremiumBoughtEvent;
 
+import faang.school.analytics.event.SearchAppearanceEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapperToLog;
 import faang.school.analytics.mappers.AnalyticsEventMapper;
 import faang.school.analytics.dto.AnalyticsEventDto;
@@ -32,6 +33,10 @@ public class AnalyticsEventService {
     private final AnalyticsEventMapperToLog analyticsEventMapperToLog;
 
     public void processEvent(SearchAppearanceEvent event) {
+        String logEntry = analyticsEventMapperToLog.mapToLog(event);
+        log.info("Processing event: " + logEntry);
+    }
+    public void processPremiumBoughtEvent(PremiumBoughtEvent event) {
         String logEntry = analyticsEventMapperToLog.mapToLog(event);
         log.info("Processing event: " + logEntry);
     }
