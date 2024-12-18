@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.PostViewEventListener;
 import faang.school.analytics.listener.SearchAppearanceEventListener;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,8 @@ public class RedisConfig {
     private String searchAppearanceTopicName;
     @Value("${spring.data.redis.topic.view-appearance}")
     private String postViewTopicName;
+    @Value("${spring.data.redis.topic.mentorship-channel}")
+    private String mentorshipChannel;
 
     @Bean
     public LettuceConnectionFactory lettuceConnectionFactory() {
@@ -37,13 +40,16 @@ public class RedisConfig {
             RedisConnectionFactory connectionFactory,
             MessageListenerAdapter postViewEventListenerAdapter,
             SearchAppearanceEventListener searchAppearanceEventListener,
+            MentorshipRequestedEventListener mentorshipRequestListenerAdapter,
             ChannelTopic postViewTopic,
-            ChannelTopic searchAppearanceTopic) {
+            ChannelTopic searchAppearanceTopic,
+            ChannelTopic mentorshipChannel) {
 
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.addMessageListener(postViewEventListenerAdapter, postViewTopic);
         container.addMessageListener(searchAppearanceEventListener, searchAppearanceTopic);
+        container.addMessageListener(mentorshipRequestListenerAdapter, mentorshipChannel);
         return container;
     }
 
@@ -60,5 +66,15 @@ public class RedisConfig {
     @Bean
     public MessageListenerAdapter postViewEventListenerAdapter(PostViewEventListener listener) {
         return new MessageListenerAdapter(listener, "onMessage");
+    }
+
+    @Bean
+    public ChannelTopic mentorshipChannel() {
+        return new ChannelTopic(mentorshipChannel);
+    }
+
+    @Bean
+    public MessageListenerAdapter mentorshipRequestListenerAdapter(MentorshipRequestedEventListener listener) {
+        return new MessageListenerAdapter(listener, mentorshipChannel);
     }
 }
