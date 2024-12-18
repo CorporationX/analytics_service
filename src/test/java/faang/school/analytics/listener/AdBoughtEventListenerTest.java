@@ -92,7 +92,8 @@ public class AdBoughtEventListenerTest {
         Message message = mock(Message.class);
         when(message.getBody()).thenReturn("".getBytes());
 
-        IOException exception = assertThrows(IOException.class, () -> listener.listenEvent(message, AdBoughtEvent.class));
+        InvalidMessageException exception = assertThrows(InvalidMessageException.class,
+                () -> listener.listenEvent(message, AdBoughtEvent.class));
         assertEquals("Message body is empty", exception.getMessage());
     }
 
