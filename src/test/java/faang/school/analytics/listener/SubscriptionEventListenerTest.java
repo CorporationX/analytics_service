@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -48,9 +49,9 @@ class SubscriptionEventListenerTest {
 
     private SubscriptionEvent subscriptionEvent;
     private AnalyticsEvent analyticsEvent;
-    ArgumentCaptor<AnalyticsEvent> analyticsEventCaptor;
-    String json;
-    String invalidJson;
+    private ArgumentCaptor<AnalyticsEvent> analyticsEventCaptor;
+    private String json;
+    private String invalidJson;
 
     @BeforeEach
     void setUp() {
@@ -84,14 +85,14 @@ class SubscriptionEventListenerTest {
 
     @Test
     void testOnMessage_Success() throws Exception {
-        when(message.getBody()).thenReturn(json.getBytes());
-        when(objectMapper.readValue(json.getBytes(), SubscriptionEvent.class)).thenReturn(subscriptionEvent);
+        when(message.getBody()).thenReturn(json.getBytes(StandardCharsets.UTF_8));
+        when(objectMapper.readValue(json, SubscriptionEvent.class)).thenReturn(subscriptionEvent);
         when(analyticsEventMapper.toEntity(subscriptionEvent)).thenReturn(analyticsEvent);
         when(analyticsEventService.saveEvent(analyticsEvent)).thenReturn(analyticsEvent);
 
         subscriptionEventListener.onMessage(message, null);
 
-        verify(objectMapper, times(1)).readValue(json.getBytes(), SubscriptionEvent.class);
+        verify(objectMapper, times(1)).readValue(json, SubscriptionEvent.class);
         verify(analyticsEventMapper, times(1)).toEntity(subscriptionEvent);
         verify(analyticsEventService, times(1)).saveEvent(analyticsEventCaptor.capture());
 
@@ -101,13 +102,14 @@ class SubscriptionEventListenerTest {
 
     @Test
     void testOnMessage_HandlesExceptionWithoutThrowing() throws Exception {
-        when(message.getBody()).thenReturn(invalidJson.getBytes());
-        when(objectMapper.readValue(invalidJson.getBytes(), SubscriptionEvent.class)).
-                thenThrow(new IOException("Invalid data format."));
+        when(message.getBody()).thenReturn(invalidJson.getBytes(StandardCharsets.UTF_8));
+        doAnswer(invocation -> {
+            throw new IOException("Invalid data format");
+        }).when(objectMapper).readValue(invalidJson, SubscriptionEvent.class);
 
         assertDoesNotThrow(() -> subscriptionEventListener.onMessage(message, null));
 
-        verify(objectMapper, times(1)).readValue(invalidJson.getBytes(StandardCharsets.UTF_8), SubscriptionEvent.class);
+        verify(objectMapper, times(1)).readValue(invalidJson, SubscriptionEvent.class);
         verify(analyticsEventMapper, never()).toEntity(any(SubscriptionEvent.class));
         verify(analyticsEventService, never()).saveEvent(any());
     }
