@@ -1,8 +1,8 @@
 package faang.school.analytics.redis.listener;
 
-import lombok.Builder;
+import lombok.NoArgsConstructor;
 
-@Builder
+@NoArgsConstructor
 public class EventForTest {
     long id;
 }
