@@ -22,8 +22,8 @@ public abstract class AbstractEventListener<T>
         try {
             return objectMapper.readValue(message.getBody(), eventType);
         } catch (IOException e) {
-            log.error("Failed to deserialize follower event", e);
-            throw new RuntimeException(e);
+            log.error("Failed to deserialize event", e);
+            throw new IllegalArgumentException("Failed to deserialize message body", e);
         }
     }
 

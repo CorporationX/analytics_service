@@ -16,6 +16,7 @@ public class AnalyticsEventService {
     public void saveEvent(AnalyticsEvent analyticsEvent) {
         analyticsEventRepository.save(analyticsEvent);
 
-        log.info("Saving analyticsEvent with type: {}", analyticsEvent.getEventType());
+        log.info("Saving analytics event with type: {}", analyticsEvent.getEventType());
     }
+
 }

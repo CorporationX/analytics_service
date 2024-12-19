@@ -8,16 +8,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class AnalyticsEventServiceTest {
+public class AnalyticsEventServiceTest {
 
     @Mock
-    AnalyticsEventRepository analyticsEventRepository;
+    private AnalyticsEventRepository analyticsEventRepository;
 
     @InjectMocks
-    AnalyticsEventService analyticsEventService;
+    private AnalyticsEventService analyticsEventService;
 
     @Test
     public void saveEventTest() {
@@ -25,6 +26,6 @@ class AnalyticsEventServiceTest {
 
         analyticsEventService.saveEvent(analyticsEvent);
 
-        verify(analyticsEventRepository).save(analyticsEvent);
+        verify(analyticsEventRepository, times(1)).save(analyticsEvent);
     }
 }
