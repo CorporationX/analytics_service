@@ -16,6 +16,7 @@ public class RedisConfig {
     private final RedisProperties redisProperties;
     private final SubscriptionEventListener subscriptionEventListener;
     private final GoalCompletedEventListener goalCompletedEventListener;
+    private final AdBoughtEventListener adBoughtEventListener;
 
     @Bean
     public RedisMessageListenerContainer redisContainer(RedisConnectionFactory connectionFactory) {
@@ -30,16 +31,16 @@ public class RedisConfig {
 
     @Bean
     public ChannelTopic adBoughtTopic() {
-        return new ChannelTopic(redisConfigProperties.channel().adBought());
+        return new ChannelTopic(redisProperties.channel().adBought());
     }
 
     @Bean
     public ChannelTopic goalCompletedTopic() {
-        return new ChannelTopic(redisConfigProperties.channel().goalCompleted());
+        return new ChannelTopic(redisProperties.channel().goalCompleted());
     }
 
     @Bean
     ChannelTopic subscriptionTopic() {
-        return new ChannelTopic(redisProperties.getChannel().getSubscriptionChannel());
+        return new ChannelTopic(redisProperties.channel().subscriptionChannel());
     }
 }

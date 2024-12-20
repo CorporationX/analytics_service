@@ -1,4 +1,4 @@
-package faang.school.analytics.dto.event;
+package faang.school.analytics.event;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
