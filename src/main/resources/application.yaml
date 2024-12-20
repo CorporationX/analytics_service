@@ -22,11 +22,10 @@ spring:
       port: 6379
       host: localhost
       channel:
-        mentorshipRequest: "mentorship_request_channel"
-      channels:
         profile-view: profile_view_channel
         goal-completed: goal_completed_channel
-
+        ad-bought: ad_bought_channel
+        mentorshipRequest: mentorship_request_channel
 
 server:
   port: 8086
