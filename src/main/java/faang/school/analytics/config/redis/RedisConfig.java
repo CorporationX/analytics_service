@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.AdBoughtEventListener;
 import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.SubscriptionEventListener;
 import lombok.RequiredArgsConstructor;
@@ -21,17 +22,24 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.addMessageListener(subscriptionEventListener, subscriptionTopic());
+        container.addMessageListener(adBoughtEventListener, adBoughtTopic());
         container.addMessageListener(goalCompletedEventListener, goalCompletedTopic());
+        container.addMessageListener(subscriptionEventListener, subscriptionTopic());
         return container;
+    }
+
+    @Bean
+    public ChannelTopic adBoughtTopic() {
+        return new ChannelTopic(redisConfigProperties.channel().adBought());
+    }
+
+    @Bean
+    public ChannelTopic goalCompletedTopic() {
+        return new ChannelTopic(redisConfigProperties.channel().goalCompleted());
     }
 
     @Bean
     ChannelTopic subscriptionTopic() {
         return new ChannelTopic(redisProperties.getChannel().getSubscriptionChannel());
-    }
-
-    @Bean
-    ChannelTopic goalCompletedTopic() {
-        return new ChannelTopic(redisProperties.getChannel().getGoalCompleted());
     }
 }

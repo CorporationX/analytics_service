@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -33,4 +34,10 @@ public class AnalyticsEvent {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "received_at", nullable = false)
     private LocalDateTime receivedAt;
+
+    @Column(name = "payment_amount")
+    private BigDecimal paymentAmount;
+
+    @Column(name = "ad_duration")
+    private Long adDuration;
 }
