@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ProfileViewEventListener extends AbstractEventListener<ProfileViewEvent> {
+public class ProfileViewEventListener extends AbstractEventListener {
 
     private final AnalyticsEventService analyticsEventService;
 

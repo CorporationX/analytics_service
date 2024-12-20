@@ -11,11 +11,11 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Slf4j
-public abstract class AbstractEventListener<T> implements MessageListener {
+public abstract class AbstractEventListener implements MessageListener {
 
     private final ObjectMapper objectMapper;
 
-    protected T getEvent(Message message, Class<T> eventClass) {
+    protected <T> T getEvent(Message message, Class<T> eventClass) {
         try {
             log.info("Trying to convert message to {}", eventClass.getName());
             return objectMapper.readValue(message.getBody(), eventClass);

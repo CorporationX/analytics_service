@@ -1,8 +1,8 @@
 package faang.school.analytics.message.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.message.event.event.ProfileViewEvent;
 import faang.school.analytics.exception.MessageMappingException;
+import faang.school.analytics.message.event.ProfileViewEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
