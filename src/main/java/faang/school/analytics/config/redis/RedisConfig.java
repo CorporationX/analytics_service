@@ -3,17 +3,20 @@ package faang.school.analytics.config.redis;
 import faang.school.analytics.listener.mentorshiprequest.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.recommendation.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
@@ -25,11 +28,14 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
-    @Value("${spring.data.redis.channel.mentorship-requested-topic}")
-    private String mentorshipRequestedChannel;
-
-    @Value("${spring.data.redis.channel.recommendation_topic}")
+    @Value("${spring.data.redis.channels.recommendation_topic}")
     private String recommendationChannel;
+
+    @Value("${spring.data.redis.channels.goal_topic}")
+    private String goalCompletedChannel;
+
+    @Value("${spring.data.redis.channels.mentorship-requested-topic}")
+    private String mentorshipRequestedChannel;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -47,32 +53,23 @@ public class RedisConfig {
     }
 
     @Bean
-    public MessageListenerAdapter mentorshipRequestedListener(MentorshipRequestedEventListener mentorshipRequestedEventListener) {
-        return new MessageListenerAdapter(mentorshipRequestedEventListener);
+    public Map<String, ChannelTopic> topics() {
+        Map<String, ChannelTopic> result = new HashMap<>();
+        result.put(RecommendationEventListener.class.getName(), new ChannelTopic(recommendationChannel));
+        result.put(MentorshipRequestedEventListener.class.getName(), new ChannelTopic(mentorshipRequestedChannel));
+//        result.put(GoalCompletedEventListener.class.getName(), new ChannelTopic(goalCompletedChannel));
+        return result;
     }
 
-    @Bean
-    public MessageListenerAdapter recommendationListener(RecommendationEventListener recommendationEventListener) {
-        return new MessageListenerAdapter(recommendationEventListener);
-    }
 
     @Bean
-    public ChannelTopic recommendationTopic() {
-        return new ChannelTopic(recommendationChannel);
-    }
-
-    @Bean
-    public ChannelTopic mentorshipRequestedTopic() {
-        return new ChannelTopic(mentorshipRequestedChannel);
-    }
-
-    @Bean
-    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter mentorshipRequestedListener,
-                                                        MessageListenerAdapter recommendationListener) {
+    public RedisMessageListenerContainer redisContainer(List<MessageListener> listeners) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(mentorshipRequestedListener, mentorshipRequestedTopic());
-        container.addMessageListener(recommendationListener, recommendationTopic());
+        Map<String, ChannelTopic> topics = topics();
+        for (MessageListener listener : listeners) {
+            container.addMessageListener(listener, topics.get(listener.getClass().getName()));
+        }
         return container;
     }
 
