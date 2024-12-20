@@ -1,6 +1,7 @@
 package faang.school.analytics.validator;
 
 import faang.school.analytics.exception.DataValidationException;
+import faang.school.analytics.validator.AnalyticsEventValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
