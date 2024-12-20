@@ -1,4 +1,4 @@
-package faang.school.analytics.listener;
+package faang.school.analytics.exception;
 
 public class EventProcessingException extends RuntimeException {
     public EventProcessingException(String message, Throwable cause) {

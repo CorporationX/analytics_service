@@ -1,7 +1,7 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.dto.event.AnalyticsEventResponseDto;
+import faang.school.analytics.dto.AnalyticsEventResponseDto;
 import faang.school.analytics.event.GoalCompletedEvent;
 import faang.school.analytics.exception.MessageProcessingException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;

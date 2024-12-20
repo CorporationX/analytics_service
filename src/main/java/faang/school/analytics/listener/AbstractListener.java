@@ -1,6 +1,9 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.exception.EventDeserializationException;
+import faang.school.analytics.exception.EventProcessingException;
+import faang.school.analytics.exception.InvalidMessageException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

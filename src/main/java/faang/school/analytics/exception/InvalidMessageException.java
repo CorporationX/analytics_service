@@ -1,4 +1,4 @@
-package faang.school.analytics.listener;
+package faang.school.analytics.exception;
 
 public class InvalidMessageException extends RuntimeException {
     public InvalidMessageException(String messageBodyIsEmpty) {

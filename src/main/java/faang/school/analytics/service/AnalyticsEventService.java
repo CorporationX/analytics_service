@@ -1,7 +1,7 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.dto.MentorshipRequestEvent;
-import faang.school.analytics.dto.event.AnalyticsEventResponseDto;
+import faang.school.analytics.event.MentorshipRequestEvent;
+import faang.school.analytics.dto.AnalyticsEventResponseDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -27,9 +27,12 @@ public class AnalyticsEventService {
     private final AnalyticsEventMapper analyticsEventMapper;
     private final AnalyticsEventValidator analyticsEventValidator;
 
-    public void saveEvent(AnalyticsEvent event) {
+    public AnalyticsEvent saveEvent(AnalyticsEvent event) {
         AnalyticsEvent savedEvent = analyticsEventRepository.save(event);
-        log.info("Analytics event {} saved successfully.", savedEvent.getId());
+        log.info("Analytics event successfully saved. ID: {}, Type: {}",
+                savedEvent.getId(), savedEvent.getEventType());
+
+        return savedEvent;
     }
 
     public List<AnalyticsEventResponseDto> getAnalytics(
@@ -58,7 +61,7 @@ public class AnalyticsEventService {
     }
 
     public void saveAnalyticsEvent(MentorshipRequestEvent mentorshipRequestEvent) {
-        AnalyticsEvent analyticsEvent =  analyticsEventMapper.toAnalyticsEventMentorshipRequest(mentorshipRequestEvent);
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEventMentorshipRequest(mentorshipRequestEvent);
         analyticsEvent.setEventType(EventType.RECOMMENDATION_RECEIVED);
         analyticsEventRepository.save(analyticsEvent);
 

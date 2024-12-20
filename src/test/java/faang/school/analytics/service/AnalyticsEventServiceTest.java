@@ -1,6 +1,6 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.dto.event.AnalyticsEventResponseDto;
+import faang.school.analytics.dto.AnalyticsEventResponseDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -23,7 +23,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
 
-import faang.school.analytics.dto.MentorshipRequestEvent;
+import faang.school.analytics.event.MentorshipRequestEvent;
 import lombok.extern.slf4j.Slf4j;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -205,9 +205,8 @@ class AnalyticsEventServiceTest {
                 .thenReturn(analyticsEventMentorshipRequest);
         doThrow(new RuntimeException("Database error")).when(analyticsEventRepository).save(analyticsEventMentorshipRequest);
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            analyticsEventService.saveAnalyticsEvent(mentorshipRequestEvent);
-        });
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> analyticsEventService.saveAnalyticsEvent(mentorshipRequestEvent));
 
         assertEquals("Database error", exception.getMessage());
     }
