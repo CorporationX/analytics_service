@@ -26,7 +26,7 @@ spring:
         goal-completed: goal_completed_channel
         subscription-channel: subscription_channel
         ad-bought: ad_bought_channel
-        mentorshipRequest: mentorship_request_channel
+        mentorship-request: mentorship_request_channel
 
 server:
   port: 8086

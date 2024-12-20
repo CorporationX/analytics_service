@@ -1,6 +1,6 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.dto.MentorshipRequestEvent;
+import faang.school.analytics.event.MentorshipRequestEvent;
 import faang.school.analytics.dto.AnalyticsEventResponseDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;

@@ -18,6 +18,7 @@ public class RedisConfig {
     private final SubscriptionEventListener subscriptionEventListener;
     private final GoalCompletedEventListener goalCompletedEventListener;
     private final AdBoughtEventListener adBoughtEventListener;
+    private final MentorshipRequestedEventListener mentorshipRequestedEventListener;
 
     @Bean
     public RedisMessageListenerContainer redisContainer(RedisConnectionFactory connectionFactory) {
