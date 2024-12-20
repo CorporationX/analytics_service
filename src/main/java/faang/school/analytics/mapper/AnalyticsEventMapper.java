@@ -1,6 +1,8 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.event.follower.FollowerEvent;
+import faang.school.analytics.event.mentorship.MentorshipRequestedEvent;
+import faang.school.analytics.event.mentorship.MentorshipRequestedEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.redis.event.ProfileViewEvent;
 import faang.school.analytics.event.RecommendationEvent;
@@ -28,4 +30,9 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "actorId", source = "authorId")
     @Mapping(target = "receivedAt", source = "dateTime")
     AnalyticsEvent recommendationEventToAnalyticsEvent(RecommendationEvent recommendationEvent);
+
+    @Mapping(target = "eventType", constant = "MENTORSHIP_REQUESTED")
+    @Mapping(target = "actorId", source = "requesterId")
+    @Mapping(target = "receivedAt", source = "requestedAt")
+    AnalyticsEvent mentorshipRequestedEventToAnalyticsEvent(MentorshipRequestedEvent followerEvent);
 }

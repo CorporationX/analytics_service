@@ -25,6 +25,8 @@ spring:
         profile-view: profile_view_channel
         follower-event: follower_channel
         recommendation: recommendation_channel
+        mentorship:
+          requested: mentorship_requested_channel
 
 server:
   port: 8086
