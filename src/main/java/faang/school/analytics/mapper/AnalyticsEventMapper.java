@@ -3,6 +3,9 @@ package faang.school.analytics.mapper;
 import faang.school.analytics.dto.AnalyticsEventResponseDto;
 import faang.school.analytics.event.AdBoughtEvent;
 import faang.school.analytics.event.SubscriptionEvent;
+import faang.school.analytics.dto.MentorshipRequestEvent;
+import faang.school.analytics.dto.event.AdBoughtEvent;
+import faang.school.analytics.dto.event.AnalyticsEventResponseDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -31,4 +34,8 @@ public interface AnalyticsEventMapper {
                 .receivedAt(event.getReceivedAt())
                 .build();
     }
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(source = "time", target = "receivedAt")
+    AnalyticsEvent toAnalyticsEventMentorshipRequest(MentorshipRequestEvent mentorshipRequestEvent);
 }

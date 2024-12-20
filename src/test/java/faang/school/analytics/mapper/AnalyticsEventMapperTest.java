@@ -22,6 +22,7 @@ class AnalyticsEventMapperTest {
     @Test
     void testSubscriptionEventToEntityMapping_CorrectValues() {
         SubscriptionEvent subscriptionEvent = new SubscriptionEvent(1L, 2L, LocalDateTime.now());
+
         AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(subscriptionEvent);
         EventType eventType = EventType.FOLLOWER;
 
@@ -29,5 +30,17 @@ class AnalyticsEventMapperTest {
         assertThat(analyticsEvent.getReceiverId()).isEqualTo(subscriptionEvent.getFolloweeId());
         assertThat(analyticsEvent.getReceivedAt()).isEqualTo(subscriptionEvent.getSubscribedAt());
         assertThat(analyticsEvent.getEventType()).isEqualTo(eventType);
+    }
+
+    @Test
+    void testMentorshipRequestEventToAnalyticsEvent() {
+        MentorshipRequestEvent mentorshipRequestEvent = new MentorshipRequestEvent(1L, 2L, null);
+
+        AnalyticsEvent result = mapper.toAnalyticsEventMentorshipRequest(mentorshipRequestEvent);
+
+        assertNotNull(result);
+        assertEquals(1L, result.getReceiverId());
+        assertEquals(2L, result.getActorId());
+        assertNull(result.getReceivedAt());
     }
 }
