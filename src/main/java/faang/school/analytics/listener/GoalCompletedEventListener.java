@@ -3,8 +3,9 @@ package faang.school.analytics.listener;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.event.GoalCompletedEvent;
 import faang.school.analytics.exception.MessageProcessingException;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.mapper.GoalCompletedMapper;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ import java.io.IOException;
 public class GoalCompletedEventListener implements MessageListener {
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
-    private final AnalyticsEventMapper analyticsEventMapper;
+    private final GoalCompletedMapper goalCompletedMapper;
 
     @Override
     public void onMessage(@Nullable Message message, byte[] pattern) {
@@ -31,7 +32,8 @@ public class GoalCompletedEventListener implements MessageListener {
         }
         try {
             GoalCompletedEvent goalCompletedEvent = objectMapper.readValue(message.getBody(), GoalCompletedEvent.class);
-            AnalyticsEvent event = analyticsEventMapper.goalCompletedEventToEntity(goalCompletedEvent);
+            AnalyticsEvent event = goalCompletedMapper.toEntity(goalCompletedEvent);
+            event.setEventType(EventType.GOAL_COMPLETED);
             analyticsEventService.saveEvent(event);
         } catch (IOException e) {
             log.error("Failed to parse or read message body", e);

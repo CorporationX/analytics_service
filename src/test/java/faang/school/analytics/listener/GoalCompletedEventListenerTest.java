@@ -48,6 +48,7 @@ class GoalCompletedEventListenerTest {
 
     private GoalCompletedEvent goalCompletedEvent;
     private AnalyticsEvent analyticsEvent;
+    private AnalyticsEventResponseDto analyticsEventResponseDto;
     private Message redisMessage;
 
     @BeforeEach
@@ -60,18 +61,11 @@ class GoalCompletedEventListenerTest {
                 .receivedAt(LocalDateTime.now())
                 .build();
 
-        goalCompletedEvent = new GoalCompletedEvent(1L, 2L, LocalDateTime.now());
-        analyticsEventResponseDto = AnalyticsEventResponseDto.builder()
-                .receiverId(2L)
-                .actorId(1L)
-                .eventType(EventType.GOAL_COMPLETED)
-                .receivedAt(LocalDateTime.now())
-                .build();
         analyticsEvent = new AnalyticsEvent();
     }
 
     @Test
-    public void testOnMessageSuccess() throws IOException {
+    void testOnMessageSuccess() throws IOException {
         String messageBody = "{\"goalId\": 1, \"userId\": 42, \"completedAt\": \"2024-12-14T10:15:30\"}";
         Message message = mock(Message.class);
         when(message.getBody()).thenReturn(messageBody.getBytes());
@@ -89,7 +83,7 @@ class GoalCompletedEventListenerTest {
     }
 
     @Test
-    public void testOnMessageIOException() throws IOException {
+    void testOnMessageIOException() throws IOException {
         Message redisMessage = mock(Message.class);
         byte[] messageBody = "{\"goalId\": 1, \"userId\": 42, \"completedAt\": \"2024-12-14T10:15:30\"}".getBytes();
         when(redisMessage.getBody()).thenReturn(messageBody);

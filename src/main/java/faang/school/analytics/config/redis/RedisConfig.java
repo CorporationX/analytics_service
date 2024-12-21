@@ -66,6 +66,6 @@ public class RedisConfig {
 
     @Bean
     public ChannelTopic goalCompletedChannel() {
-        return new ChannelTopic(redisProperties.channel().goalCompletedChannel());
+        return new ChannelTopic(redisProperties.channel().goalCompleted());
     }
 }
