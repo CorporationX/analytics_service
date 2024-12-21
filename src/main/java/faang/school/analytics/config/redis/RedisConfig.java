@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import faang.school.analytics.listener.LikeEventListener;
+import faang.school.analytics.message.consumer.ProfileViewEventListener;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,10 +19,16 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@RequiredArgsConstructor
 public class RedisConfig {
+
+    private final ProfileViewEventListener profileViewEventListener;
 
     @Value("${spring.data.redis.channel.like-event-topic}")
     private String likeEventTopic;
+
+    @Value("${spring.data.redis.channel.profile-view}")
+    private String profileViewChannel;
 
     @Bean
     public MessageListenerAdapter likeListenerAdapter(LikeEventListener likeEventListener) {
@@ -53,6 +61,11 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.addMessageListener(likeListener, likeTopic());
+
+        ChannelTopic profileViewTopic = new ChannelTopic(profileViewChannel);
+        MessageListenerAdapter profileViewMessageListenerAdapter = new MessageListenerAdapter(profileViewEventListener);
+        container.addMessageListener(profileViewMessageListenerAdapter, profileViewTopic);
+
         return container;
     }
 

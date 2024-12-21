@@ -4,6 +4,7 @@ import faang.school.analytics.dto.event.analyticsEvent.AnalyticsEventDto;
 import faang.school.analytics.dto.event.analyticsEvent.AnalyticsEventRequestDto;
 import faang.school.analytics.dto.interval.IntervalDto;
 import faang.school.analytics.exception.DataValidationException;
+import faang.school.analytics.message.event.ProfileViewEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.mapper.IntervalMapper;
 import faang.school.analytics.model.AnalyticsEvent;
@@ -11,10 +12,10 @@ import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,6 +34,13 @@ public class AnalyticsEventService {
     }
 
     @Transactional
+    public void saveProfileView(ProfileViewEvent profileViewEvent) {
+        log.info("Trying to save profileViewEvent: {} to database", profileViewEvent);
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(profileViewEvent);
+        analyticsEventRepository.save(analyticsEvent);
+    }
+
+    @Transactional
     public AnalyticsEventDto createEvent(AnalyticsEventRequestDto eventDto, EventType eventType) {
         AnalyticsEvent event = analyticsEventMapper.toEntity(eventDto);
         event.setEventType(eventType);
@@ -46,7 +54,7 @@ public class AnalyticsEventService {
         analyticsEventRepository.deleteById(eventId);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<AnalyticsEventDto> getAnalytics(long receiverId, IntervalDto intervalDto, EventType eventType,
                                                 LocalDateTime from, LocalDateTime to) {
 

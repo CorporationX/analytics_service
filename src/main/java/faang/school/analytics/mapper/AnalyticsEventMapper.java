@@ -1,20 +1,24 @@
 package faang.school.analytics.mapper;
 
+import faang.school.analytics.message.event.ProfileViewEvent;
 import faang.school.analytics.dto.event.analyticsEvent.AnalyticsEventDto;
 import faang.school.analytics.dto.event.analyticsEvent.AnalyticsEventRequestDto;
 import faang.school.analytics.dto.event.likeEvent.PostLikeEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = org.mapstruct.ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
     AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
 
     AnalyticsEventRequestDto toRequestDto(AnalyticsEvent analyticsEvent);
 
+    @Mapping(target = "eventType", constant = "PROFILE_VIEW")
+    AnalyticsEvent toAnalyticsEvent(ProfileViewEvent profileViewEvent);
     AnalyticsEvent toEntity(AnalyticsEventDto analyticsEventDto);
 
     @Mapping(target = "eventType", ignore = true)

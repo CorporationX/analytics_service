@@ -5,6 +5,7 @@ import faang.school.analytics.dto.event.analyticsEvent.AnalyticsEventRequestDto;
 import faang.school.analytics.dto.interval.IntervalDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.mapper.IntervalMapper;
+import faang.school.analytics.message.event.ProfileViewEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
@@ -34,6 +35,9 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class AnalyticsEventServiceTest {
 
+    @InjectMocks
+    private AnalyticsEventService analyticsEventService;
+
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
 
@@ -42,9 +46,6 @@ public class AnalyticsEventServiceTest {
 
     @Mock
     private IntervalMapper intervalMapper;
-
-    @InjectMocks
-    private AnalyticsEventService analyticsEventService;
 
     private AnalyticsEvent event;
     private AnalyticsEventRequestDto eventRequestDto;
@@ -84,6 +85,35 @@ public class AnalyticsEventServiceTest {
                 .start(LocalDateTime.now().minusDays(1))
                 .end(LocalDateTime.now())
                 .build();
+    }
+
+    @Test
+    public void testSaveProfileView() {
+        // arrange
+        long actorId = 5L;
+        long receiverId = 2L;
+        LocalDateTime receivedAt = LocalDateTime.now();
+        ProfileViewEvent profileViewEvent = ProfileViewEvent.builder()
+                .actorId(actorId)
+                .receiverId(receiverId)
+                .receivedAt(receivedAt)
+                .build();
+
+        AnalyticsEvent analyticsEvent = AnalyticsEvent.builder()
+                .actorId(actorId)
+                .receiverId(receiverId)
+                .receivedAt(receivedAt)
+                .eventType(EventType.PROFILE_VIEW)
+                .build();
+
+        when(analyticsEventMapper.toAnalyticsEvent(profileViewEvent))
+                .thenReturn(analyticsEvent);
+
+        // act
+        analyticsEventService.saveProfileView(profileViewEvent);
+
+        // assert
+        verify(analyticsEventRepository).save(analyticsEvent);
     }
 
     @Test
