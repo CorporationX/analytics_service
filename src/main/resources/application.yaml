@@ -21,7 +21,7 @@ spring:
     redis:
       port: 6379
       host: localhost
-      channel:
+      channels:
         profile-view: profile_view_channel
         recommendation_topic: recommendation_topic
         goal_topic: goal_topic
