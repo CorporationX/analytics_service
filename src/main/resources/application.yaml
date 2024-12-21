@@ -22,8 +22,13 @@ spring:
       port: 6379
       host: localhost
       channel:
-        goal-completed-channel: goal_completed_channel
+        profile-view: profile_view_channel
+        goal-completed: goal_completed_channel
+        subscription-channel: subscription_channel
+        ad-bought: ad_bought_channel
+        mentorship-request: mentorship_request_channel
         comment-channel: comment_channel
+
   retry:
     maxAttempts: 3
     initialDelay: 1000

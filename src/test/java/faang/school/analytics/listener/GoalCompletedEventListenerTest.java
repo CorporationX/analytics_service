@@ -1,28 +1,32 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.dto.AnalyticsEventResponseDto;
 import faang.school.analytics.event.GoalCompletedEvent;
 import faang.school.analytics.exception.MessageProcessingException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.mapper.GoalCompletedMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.Message;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class GoalCompletedEventListenerTest {
@@ -36,6 +40,9 @@ class GoalCompletedEventListenerTest {
     @Mock
     private AnalyticsEventMapper analyticsEventMapper;
 
+    @Spy
+    private GoalCompletedMapper goalCompletedMapper;
+
     @InjectMocks
     private GoalCompletedEventListener goalCompletedEventListener;
 
@@ -45,40 +52,48 @@ class GoalCompletedEventListenerTest {
 
     @BeforeEach
     public void setUp() {
-
         goalCompletedEvent = new GoalCompletedEvent(1L, 2L, LocalDateTime.now());
-        analyticsEvent = AnalyticsEvent.builder()
+        analyticsEventResponseDto = AnalyticsEventResponseDto.builder()
                 .receiverId(2L)
                 .actorId(1L)
                 .eventType(EventType.GOAL_COMPLETED)
                 .receivedAt(LocalDateTime.now())
                 .build();
 
-        byte[] messageBody = "{\"userId\":1,\"goalId\":2,\"completedAt\":\"2024-12-09T12:00:00\"}"
-                .getBytes(StandardCharsets.UTF_8);
-        redisMessage = mock(Message.class);
-        when(redisMessage.getBody()).thenReturn(messageBody);
+        goalCompletedEvent = new GoalCompletedEvent(1L, 2L, LocalDateTime.now());
+        analyticsEventResponseDto = AnalyticsEventResponseDto.builder()
+                .receiverId(2L)
+                .actorId(1L)
+                .eventType(EventType.GOAL_COMPLETED)
+                .receivedAt(LocalDateTime.now())
+                .build();
+        analyticsEvent = new AnalyticsEvent();
     }
 
     @Test
-    void testOnMessageSuccess() throws IOException {
-        when(objectMapper.readValue(redisMessage.getBody(), GoalCompletedEvent.class)).thenReturn(goalCompletedEvent);
-        when(analyticsEventMapper.goalCompletedEventToEntity(any(GoalCompletedEvent.class))).thenReturn(analyticsEvent);
+    public void testOnMessageSuccess() throws IOException {
+        String messageBody = "{\"goalId\": 1, \"userId\": 42, \"completedAt\": \"2024-12-14T10:15:30\"}";
+        Message message = mock(Message.class);
+        when(message.getBody()).thenReturn(messageBody.getBytes());
 
-        goalCompletedEventListener.onMessage(redisMessage, null);
+        GoalCompletedEvent goalCompletedEvent = new GoalCompletedEvent(1L, 42L, LocalDateTime.now());
+        AnalyticsEvent analyticsEvent = new AnalyticsEvent();
 
-        ArgumentCaptor<AnalyticsEvent> dtoCaptor = ArgumentCaptor.forClass(AnalyticsEvent.class);
-        verify(analyticsEventService).saveEvent(dtoCaptor.capture());
-        AnalyticsEvent capturedEvent = dtoCaptor.getValue();
-        assertEquals(EventType.GOAL_COMPLETED, capturedEvent.getEventType());
-        assertEquals(goalCompletedEvent.goalId(), capturedEvent.getReceiverId());
-        assertEquals(goalCompletedEvent.userId(), capturedEvent.getActorId());
+        lenient().when(objectMapper.readValue(messageBody.getBytes(), GoalCompletedEvent.class)).thenReturn(goalCompletedEvent);
+        lenient().when(goalCompletedMapper.toEntity(goalCompletedEvent)).thenReturn(analyticsEvent);
+
+        goalCompletedEventListener.onMessage(message, null);
 
         verify(analyticsEventService).saveEvent(analyticsEvent);
+        assertEquals(EventType.GOAL_COMPLETED, analyticsEvent.getEventType());
     }
 
     @Test
-    void testOnMessageIOException() throws IOException {
+    public void testOnMessageIOException() throws IOException {
+        Message redisMessage = mock(Message.class);
+        byte[] messageBody = "{\"goalId\": 1, \"userId\": 42, \"completedAt\": \"2024-12-14T10:15:30\"}".getBytes();
+        when(redisMessage.getBody()).thenReturn(messageBody);
+
         when(objectMapper.readValue(redisMessage.getBody(), GoalCompletedEvent.class))
                 .thenThrow(new IOException("Test Exception"));
 

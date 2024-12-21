@@ -1,13 +1,14 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.validator.AnalyticsEventValidator;
-import faang.school.analytics.dto.analyticsEvent.AnalyticsEventResponseDto;
+import faang.school.analytics.event.MentorshipRequestEvent;
+import faang.school.analytics.dto.AnalyticsEventResponseDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.specification.AnalyticsEventSpecification;
+import faang.school.analytics.validator.AnalyticsEventValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -26,9 +27,12 @@ public class AnalyticsEventService {
     private final AnalyticsEventMapper analyticsEventMapper;
     private final AnalyticsEventValidator analyticsEventValidator;
 
-    public void saveEvent(AnalyticsEvent event) {
+    public AnalyticsEvent saveEvent(AnalyticsEvent event) {
         AnalyticsEvent savedEvent = analyticsEventRepository.save(event);
-        log.info("Analytics {} event saved successfully: {}", savedEvent.getEventType(), savedEvent.toString());
+        log.info("Analytics event successfully saved. ID: {}, Type: {}",
+                savedEvent.getId(), savedEvent.getEventType());
+
+        return savedEvent;
     }
 
     public List<AnalyticsEventResponseDto> getAnalytics(
@@ -54,5 +58,14 @@ public class AnalyticsEventService {
         log.info("Analytics retrieved successfully for receiverId {}. {} events found.", receiverId, result.size());
 
         return result;
+    }
+
+    public void saveAnalyticsEvent(MentorshipRequestEvent mentorshipRequestEvent) {
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEventMentorshipRequest(mentorshipRequestEvent);
+        analyticsEvent.setEventType(EventType.RECOMMENDATION_RECEIVED);
+        analyticsEventRepository.save(analyticsEvent);
+
+        log.info("Successfully saved AnalyticsEvent with receiverId={} and actorId={}",
+                analyticsEvent.getReceiverId(), analyticsEvent.getActorId());
     }
 }

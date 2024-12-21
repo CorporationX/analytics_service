@@ -1,12 +1,12 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.validator.AnalyticsEventValidator;
-import faang.school.analytics.dto.analyticsEvent.AnalyticsEventResponseDto;
+import faang.school.analytics.dto.AnalyticsEventResponseDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import faang.school.analytics.validator.AnalyticsEventValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,11 +22,19 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
+
+import faang.school.analytics.event.MentorshipRequestEvent;
+import lombok.extern.slf4j.Slf4j;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@Slf4j
 class AnalyticsEventServiceTest {
     private static final int WEEKS_COUNT = 1;
 
@@ -49,6 +57,8 @@ class AnalyticsEventServiceTest {
     private Interval interval;
     private LocalDateTime from;
     private LocalDateTime to;
+    private MentorshipRequestEvent mentorshipRequestEvent;
+    private AnalyticsEvent analyticsEventMentorshipRequest;
 
     @BeforeEach
     void setUp() {
@@ -70,6 +80,9 @@ class AnalyticsEventServiceTest {
                 .receiverId(receiverId)
                 .eventType(eventType)
                 .build();
+
+        mentorshipRequestEvent = new MentorshipRequestEvent(1L, 2L, null);
+        analyticsEventMentorshipRequest = new AnalyticsEvent();
     }
 
     @Test
@@ -173,5 +186,28 @@ class AnalyticsEventServiceTest {
                 ArgumentMatchers.<Specification<AnalyticsEvent>>any(),
                 ArgumentMatchers.any(Sort.class));
         verify(analyticsEventMapper, times(1)).entityToResponseDto(analyticsEvent);
+    }
+
+    @Test
+    void saveMentorshipRequestEventSuccessfully() {
+        when(analyticsEventMapper.toAnalyticsEventMentorshipRequest(mentorshipRequestEvent))
+                .thenReturn(analyticsEventMentorshipRequest);
+
+        analyticsEventService.saveAnalyticsEvent(mentorshipRequestEvent);
+
+        verify(analyticsEventMapper, times(1)).toAnalyticsEventMentorshipRequest(mentorshipRequestEvent);
+        verify(analyticsEventRepository, times(1)).save(analyticsEventMentorshipRequest);
+    }
+
+    @Test
+    void saveMentorshipRequestEvent_ShouldThrowExceptionWhenRepositoryFails() {
+        when(analyticsEventMapper.toAnalyticsEventMentorshipRequest(mentorshipRequestEvent))
+                .thenReturn(analyticsEventMentorshipRequest);
+        doThrow(new RuntimeException("Database error")).when(analyticsEventRepository).save(analyticsEventMentorshipRequest);
+
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> analyticsEventService.saveAnalyticsEvent(mentorshipRequestEvent));
+
+        assertEquals("Database error", exception.getMessage());
     }
 }

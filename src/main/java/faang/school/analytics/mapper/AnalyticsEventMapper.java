@@ -1,5 +1,9 @@
 package faang.school.analytics.mapper;
 
+import faang.school.analytics.dto.AnalyticsEventResponseDto;
+import faang.school.analytics.event.AdBoughtEvent;
+import faang.school.analytics.event.MentorshipRequestEvent;
+import faang.school.analytics.event.SubscriptionEvent;
 import faang.school.analytics.dto.analyticsEvent.AnalyticsEventResponseDto;
 import faang.school.analytics.event.GoalCompletedEvent;
 import faang.school.analytics.event.CommentEvent;
@@ -13,6 +17,26 @@ public interface AnalyticsEventMapper {
 
     AnalyticsEventResponseDto entityToResponseDto(AnalyticsEvent event);
 
+    @Mapping(source = "followerId", target = "actorId")
+    @Mapping(source = "followeeId", target = "receiverId")
+    @Mapping(source = "subscribedAt", target = "receivedAt")
+    @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.FOLLOWER)")
+    AnalyticsEvent toEntity(SubscriptionEvent event);
+
+    default AnalyticsEvent dtoToEntity(AdBoughtEvent event) {
+        return AnalyticsEvent.builder()
+                .id(event.getPostId())
+                .actorId(event.getActorId())
+                .receiverId(event.getReceiverId())
+                .paymentAmount(event.getPaymentAmount())
+                .adDuration(event.getAdDuration())
+                .receivedAt(event.getReceivedAt())
+                .build();
+    }
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(source = "time", target = "receivedAt")
+    AnalyticsEvent toAnalyticsEventMentorshipRequest(MentorshipRequestEvent mentorshipRequestEvent);
     AnalyticsEvent toEntity(AnalyticsEventResponseDto dto);
 
     @Mapping(source = "postAuthorId", target = "receiverId")
@@ -27,4 +51,3 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "completedAt", target = "receivedAt")
     AnalyticsEvent goalCompletedEventToEntity(GoalCompletedEvent dto);
 }
-
