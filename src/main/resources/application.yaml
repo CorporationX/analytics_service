@@ -26,6 +26,8 @@ spring:
         recommendation_topic: recommendation_topic
         goal_completed_topic:
           name: goal_complete
+        project_view_channel:
+          name: project_view
 
 server:
   port: 8086

@@ -17,12 +17,12 @@ public abstract class AbstractListenerForAddEvent<T> implements MessageListener 
     public void onMessage(Message message, byte[] pattern) {
         String stringMessage = new String(message.getBody());
         try {
-            log.warn("mapping message to"+getEventClass().getSimpleName());
-            T event = objectMapper.readValue(stringMessage,getEventClass());
+            log.warn("mapping message to " + getEventClass().getSimpleName());
+            T event = objectMapper.readValue(stringMessage, getEventClass());
             handleEvent(event);
         } catch (JsonProcessingException e) {
-            log.error("Пришел не верный формат данных в GoalCompletedEventListener",e);
-            throw new IllegalArgumentException("Пришел не верный формат данных в GoalCompletedEventListener",e);
+            log.error("Пришел не верный формат данных в AbstractListenerForAddEvent",e);
+            throw new IllegalArgumentException("Пришел не верный формат данных в AbstractListenerForAddEvent",e);
         }
     }
 
