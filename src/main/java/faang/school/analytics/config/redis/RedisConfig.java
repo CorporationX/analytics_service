@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.following.FollowerEventListener;
 import faang.school.analytics.listener.mentorshiprequest.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.recommendation.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,8 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channels.mentorship-requested-topic}")
     private String mentorshipRequestedChannel;
+    @Value("${spring.data.redis.channels.follower-event-topic}")
+    private String followersChannel;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -57,6 +60,7 @@ public class RedisConfig {
         Map<String, ChannelTopic> result = new HashMap<>();
         result.put(RecommendationEventListener.class.getName(), new ChannelTopic(recommendationChannel));
         result.put(MentorshipRequestedEventListener.class.getName(), new ChannelTopic(mentorshipRequestedChannel));
+        result.put(FollowerEventListener.class.getName(), new ChannelTopic(followersChannel));
 //        result.put(GoalCompletedEventListener.class.getName(), new ChannelTopic(goalCompletedChannel));
         return result;
     }
