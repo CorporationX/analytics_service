@@ -38,7 +38,8 @@ public class CommentEventListener implements MessageListener {
         try {
             log.info("Received message from Redis: {}", new String(message.getBody(), StandardCharsets.UTF_8));
             CommentEvent event = objectMapper.readValue(message.getBody(), CommentEvent.class);
-            handleEvent(event);
+            AnalyticsEvent analyticsEvent = analyticsEventMapper.newCommentEventToEntity(event);
+            analyticsEventService.saveEvent(analyticsEvent);
         } catch (IOException e) {
             String errorMessage = new String(message.getBody(), StandardCharsets.UTF_8);
             log.error("Error while deserializing {} from Redis. Error: {}", errorMessage, e.getMessage());
@@ -48,10 +49,4 @@ public class CommentEventListener implements MessageListener {
             throw e;
         }
     }
-
-    private void handleEvent(CommentEvent event) {
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.newCommentEventToEntity(event);
-        analyticsEventService.saveEvent(analyticsEvent);
-    }
-
 }

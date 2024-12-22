@@ -37,9 +37,6 @@ class GoalCompletedEventListenerTest {
     @Mock
     private AnalyticsEventService analyticsEventService;
 
-    @Mock
-    private AnalyticsEventMapper analyticsEventMapper;
-
     @Spy
     private GoalCompletedMapper goalCompletedMapper;
 
@@ -49,7 +46,6 @@ class GoalCompletedEventListenerTest {
     private GoalCompletedEvent goalCompletedEvent;
     private AnalyticsEvent analyticsEvent;
     private AnalyticsEventResponseDto analyticsEventResponseDto;
-    private Message redisMessage;
 
     @BeforeEach
     public void setUp() {
@@ -60,8 +56,6 @@ class GoalCompletedEventListenerTest {
                 .eventType(EventType.GOAL_COMPLETED)
                 .receivedAt(LocalDateTime.now())
                 .build();
-
-        analyticsEvent = new AnalyticsEvent();
     }
 
     @Test

@@ -6,6 +6,7 @@ import faang.school.analytics.event.CommentEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
+import faang.school.analytics.util.JsonTestHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,7 +45,7 @@ class CommentEventListenerTest {
 
     @BeforeEach
     void setUp() {
-        json = "{\"commentAuthorId\":1, \"postAuthorId\":2, \"postId\":3, \"commentId\":4, \"createdAt\":\"2024-12-13T12:00:00\"}";
+        json = JsonTestHandler.readJsonFileToString("/json/new_comment_event.json");
         message = mock(Message.class);
         analyticsEvent = mock(AnalyticsEvent.class);
     }
