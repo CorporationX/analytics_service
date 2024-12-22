@@ -1,7 +1,9 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.dto.RecommendationEvent;
 import faang.school.analytics.listener.PostViewEventListener;
 import faang.school.analytics.listener.PremiumBoughtEventListener;
+import faang.school.analytics.listener.RecommendationEventListener;
 import faang.school.analytics.listener.SearchAppearanceEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +41,7 @@ public class RedisConfig {
             MessageListenerAdapter postViewEventListenerAdapter,
             SearchAppearanceEventListener searchAppearanceEventListener,
             PremiumBoughtEventListener premiumBoughtEventListener,
+            MessageListenerAdapter recommendationEventListenerAdapter,
             ChannelTopic buyPremiumTopic,
             ChannelTopic postViewTopic,
             ChannelTopic searchAppearanceTopic) {
@@ -48,6 +51,7 @@ public class RedisConfig {
         container.addMessageListener(postViewEventListenerAdapter, postViewTopic);
         container.addMessageListener(searchAppearanceEventListener, searchAppearanceTopic);
         container.addMessageListener(premiumBoughtEventListener, buyPremiumTopic);
+        container.addMessageListener(recommendationEventListenerAdapter, recommendationEventTopic());
         return container;
     }
 
@@ -69,5 +73,15 @@ public class RedisConfig {
     @Bean
     public ChannelTopic buyPremiumTopic() {
         return new ChannelTopic(redisProperties.getBuyPremiumTopic());
+    }
+
+    @Bean
+    public ChannelTopic recommendationEventTopic() {
+        return new ChannelTopic(redisProperties.getRecommendationEventTopic());
+    }
+
+    @Bean
+    public MessageListenerAdapter recommendationEventListenerAdapter(RecommendationEventListener listener) {
+        return new MessageListenerAdapter(listener, "onMessage");
     }
 }
