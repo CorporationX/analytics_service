@@ -22,6 +22,7 @@ spring:
       port: 6379
       host: localhost
       channel:
+        comment: comment_channel
         profile-view: profile_view_channel
 
 server:
