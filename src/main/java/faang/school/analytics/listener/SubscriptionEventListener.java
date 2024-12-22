@@ -28,7 +28,7 @@ public class SubscriptionEventListener implements MessageListener {
         SubscriptionEvent subscriptionEvent;
 
         try {
-            subscriptionEvent = objectMapper.readValue(message.getBody(), SubscriptionEvent.class);
+            subscriptionEvent = objectMapper.readValue(messageBody, SubscriptionEvent.class);
         } catch (IOException e) {
             log.error("Failed to deserialize message body: {}. Error: {}", messageBody, e.getMessage(), e);
             return;

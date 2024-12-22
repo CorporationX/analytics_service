@@ -1,6 +1,7 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.dto.analyticsEvent.AnalyticsEventResponseDto;
+import faang.school.analytics.event.MentorshipRequestEvent;
+import faang.school.analytics.dto.AnalyticsEventResponseDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -57,5 +58,14 @@ public class AnalyticsEventService {
         log.info("Analytics retrieved successfully for receiverId {}. {} events found.", receiverId, result.size());
 
         return result;
+    }
+
+    public void saveAnalyticsEvent(MentorshipRequestEvent mentorshipRequestEvent) {
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEventMentorshipRequest(mentorshipRequestEvent);
+        analyticsEvent.setEventType(EventType.RECOMMENDATION_RECEIVED);
+        analyticsEventRepository.save(analyticsEvent);
+
+        log.info("Successfully saved AnalyticsEvent with receiverId={} and actorId={}",
+                analyticsEvent.getReceiverId(), analyticsEvent.getActorId());
     }
 }
