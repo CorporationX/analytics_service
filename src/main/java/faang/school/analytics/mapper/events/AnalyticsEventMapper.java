@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
 
-    EventType recommendation_received = EventType.RECOMMENDATION_RECEIVED;
-    EventType comment_received = EventType.POST_COMMENT;
+    EventType recommendationReceived = EventType.RECOMMENDATION_RECEIVED;
+    EventType commentReceived = EventType.POST_COMMENT;
 
     @Mapping(source = "eventTypeNumber", target = "eventType", qualifiedByName = "mapToEventType")
     AnalyticsEvent toEntity(AnalyticsEventDto analyticsEventDto);
@@ -26,13 +26,13 @@ public interface AnalyticsEventMapper {
 
     @Mapping(source = "authorId", target = "actorId")
     @Mapping(source = "createdAt", target = "receivedAt")
-    @Mapping(target = "eventTypeNumber", expression = "java(map(recommendation_received))")
+    @Mapping(target = "eventTypeNumber", expression = "java(map(recommendationReceived))")
     AnalyticsEventDto recommendationToAnalyticsDto(RecommendationEvent recommendationEvent);
 
     @Mapping(source = "commentId", target = "receiverId")
     @Mapping(source = "authorId", target = "actorId")
     @Mapping(source = "date", target = "receivedAt")
-    @Mapping(target = "eventTypeNumber", expression = "java(map(comment_received))")
+    @Mapping(target = "eventTypeNumber", expression = "java(map(commentReceived))")
     AnalyticsEventDto commentToAnalyticsDto(CommentEvent commentEvent);
 
     @Named("mapToEventTypeNumber")

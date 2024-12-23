@@ -32,7 +32,7 @@ public class CommentEventListener implements MessageListener {
             log.info("Saving comment event: {}", analyticsEvent);
             analyticsEventService.saveCommentEvent(analyticsEvent);
         } catch (IOException e) {
-            log.error("Error reading value");
+            log.error("Error reading value {}", message, e);
             throw new RuntimeException(e);
         }
     }
