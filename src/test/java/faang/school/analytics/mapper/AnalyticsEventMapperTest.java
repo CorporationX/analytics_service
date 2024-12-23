@@ -25,17 +25,13 @@ class AnalyticsEventMapperTest {
 
     @Test
     void testSubscriptionEventToEntityMapping_CorrectValues() {
-        SubscriptionEvent subscriptionEvent = SubscriptionEvent.builder()
-                .followerId(1L)
-                .followeeId(2L)
-                .subscribedAt(LocalDateTime.now())
-                .build();
+        SubscriptionEvent subscriptionEvent = new SubscriptionEvent(1L, 2L, LocalDateTime.now(), null, null);
         AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(subscriptionEvent);
         EventType eventType = EventType.FOLLOWER;
 
-        assertThat(analyticsEvent.getActorId()).isEqualTo(subscriptionEvent.getFollowerId());
-        assertThat(analyticsEvent.getReceiverId()).isEqualTo(subscriptionEvent.getFolloweeId());
-        assertThat(analyticsEvent.getReceivedAt()).isEqualTo(subscriptionEvent.getSubscribedAt());
+        assertThat(analyticsEvent.getActorId()).isEqualTo(subscriptionEvent.followerId());
+        assertThat(analyticsEvent.getReceiverId()).isEqualTo(subscriptionEvent.followeeId());
+        assertThat(analyticsEvent.getReceivedAt()).isEqualTo(subscriptionEvent.subscribedAt());
         assertThat(analyticsEvent.getEventType()).isEqualTo(eventType);
     }
 
