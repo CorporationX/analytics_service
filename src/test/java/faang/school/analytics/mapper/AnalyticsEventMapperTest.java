@@ -32,7 +32,7 @@ public class AnalyticsEventMapperTest {
         assertEquals(2L, dto.receiverId());
         assertEquals(3L, dto.actorId());
         assertEquals("POST_COMMENT", dto.eventType());
-        assertEquals("2023-12-10 14:30:00", dto.receivedAt());
+        assertEquals(LocalDateTime.of(2023, 12, 10, 14, 30, 0), dto.receivedAt());
     }
 
     @Test
@@ -42,7 +42,7 @@ public class AnalyticsEventMapperTest {
                 2L,
                 3L,
                 "POST_COMMENT",
-                "2023-12-10 14:30:00"
+                LocalDateTime.of(2023, 12, 10, 14, 30, 0)
         );
 
 
