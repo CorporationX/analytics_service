@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.comment.CommentEventListener;
 import faang.school.analytics.listener.mentorshiprequest.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.recommendation.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,8 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.recommendation_topic}")
     private String recommendationChannel;
+    @Value("${spring.data.redis.channel.comment}")
+    private String commentChannel;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -57,8 +60,17 @@ public class RedisConfig {
     }
 
     @Bean
+    public MessageListenerAdapter commentListener(CommentEventListener commentEventListener) {
+        return new MessageListenerAdapter(commentEventListener);
+    }
+
+    @Bean
     public ChannelTopic recommendationTopic() {
         return new ChannelTopic(recommendationChannel);
+    }
+
+    @Bean ChannelTopic commentTopic() {
+        return new ChannelTopic(commentChannel);
     }
 
     @Bean
@@ -68,11 +80,13 @@ public class RedisConfig {
 
     @Bean
     public RedisMessageListenerContainer redisContainer(MessageListenerAdapter mentorshipRequestedListener,
-                                                        MessageListenerAdapter recommendationListener) {
+                                                        MessageListenerAdapter recommendationListener,
+                                                        MessageListenerAdapter commentListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(mentorshipRequestedListener, mentorshipRequestedTopic());
         container.addMessageListener(recommendationListener, recommendationTopic());
+        container.addMessageListener(commentListener, commentTopic());
         return container;
     }
 
