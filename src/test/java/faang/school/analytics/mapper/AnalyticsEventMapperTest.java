@@ -3,6 +3,7 @@ package faang.school.analytics.mapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.dto.AnalyticsEventDto;
+import faang.school.analytics.model.dto.ProfileViewEvent;
 import faang.school.analytics.model.mapper.AnalyticsEventMapper;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -44,8 +45,6 @@ public class AnalyticsEventMapperTest {
                 "POST_COMMENT",
                 LocalDateTime.of(2023, 12, 10, 14, 30, 0)
         );
-
-
         AnalyticsEvent event = mapper.toEntity(dto);
 
         assertNotNull(event);
@@ -63,5 +62,30 @@ public class AnalyticsEventMapperTest {
 
         AnalyticsEvent event = mapper.toEntity(null);
         assertNull(event);
+    }
+
+
+    @Test
+    void testToEntityFromProfileViewEvent() {
+        LocalDateTime now = LocalDateTime.now();
+        ProfileViewEvent profileViewEvent = new ProfileViewEvent(202L, 101L, now);
+
+        AnalyticsEvent analyticsEvent = mapper.toEntityFromProfileViewEvent(profileViewEvent);
+        assertNotNull(analyticsEvent, "AnalyticsEvent should not be null after mapping.");
+
+        assertEquals(EventType.PROFILE_VIEW, analyticsEvent.getEventType(),
+                "eventType should be mapped as constant: PROFILE_VIEW.");
+        assertEquals(now, analyticsEvent.getReceivedAt(),
+                "receivedAt should match the createdTime of the source.");
+        assertEquals(101L, analyticsEvent.getReceiverId(),
+                "receiverId should match idUser from the source.");
+        assertEquals(202L, analyticsEvent.getActorId(),
+                "actorId should match idRequester from the source.");
+    }
+
+    @Test
+    void testToEntityFromProfileViewEvent_NullSource() {
+        AnalyticsEvent analyticsEvent = mapper.toEntityFromProfileViewEvent(null);
+        assertNull(analyticsEvent, "If source is null, result should be null (MapStruct default).");
     }
 }
