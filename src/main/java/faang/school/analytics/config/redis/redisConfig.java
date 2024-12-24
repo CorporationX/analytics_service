@@ -2,6 +2,7 @@ package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.ProjectViewEventListener;
+import faang.school.analytics.listener.UserSearchAppearanceEventListener;
 import faang.school.analytics.messageListener.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,9 +35,13 @@ public class redisConfig {
     @Value("${spring.data.redis.channel.project_view_channel.name}")
     private String projectViewTopic;
 
+    @Value("${spring.data.redis.channel.user_search_appearance_topic.name}")
+    private String userSearchAppearanceTopic;
+
     private final GoalCompletedEventListener goalCompletedEventListener;
     private final RecommendationEventListener recommendationEventListener;
     private final ProjectViewEventListener projectViewEventListener;
+    private final UserSearchAppearanceEventListener userSearchAppearanceEventListener;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -81,12 +86,22 @@ public class redisConfig {
     }
 
     @Bean
+    ChannelTopic userSearchAppearanceTopic() {
+        return new ChannelTopic(userSearchAppearanceTopic);
+    }
+    @Bean
+    public MessageListenerAdapter userSearchAppearanceEventListenerAdapter() {
+        return new MessageListenerAdapter(userSearchAppearanceEventListener);
+    }
+
+    @Bean
     public RedisMessageListenerContainer container(JedisConnectionFactory jedisConnectionFactory){
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory);
         container.addMessageListener(GoalCompletedMessageListener(), goalCompletedTopic());
         container.addMessageListener(recommendationListener(), recommendationTopic());
         container.addMessageListener(projectViewListener(), projectViewTopic());
+        container.addMessageListener(userSearchAppearanceEventListenerAdapter(), userSearchAppearanceTopic());
         return container;
     }
 }
