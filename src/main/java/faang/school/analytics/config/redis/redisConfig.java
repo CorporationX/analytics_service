@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -62,8 +61,9 @@ public class redisConfig {
     public ChannelTopic goalCompletedTopic() {
         return new ChannelTopic(goalCompletedTopic);
     }
+
     @Bean
-    public MessageListenerAdapter GoalCompletedMessageListener(){
+    public MessageListenerAdapter GoalCompletedMessageListener() {
         return new MessageListenerAdapter(goalCompletedEventListener);
     }
 
@@ -71,6 +71,7 @@ public class redisConfig {
     ChannelTopic recommendationTopic() {
         return new ChannelTopic(recommendationChannel);
     }
+
     @Bean
     public MessageListenerAdapter recommendationListener() {
         return new MessageListenerAdapter(recommendationEventListener);
@@ -80,6 +81,7 @@ public class redisConfig {
     ChannelTopic projectViewTopic() {
         return new ChannelTopic(projectViewTopic);
     }
+
     @Bean
     public MessageListenerAdapter projectViewListener() {
         return new MessageListenerAdapter(projectViewEventListener);
@@ -89,13 +91,14 @@ public class redisConfig {
     ChannelTopic userSearchAppearanceTopic() {
         return new ChannelTopic(userSearchAppearanceTopic);
     }
+
     @Bean
     public MessageListenerAdapter userSearchAppearanceEventListenerAdapter() {
         return new MessageListenerAdapter(userSearchAppearanceEventListener);
     }
 
     @Bean
-    public RedisMessageListenerContainer container(JedisConnectionFactory jedisConnectionFactory){
+    public RedisMessageListenerContainer container(JedisConnectionFactory jedisConnectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory);
         container.addMessageListener(GoalCompletedMessageListener(), goalCompletedTopic());
