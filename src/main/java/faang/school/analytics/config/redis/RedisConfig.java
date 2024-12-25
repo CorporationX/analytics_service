@@ -5,6 +5,7 @@ import faang.school.analytics.listener.event.FundRaisedEventListener;
 import faang.school.analytics.listener.goal.GoalCompletedEventListener;
 import faang.school.analytics.listener.premium.PremiumBoughtEventListener;
 import faang.school.analytics.listener.project.ProjectViewEventListener;
+import faang.school.analytics.listener.recommendation.RecommendationEventListener;
 import faang.school.analytics.listener.subscription.FollowerEventListener;
 import faang.school.analytics.listener.user.SearchAppearanceEventListener;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class RedisConfig {
     private final FollowerEventListener followerEventListener;
     private final PremiumBoughtEventListener premiumBoughtEventListener;
     private final CommentEventListener commentEventListener;
+    private final RecommendationEventListener recommendationEventListener;
 
     @Value("${spring.data.redis.host}")
     private String redisHost;
@@ -50,6 +52,8 @@ public class RedisConfig {
     private String premiumBoughtEventTopic;
     @Value("${spring.data.redis.channels.comment-channel}")
     private String topicComment;
+    @Value("${spring.data.redis.channels.recommendation}")
+    private String recommendationTopic;
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
@@ -78,6 +82,7 @@ public class RedisConfig {
         addMessageListenerInContainer(followerEventListener, topicFollower, container);
         addMessageListenerInContainer(premiumBoughtEventListener, premiumBoughtEventTopic, container);
         addMessageListenerInContainer(commentEventListener, topicComment, container);
+        addMessageListenerInContainer(recommendationEventListener, recommendationTopic, container);
 
         return container;
     }

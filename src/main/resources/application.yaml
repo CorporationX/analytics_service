@@ -30,6 +30,7 @@ spring:
         follower: follower-channel
         premium-bought-channel: premium-bought
         comment-channel: comment-topic
+        recommendation: recommendation-topic
 
 server:
   port: 8086
