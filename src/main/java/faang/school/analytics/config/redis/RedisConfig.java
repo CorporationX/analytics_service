@@ -1,6 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.GoalCompletedEventListener;
+import faang.school.analytics.listener.UserSearchAppearanceEventListener;
 import faang.school.analytics.messageListener.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,8 +30,12 @@ public class RedisConfig {
     @Value("${spring.data.redis.channel.recommendation_topic}")
     private String recommendationChannel;
 
+    @Value("${spring.data.redis.channel.user_search_appearance_topic.name}")
+    private String userSearchAppearanceTopic;
+
     private final GoalCompletedEventListener goalCompletedEventListener;
     private final RecommendationEventListener recommendationEventListener;
+    private final UserSearchAppearanceEventListener userSearchAppearanceEventListener;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -66,11 +71,21 @@ public class RedisConfig {
     }
 
     @Bean
+    ChannelTopic userSearchAppearanceTopic() {
+        return new ChannelTopic(userSearchAppearanceTopic);
+    }
+    @Bean
+    public MessageListenerAdapter userSearchAppearanceEventListenerAdapter() {
+        return new MessageListenerAdapter(userSearchAppearanceEventListener);
+    }
+
+    @Bean
     public RedisMessageListenerContainer container(JedisConnectionFactory jedisConnectionFactory){
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory);
         container.addMessageListener(GoalCompletedMessageListener(), goalCompletedTopic());
         container.addMessageListener(recommendationListener(), recommendationTopic());
+        container.addMessageListener(userSearchAppearanceEventListenerAdapter(), userSearchAppearanceTopic());
         return container;
     }
 }
