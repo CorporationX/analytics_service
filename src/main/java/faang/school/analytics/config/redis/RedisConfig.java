@@ -1,6 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.GoalCompletedEventListener;
+import faang.school.analytics.listener.ProjectViewEventListener;
 import faang.school.analytics.listener.UserSearchAppearanceEventListener;
 import faang.school.analytics.messageListener.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +31,15 @@ public class RedisConfig {
     @Value("${spring.data.redis.channel.recommendation_topic}")
     private String recommendationChannel;
 
+    @Value("${spring.data.redis.channel.project_view_channel.name}")
+    private String projectViewTopic;
+
     @Value("${spring.data.redis.channel.user_search_appearance_topic.name}")
     private String userSearchAppearanceTopic;
 
     private final GoalCompletedEventListener goalCompletedEventListener;
     private final RecommendationEventListener recommendationEventListener;
+    private final ProjectViewEventListener projectViewEventListener;
     private final UserSearchAppearanceEventListener userSearchAppearanceEventListener;
 
     @Bean
@@ -56,8 +61,9 @@ public class RedisConfig {
     public ChannelTopic goalCompletedTopic() {
         return new ChannelTopic(goalCompletedTopic);
     }
+
     @Bean
-    public MessageListenerAdapter GoalCompletedMessageListener(){
+    public MessageListenerAdapter GoalCompletedMessageListener() {
         return new MessageListenerAdapter(goalCompletedEventListener);
     }
 
@@ -65,26 +71,39 @@ public class RedisConfig {
     ChannelTopic recommendationTopic() {
         return new ChannelTopic(recommendationChannel);
     }
+
     @Bean
     public MessageListenerAdapter recommendationListener() {
         return new MessageListenerAdapter(recommendationEventListener);
     }
 
     @Bean
+    ChannelTopic projectViewTopic() {
+        return new ChannelTopic(projectViewTopic);
+    }
+
+    @Bean
+    public MessageListenerAdapter projectViewListener() {
+        return new MessageListenerAdapter(projectViewEventListener);
+    }
+
+    @Bean
     ChannelTopic userSearchAppearanceTopic() {
         return new ChannelTopic(userSearchAppearanceTopic);
     }
+
     @Bean
     public MessageListenerAdapter userSearchAppearanceEventListenerAdapter() {
         return new MessageListenerAdapter(userSearchAppearanceEventListener);
     }
 
     @Bean
-    public RedisMessageListenerContainer container(JedisConnectionFactory jedisConnectionFactory){
+    public RedisMessageListenerContainer container(JedisConnectionFactory jedisConnectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory);
         container.addMessageListener(GoalCompletedMessageListener(), goalCompletedTopic());
         container.addMessageListener(recommendationListener(), recommendationTopic());
+        container.addMessageListener(projectViewListener(), projectViewTopic());
         container.addMessageListener(userSearchAppearanceEventListenerAdapter(), userSearchAppearanceTopic());
         return container;
     }
