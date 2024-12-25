@@ -7,6 +7,7 @@ import faang.school.analytics.mapper.analytics_event.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -23,7 +24,7 @@ public class RecommendationEventListener extends AbstractEventListener<Recommend
     }
 
     @Override
-    public void onMessage(Message message, byte[] pattern) {
+    public void onMessage(@NonNull Message message, byte[] pattern) {
         handleEvent(message, RecommendationEvent.class, event -> {
             AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(event);
             analyticsEvent.setEventType(EventType.fromEventClass(event.getClass()));
