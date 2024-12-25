@@ -7,6 +7,7 @@ import faang.school.analytics.event.PremiumBoughtEvent;
 import faang.school.analytics.event.ProjectViewEvent;
 import faang.school.analytics.dto.AnalyticsEventResponseDto;
 import faang.school.analytics.event.GoalCompletedEvent;
+import faang.school.analytics.event.RecommendationEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -46,8 +47,14 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "userId", target = "receiverId")
     @Mapping(source = "purchaseDate", target = "receivedAt")
     AnalyticsEvent toEntity(PremiumBoughtEvent premiumBoughtEvent);
+
     @Mapping(source = "postAuthorId", target = "receiverId")
     @Mapping(source = "commentAuthorId", target = "actorId")
     @Mapping(source = "commentedAt", target = "receivedAt")
     AnalyticsEvent toAnalyticsEvent(CommentEvent commentEvent);
+
+    @Mapping(source = "authorId", target = "actorId")
+    @Mapping(source = "recipientId", target = "receiverId")
+    @Mapping(source = "timestamp", target = "receivedAt")
+    AnalyticsEvent toAnalyticsEvent(RecommendationEvent recommendationEvent);
 }
