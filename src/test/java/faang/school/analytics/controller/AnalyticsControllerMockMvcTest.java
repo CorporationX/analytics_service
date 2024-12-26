@@ -14,6 +14,7 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import jakarta.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -67,7 +68,12 @@ public class AnalyticsControllerMockMvcTest {
     @Test
     @Transactional
     public void testSaveEventPositive() throws Exception {
-        AnalyticsCreateEventDto content = new AnalyticsCreateEventDto(1L, 2L, EventTypeDto.POST_LIKE);
+        AnalyticsCreateEventDto content = new AnalyticsCreateEventDto(
+                1L,
+                2L,
+                LocalDateTime.of(2024, 12, 17, 0, 0, 0),
+                EventTypeDto.POST_LIKE
+        );
         String json = objectMapper.writeValueAsString(content);
 
         MvcResult result = mockMvc.perform(post("/api/v1/analytics")
