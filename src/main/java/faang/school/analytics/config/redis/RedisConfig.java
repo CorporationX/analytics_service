@@ -20,13 +20,16 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
     @Value("${spring.data.redis.host}")
     private String redisHost;
+
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
     @Value("${spring.data.redis.channel.mentorship-requested-topic}")
     private String mentorshipRequestedChannel;
+
     @Value("${spring.data.redis.channel.recommendation_topic}")
     private String recommendationChannel;
+
     @Value("${spring.data.redis.channel.fund-raised}")
     private String fundRaisedChannel;
 
