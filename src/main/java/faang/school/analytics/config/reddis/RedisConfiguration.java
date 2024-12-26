@@ -1,6 +1,7 @@
 package faang.school.analytics.config.reddis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.listener.PostViewEventListener;
 import faang.school.analytics.listener.mentorshipoffered.ProfileViewEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,6 +59,7 @@ public class RedisConfiguration {
         return new ChannelTopic(redisProperties.getChannels().getProfileViewChannel().getName());
     }
 
+
     @Bean
     public MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
         return new MessageListenerAdapter(profileViewEventListener);
@@ -65,8 +67,24 @@ public class RedisConfiguration {
 
 
     @Bean
-    public Pair<MessageListenerAdapter, ChannelTopic> profileViewEventPair(MessageListenerAdapter profileViewMessageListener,
-                                                                               ChannelTopic profileViewEvent) {
-        return Pair.of(profileViewMessageListener, profileViewEvent);
+    public Pair<MessageListenerAdapter, ChannelTopic> profileViewEventPair(MessageListenerAdapter profileViewListener,
+                                                                           ChannelTopic profileViewTopic) {
+        return Pair.of(profileViewListener, profileViewTopic);
+    }
+
+    @Bean
+    ChannelTopic postViewTopic() {
+        return new ChannelTopic(redisProperties.getChannels().getPostViewChannel().getName());
+    }
+
+    @Bean
+    MessageListenerAdapter postViewListener(PostViewEventListener postViewEventListener) {
+        return new MessageListenerAdapter(postViewEventListener);
+    }
+
+    @Bean
+    public Pair<MessageListenerAdapter, ChannelTopic> postViewEventPair(MessageListenerAdapter postViewListener,
+                                                                        ChannelTopic postViewTopic) {
+        return Pair.of(postViewListener, postViewTopic);
     }
 }

@@ -16,6 +16,7 @@ public class RedisProperties {
     @Setter
     protected static class Channels {
         private Channel profileViewChannel;
+        private Channel postViewChannel;
 
         @Getter
         @Setter
@@ -24,3 +25,4 @@ public class RedisProperties {
         }
     }
 }
+
