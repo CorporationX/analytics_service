@@ -3,10 +3,10 @@ package faang.school.analytics.config.redis;
 import faang.school.analytics.listener.mentorshiprequest.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.recommendation.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,7 +18,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfig {
-
     @Value("${spring.data.redis.host}")
     private String redisHost;
 
@@ -30,6 +29,9 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.recommendation_topic}")
     private String recommendationChannel;
+
+    @Value("${spring.data.redis.channel.fund-raised}")
+    private String fundRaisedChannel;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -67,12 +69,19 @@ public class RedisConfig {
     }
 
     @Bean
+    public ChannelTopic fundRaisedTopic() {
+        return new ChannelTopic(fundRaisedChannel);
+    }
+
+    @Bean
     public RedisMessageListenerContainer redisContainer(MessageListenerAdapter mentorshipRequestedListener,
-                                                        MessageListenerAdapter recommendationListener) {
+                                                        MessageListenerAdapter recommendationListener,
+                                                        MessageListener fundRaisedEventListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(mentorshipRequestedListener, mentorshipRequestedTopic());
         container.addMessageListener(recommendationListener, recommendationTopic());
+        container.addMessageListener(fundRaisedEventListener, fundRaisedTopic());
         return container;
     }
 
