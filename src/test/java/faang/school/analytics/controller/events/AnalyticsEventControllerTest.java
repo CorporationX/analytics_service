@@ -38,7 +38,7 @@ class AnalyticsEventControllerTest {
 
     @Test
     void testSaveEventBadRequest() throws Exception {
-        mockMvc.perform(post("/analytics/events/save-event"))
+        mockMvc.perform(post("/analytics/events"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -60,7 +60,7 @@ class AnalyticsEventControllerTest {
         Mockito.when(analyticsEventService.saveEvent(any())).thenReturn(dtoAfterSave);
 
         String rq = objectMapper.writeValueAsString(dto);
-        mockMvc.perform(post("/analytics/events/save-event")
+        mockMvc.perform(post("/analytics/events")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(rq))
                 .andExpect(status().isOk())
@@ -84,7 +84,7 @@ class AnalyticsEventControllerTest {
         Mockito.doThrow(new DataValidationException("Error message")).when(analyticsEventService).saveEvent(any());
 
         String rq = objectMapper.writeValueAsString(dto);
-        mockMvc.perform(post("/analytics/events/save-event")
+        mockMvc.perform(post("/analytics/events")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(rq))
                 .andExpect(status().isBadRequest())

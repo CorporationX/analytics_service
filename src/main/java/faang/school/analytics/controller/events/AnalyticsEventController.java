@@ -17,26 +17,27 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/analytics/events")
+@RequestMapping("/analytics")
 @RequiredArgsConstructor
 public class AnalyticsEventController {
 
     private final AnalyticsEventService analyticsEventService;
 
-    @PostMapping("/save-event")
+    @PostMapping("/events")
     public AnalyticsEventDto saveEvent(@Valid @RequestBody AnalyticsEventDto event) {
-        log.info("Save event. Type = {}. ReceiverId = {}. ActorId = {}.", event.getEventTypeNumber(), event.getReceivedAt(), event.getActorId());
+        log.info("Save event. Type = {}. ReceiverId = {}. ActorId = {}.",
+                event.getEventTypeNumber(), event.getReceivedAt(), event.getActorId());
         return analyticsEventService.saveEvent(event);
     }
 
-    @GetMapping
+    @GetMapping("/events")
     public List<AnalyticsEventDto> getEvents(@ModelAttribute @Valid AnalyticsEventFilterDto filterDto) {
         log.info("Requested events with filter: interval = {}, fromAt = {}, toAt = {}",
                 filterDto.getInterval(), filterDto.getFrom(), filterDto.getTo());
         return analyticsEventService.getAnalytics(filterDto);
     }
 
-    @PostMapping("/save-action")
+    @PostMapping("/actions")
     public AnalyticsEventDto saveAction(@RequestBody @Valid AnalyticsEventDto analyticsEventDto) {
         return analyticsEventService.saveEvent(analyticsEventDto);
     }
