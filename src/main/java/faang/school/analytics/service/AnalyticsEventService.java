@@ -59,13 +59,4 @@ public class AnalyticsEventService {
 
         return result;
     }
-
-    public void saveAnalyticsEvent(MentorshipRequestEvent mentorshipRequestEvent) {
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEventMentorshipRequest(mentorshipRequestEvent);
-        analyticsEvent.setEventType(EventType.RECOMMENDATION_RECEIVED);
-        analyticsEventRepository.save(analyticsEvent);
-
-        log.info("Successfully saved AnalyticsEvent with receiverId={} and actorId={}",
-                analyticsEvent.getReceiverId(), analyticsEvent.getActorId());
-    }
 }
