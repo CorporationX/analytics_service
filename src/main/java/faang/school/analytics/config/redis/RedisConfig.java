@@ -3,8 +3,9 @@ package faang.school.analytics.config.redis;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import faang.school.analytics.listener.LikeEventListener;
+import faang.school.analytics.message.consumer.LikeEventListener;
 import faang.school.analytics.message.consumer.ProfileViewEventListener;
+import faang.school.analytics.message.consumer.ViewedUsersEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -30,19 +31,12 @@ public class RedisConfig {
     @Value("${spring.data.redis.channel.profile-view}")
     private String profileViewChannel;
 
-    @Bean
-    public MessageListenerAdapter likeListenerAdapter(LikeEventListener likeEventListener) {
-        return new MessageListenerAdapter(likeEventListener);
-    }
+    @Value("${spring.data.redis.channel.viewed-user-event-channel}")
+    private String viewedUserChannel;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
         return new JedisConnectionFactory();
-    }
-
-    @Bean
-    public ChannelTopic likeTopic() {
-        return new ChannelTopic(likeEventTopic);
     }
 
     @Bean
@@ -57,6 +51,7 @@ public class RedisConfig {
 
     @Bean
     public RedisMessageListenerContainer redisContainer(MessageListenerAdapter likeListener,
+                                                        MessageListenerAdapter viewedUserEventListener,
                                                         JedisConnectionFactory connectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
@@ -65,6 +60,7 @@ public class RedisConfig {
         ChannelTopic profileViewTopic = new ChannelTopic(profileViewChannel);
         MessageListenerAdapter profileViewMessageListenerAdapter = new MessageListenerAdapter(profileViewEventListener);
         container.addMessageListener(profileViewMessageListenerAdapter, profileViewTopic);
+        container.addMessageListener(viewedUserEventListener, viewedUsersTopic());
 
         return container;
     }
@@ -78,5 +74,25 @@ public class RedisConfig {
         template.setHashKeySerializer(new StringRedisSerializer());
         template.setHashValueSerializer(jackson2JsonRedisSerializer());
         return template;
+    }
+
+    @Bean
+    public ChannelTopic likeTopic() {
+        return new ChannelTopic(likeEventTopic);
+    }
+
+    @Bean
+    public ChannelTopic viewedUsersTopic() {
+        return new ChannelTopic(viewedUserChannel);
+    }
+
+    @Bean
+    public MessageListenerAdapter likeListener(LikeEventListener likeEventListener) {
+        return new MessageListenerAdapter(likeEventListener);
+    }
+
+    @Bean
+    public MessageListenerAdapter viewedUserEventListener(ViewedUsersEventListener viewedUsersEventListener) {
+        return new MessageListenerAdapter(viewedUsersEventListener);
     }
 }

@@ -2,6 +2,8 @@ package faang.school.analytics.message.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.exception.MessageMappingException;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.message.event.ProfileViewEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +23,7 @@ public class ProfileViewEventListenerTest {
     private ProfileViewEventListener profileViewEventListener;
     private ObjectMapper objectMapper;
     private AnalyticsEventService analyticsEventService;
+    private AnalyticsEventMapper analyticsEventMapper;
 
     private Message message;
     private byte[] messageBody;
@@ -29,8 +32,9 @@ public class ProfileViewEventListenerTest {
     public void setUp() {
         objectMapper = Mockito.mock(ObjectMapper.class);
         analyticsEventService = Mockito.mock(AnalyticsEventService.class);
-        profileViewEventListener = new ProfileViewEventListener(objectMapper, analyticsEventService);
-
+        analyticsEventMapper = new AnalyticsEventMapperImpl();
+        profileViewEventListener =
+                new ProfileViewEventListener(objectMapper, analyticsEventService, analyticsEventMapper);
         message = Mockito.mock(Message.class);
         messageBody = new byte[]{};
     }
