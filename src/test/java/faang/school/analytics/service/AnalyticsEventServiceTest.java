@@ -36,7 +36,6 @@ public class AnalyticsEventServiceTest {
     private AnalyticsEventMapper analyticsEventMapper = Mappers.getMapper(AnalyticsEventMapper.class);
 
 
-
     @InjectMocks
     private AnalyticsEventService analyticsEventService;
 

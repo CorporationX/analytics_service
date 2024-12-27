@@ -5,6 +5,6 @@ public record AnalyticsEventDto(
         long receiverId,
         long actorId,
         String eventType,
-        String receivedAt
+        java.time.LocalDateTime receivedAt
 ) {
 }
