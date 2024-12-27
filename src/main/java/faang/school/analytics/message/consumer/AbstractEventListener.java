@@ -1,7 +1,7 @@
 package faang.school.analytics.message.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.exception.EventProcessingException;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +28,7 @@ public abstract class AbstractEventListener<T> {
             log.info("Processed and saved event: {}", event);
         } catch (Exception e) {
             log.error("Error processing event message", e);
+            throw new EventProcessingException(eventType, e);
         }
     }
 }

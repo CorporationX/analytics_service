@@ -2,7 +2,6 @@ package faang.school.analytics.message.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
-import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.message.event.ProfileViewEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.extern.slf4j.Slf4j;
