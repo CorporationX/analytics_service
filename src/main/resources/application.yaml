@@ -24,6 +24,8 @@ spring:
       channel:
         profile-view: profile_view_channel
         like-event-topic: likeEventTopic
+        viewed-user-event-channel: viewed-user-event-channel
+
 
 server:
   port: 8086
