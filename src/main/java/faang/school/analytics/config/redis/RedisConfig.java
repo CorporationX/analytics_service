@@ -1,5 +1,8 @@
 package faang.school.analytics.config.redis;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import faang.school.analytics.dto.RecommendationEvent;
 import faang.school.analytics.listener.PostViewEventListener;
@@ -7,6 +10,7 @@ import faang.school.analytics.listener.PremiumBoughtEventListener;
 import faang.school.analytics.listener.RecommendationEventListener;
 import faang.school.analytics.listener.SearchAppearanceEventListener;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,15 +41,24 @@ public class RedisConfig {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, redisPort);
         return new LettuceConnectionFactory(config);
     }
+    @Bean
+    @Qualifier("redisObjectMapper")
+    public ObjectMapper redisObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        return objectMapper;
+    }
 
     @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(
             RedisConnectionFactory connectionFactory,
             MessageListenerAdapter postViewEventListenerAdapter,
-            SearchAppearanceEventListener searchAppearanceEventListener,
-            MentorshipRequestedEventListener mentorshipRequestListenerAdapter,
-            PremiumBoughtEventListener premiumBoughtEventListener,
+            MessageListenerAdapter searchAppearanceEventListenerAdapter,
+            MessageListenerAdapter mentorshipRequestListenerAdapter,
+            MessageListenerAdapter premiumBoughtEventListenerAdapter,
             MessageListenerAdapter recommendationEventListenerAdapter,
+            @Qualifier("recommendationTopic") ChannelTopic recommendationEventTopic,
             ChannelTopic buyPremiumTopic,
             ChannelTopic postViewTopic,
             ChannelTopic searchAppearanceTopic,
@@ -54,10 +67,11 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.addMessageListener(postViewEventListenerAdapter, postViewTopic);
-        container.addMessageListener(searchAppearanceEventListener, searchAppearanceTopic);
+        container.addMessageListener(searchAppearanceEventListenerAdapter, searchAppearanceTopic);
         container.addMessageListener(mentorshipRequestListenerAdapter, mentorshipChannel);
-        container.addMessageListener(premiumBoughtEventListener, buyPremiumTopic);
-        container.addMessageListener(recommendationEventListenerAdapter, recommendationEventTopic());
+        container.addMessageListener(premiumBoughtEventListenerAdapter, buyPremiumTopic);
+        container.addMessageListener(recommendationEventListenerAdapter, recommendationEventTopic);
+
         return container;
     }
 
@@ -72,18 +86,8 @@ public class RedisConfig {
     }
 
     @Bean
-    public MessageListenerAdapter postViewEventListenerAdapter(PostViewEventListener listener) {
-        return new MessageListenerAdapter(listener, "onMessage");
-    }
-
-    @Bean
     public ChannelTopic mentorshipChannel() {
         return new ChannelTopic(mentorshipChannel);
-    }
-
-    @Bean
-    public MessageListenerAdapter mentorshipRequestListenerAdapter(MentorshipRequestedEventListener listener) {
-        return new MessageListenerAdapter(listener, mentorshipChannel);
     }
 
     @Bean
@@ -92,8 +96,29 @@ public class RedisConfig {
     }
 
     @Bean
+    @Qualifier("recommendationTopic")
     public ChannelTopic recommendationEventTopic() {
         return new ChannelTopic(redisProperties.getRecommendationEventTopic());
+    }
+
+    @Bean
+    public MessageListenerAdapter postViewEventListenerAdapter(PostViewEventListener listener) {
+        return new MessageListenerAdapter(listener, "onMessage");
+    }
+
+    @Bean
+    public MessageListenerAdapter searchAppearanceEventListenerAdapter(SearchAppearanceEventListener listener) {
+        return new MessageListenerAdapter(listener, "onMessage");
+    }
+
+    @Bean
+    public MessageListenerAdapter mentorshipRequestListenerAdapter(MentorshipRequestedEventListener listener) {
+        return new MessageListenerAdapter(listener, "onMessage");
+    }
+
+    @Bean
+    public MessageListenerAdapter premiumBoughtEventListenerAdapter(PremiumBoughtEventListener listener) {
+        return new MessageListenerAdapter(listener, "onMessage");
     }
 
     @Bean

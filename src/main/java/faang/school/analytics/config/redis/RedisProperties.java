@@ -16,6 +16,7 @@ public class RedisProperties {
 
     @Value("spring.data.redis.topic.buy-premium-channel")
     private String buyPremiumTopic;
+
     @Value("${spring.data.redis.topic.recommendation-event}")
     private String recommendationEventTopic;
 }

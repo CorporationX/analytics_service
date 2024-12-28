@@ -1,0 +1,11 @@
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      topic:
+        search-appearance: search_appearance_topic
+        view-appearance: post_view_appearance_topic
+        buy-premium-channel: buy_premium_topic
+        mentorship-channel: mentorship_channel
+        recommendation-event: recommendation_event_topic

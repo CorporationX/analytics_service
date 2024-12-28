@@ -5,15 +5,19 @@ import faang.school.analytics.dto.RecommendationEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 @Component
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
 public class RecommendationEventListener implements MessageListener {
+
     private final AnalyticsEventService analyticsEventService;
+
+    @Qualifier("redisObjectMapper") // Resolved correctly now
     private final ObjectMapper objectMapper;
 
     @Override
@@ -23,7 +27,7 @@ public class RecommendationEventListener implements MessageListener {
             log.info("Consumed RecommendationEvent: {}", event);
             analyticsEventService.processRecommendationEvent(event);
         } catch (Exception e) {
-            log.error("Failed to process RecommendationEvent: {}", e.getMessage());
+            log.error("Failed to process RecommendationEvent: {}", e.getMessage(), e);
         }
     }
 }
