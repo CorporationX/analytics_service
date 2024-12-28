@@ -32,4 +32,6 @@ public abstract class AbstractEventListener<T> {
             log.error("Error processing event message", e);
         }
     }
+
+    public abstract void onMessage(Message message, byte[] pattern);
 }
