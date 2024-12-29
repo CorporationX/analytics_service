@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.ad.AdBoughtEventListener;
 import faang.school.analytics.listener.mentorshiprequest.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.recommendation.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.channel.fund-raised}")
     private String fundRaisedChannel;
 
+    @Value("${spring.data.redis.channel.ad_bought}")
+    private String adBoughtChannel;
+
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(redisHost, redisPort);
@@ -59,6 +63,11 @@ public class RedisConfig {
     }
 
     @Bean
+    public MessageListenerAdapter adBoughtListener(AdBoughtEventListener adBoughtEventListener) {
+        return new MessageListenerAdapter(adBoughtEventListener);
+    }
+
+    @Bean
     public ChannelTopic recommendationTopic() {
         return new ChannelTopic(recommendationChannel);
     }
@@ -74,14 +83,21 @@ public class RedisConfig {
     }
 
     @Bean
+    public ChannelTopic adBoughtTopic() {
+        return new ChannelTopic(adBoughtChannel);
+    }
+
+    @Bean
     public RedisMessageListenerContainer redisContainer(MessageListenerAdapter mentorshipRequestedListener,
                                                         MessageListenerAdapter recommendationListener,
-                                                        MessageListener fundRaisedEventListener) {
+                                                        MessageListener fundRaisedEventListener,
+                                                        MessageListenerAdapter adBoughtListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(mentorshipRequestedListener, mentorshipRequestedTopic());
         container.addMessageListener(recommendationListener, recommendationTopic());
         container.addMessageListener(fundRaisedEventListener, fundRaisedTopic());
+        container.addMessageListener(adBoughtListener, adBoughtTopic());
         return container;
     }
 

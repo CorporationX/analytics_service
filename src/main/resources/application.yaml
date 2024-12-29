@@ -26,7 +26,8 @@ spring:
         recommendation_topic: recommendation_topic
         goal_topic: goal_topic
         mentorship-requested-topic: mentorship_requested_channel
-        fund-raised: fund_raised_channel
+        fund-raised: fund_raised_channel,
+        ad_bought: ad_bought_channel
 
 server:
   port: 8086
