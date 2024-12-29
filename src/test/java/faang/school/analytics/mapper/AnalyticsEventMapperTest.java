@@ -109,7 +109,7 @@ public class AnalyticsEventMapperTest {
     }
 
     @Test
-    void testToEntityFromPPostViewEvent_NullSource() {
+    void testToEntityFromPostViewEvent_NullSource() {
         AnalyticsEvent analyticsEvent = mapper.toEntityFromPostViewEvent(null);
         assertNull(analyticsEvent, "If source is null, result should be null (MapStruct default).");
     }
