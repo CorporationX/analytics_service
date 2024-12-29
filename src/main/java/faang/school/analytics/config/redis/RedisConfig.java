@@ -1,6 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.following.FollowerEventListener;
+import faang.school.analytics.listener.fundraised.FundRaisedEventListener;
 import faang.school.analytics.listener.mentorshiprequest.MentorshipRequestedEventListener;
 import faang.school.analytics.listener.recommendation.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
@@ -22,23 +23,21 @@ import java.util.Map;
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfig {
-
     @Value("${spring.data.redis.host}")
     private String redisHost;
-
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
-    @Value("${spring.data.redis.channels.recommendation_topic}")
+    @Value("${spring.data.redis.channel.recommendation_topic}")
     private String recommendationChannel;
-
-    @Value("${spring.data.redis.channels.goal_topic}")
+    @Value("${spring.data.redis.channel.goal_topic}")
     private String goalCompletedChannel;
-
-    @Value("${spring.data.redis.channels.mentorship-requested-topic}")
+    @Value("${spring.data.redis.channel.mentorship-requested-topic}")
     private String mentorshipRequestedChannel;
-    @Value("${spring.data.redis.channels.follower-event-topic}")
+    @Value("${spring.data.redis.channel.follower-event-topic}")
     private String followersChannel;
+    @Value("${spring.data.redis.channel.fund-raised}")
+    private String fundRaisedChannel;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -61,6 +60,7 @@ public class RedisConfig {
         result.put(RecommendationEventListener.class.getName(), new ChannelTopic(recommendationChannel));
         result.put(MentorshipRequestedEventListener.class.getName(), new ChannelTopic(mentorshipRequestedChannel));
         result.put(FollowerEventListener.class.getName(), new ChannelTopic(followersChannel));
+        result.put(FundRaisedEventListener.class.getName(), new ChannelTopic(fundRaisedChannel));
         return result;
     }
 

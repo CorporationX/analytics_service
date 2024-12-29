@@ -16,9 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Stream;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -75,6 +75,12 @@ public class AnalyticsEventService {
         return usersActionsSumByEventType.stream()
                 .mapToInt(Integer::intValue)
                 .sum();
+    }
+
+    public AnalyticsEventDto saveFundRaisedEvent(AnalyticsEventDto analyticsEventDto) {
+        log.info("saving donation, project id: {}", analyticsEventDto.getReceiverId());
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(analyticsEventDto);
+        return analyticsEventMapper.toDto(analyticsEventRepository.save(analyticsEvent));
     }
 
     private Stream<AnalyticsEvent> filterEvents(Stream<AnalyticsEvent> events, AnalyticsEventFilterDto filter) {
