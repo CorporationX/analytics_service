@@ -1,10 +1,9 @@
-package faang.school.analytics.messaging.premium;
+package faang.school.analytics.listener.premium;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.premium.PremiumBoughtEvent;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
-import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.service.analytic.AnalyticsEventService;
+import faang.school.analytics.mapper.premium.PremiumBoughtEventMapper;
+import faang.school.analytics.service.events.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -16,9 +15,9 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class PremiumBoughtListener implements MessageListener {
+public class PremiumBoughtEventListener implements MessageListener {
     private final ObjectMapper objectMapper;
-    private final AnalyticsEventMapper analyticsEventMapper;
+    private final PremiumBoughtEventMapper analyticsEventMapper;
     private final AnalyticsEventService analyticsEventService;
 
     @Override
@@ -26,10 +25,10 @@ public class PremiumBoughtListener implements MessageListener {
         log.info("Received message {}", message);
         try {
             PremiumBoughtEvent premiumBoughtEvent = objectMapper.readValue(message.getBody(), PremiumBoughtEvent.class);
-            AnalyticsEvent analyticsEvent = analyticsEventMapper.premiumBoughtToAnalytics(premiumBoughtEvent);
-            analyticsEventService.saveAction(analyticsEvent);
+            analyticsEventService.saveEvent(analyticsEventMapper.premiumBoughtToAnalyticsDto(premiumBoughtEvent));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            log.error("Error reading value from redis", e);
+            throw new IllegalStateException(e);
         }
     }
 }

@@ -27,6 +27,7 @@ spring:
         goal_topic: goal_topic
         mentorship-requested-topic: mentorship_requested_channel
         fund-raised: fund_raised_channel
+        premium-bought: premium_bought_channel
 
 server:
   port: 8086
@@ -49,7 +50,3 @@ rating:
   half-max-rank: 50.0
   max-user-rating: 100.0
   min-user-rating: 0.0
-
-redis:
-  topic:
-    premium-bought: premium-bought
