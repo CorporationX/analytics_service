@@ -1,4 +1,4 @@
-package faang.school.analytics.dto.user;
+package faang.school.analytics.domain.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

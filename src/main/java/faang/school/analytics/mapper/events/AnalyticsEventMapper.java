@@ -1,7 +1,7 @@
-package faang.school.analytics.mapper;
+package faang.school.analytics.mapper.events;
 
-import faang.school.analytics.dto.analytic.AnalyticsEventDto;
-import faang.school.analytics.dto.premium.PremiumBoughtEvent;
+import faang.school.analytics.domain.dto.events.analytic.AnalyticsEventDto;
+import faang.school.analytics.domain.dto.events.recommendation.RecommendationEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.mapstruct.Mapper;
@@ -14,18 +14,18 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
 
+    EventType recommendation_received = EventType.RECOMMENDATION_RECEIVED;
+
     @Mapping(source = "eventTypeNumber", target = "eventType", qualifiedByName = "mapToEventType")
     AnalyticsEvent toEntity(AnalyticsEventDto analyticsEventDto);
 
     @Mapping(source = "eventType", target = "eventTypeNumber", qualifiedByName = "mapToEventTypeNumber")
     AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(source = "userId", target = "receiverId")
-    @Mapping(source = "userId", target = "actorId")
-    @Mapping(target = "eventType", constant = "PREMIUM_BOUGHT")
-    @Mapping(source = "startDate", target = "receivedAt")
-    AnalyticsEvent premiumBoughtToAnalytics(PremiumBoughtEvent premiumBoughtEvent);
+    @Mapping(source = "authorId", target = "actorId")
+    @Mapping(source = "createdAt", target = "receivedAt")
+    @Mapping(target = "eventTypeNumber", expression = "java(map(recommendation_received))")
+    AnalyticsEventDto recommendationToAnalyticsDto(RecommendationEvent recommendationEvent);
 
     @Named("mapToEventTypeNumber")
     default int map(EventType eventType) {
