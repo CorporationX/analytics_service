@@ -3,6 +3,7 @@ package faang.school.analytics.model.mapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.dto.AnalyticsEventDto;
+import faang.school.analytics.model.dto.PostViewEvent;
 import faang.school.analytics.model.dto.ProfileViewEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -25,6 +26,12 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "idUser", target = "receiverId")
     @Mapping(source = "idRequester", target = "actorId")
     AnalyticsEvent toEntityFromProfileViewEvent(ProfileViewEvent profileViewEvent);
+
+    @Mapping(target = "eventType", constant = "POST_VIEW")
+    @Mapping(source = "timestamp", target = "receivedAt")
+    @Mapping(source = "authorId", target = "receiverId")
+    @Mapping(source = "userId", target = "actorId")
+    AnalyticsEvent toEntityFromPostViewEvent(PostViewEvent postViewEvent);
 
     @Named("eventTypeToString")
     static String eventTypeToString(EventType eventType) {
