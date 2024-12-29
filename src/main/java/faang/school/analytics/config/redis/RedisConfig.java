@@ -61,7 +61,6 @@ public class RedisConfig {
         result.put(RecommendationEventListener.class.getName(), new ChannelTopic(recommendationChannel));
         result.put(MentorshipRequestedEventListener.class.getName(), new ChannelTopic(mentorshipRequestedChannel));
         result.put(FollowerEventListener.class.getName(), new ChannelTopic(followersChannel));
-//        result.put(GoalCompletedEventListener.class.getName(), new ChannelTopic(goalCompletedChannel));
         return result;
     }
 
