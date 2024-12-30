@@ -15,8 +15,8 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 @RequiredArgsConstructor
 public class RedisConfiguration {
 
-    @Value("${spring.data.redis.channel.user.recommendation}")
-    private String userRecommendationTopic;
+    @Value("${spring.data.redis.channel.user-recommendation.name}")
+    private String userRecommendationChannel;
     @Value("${spring.data.redis.host}")
     private String host;
     @Value("${spring.data.redis.port}")
@@ -37,7 +37,7 @@ public class RedisConfiguration {
         container.setConnectionFactory(connectionFactory);
 
         MessageListenerAdapter recommendationListenerAdapter = new MessageListenerAdapter(recommendationEventListener);
-        container.addMessageListener(recommendationListenerAdapter, new ChannelTopic(userRecommendationTopic));
+        container.addMessageListener(recommendationListenerAdapter, new ChannelTopic(userRecommendationChannel));
 
         return container;
     }
