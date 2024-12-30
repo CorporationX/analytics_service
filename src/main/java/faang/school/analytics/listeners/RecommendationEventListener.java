@@ -1,8 +1,9 @@
 package faang.school.analytics.listeners;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.dto.AnalyticsCreateEventDto;
+import faang.school.analytics.dto.EventTypeDto;
 import faang.school.analytics.dto.event.RecommendationEventDto;
-import faang.school.analytics.mapper.AnalyticsMapper;
 import faang.school.analytics.service.AnalyticsService;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,6 @@ public class RecommendationEventListener implements MessageListener {
 
     private final ObjectMapper objectMapper;
     private final AnalyticsService analyticsService;
-    private final AnalyticsMapper analyticsMapper;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
@@ -24,10 +24,16 @@ public class RecommendationEventListener implements MessageListener {
 
         try {
             recommendationEventDto = objectMapper.readValue(message.getBody(), RecommendationEventDto.class);
+
         } catch (IOException e) {
             throw new RuntimeException("Проблема преобразования сообщения из redis", e);
         }
 
-        analyticsService.saveEvent(analyticsMapper.fromEventToCreateDto(recommendationEventDto));
+        analyticsService.saveEvent(new AnalyticsCreateEventDto(
+                recommendationEventDto.receiverId(),
+                recommendationEventDto.authorId(),
+                recommendationEventDto.createdAt(),
+                EventTypeDto.RECOMMENDATION_RECEIVED
+        ));
     }
 }

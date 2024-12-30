@@ -1,14 +1,13 @@
 package faang.school.analytics.dto.event;
 
-import faang.school.analytics.dto.EventTypeDto;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public record RecommendationEventDto(
+        @NotNull Long recommendationId,
         @NotNull Long receiverId,
         @NotNull Long authorId,
-        @NotNull LocalDateTime createdAt,
-        @NotNull EventTypeDto eventType
+        @NotNull LocalDateTime createdAt
 ) implements Event {
 
 }
