@@ -3,6 +3,9 @@ package faang.school.analytics.listener;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.event.MentorshipRequestEvent;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +21,15 @@ import java.io.IOException;
 public class MentorshipRequestedEventListener implements MessageListener {
     private final AnalyticsEventService analyticsEventService;
     private final ObjectMapper objectMapper;
+    private final AnalyticsEventMapper analyticsEventMapper;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
             MentorshipRequestEvent mentorshipRequestEvent = objectMapper.readValue(message.getBody(), MentorshipRequestEvent.class);
-            analyticsEventService.saveAnalyticsEvent(mentorshipRequestEvent);
+            AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEventMentorshipRequest(mentorshipRequestEvent);
+            analyticsEvent.setEventType(EventType.MENTORSHIP_REQUEST);
+            analyticsEventService.saveEvent(analyticsEvent);
             log.info("MentorshipRequestEvent save");
         } catch (JsonProcessingException ex) {
             log.error("Error parsing message body to MentorshipRequestEvent: {}", ex.getMessage(), ex);

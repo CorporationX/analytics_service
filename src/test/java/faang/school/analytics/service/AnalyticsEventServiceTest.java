@@ -187,27 +187,4 @@ class AnalyticsEventServiceTest {
                 ArgumentMatchers.any(Sort.class));
         verify(analyticsEventMapper, times(1)).entityToResponseDto(analyticsEvent);
     }
-
-    @Test
-    void saveMentorshipRequestEventSuccessfully() {
-        when(analyticsEventMapper.toAnalyticsEventMentorshipRequest(mentorshipRequestEvent))
-                .thenReturn(analyticsEventMentorshipRequest);
-
-        analyticsEventService.saveAnalyticsEvent(mentorshipRequestEvent);
-
-        verify(analyticsEventMapper, times(1)).toAnalyticsEventMentorshipRequest(mentorshipRequestEvent);
-        verify(analyticsEventRepository, times(1)).save(analyticsEventMentorshipRequest);
-    }
-
-    @Test
-    void saveMentorshipRequestEvent_ShouldThrowExceptionWhenRepositoryFails() {
-        when(analyticsEventMapper.toAnalyticsEventMentorshipRequest(mentorshipRequestEvent))
-                .thenReturn(analyticsEventMentorshipRequest);
-        doThrow(new RuntimeException("Database error")).when(analyticsEventRepository).save(analyticsEventMentorshipRequest);
-
-        RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> analyticsEventService.saveAnalyticsEvent(mentorshipRequestEvent));
-
-        assertEquals("Database error", exception.getMessage());
-    }
 }
