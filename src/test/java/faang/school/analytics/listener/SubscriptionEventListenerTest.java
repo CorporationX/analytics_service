@@ -56,7 +56,7 @@ class SubscriptionEventListenerTest {
     @BeforeEach
     void setUp() {
         analyticsEvent = AnalyticsEvent.builder().id(100L).build();
-        subscriptionEvent = new SubscriptionEvent(1L, 2L, null);
+        subscriptionEvent = SubscriptionEvent.builder().followerId(1L).followeeId(2L).build();
         analyticsEventCaptor = ArgumentCaptor.forClass(AnalyticsEvent.class);
         json = "{\"followerId\":1,\"followeeId\":2,\"subscribedAt\":\"2024-12-10T12:00:00\"}";
         invalidJson = "{\"followerId\":\"invalid_id\",\"followeeId\":2,\"subscribedAt\":\"invalid_date\"}";
@@ -69,9 +69,9 @@ class SubscriptionEventListenerTest {
         SubscriptionEvent event = objectMapper.readValue(json, SubscriptionEvent.class);
 
         assertThat(event).isNotNull();
-        assertThat(event.getFollowerId()).isEqualTo(1L);
-        assertThat(event.getFolloweeId()).isEqualTo(2L);
-        assertThat(event.getSubscribedAt()).isEqualTo(LocalDateTime.of(2024, 12, 10, 12, 0));
+        assertThat(event.followerId()).isEqualTo(1L);
+        assertThat(event.followeeId()).isEqualTo(2L);
+        assertThat(event.subscribedAt()).isEqualTo(LocalDateTime.of(2024, 12, 10, 12, 0));
     }
 
     @Test

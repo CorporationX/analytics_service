@@ -1,16 +1,13 @@
 package faang.school.analytics.event;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class SubscriptionEvent {
-    private Long followerId;
-    private Long followeeId;
-    private LocalDateTime subscribedAt;
+@Builder
+public record SubscriptionEvent(Long followerId,
+                                Long followeeId,
+                                LocalDateTime subscribedAt,
+                                String followerName,
+                                String followeeName) {
 }
