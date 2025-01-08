@@ -17,7 +17,7 @@ public class RecommendationEventListener implements MessageListener {
 
     private final AnalyticsEventService analyticsEventService;
 
-    @Qualifier("redisObjectMapper") // Resolved correctly now
+    @Qualifier("redisObjectMapper")
     private final ObjectMapper objectMapper;
 
     @Override
