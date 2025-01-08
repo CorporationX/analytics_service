@@ -42,6 +42,7 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
 
+
     /**
      * Test containers
      */
@@ -51,19 +52,27 @@ dependencies {
     testImplementation("com.redis.testcontainers:testcontainers-redis-junit-jupiter:1.4.6")
 
     /**
+     * Embedded Redis for tests
+     */
+    testImplementation("it.ozimov:embedded-redis:0.7.3")
+
+    /**
      * Tests
      */
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
     testImplementation("org.assertj:assertj-core:3.24.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-}
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
 
-val test by tasks.getting(Test::class) { testLogging.showStandardStreams = true }
 
-tasks.bootJar {
-    archiveFileName.set("service.jar")
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
+
+    val test by tasks.getting(Test::class) { testLogging.showStandardStreams = true }
+
+    tasks.bootJar {
+        archiveFileName.set("service.jar")
+    }
 }

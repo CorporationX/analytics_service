@@ -4,8 +4,8 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
-@Data
 @Configuration
+@Data
 public class RedisProperties {
 
     @Value("${spring.data.redis.host}")
@@ -14,6 +14,9 @@ public class RedisProperties {
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
-    @Value("buy_premium_topic")
+    @Value("${spring.data.redis.topic.buy-premium-channel}")
     private String buyPremiumTopic;
+
+    @Value("${spring.data.redis.topic.recommendation-event}")
+    private String recommendationEventTopic;
 }

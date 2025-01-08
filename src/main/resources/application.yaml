@@ -26,6 +26,7 @@ spring:
         view-appearance: post_view_appearance_topic
         buy-premium-channel: buy_premium_topic
         mentorship-channel: mentorship_channel
+        recommendation-event: recommendation_event_topic
 
 server:
   port: 8086
