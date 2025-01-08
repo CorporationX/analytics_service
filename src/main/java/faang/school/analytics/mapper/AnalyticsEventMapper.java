@@ -12,6 +12,7 @@ import faang.school.analytics.model.EventType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
+import faang.school.analytics.dto.profileView.ProfileViewEvent;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, imports = EventType.class)
 public interface AnalyticsEventMapper {
@@ -48,4 +49,9 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "actorId", source = "userId")
     @Mapping(target = "receivedAt", source = "boughtAt")
     AnalyticsEvent toEntity(AdBoughtEventDto adBoughtEventDto);
+
+    @Mapping(source = "userId", target = "actorId")
+    @Mapping(source = "userIdViewing", target = "receiverId")
+    @Mapping(source = "dateTimeOfViewing", target = "receivedAt")
+    AnalyticsEvent toEntity(ProfileViewEvent analyticsEventDto);
 }
