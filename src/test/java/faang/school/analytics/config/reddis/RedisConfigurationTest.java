@@ -57,7 +57,7 @@ class RedisConfigurationTest {
     }
 
     @Test
-    void jedisConnectionFactory() {
+    void jedisConnectionFactorySuccessTest() {
         JedisConnectionFactory factory = redisConfiguration.jedisConnectionFactory();
         assertNotNull(factory, "JedisConnectionFactory is null");
         assertTrue(factory.getStandaloneConfiguration() instanceof RedisStandaloneConfiguration,
@@ -65,7 +65,7 @@ class RedisConfigurationTest {
     }
 
     @Test
-    void redisTemplate() {
+    void redisTemplateSuccessTest() {
         RedisTemplate<String, Object> redisTemplate = redisConfiguration.redisTemplate();
 
         assertNotNull(redisTemplate, "RedisTemplate is null");
@@ -76,7 +76,7 @@ class RedisConfigurationTest {
     }
 
     @Test
-    void redisContainer() {
+    void redisContainerSuccessTest() {
         JedisConnectionFactory factory = mock(JedisConnectionFactory.class);
         when(requesterRedis.getRequester()).thenReturn(Pair.of(
                 new MessageListenerAdapter(followerEventListener),

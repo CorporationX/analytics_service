@@ -32,7 +32,7 @@ class FollowerEventListenerTest {
     private FollowerEventListener followerEventListener;
 
     @Test
-    void onMessage() {
+    void onMessageSuccessTest() {
         LocalDateTime localDateTime = LocalDateTime.now();
         AnalyticsEventDto analyticsEventDto = new AnalyticsEventDto(1L, 101L,
                 202L, "FOLLOWER", localDateTime);

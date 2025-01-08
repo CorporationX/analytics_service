@@ -24,7 +24,7 @@ class FollowerEventMapperTest {
     }
 
     @Test
-    void toFollowerEvent() {
+    void toFollowerEventSuccessTest() {
         LocalDateTime localDateTime = LocalDateTime.now();
         AnalyticsEventDto analyticsEventDto = new AnalyticsEventDto(1L, 101L,
                 202L,  "FOLLOWER", localDateTime);
