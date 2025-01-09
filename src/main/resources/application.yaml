@@ -28,6 +28,7 @@ spring:
         mentorship-requested-topic: mentorship_requested_channel
         fund-raised: fund_raised_channel
         follower-event-topic: follower_event
+        premium-bought: premium_bought_channel
 
 server:
   port: 8086

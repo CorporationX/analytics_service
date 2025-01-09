@@ -36,11 +36,6 @@ public class AnalyticsEventService {
         userServiceClient.getUser(eventDto.getReceiverId());
         eventDto.setReceivedAt(LocalDateTime.now());
         log.info("getting action: {}, from userId: {}", eventDto, eventDto.getReceiverId());
-
-        if (eventDto.getId() != null) {
-            throw new DataValidationException("The event must not have id for save");
-        }
-
         eventDto.setReceivedAt(LocalDateTime.now());
         AnalyticsEvent event = analyticsEventMapper.toEntity(eventDto);
         event = analyticsEventRepository.save(event);
