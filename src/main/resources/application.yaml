@@ -27,6 +27,7 @@ spring:
         goal_topic: goal_topic
         mentorship-requested-topic: mentorship_requested_channel
         fund-raised: fund_raised_channel
+        follower-event-topic: follower_event
         premium-bought: premium_bought_channel
 
 server:
