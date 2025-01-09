@@ -3,6 +3,7 @@ package faang.school.analytics.config.redis;
 import faang.school.analytics.listener.following.FollowerEventListener;
 import faang.school.analytics.listener.fundraised.FundRaisedEventListener;
 import faang.school.analytics.listener.mentorshiprequest.MentorshipRequestedEventListener;
+import faang.school.analytics.listener.premium.PremiumBoughtEventListener;
 import faang.school.analytics.listener.recommendation.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +39,8 @@ public class RedisConfig {
     private String followersChannel;
     @Value("${spring.data.redis.channel.fund-raised}")
     private String fundRaisedChannel;
+    @Value("${spring.data.redis.channel.premium-bought}")
+    private String premiumBoughtChannel;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -61,6 +64,7 @@ public class RedisConfig {
         result.put(MentorshipRequestedEventListener.class.getName(), new ChannelTopic(mentorshipRequestedChannel));
         result.put(FollowerEventListener.class.getName(), new ChannelTopic(followersChannel));
         result.put(FundRaisedEventListener.class.getName(), new ChannelTopic(fundRaisedChannel));
+        result.put(PremiumBoughtEventListener.class.getName(), new ChannelTopic(premiumBoughtChannel));
         return result;
     }
 
