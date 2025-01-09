@@ -72,6 +72,12 @@ public class AnalyticsEventService {
                 .sum();
     }
 
+    public AnalyticsEventDto savePostView(AnalyticsEventDto analyticsEventDto) {
+        log.info("saving view, post id: {}", analyticsEventDto.getReceiverId());
+        AnalyticsEvent event = analyticsEventMapper.toEntity(analyticsEventDto);
+        return analyticsEventMapper.toDto(analyticsEventRepository.save(event));
+    }
+
     public AnalyticsEventDto saveFundRaisedEvent(AnalyticsEventDto analyticsEventDto) {
         log.info("saving donation, project id: {}", analyticsEventDto.getReceiverId());
         AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(analyticsEventDto);

@@ -3,6 +3,7 @@ package faang.school.analytics.config.redis;
 import faang.school.analytics.listener.following.FollowerEventListener;
 import faang.school.analytics.listener.fundraised.FundRaisedEventListener;
 import faang.school.analytics.listener.mentorshiprequest.MentorshipRequestedEventListener;
+import faang.school.analytics.listener.postview.PostViewEventListener;
 import faang.school.analytics.listener.premium.PremiumBoughtEventListener;
 import faang.school.analytics.listener.recommendation.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,8 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.recommendation_topic}")
     private String recommendationChannel;
+    @Value("${spring.data.redis.channel.post-view}")
+    private String postViewChannel;
     @Value("${spring.data.redis.channel.goal_topic}")
     private String goalCompletedChannel;
     @Value("${spring.data.redis.channel.mentorship-requested-topic}")
@@ -63,8 +66,9 @@ public class RedisConfig {
         result.put(RecommendationEventListener.class.getName(), new ChannelTopic(recommendationChannel));
         result.put(MentorshipRequestedEventListener.class.getName(), new ChannelTopic(mentorshipRequestedChannel));
         result.put(FollowerEventListener.class.getName(), new ChannelTopic(followersChannel));
-        result.put(FundRaisedEventListener.class.getName(), new ChannelTopic(fundRaisedChannel));
         result.put(PremiumBoughtEventListener.class.getName(), new ChannelTopic(premiumBoughtChannel));
+        result.put(FundRaisedEventListener.class.getName(), new ChannelTopic(fundRaisedChannel));
+        result.put(PostViewEventListener.class.getName(), new ChannelTopic(postViewChannel));
         return result;
     }
 
@@ -79,5 +83,4 @@ public class RedisConfig {
         }
         return container;
     }
-
 }
