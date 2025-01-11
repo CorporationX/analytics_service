@@ -2,6 +2,7 @@ package faang.school.analytics.mapper.events;
 
 import faang.school.analytics.domain.dto.events.analytic.AnalyticsEventDto;
 import faang.school.analytics.domain.dto.events.recommendation.RecommendationEvent;
+import faang.school.analytics.dto.user.SearchAppearanceEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.mapstruct.Mapper;
@@ -36,4 +37,6 @@ public interface AnalyticsEventMapper {
     default EventType map(int eventTypeNumber) {
         return EventType.of(eventTypeNumber);
     }
+
+    AnalyticsEvent searchAppearanceEventToEntity(SearchAppearanceEvent event);
 }

@@ -31,6 +31,7 @@ spring:
         comment: comment_channel
         follower-event-topic: follower_event
         premium-bought: premium_bought_channel
+        user_profile_filter_view_channel: user_profile_filter_view
 
 server:
   port: 8086

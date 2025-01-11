@@ -6,6 +6,7 @@ import faang.school.analytics.listener.mentorshiprequest.MentorshipRequestedEven
 import faang.school.analytics.listener.postview.PostViewEventListener;
 import faang.school.analytics.listener.premium.PremiumBoughtEventListener;
 import faang.school.analytics.listener.recommendation.RecommendationEventListener;
+import faang.school.analytics.listener.user.SearchAppearanceEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -44,6 +45,8 @@ public class RedisConfig {
     private String fundRaisedChannel;
     @Value("${spring.data.redis.channel.premium-bought}")
     private String premiumBoughtChannel;
+    @Value("${spring.data.redis.channel.user_profile_filter_view_channel}")
+    private String userProfileFilterViewChannel;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -69,6 +72,7 @@ public class RedisConfig {
         result.put(PremiumBoughtEventListener.class.getName(), new ChannelTopic(premiumBoughtChannel));
         result.put(FundRaisedEventListener.class.getName(), new ChannelTopic(fundRaisedChannel));
         result.put(PostViewEventListener.class.getName(), new ChannelTopic(postViewChannel));
+        result.put(SearchAppearanceEventListener.class.getName(), new ChannelTopic(userProfileFilterViewChannel));
         return result;
     }
 

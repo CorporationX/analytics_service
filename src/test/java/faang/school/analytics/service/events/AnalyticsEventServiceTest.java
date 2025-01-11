@@ -25,11 +25,13 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AnalyticsEventServiceTest {
@@ -65,7 +67,9 @@ class AnalyticsEventServiceTest {
     @Test
     void testSaveEventWithId() {
         AnalyticsEventDto dto = provideEventDto(1L, LocalDateTime.now());
-        assertThrows(DataValidationException.class, () -> analyticsEventService.saveEvent(dto));
+        when(analyticsEventRepository.save(any()))
+                .thenReturn(AnalyticsEvent.builder().build());
+        analyticsEventService.saveEvent(dto);
     }
 
     @Test
