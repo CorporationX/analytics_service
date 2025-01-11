@@ -2,6 +2,7 @@ package faang.school.analytics.listener.profileView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.profileView.ProfileViewEvent;
+import faang.school.analytics.exception.ProfileViewEventException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -33,7 +34,7 @@ public class ProfileViewEventListener implements MessageListener {
         } catch (IOException e) {
             String messageBody = new String(message.getBody());
             log.error("Failed to parse event: {}", messageBody, e);
-            throw new RuntimeException("Error parsing FundRaisedEvent", e);
+            throw new ProfileViewEventException("Error parsing FundRaisedEvent");
         }
     }
 
