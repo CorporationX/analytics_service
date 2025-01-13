@@ -4,6 +4,7 @@ import faang.school.analytics.listener.AbstractEventListener;
 import faang.school.analytics.listener.AdBoughtEventListener;
 import faang.school.analytics.listener.SearchAppearanceEventListener;
 import faang.school.analytics.listener.donation_analysis.FundRaisedEventListener;
+import faang.school.analytics.listener.profileView.ProfileViewEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -41,6 +42,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.channel.ad-bought-channel.name}")
     private String adBoughtEvent;
 
+    @Value("${spring.data.redis.channel.profileView-channel.name}")
+    private String profileViewEventTopic;
+
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
@@ -54,7 +58,8 @@ public class RedisConfig {
     RedisMessageListenerContainer redisMessageListenerContainer(
             SearchAppearanceEventListener searchAppearanceEventListener,
             MessageListenerAdapter fundRaisedListener,
-            MessageListenerAdapter adBoughtListener) {
+            MessageListenerAdapter adBoughtListener,
+            MessageListenerAdapter profileViewListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         eventListeners.forEach(listener ->
@@ -62,6 +67,7 @@ public class RedisConfig {
         container.addMessageListener(fundRaisedListener, topic());
         container.addMessageListener(searchAppearanceEventListener, searchAppearanceTopic());
         container.addMessageListener(adBoughtListener, adBoughtTopic());
+        container.addMessageListener(profileViewListener,profileViewTopic());
         return container;
     }
 
@@ -93,5 +99,15 @@ public class RedisConfig {
     @Bean
     ChannelTopic adBoughtTopic() {
         return new ChannelTopic(adBoughtEvent);
+    }
+
+    @Bean
+    MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
+        return new MessageListenerAdapter(profileViewEventListener);
+    }
+
+    @Bean
+    ChannelTopic profileViewTopic() {
+        return new ChannelTopic(profileViewEventTopic);
     }
 }
