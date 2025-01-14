@@ -4,9 +4,11 @@ import faang.school.analytics.client.user.UserServiceClient;
 import faang.school.analytics.config.context.UserContext;
 import faang.school.analytics.domain.dto.events.analytic.AnalyticsEventDto;
 import faang.school.analytics.domain.dto.events.analytic.AnalyticsEventFilterDto;
+import faang.school.analytics.dto.user.SearchAppearanceEvent;
 import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.mapper.events.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.analytic.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -90,5 +92,12 @@ public class AnalyticsEventService {
         }
         return filter.getInterval() != null ? analyticsEventFilter.filterByInterval(events, filter.getInterval().getDays()) :
                 analyticsEventFilter.filterByDates(events, filter.getFrom(), filter.getTo());
+    }
+
+    public AnalyticsEventDto saveProfileView(SearchAppearanceEvent eventDto) {
+        log.info("saving profile view, user id: {}", eventDto.actorId());
+        AnalyticsEvent event = analyticsEventMapper.searchAppearanceEventToEntity(eventDto);
+        event.setEventType(EventType.PROFILE_VIEW);
+        return analyticsEventMapper.toDto(analyticsEventRepository.save(event));
     }
 }
