@@ -24,6 +24,8 @@ spring:
       channel:
         comment: comment_channel
         profile-view: profile_view_channel
+        user-recommendation:
+            name: recommendation_channel
 
 server:
   port: 8086
