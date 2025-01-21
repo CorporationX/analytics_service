@@ -67,12 +67,4 @@ public class RedisConfiguration {
 
         return container;
     }
-
-//    @Bean
-//    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter commentListener) {
-//        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-//        container.setConnectionFactory(connectionFactory());
-//        container.addMessageListener(commentListener, commentTopic());
-//        return container;
-//    }
 }
