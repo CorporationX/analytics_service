@@ -34,6 +34,10 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         return analyticsMapper.toDto(savedEvent);
     }
 
+    public AnalyticsEvent addAnalyticsEvent(AnalyticsEvent analyticsEvent) {
+        return analyticsRepository.save(analyticsEvent);
+    }
+
     @Override
     @Transactional
     public List<AnalyticsEventDto> getAnalytics(GetAnalyticsRqDto getAnalyticsRqDto) {
