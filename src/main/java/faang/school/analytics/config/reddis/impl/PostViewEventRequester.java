@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Getter
-public class FollowerEventRequester implements RequesterRedis<FollowerEventListener> {
+public class PostViewEventRequester implements RequesterRedis<FollowerEventListener> {
     private final FollowerEventListener methodListener;
 
-    @Value("${spring.data.redis.channels.followerChannel.name}")
+    @Value("${spring.data.redis.channels.profileViewChannel.name}")
     private String channel;
 }
