@@ -1,4 +1,4 @@
-CREATE TABLE analytics_event (
+CREATE TABLE if not exists analytics_event (
     id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY UNIQUE,
     receiver_id bigint NOT NULL,
     actor_id bigint NOT NULL,
@@ -6,4 +6,4 @@ CREATE TABLE analytics_event (
     received_at timestamptz DEFAULT current_timestamp
 );
 
-CREATE INDEX events_idx ON analytics_event(receiver_id, event_type, received_at DESC);
+CREATE INDEX if not exists events_idx ON analytics_event(receiver_id, event_type, received_at DESC);

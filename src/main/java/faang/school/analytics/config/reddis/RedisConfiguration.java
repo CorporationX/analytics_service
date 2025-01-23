@@ -1,8 +1,6 @@
 package faang.school.analytics.config.reddis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.listener.PostViewEventListener;
-import faang.school.analytics.listener.mentorshipoffered.ProfileViewEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,28 +8,25 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.data.util.Pair;
 
 import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfiguration {
-    private final RedisProperties redisProperties;
     private final ObjectMapper objectMapper;
+    private final List<RequesterRedis<?>> requesters;
     @Value("${spring.data.redis.host}")
     private String host;
     @Value("${spring.data.redis.port}")
-    private Integer port;
+    private int port;
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
-        return new JedisConnectionFactory(new RedisStandaloneConfiguration(host, port));
+        return new JedisConnectionFactory(new RedisStandaloneConfiguration(host,port));
     }
 
     @Bean
@@ -44,47 +39,14 @@ public class RedisConfiguration {
     }
 
     @Bean
-    public RedisMessageListenerContainer redisContainer(List<Pair<MessageListenerAdapter, ChannelTopic>> requesters,
-                                                        JedisConnectionFactory jedisConnectionFactory) {
+    public RedisMessageListenerContainer redisContainer(JedisConnectionFactory jedisConnectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory);
         requesters.forEach(
-                (requester) -> container.addMessageListener(requester.getFirst(), requester.getSecond())
+                requester -> container.addMessageListener(
+                        requester.getRequester().getFirst(),
+                        requester.getRequester().getSecond())
         );
         return container;
-    }
-
-    @Bean
-    public ChannelTopic profileViewTopic() {
-        return new ChannelTopic(redisProperties.getChannels().getProfileViewChannel().getName());
-    }
-
-
-    @Bean
-    public MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
-        return new MessageListenerAdapter(profileViewEventListener);
-    }
-
-
-    @Bean
-    public Pair<MessageListenerAdapter, ChannelTopic> profileViewEventPair(MessageListenerAdapter profileViewListener,
-                                                                           ChannelTopic profileViewTopic) {
-        return Pair.of(profileViewListener, profileViewTopic);
-    }
-
-    @Bean
-    ChannelTopic postViewTopic() {
-        return new ChannelTopic(redisProperties.getChannels().getPostViewChannel().getName());
-    }
-
-    @Bean
-    MessageListenerAdapter postViewListener(PostViewEventListener postViewEventListener) {
-        return new MessageListenerAdapter(postViewEventListener);
-    }
-
-    @Bean
-    public Pair<MessageListenerAdapter, ChannelTopic> postViewEventPair(MessageListenerAdapter postViewListener,
-                                                                        ChannelTopic postViewTopic) {
-        return Pair.of(postViewListener, postViewTopic);
     }
 }
