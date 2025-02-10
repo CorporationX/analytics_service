@@ -2,7 +2,6 @@ package faang.school.analytics.service.impl;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.exception.DataValidationException;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -65,7 +64,7 @@ public class AnalyticsEventServiceImplTest {
     private Stream<AnalyticsEvent> prepareStreamForTest(boolean interval) {
         List<AnalyticsEvent> analyticsEventList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            LocalDateTime date = interval == false ? LocalDateTime.now() : LocalDateTime.now().minusMonths(5) ;
+            LocalDateTime date = !interval ? LocalDateTime.now() : LocalDateTime.now().minusMonths(5);
             analyticsEventList.add(new AnalyticsEvent(i, RECEIVER_ID, ACTOR_ID, EVENT_TYPE, date));
         }
         return analyticsEventList.stream();
@@ -95,33 +94,41 @@ public class AnalyticsEventServiceImplTest {
     public void testGetAnalyticsFromTo() {
         LocalDateTime from = LocalDateTime.now().minusDays(6);
         LocalDateTime to = LocalDateTime.now();
-        when(analyticsEventRepository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE)).thenReturn(analyticsEventStream);
-        List<AnalyticsEventDto> list = analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, null, from, to);
-        Assert.assertEquals(10,list.size());
+        when(analyticsEventRepository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE))
+                .thenReturn(analyticsEventStream);
+        List<AnalyticsEventDto> list = analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, null,
+                from, to);
+        Assert.assertEquals(10, list.size());
     }
 
     @Test
     public void testGetAnalyticsFromToNoData() {
         LocalDateTime from = LocalDateTime.now().minusDays(6);
         LocalDateTime to = LocalDateTime.now().minusDays(3);
-        when(analyticsEventRepository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE)).thenReturn(analyticsEventStream);
-        List<AnalyticsEventDto> list = analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, null, from, to);
-        Assert.assertEquals(0,list.size());
+        when(analyticsEventRepository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE))
+                .thenReturn(analyticsEventStream);
+        List<AnalyticsEventDto> list = analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, null,
+                from, to);
+        Assert.assertEquals(0, list.size());
     }
 
     @Test
     public void testGetAnalyticsIntervalFailed() {
         Interval interval = Interval.ONE_MONTH;
-        when(analyticsEventRepository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE)).thenReturn(analyticsEventStreamInterval);
-        List<AnalyticsEventDto> list = analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, interval, null, null);
-        Assert.assertEquals(0,list.size());
+        when(analyticsEventRepository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE))
+                .thenReturn(analyticsEventStreamInterval);
+        List<AnalyticsEventDto> list = analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, interval,
+                null, null);
+        Assert.assertEquals(0, list.size());
     }
 
     @Test
     public void testGetAnalyticsInterval() {
         Interval interval = Interval.ONE_YEAR;
-        when(analyticsEventRepository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE)).thenReturn(analyticsEventStreamInterval);
-        List<AnalyticsEventDto> list = analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, interval, null, null);
-        Assert.assertEquals(10,list.size());
+        when(analyticsEventRepository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE))
+                .thenReturn(analyticsEventStreamInterval);
+        List<AnalyticsEventDto> list = analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, interval,
+                null, null);
+        Assert.assertEquals(10, list.size());
     }
 }

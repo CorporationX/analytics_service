@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="analytics_event")
+@Table(name = "analytics_event")
 public class AnalyticsEvent {
 
     @Id

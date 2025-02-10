@@ -9,9 +9,11 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
+
     AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
+
+    List<AnalyticsEventDto> toDto(List<AnalyticsEvent> analyticsEvents);
 
     AnalyticsEvent toEntity(AnalyticsEventDto analyticsEventDto);
 
-    List<AnalyticsEventDto> toDto(List<AnalyticsEvent> analyticsEvents);
 }
