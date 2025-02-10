@@ -29,7 +29,7 @@ public class AnalyticsEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name="receiver_id", nullable = false)
+    @Column(name = "receiver_id", nullable = false)
     private long receiverId;
 
     @Column(name = "actor_id", nullable = false)
