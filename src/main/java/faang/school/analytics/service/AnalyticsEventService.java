@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -33,21 +31,14 @@ public class AnalyticsEventService {
                                                 EventType eventType,
                                                 Interval interval,
                                                 LocalDateTime from, LocalDateTime to) {
-        Stream<AnalyticsEvent> analyticsEventsStream = analyticsEventRepository
-                .findByReceiverIdAndEventType(receiverId, eventType);
-
         if (interval != null) {
             LocalDateTime timeNow = LocalDateTime.now();
             from = interval.apply(timeNow);
             to = timeNow;
         }
 
-        LocalDateTime finalFrom = from;
-        LocalDateTime finalTo = to;
-        return analyticsEventsStream.filter(analyticsEvent ->
-                        finalFrom.isBefore(analyticsEvent.getReceivedAt()) &&
-                                finalTo.isAfter(analyticsEvent.getReceivedAt()))
-                .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
+        return analyticsEventRepository.findByReceiverIdAndEventTypeThenFilterByDateAndSortByTimeDesc(receiverId,
+                        eventType, from, to)
                 .map(analyticsEventMapper::toAnalyticsEventDto)
                 .toList();
     }

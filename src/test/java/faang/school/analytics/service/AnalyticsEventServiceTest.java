@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -54,54 +55,50 @@ class AnalyticsEventServiceTest {
 
     @Test
     void getAnalytics_ShouldFilterAndSortEvents() {
-        LocalDateTime from = LocalDateTime.of(2025, 2, 1, 0, 0);
-        LocalDateTime to = LocalDateTime.of(2025, 2, 10, 0, 0);
+        // Given
+        LocalDateTime from = LocalDateTime.of(2024, 2, 8, 12, 0);
+        LocalDateTime to = LocalDateTime.of(2024, 2, 9, 12, 0);
 
-        AnalyticsEvent event1 = AnalyticsEvent.builder().id(1L).receiverId(100L).actorId(200L)
-                .eventType(EventType.FOLLOWER)
-                .receivedAt(LocalDateTime.of(2025, 1, 30, 10, 0)).build();
-        AnalyticsEvent event2 = AnalyticsEvent.builder().id(2L).receiverId(100L).actorId(200L)
-                .eventType(EventType.FOLLOWER)
-                .receivedAt(LocalDateTime.of(2025, 2, 5, 10, 0)).build();
-        AnalyticsEvent event3 = AnalyticsEvent.builder().id(3L).receiverId(100L).actorId(200L)
-                .eventType(EventType.FOLLOWER)
-                .receivedAt(LocalDateTime.of(2025, 2, 7, 10, 0)).build();
-
-        when(analyticsEventRepository.findByReceiverIdAndEventType(100L, EventType.FOLLOWER))
-                .thenReturn(Stream.of(event3, event2, event1));
-
-        List<AnalyticsEventDto> expectedDtos = Stream.of(event3, event2)
+        AnalyticsEvent analyticsEvent = new AnalyticsEvent(1, 1, 1, EventType.FOLLOWER,
+                LocalDateTime.of(2024, 2, 7, 10, 0));
+        List<AnalyticsEventDto> expected = Stream.of(analyticsEvent)
                 .map(analyticsEventMapper::toAnalyticsEventDto)
                 .toList();
 
-        List<AnalyticsEventDto> result = analyticsEventService.getAnalytics(100L,
+        when(analyticsEventRepository.findByReceiverIdAndEventTypeThenFilterByDateAndSortByTimeDesc(1L,
+                EventType.FOLLOWER, from, to))
+                .thenReturn(Stream.of(analyticsEvent));
+
+        List<AnalyticsEventDto> result = analyticsEventService.getAnalytics(1L,
                 EventType.FOLLOWER, null, from, to);
 
-        assertEquals(expectedDtos, result);
-        verify(analyticsEventRepository).findByReceiverIdAndEventType(100L, EventType.FOLLOWER);
+        assertEquals(expected, result);
+        verify(analyticsEventRepository).findByReceiverIdAndEventTypeThenFilterByDateAndSortByTimeDesc(1L,
+                EventType.FOLLOWER, from, to);
     }
 
     @Test
     void getAnalytics_ShouldApplyInterval() {
-        Interval interval = Interval.WEEK;
+        Interval interval = mock(Interval.class);
+        LocalDateTime now = LocalDateTime.of(2024, 2, 9, 12, 0);
+        LocalDateTime calculatedFrom = now.minusDays(1);
 
-        AnalyticsEvent event1 = AnalyticsEvent.builder().id(1L).receiverId(100L).actorId(200L)
-                .eventType(EventType.FOLLOWER).receivedAt(LocalDateTime.now().minusDays(6)).build();
-        AnalyticsEvent event2 = AnalyticsEvent.builder().id(2L).receiverId(100L).actorId(200L)
-                .eventType(EventType.FOLLOWER).receivedAt(LocalDateTime.now().minusDays(2)).build();
-        AnalyticsEvent event3 = AnalyticsEvent.builder().id(3L).receiverId(100L).actorId(200L)
-                .eventType(EventType.FOLLOWER).receivedAt(LocalDateTime.now().minusDays(10)).build();
-        List<AnalyticsEventDto> expectedDtos = Stream.of(event2, event1)
-                .map(analyticsEventMapper::toAnalyticsEventDto)
-                .toList();
+        try (MockedStatic<LocalDateTime> mockedLocalDateTime = mockStatic(LocalDateTime.class)) {
+            mockedLocalDateTime.when(LocalDateTime::now).thenReturn(now);
+            when(interval.apply(any(LocalDateTime.class))).thenReturn(calculatedFrom);
+            when(analyticsEventRepository.findByReceiverIdAndEventTypeThenFilterByDateAndSortByTimeDesc(1L,
+                    EventType.FOLLOWER, calculatedFrom, now))
+                    .thenReturn(Stream.of(event));
 
-        when(analyticsEventRepository.findByReceiverIdAndEventType(100L, EventType.FOLLOWER))
-                .thenReturn(Stream.of(event1, event2, event3));
+            List<AnalyticsEventDto> result = analyticsEventService.getAnalytics(1L,
+                    EventType.FOLLOWER, interval, null, null);
 
+            assertNotNull(result);
+            assertEquals(1, result.size());
 
-        List<AnalyticsEventDto> result = analyticsEventService.getAnalytics(100L,
-                EventType.FOLLOWER, interval, null, null);
-
-        assertEquals(expectedDtos, result);
+            verify(interval).apply(any(LocalDateTime.class));
+            verify(analyticsEventRepository).findByReceiverIdAndEventTypeThenFilterByDateAndSortByTimeDesc(1L,
+                    EventType.FOLLOWER, calculatedFrom, now);
+        }
     }
 }
