@@ -19,4 +19,12 @@ public interface AnalyticsEventRepository extends CrudRepository<AnalyticsEvent,
     );
 
 
+    Stream<AnalyticsEvent> findByReceiverIdAndEventTypeAndReceivedAtBetween(
+            long receiverId,
+            EventType eventType,
+            LocalDateTime receivedAtStart,
+            LocalDateTime receivedAtEnd
+    );
+
+
 }
