@@ -11,6 +11,14 @@ import java.util.stream.Stream;
 @Repository
 public interface AnalyticsEventRepository extends CrudRepository<AnalyticsEvent, Long> {
 
+    Stream<AnalyticsEvent> findByReceiverIdAndEventTypeAndReceivedAtBetween(
+            long receiverId,
+            EventType eventType,
+            LocalDateTime receivedAtStart,
+            LocalDateTime receivedAtEnd
+    );
+
+
     Stream<AnalyticsEvent> findByReceiverIdAndEventTypeAndReceivedAtBetweenOrderByReceivedAtDesc(
             long receiverId,
             EventType eventType,
