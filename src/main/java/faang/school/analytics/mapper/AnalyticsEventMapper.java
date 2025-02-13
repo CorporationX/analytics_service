@@ -6,6 +6,8 @@ import faang.school.analytics.dto.ProjectViewProfileEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import jakarta.validation.constraints.NotBlank;
+import faang.school.analytics.dto.ProjectViewProfileEvent;
+import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -29,4 +31,9 @@ public interface AnalyticsEventMapper {
 
     AnalyticsEvent toAnalyticsEventEntity(AnalyticsEventDto analyticsEventDto);
 
+    @Mapping(source = "projectId", target = "receiverId")
+    @Mapping(source = "userId", target = "actorId")
+    @Mapping(source = "dateTime", target = "receivedAt")
+    @Mapping(constant  = "PROJECT_VIEW", target = "eventType")
+    AnalyticsEvent toAnalyticsEventEntity(ProjectViewProfileEvent projectViewProfileEvent);
 }

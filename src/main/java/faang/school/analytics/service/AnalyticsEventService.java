@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface AnalyticsEventService {
-
     void saveEvent(AnalyticsEvent event);
 
     List<AnalyticsEventDto> getAnalytics(
