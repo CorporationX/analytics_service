@@ -145,7 +145,7 @@ class AnalyticsEventServiceImplTest {
         LocalDateTime from = null;
         LocalDateTime to = null;
 
-        Mockito.when(analyticsEventRepositoryMock.findByReceiverIdAndEventTypeAndReceivedAtBetween(
+        Mockito.when(analyticsEventRepositoryMock.findByReceiverIdAndEventTypeAndReceivedAtBetweenOrderByReceivedAtDesc(
                         anyLong(), any(EventType.class), any(LocalDateTime.class), any(LocalDateTime.class))
                 )
                 .thenReturn(Stream.of(analyticsEvent));
@@ -154,7 +154,7 @@ class AnalyticsEventServiceImplTest {
                 analyticsEventServiceImpl.getAnalytics(receiverId, eventType, interval, from, to);
 
         Mockito.verify(analyticsEventRepositoryMock, Mockito.times(1))
-                .findByReceiverIdAndEventTypeAndReceivedAtBetween(
+                .findByReceiverIdAndEventTypeAndReceivedAtBetweenOrderByReceivedAtDesc(
                         anyLong(), any(EventType.class), any(LocalDateTime.class), any(LocalDateTime.class));
 
         Assertions.assertEquals(analyticsEventMapperMock.toAnalyticsEventDto(analyticsEvent), result.get(0));
@@ -168,7 +168,7 @@ class AnalyticsEventServiceImplTest {
         LocalDateTime from = getRandomDateTime(Instant.now().minus(Duration.ofDays(365)), Instant.now());
         LocalDateTime to = from.plusDays(1);
 
-        Mockito.when(analyticsEventRepositoryMock.findByReceiverIdAndEventTypeAndReceivedAtBetween(
+        Mockito.when(analyticsEventRepositoryMock.findByReceiverIdAndEventTypeAndReceivedAtBetweenOrderByReceivedAtDesc(
                         anyLong(), any(EventType.class), any(LocalDateTime.class), any(LocalDateTime.class))
                 )
                 .thenReturn(Stream.of(analyticsEvent));
@@ -177,7 +177,7 @@ class AnalyticsEventServiceImplTest {
                 analyticsEventServiceImpl.getAnalytics(receiverId, eventType, interval, from, to);
 
         Mockito.verify(analyticsEventRepositoryMock, Mockito.times(1))
-                .findByReceiverIdAndEventTypeAndReceivedAtBetween(
+                .findByReceiverIdAndEventTypeAndReceivedAtBetweenOrderByReceivedAtDesc(
                         anyLong(), any(EventType.class), any(LocalDateTime.class), any(LocalDateTime.class));
 
         Assertions.assertEquals(analyticsEventMapperMock.toAnalyticsEventDto(analyticsEvent), result.get(0));

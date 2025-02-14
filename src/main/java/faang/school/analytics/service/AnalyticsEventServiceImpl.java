@@ -63,7 +63,9 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
         }
 
         List<AnalyticsEventDto> result = analyticsEventRepository
-                .findByReceiverIdAndEventTypeAndReceivedAtBetween(receiverId, eventType, start, end)
+                .findByReceiverIdAndEventTypeAndReceivedAtBetweenOrderByReceivedAtDesc(
+                        receiverId, eventType, start, end
+                )
                 .map(analyticsEventMapper::toAnalyticsEventDto)
                 .toList();
         log.debug("Found {} AnalyticsEvents", result.size());
