@@ -1,10 +1,10 @@
 package faang.school.analytics.service.impl;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.AnalyticsEventRequestDto;
 import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.service.AnalyticsEventService;
 import faang.school.analytics.service.Interval;
@@ -26,19 +26,19 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     private final AnalyticsEventMapper analyticsEventMapper;
 
     @Override
-    public void saveEvent(AnalyticsEvent event) {
-        checkDataBeforeSave(event);
-        analyticsEventRepository.save(event);
+    public void saveEvent(AnalyticsEventDto event) {
+        analyticsEventRepository.save(analyticsEventMapper.toEntity(event));
         log.info("Analytic event save.");
     }
 
     @Override
-    public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval,
-                                                LocalDateTime from, LocalDateTime to) {
-        Stream<AnalyticsEvent> analyticsEventStream = analyticsEventRepository.findByReceiverIdAndEventType(receiverId,
-                eventType);
+    public List<AnalyticsEventDto> getAnalytics(AnalyticsEventRequestDto analyticsEventRequestDto) {
+        Stream<AnalyticsEvent> analyticsEventStream = analyticsEventRepository
+                .findByReceiverIdAndEventType(analyticsEventRequestDto.getReceiverId(),
+                        analyticsEventRequestDto.getEventType());
         List<AnalyticsEvent> analyticsEvents = analyticsEventStream
-                .filter(event -> checkDate(event, from, to, interval))
+                .filter(event -> checkDate(event, analyticsEventRequestDto.getFrom(), analyticsEventRequestDto.getTo(),
+                        analyticsEventRequestDto.getInterval()))
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .toList();
         log.info("Found {} record's", analyticsEvents.size());
@@ -52,25 +52,6 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
             return interval.getStartDate(localDateTime).isBefore(receivedAt) && localDateTime.isAfter(receivedAt);
         } else {
             return from.isBefore(receivedAt) && to.isAfter(receivedAt);
-        }
-    }
-
-    private void checkDataBeforeSave(AnalyticsEvent event) {
-        if (event == null) {
-            log.error("Analytics event can't be null.");
-            throw new DataValidationException("Analytics event can't be null.");
-        }
-        if (event.getEventType() == null) {
-            log.error("Event type can't be null.");
-            throw new DataValidationException("Event type can't be null.");
-        }
-        if (event.getActorId() == 0) {
-            log.error("Actor id can't be 0.");
-            throw new DataValidationException("Actor id can't be 0.");
-        }
-        if (event.getReceiverId() == 0) {
-            log.error("Receiver id can't be 0.");
-            throw new DataValidationException("Receiver id can't be 0.");
         }
     }
 }
