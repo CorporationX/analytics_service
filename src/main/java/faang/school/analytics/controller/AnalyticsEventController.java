@@ -20,12 +20,6 @@ import java.util.List;
 public class AnalyticsEventController {
     private final AnalyticsEventService analyticsEventService;
 
-    @PostMapping
-    public ResponseEntity<AnalyticsEventDto> saveEvent(@RequestBody AnalyticsEvent analyticsEvent) {
-        AnalyticsEventDto eventDto = analyticsEventService.saveEvent(analyticsEvent);
-        return ResponseEntity.ok(eventDto);
-    }
-
     @GetMapping
     public ResponseEntity<List<AnalyticsEventDto>> getAnalytics(
             @RequestParam long recieverId,
