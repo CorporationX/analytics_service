@@ -75,10 +75,11 @@ class AnalyticsEventServiceTest {
 
     @Test
     void getAnalytics_WithoutInterval_ShouldCallCorrectRepositoryMethod() {
+        LocalDateTime now = LocalDateTime.now();
         long receiverId = 1L;
         EventType eventType = EventType.PROFILE_VIEW;
-        LocalDateTime from = LocalDateTime.now().minusDays(2);
-        LocalDateTime to = LocalDateTime.now();
+        LocalDateTime from = now.minusDays(2);
+        LocalDateTime to = now;
 
         when(analyticsEventRepository.findByReceiverIdAndEventTypeAndDateRange(receiverId, eventType, from, to))
                 .thenReturn(Collections.singletonList(analyticsEvent));
