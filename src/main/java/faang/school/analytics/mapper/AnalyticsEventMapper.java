@@ -12,7 +12,7 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "postId", target = "receiverId")
     @Mapping(source = "authorId", target = "actorId")
-    @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.POST_COMMENT)")
+    @Mapping(target = "eventType", constant = "POST_COMMENT")
     @Mapping(source = "timestamp", target = "receivedAt")
     AnalyticsEvent toAnalyticsEvent(AnalyticsCommentEvent event);
 }
