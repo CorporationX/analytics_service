@@ -42,7 +42,7 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic ProfileViewTopic() {
+    ChannelTopic profileViewTopic() {
         return new ChannelTopic("ProfileView");
     }
     @Bean
@@ -50,7 +50,7 @@ public class RedisConfig {
                                                         ProjectViewEventListener projectViewEventListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory);
-        container.addMessageListener(projectViewEventListener, ProfileViewTopic());
+        container.addMessageListener(projectViewEventListener, profileViewTopic());
         return container;
     }
 }
