@@ -16,11 +16,11 @@ public interface AnalyticsEventRepository extends CrudRepository<AnalyticsEvent,
 
     Stream<AnalyticsEvent> findByReceiverIdAndEventType(long receiverId, EventType eventType);
 
-    @Query("SELECT ae FROM AnalyticsEvent ae " +
-            "WHERE ae.receiverId = :receiverId " +
-            "AND ae.eventType = :eventType " +
-            "AND ae.receivedAt BETWEEN :from AND :to " +
-            "ORDER BY ae.receivedAt DESC")
+    @Query("SELECT ae FROM AnalyticsEvent ae "
+            + "WHERE ae.receiverId = :receiverId "
+            + "AND ae.eventType = :eventType "
+            + "AND ae.receivedAt BETWEEN :from AND :to "
+            + "ORDER BY ae.receivedAt DESC")
     List<AnalyticsEvent> findByReceiverIdAndEventTypeAndReceivedAtBetween(
             @Param("receiverId") long receiverId,
             @Param("eventType") EventType eventType,

@@ -34,7 +34,11 @@ public class AnalyticsEventController {
             @RequestParam(required = false) LocalDateTime from,
             @RequestParam(required = false) LocalDateTime to
     ) {
-        List<AnalyticsEventDto> analytics = analyticsEventService.getAnalytics(receiverId, eventType, interval, from, to);
+        List<AnalyticsEventDto> analytics = analyticsEventService.getAnalytics(receiverId,
+                eventType,
+                interval,
+                from,
+                to);
         return ResponseEntity.ok(analytics);
     }
 }

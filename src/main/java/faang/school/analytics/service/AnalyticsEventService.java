@@ -25,7 +25,11 @@ public class AnalyticsEventService {
         repository.save(event);
     }
 
-    public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to) {
+    public List<AnalyticsEventDto> getAnalytics(long receiverId,
+                                                EventType eventType,
+                                                Interval interval,
+                                                LocalDateTime from,
+                                                LocalDateTime to) {
         LocalDateTime calculatedFrom = from;
         LocalDateTime calculatedTo = to;
 
