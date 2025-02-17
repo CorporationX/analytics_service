@@ -26,20 +26,20 @@ public class AnalyticsEventService {
     }
 
     public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to) {
-        return repository.findByReceiverIdAndEventType(receiverId, eventType)
-                .filter(event -> filterByIntervalOrDate(event, interval, from, to))
-                .sorted((e1, e2) -> e2.getReceivedAt().compareTo(e1.getReceivedAt()))
+        LocalDateTime calculatedFrom = from;
+        LocalDateTime calculatedTo = to;
+
+        if (interval != null) {
+            calculatedFrom = interval.getStart();
+            calculatedTo = LocalDateTime.now();
+        }
+
+        List<AnalyticsEvent> events = repository.findByReceiverIdAndEventTypeAndReceivedAtBetween(
+                receiverId, eventType, calculatedFrom, calculatedTo
+        );
+
+        return events.stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
-    }
-
-    private boolean filterByIntervalOrDate(AnalyticsEvent event, Interval interval, LocalDateTime from, LocalDateTime to) {
-        if (interval != null) {
-            return interval.isWithinInterval(event.getReceivedAt());
-        }
-        if (from != null && event.getReceivedAt().isBefore(from)) {
-            return false;
-        }
-        return to == null || !event.getReceivedAt().isAfter(to);
     }
 }

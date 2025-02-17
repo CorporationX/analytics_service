@@ -5,25 +5,22 @@ import java.time.LocalDateTime;
 public enum Interval {
     TODAY {
         @Override
-        public boolean isWithinInterval(LocalDateTime dateTime) {
-            LocalDateTime startOfToday = LocalDateTime.now().toLocalDate().atStartOfDay();
-            return !dateTime.isBefore(startOfToday);
+        public LocalDateTime getStart() {
+            return LocalDateTime.now().toLocalDate().atStartOfDay();
         }
     },
     LAST_WEEK {
         @Override
-        public boolean isWithinInterval(LocalDateTime dateTime) {
-            LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
-            return !dateTime.isBefore(oneWeekAgo);
+        public LocalDateTime getStart() {
+            return LocalDateTime.now().minusWeeks(1);
         }
     },
     LAST_MONTH {
         @Override
-        public boolean isWithinInterval(LocalDateTime dateTime) {
-            LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
-            return !dateTime.isBefore(oneMonthAgo);
+        public LocalDateTime getStart() {
+            return LocalDateTime.now().minusMonths(1);
         }
     };
 
-    public abstract boolean isWithinInterval(LocalDateTime dateTime);
+    public abstract LocalDateTime getStart();
 }
