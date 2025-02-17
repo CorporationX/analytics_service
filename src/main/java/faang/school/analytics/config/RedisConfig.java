@@ -45,8 +45,8 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic commentTopic() {
-        return new ChannelTopic("comment");
+    ChannelTopic commentTopic(@Value("${spring.data.redis.topics.comment}") String topic) {
+        return new ChannelTopic(topic);
     }
 
     @Bean
