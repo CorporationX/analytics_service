@@ -18,9 +18,10 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
     @Value("${spring.data.redis.host}")
     private String redisHost;
-
     @Value("${spring.data.redis.port}")
     private int redisPort;
+    @Value("${spring.data.redis.channel.follower}")
+    private String followerTopic;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -33,6 +34,7 @@ public class RedisConfig {
         RedisTemplate template = new RedisTemplate<>();
         template.setConnectionFactory(jedisConnectionFactory());
         template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
         return template;
     }
 
@@ -42,17 +44,15 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic topic() {
-        return new ChannelTopic("follower_topic");
+    ChannelTopic followerTopic() {
+        return new ChannelTopic(followerTopic);
     }
-
 
     @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory( jedisConnectionFactory());
-        container.addMessageListener(followerListener,topic());
+        container.setConnectionFactory(jedisConnectionFactory());
+        container.addMessageListener(followerListener, followerTopic());
         return container;
     }
-
 }
