@@ -21,6 +21,8 @@ public class RedisConfig {
     private final String redisHost;
     @Value("${spring.data.redis.port}")
     private final Integer redisPort;
+    @Value("${spring.data.redis.topics.profile_view}")
+    private final String profileViewTopic;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory () {
@@ -43,7 +45,7 @@ public class RedisConfig {
 
     @Bean
     ChannelTopic profileViewTopic() {
-        return new ChannelTopic("ProfileView");
+        return new ChannelTopic(profileViewTopic);
     }
     @Bean
     public RedisMessageListenerContainer redisContainer(JedisConnectionFactory jedisConnectionFactory,

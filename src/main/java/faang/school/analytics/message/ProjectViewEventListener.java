@@ -20,9 +20,9 @@ public class ProjectViewEventListener implements MessageListener {
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper analyticsEventMapper;
+
     @Override
     public void onMessage(Message message, byte[] pattern) {
-
         try {
             ProjectViewProfileEvent event = objectMapper.readValue(message.getBody(), ProjectViewProfileEvent.class);
             analyticsEventService.saveEvent(analyticsEventMapper.toAnalyticsEventEntity(event));
