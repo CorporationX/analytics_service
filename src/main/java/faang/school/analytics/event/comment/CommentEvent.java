@@ -1,22 +1,22 @@
-package faang.school.analytics.event;
+package faang.school.analytics.event.comment;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import faang.school.analytics.event.BaseEvent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@JsonIgnoreProperties({"@class"})
-public class CommentEvent {
+public class CommentEvent extends BaseEvent {
     private Long commentId;
     private String comment;
     private Long userId;
     private Long postId;
+    private CommentEventType eventType;
     private LocalDateTime createdAt;
 }
