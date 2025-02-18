@@ -1,4 +1,4 @@
-package faang.school.analytics.listener;
+package faang.school.analytics.dto.goal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
