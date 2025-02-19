@@ -1,6 +1,5 @@
 package faang.school.analytics.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public enum Interval {

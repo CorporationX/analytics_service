@@ -2,7 +2,6 @@ package faang.school.analytics.service.impl;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.AnalyticsEventRequestDto;
-import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
@@ -28,7 +27,7 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     @Override
     public void saveEvent(AnalyticsEventDto event) {
         analyticsEventRepository.save(analyticsEventMapper.toEntity(event));
-        log.info("Analytic event save.");
+        log.info("Analytic event saved.");
     }
 
     @Override
@@ -41,12 +40,15 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
                         analyticsEventRequestDto.getInterval()))
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .toList();
-        log.info("Found {} record's", analyticsEvents.size());
+        log.info("Founded {} record's", analyticsEvents.size());
         return analyticsEventMapper.toDto(analyticsEvents);
     }
 
     private boolean checkDate(AnalyticsEvent event, LocalDateTime from, LocalDateTime to, Interval interval) {
         LocalDateTime receivedAt = event.getReceivedAt();
+        if (receivedAt == null) {
+            return false;
+        }
         LocalDateTime localDateTime = LocalDateTime.now();
         if (interval != null) {
             return interval.getStartDate(localDateTime).isBefore(receivedAt) && localDateTime.isAfter(receivedAt);
