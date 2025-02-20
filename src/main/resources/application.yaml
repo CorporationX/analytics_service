@@ -24,6 +24,9 @@ spring:
       channel:
         profile-view: profile_view_channel
 
+  kafka:
+    bootstrap-servers: localhost:9092
+
 server:
   port: 8086
 
@@ -34,3 +37,8 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+kafka:
+  goal:
+    completed:
+      topic: goal_completed_topic
