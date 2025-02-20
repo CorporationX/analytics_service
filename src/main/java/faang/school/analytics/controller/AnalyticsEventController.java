@@ -36,19 +36,15 @@ public class AnalyticsEventController {
 
     private void checkDataBeforeSave(AnalyticsEventDto event) {
         if (event == null) {
-            log.error("Analytics event can't be null.");
             throw new DataValidationException("Analytics event can't be null.");
         }
         if (event.getEventType() == null) {
-            log.error("Event type can't be null.");
             throw new DataValidationException("Event type can't be null.");
         }
         if (event.getActorId() == 0) {
-            log.error("Actor id can't be 0.");
             throw new DataValidationException("Actor id can't be 0.");
         }
         if (event.getReceiverId() == 0) {
-            log.error("Receiver id can't be 0.");
             throw new DataValidationException("Receiver id can't be 0.");
         }
     }
