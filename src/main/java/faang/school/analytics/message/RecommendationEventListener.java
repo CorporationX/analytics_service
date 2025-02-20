@@ -19,7 +19,8 @@ public class RecommendationEventListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
-            objectMapper.readValue(message.getBody(), RecommendationEventDto.class);
+          RecommendationEventDto recommendationEventDto = objectMapper.readValue(message.getBody(), RecommendationEventDto.class);
+          //TODO как только можно будет смержить с мастером можно будет сохранить аналитику
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
