@@ -23,7 +23,7 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
-    @Value("${spring.data.redis.recommendation-event}")
+    @Value("${spring.data.redis.channel.recommendation-event}")
     private String redisRecommendationEventTopic;
 
     @Bean
