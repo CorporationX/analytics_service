@@ -1,6 +1,5 @@
-package faang.school.analytics.event.comment;
+package faang.school.analytics.event;
 
-import faang.school.analytics.event.BaseEvent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +16,5 @@ public class CommentEvent extends BaseEvent {
     private String comment;
     private Long userId;
     private Long postId;
-    private CommentEventType eventType;
     private LocalDateTime createdAt;
 }
