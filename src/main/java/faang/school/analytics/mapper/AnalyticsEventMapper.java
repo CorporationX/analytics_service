@@ -10,11 +10,15 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
 
-    @Mapping(target = "receiverId", source = "commentEvent.postId")
-    @Mapping(target = "actorId", source = "commentEvent.authorId")
+    @Mapping(target = "receiverId", source = "event.postId")
+    @Mapping(target = "actorId", source = "event.authorId")
     @Mapping(target = "eventType", constant = "COMMENT")
-    @Mapping(target = "receivedAt", source = "commentEvent.date")
-    AnalyticsEvent toAnalyticsEventFromCommentEvent(CommentEvent commentEvent);
+    @Mapping(target = "receivedAt", source = "event.date")
+    AnalyticsEvent toAnalyticsEventFromCommentEvent(CommentEvent event);
 
+    @Mapping(target = "receiverId", source = "event.goalId")
+    @Mapping(target = "actorId", source = "event.userId")
+    @Mapping(target = "eventType", constant = "GOAL_COMPLETED")
+    @Mapping(target = "receivedAt", source = "event.date")
     AnalyticsEvent toAnalyticsEntityFromGoalCompletedEvent(GoalCompletedEvent event);
 }

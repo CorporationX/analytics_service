@@ -20,11 +20,11 @@ public class GoalCompletedEventListener {
     private final AnalyticsEventMapper analyticsEventMapper;
     private final ObjectMapper objectMapper;
 
-    @KafkaListener(topics = "${kafka.goal.completed.topic}", groupId = "analytics-group")
+    @KafkaListener(topics = "${kafka.goal.completed.topic}", groupId = "${spring.kafka.group.id}")
     public void listen(String input) {
         GoalCompletedEvent event = mapInputToGoalCompletedEvent(input);
         log.info("Received GoalCompletedEvent: {}", event);
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEntity(event);
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEntityFromGoalCompletedEvent(event);
         analyticsEventService.saveAnalyticsEvent(analyticsEvent);
         log.info("Analytics event saved for GoalCompletedEvent: {}", event);
     }
