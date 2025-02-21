@@ -1,6 +1,7 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.event.CommentEvent;
+import faang.school.analytics.dto.goal.GoalCompletedEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,4 +15,6 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "eventType", constant = "COMMENT")
     @Mapping(target = "receivedAt", source = "commentEvent.date")
     AnalyticsEvent toAnalyticsEventFromCommentEvent(CommentEvent commentEvent);
+
+    AnalyticsEvent toAnalyticsEntityFromGoalCompletedEvent(GoalCompletedEvent event);
 }

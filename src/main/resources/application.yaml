@@ -41,5 +41,9 @@ project-service:
   port: 8082
 
 kafka:
+  goal:
+    completed:
+      topic: goal_completed_topic
+
   comment:
     topic: comment_event
