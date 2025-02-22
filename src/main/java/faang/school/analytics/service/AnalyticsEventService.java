@@ -1,5 +1,7 @@
 package faang.school.analytics.service;
 
+import faang.school.analytics.dto.event.CommentEventDto;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.NonNull;
@@ -16,7 +18,11 @@ import org.springframework.validation.annotation.Validated;
 public class AnalyticsEventService {
 
     private final AnalyticsEventRepository analyticsEventRepository;
+    private final AnalyticsEventMapper analyticsEventMapper;
 
+    public void saveCreateComment(CommentEventDto commentEventDto) {
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(commentEventDto);
+        analyticsEventRepository.save(analyticsEvent);
     @Transactional
     public void addEvent(@NonNull AnalyticsEvent event) {
 

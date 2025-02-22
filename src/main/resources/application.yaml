@@ -48,3 +48,10 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+kafka:
+  bootstrap-servers: localhost:9092
+  topic:
+    comment: user-comment-post
+  group-id:
+    comment: comment-group
