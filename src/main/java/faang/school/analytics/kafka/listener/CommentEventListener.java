@@ -26,7 +26,7 @@ public class CommentEventListener {
         CommentEvent event = mapInputToGoalCompletedEvent(input);
         log.info("Received GoalCompletedEvent: {}", event);
         AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEventFromCommentEvent(event);
-        analyticsEvent.setEventType(EventType.COMMENT);
+        analyticsEvent.setEventType(EventType.COMMENT_EVIL);
         eventService.saveAnalyticsEvent(analyticsEvent);
         log.info("Analytics event saved for GoalCompletedEvent: {}", event);
     }
