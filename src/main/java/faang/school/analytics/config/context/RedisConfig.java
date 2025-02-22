@@ -2,7 +2,6 @@ package faang.school.analytics.config.context;
 
 import faang.school.analytics.message.FollowerEvenListener;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
@@ -20,7 +19,8 @@ public class RedisConfig {
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(redisConfigProperties.getHost(), redisConfigProperties.getPort());
+        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(
+                redisConfigProperties.getHost(), redisConfigProperties.getPort());
         return new JedisConnectionFactory(redisConfig);
     }
 

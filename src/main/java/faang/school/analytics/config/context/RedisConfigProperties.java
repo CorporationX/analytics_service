@@ -1,7 +1,6 @@
 package faang.school.analytics.config.context;
 
 import lombok.Data;
-import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
