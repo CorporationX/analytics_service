@@ -1,6 +1,7 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.event.ProfileViewEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -37,4 +38,13 @@ public class AnalyticsEventService {
 
         return events.stream().map(analyticsEventMapper::toDto).collect(Collectors.toList());
     }
+
+    public void createProfileViewEvent(ProfileViewEvent event) {
+        if (event == null) {
+            throw new NullPointerException("Event cannot be null");
+        }
+        var eventAnalytic = analyticsEventMapper.toAnalyticsFromUserProfileView(event);
+        analyticsEventRepository.save(eventAnalytic);
+    }
+
 }
