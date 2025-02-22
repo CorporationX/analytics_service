@@ -30,12 +30,10 @@ public class GoalCompletedEventListener {
     }
 
     private GoalCompletedEvent mapInputToGoalCompletedEvent(String input) {
-        GoalCompletedEvent event;
         try {
-            event = objectMapper.readValue(input, GoalCompletedEvent.class);
+            return objectMapper.readValue(input, GoalCompletedEvent.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        return event;
     }
 }
