@@ -16,16 +16,11 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfig {
-    @Value("${spring.data.redis.host}")
-    private String redisHost;
-    @Value("${spring.data.redis.port}")
-    private int redisPort;
-    @Value("${spring.data.redis.channel.follower}")
-    private String followerTopic;
+    private final RedisConfigProperties redisConfigProperties;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(redisHost, redisPort);
+        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(redisConfigProperties.getHost(), redisConfigProperties.getPort());
         return new JedisConnectionFactory(redisConfig);
     }
 
@@ -45,7 +40,7 @@ public class RedisConfig {
 
     @Bean
     ChannelTopic followerTopic() {
-        return new ChannelTopic(followerTopic);
+        return new ChannelTopic(redisConfigProperties.getChannelFollower());
     }
 
     @Bean
