@@ -1,10 +1,4 @@
 spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: user
-    password: password
-
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
@@ -30,6 +24,18 @@ spring:
         max.poll.records: 100
         max.poll.interval.ms: 10000
         fetch.max.wait.ms: 5000
+    producer:
+      acks: all
+      bootstrap-servers: localhost:9092
+      security:
+        protocol: PLAINTEXT
+      retries: 5
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+      project_view:
+        topic: "project-view"
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
