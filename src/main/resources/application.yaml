@@ -22,7 +22,11 @@ spring:
       port: 6379
       host: localhost
       channel:
-        profile-view: profile_view_channel
+        comment-channel: comment_channel
+
+  mvc:
+    servlet:
+      path: /api/v1
 
 server:
   port: 8086
