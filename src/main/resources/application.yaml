@@ -17,6 +17,20 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
 
+  config:
+    import: classpath:kafka-topics.yaml
+
+kafka:
+  consumer:
+    group-id: "notification-group"
+    bootstrap-servers: "localhost:9092"
+    retry-interval-ms: 5000
+    max-attempts: 5
+
+user-profile-viewed:
+  topic-name: "user-profile-viewed"
+
+
   data:
     redis:
       port: 6379
