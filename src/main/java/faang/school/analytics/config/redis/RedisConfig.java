@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.comment.CommentEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +18,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
     private final RedisProperties redisProperties;
     private final Channels channels;
-    private final RecommendationEventListener recommendationEventListener;
+    private final CommentEventListener commentEventListener;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -42,7 +43,7 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
 
-        addMessageListenerInContainer(recommendationEventListener, channels.getRecommendationChannel(), container);
+        addMessageListenerInContainer(commentEventListener, channels.getCommentChannel(), container);
         return container;
     }
 

@@ -12,11 +12,21 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CommentEventListener extends AbstractEventListener<CommentEvent> {
+    private final AnalyticsEventService analyticsEventService;
+    private final AnalyticsEventMapper analyticsEventMapper;
 
     public CommentEventListener(AnalyticsEventService analyticsEventService,
                                 AnalyticsEventMapper analyticsEventMapper,
                                 ObjectMapper objectMapper) {
-        super(analyticsEventService, analyticsEventMapper, objectMapper);
+        super(objectMapper);
+
+        this.analyticsEventMapper = analyticsEventMapper;
+        this.analyticsEventService = analyticsEventService;
+    }
+
+    public EventType getEventType() {
+
+        return EventType.POST_COMMENT;
     }
 
     @Override
