@@ -1,5 +1,7 @@
 package faang.school.analytics.message;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.RecommendationEventDto;
@@ -30,9 +32,9 @@ public class RecommendationEventListener implements MessageListener {
             AnalyticsEventDto analyticsEventDto = recommendationEventMapper.toAnalyticsEvent(recommendationEventDto);
             analyticsEventDto.setEventType(EventType.RECOMMENDATION_RECEIVED);
             analyticsEventService.saveEvent(analyticsEventDto);
+            log.info("Received message from channel {}: {}", message.getChannel(), message.getBody());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        log.info("Received message from channel {}: {}", message.getChannel(), message.getBody());
     }
 }
