@@ -16,8 +16,6 @@ public interface AnalyticsEventMapper {
 
     @Mapping(source = "postAuthorId", target = "receiverId")
     @Mapping(source = "commentAuthorId", target = "actorId")
-    @Mapping(target = "eventType", expression = "java(EventType.POST_COMMENT)")
-    //@Mapping(target = "eventType", constant = "POST_COMMENT")
     @Mapping(source = "commentedAt", target = "receivedAt")
     AnalyticsEvent toAnalyticsEvent(CommentEvent commentEvent);
 

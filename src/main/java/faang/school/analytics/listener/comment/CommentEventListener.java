@@ -33,7 +33,7 @@ public class CommentEventListener extends AbstractEventListener<CommentEvent> {
     public void onMessage(Message message, byte[] pattern) {
         handleEvent(message, CommentEvent.class, commentEvent -> {
             AnalyticsEvent entity = analyticsEventMapper.toAnalyticsEvent(commentEvent);
-            entity.setEventType(EventType.POST_COMMENT);
+            entity.setEventType(getEventType());
             analyticsEventService.saveEvent(entity);
         });
     }
