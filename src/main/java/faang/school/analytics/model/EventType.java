@@ -8,6 +8,8 @@ public enum EventType {
     POST_VIEW,
     POST_LIKE,
     POST_COMMENT,
+    COMMENT_DELETE,
+    COMMENT_UPDATE,
     SKILL_RECEIVED,
     RECOMMENDATION_RECEIVED,
     ADDED_TO_FAVOURITES,
@@ -16,14 +18,5 @@ public enum EventType {
     GOAL_COMPLETED,
     ACHIEVEMENT_RECEIVED,
     PROFILE_APPEARED_IN_SEARCH,
-    PROJECT_APPEARED_IN_SEARCH;
-
-    public static EventType of(int type) {
-        for (EventType eventType : EventType.values()) {
-            if (eventType.ordinal() == type) {
-                return eventType;
-            }
-        }
-        throw new IllegalArgumentException("Unknown event type: " + type);
-    }
+    PROJECT_APPEARED_IN_SEARCH
 }

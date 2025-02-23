@@ -25,14 +25,14 @@ public class AnalyticsEventService {
         return analyticsEventMapper.toDto(analyticsEvent);
     }
 
-    public List<AnalyticsEventDto> getAnalytics(long recieverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to) {
+    public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to) {
         List<AnalyticsEvent> events;
 
         if (interval != null) {
             LocalDateTime start = interval.getStartTime();
-            events = analyticsEventRepository.findByReceiverIdAndEventTypeAndAfterDate(recieverId, eventType, start);
+            events = analyticsEventRepository.findByReceiverIdAndEventTypeAndAfterDate(receiverId, eventType, start);
         } else {
-            events = analyticsEventRepository.findByReceiverIdAndEventTypeAndDateRange(recieverId, eventType, from, to);
+            events = analyticsEventRepository.findByReceiverIdAndEventTypeAndDateRange(receiverId, eventType, from, to);
         }
 
         return events.stream().map(analyticsEventMapper::toDto).collect(Collectors.toList());
