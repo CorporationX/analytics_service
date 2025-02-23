@@ -24,6 +24,10 @@ spring:
       channel:
         profile-view: profile_view_channel
 
+analytics-service:
+  redis:
+    analytics-topic: "pubsub:analytics-service"
+
 server:
   port: 8086
 
