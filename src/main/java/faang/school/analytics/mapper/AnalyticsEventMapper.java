@@ -12,7 +12,7 @@ public interface AnalyticsEventMapper {
 
     @Mapping(target = "receiverId", source = "event.postId")
     @Mapping(target = "actorId", source = "event.postAuthorId")
-    @Mapping(target = "eventType", constant = "COMMENT")
+    @Mapping(target = "eventType", constant = "COMMENT_EVIL")
     @Mapping(target = "receivedAt", source = "event.date")
     AnalyticsEvent toAnalyticsEventFromCommentEvent(CommentEvent event);
 
