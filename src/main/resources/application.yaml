@@ -22,8 +22,7 @@ spring:
       port: 6379
       host: localhost
       channelFollower: user_follow_channel
-      channel:
-        comment-channel: comment_channel
+      comment-channel: comment_channel
 
   mvc:
     servlet:

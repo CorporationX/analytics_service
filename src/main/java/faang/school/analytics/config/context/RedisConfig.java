@@ -1,5 +1,6 @@
 package faang.school.analytics.config.context;
 
+import faang.school.analytics.listener.comment.CommentEventListener;
 import faang.school.analytics.message.FollowerEvenListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -39,15 +40,27 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter commentListener(CommentEventListener commentEventListener) {
+        return new MessageListenerAdapter(commentEventListener);
+    }
+
+    @Bean
     ChannelTopic followerTopic() {
         return new ChannelTopic(redisConfigProperties.getChannelFollower());
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener) {
+    ChannelTopic commentTopic() {
+        return new ChannelTopic(redisConfigProperties.getCommentChannel());
+    }
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener,
+                                                 MessageListenerAdapter commentListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener, followerTopic());
+        container.addMessageListener(commentListener, commentTopic());
         return container;
     }
 }

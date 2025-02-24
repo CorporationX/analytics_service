@@ -4,8 +4,6 @@ import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.event.CommentEvent;
 import faang.school.analytics.dto.FollowerEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
-import jakarta.validation.constraints.NotBlank;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;

@@ -11,4 +11,5 @@ public class RedisConfigProperties {
     private String host;
     private int port;
     private String channelFollower;
+    private String commentChannel;
 }
