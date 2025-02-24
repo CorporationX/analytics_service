@@ -18,11 +18,11 @@ public class CommentEventListener {
 
     private final EventService eventService;
     private final AnalyticsEventMapper analyticsEventMapper;
-    private final EventMapper<CommentEvent> eventEventMapper;
+    private final EventMapper<CommentEvent> eventMapper;
 
     @KafkaListener(topics = "${kafka.comment.topic}", groupId = "${spring.kafka.group.id}")
     public void listen(String message) {
-        CommentEvent event = eventEventMapper.mapMessageToEvent(message, CommentEvent.class);
+        CommentEvent event = eventMapper.mapMessageToEvent(message, CommentEvent.class);
         log.info("Received GoalCompletedEvent: {}", event);
         AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEventFromCommentEvent(event);
         analyticsEvent.setEventType(EventType.COMMENT_EVIL);
