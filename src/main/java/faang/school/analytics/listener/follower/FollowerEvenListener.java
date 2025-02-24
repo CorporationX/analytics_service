@@ -1,7 +1,7 @@
-package faang.school.analytics.listener.comment;
+package faang.school.analytics.listener.follower;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.event.CommentEvent;
+import faang.school.analytics.dto.FollowerEventDto;
 import faang.school.analytics.listener.AbstractEventListener;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -9,11 +9,11 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CommentEventListener extends AbstractEventListener<CommentEvent> {
+public class FollowerEvenListener extends AbstractEventListener<FollowerEventDto> {
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper analyticsEventMapper;
 
-    public CommentEventListener(AnalyticsEventService analyticsEventService,
+    public FollowerEvenListener(AnalyticsEventService analyticsEventService,
                                 AnalyticsEventMapper analyticsEventMapper,
                                 ObjectMapper objectMapper) {
         super(objectMapper);
@@ -24,8 +24,9 @@ public class CommentEventListener extends AbstractEventListener<CommentEvent> {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        handleEvent(message, CommentEvent.class, commentEvent -> {
-            analyticsEventService.saveEvent(analyticsEventMapper.toAnalyticsEvent(commentEvent));
+        handleEvent(message, FollowerEventDto.class, event -> {
+            analyticsEventService.saveEvent(analyticsEventMapper.toAnalyticsEventEntity(event));
         });
     }
 }
+

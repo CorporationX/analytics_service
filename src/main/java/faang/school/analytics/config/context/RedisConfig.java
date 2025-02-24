@@ -1,7 +1,7 @@
 package faang.school.analytics.config.context;
 
 import faang.school.analytics.listener.comment.CommentEventListener;
-import faang.school.analytics.message.FollowerEvenListener;
+import faang.school.analytics.listener.follower.FollowerEvenListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

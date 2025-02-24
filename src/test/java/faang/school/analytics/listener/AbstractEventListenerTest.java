@@ -1,7 +1,6 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.model.EventType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,11 +32,6 @@ public class AbstractEventListenerTest {
             @Override
             public void onMessage(Message message, byte[] pattern) {
 
-            }
-
-            @Override
-            public EventType getEventType() {
-                return EventType.POST_COMMENT;
             }
         };
     }
