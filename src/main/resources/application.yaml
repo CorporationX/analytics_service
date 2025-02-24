@@ -21,8 +21,9 @@ spring:
     redis:
       port: 6379
       host: localhost
-      channelFollower: user_follow_channel
-      comment-channel: comment_channel
+      channels:
+        channelFollower: user_follow_channel
+        comment-channel: comment_channel
 
   mvc:
     servlet:

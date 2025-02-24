@@ -13,9 +13,9 @@ import java.util.function.Consumer;
 public abstract class AbstractEventListener<T> implements MessageListener {
     private final ObjectMapper objectMapper;
 
-    protected void handleEvent(Message message, Class<T> tClass, Consumer<T> consumer) {
+    protected void handleEvent(Message message, Class<T> typeClass, Consumer<T> consumer) {
         try {
-            T event = objectMapper.readValue(message.getBody(), tClass);
+            T event = objectMapper.readValue(message.getBody(), typeClass);
             consumer.accept(event);
         } catch (IOException e) {
             log.error("Error deserializing JSON to object", e);

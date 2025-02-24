@@ -17,6 +17,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @RequiredArgsConstructor
 public class RedisConfig {
     private final RedisConfigProperties redisConfigProperties;
+    private final Channels channels;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -46,12 +47,12 @@ public class RedisConfig {
 
     @Bean
     ChannelTopic followerTopic() {
-        return new ChannelTopic(redisConfigProperties.getChannelFollower());
+        return new ChannelTopic(channels.getChannelFollower());
     }
 
     @Bean
     ChannelTopic commentTopic() {
-        return new ChannelTopic(redisConfigProperties.getCommentChannel());
+        return new ChannelTopic(channels.getCommentChannel());
     }
 
     @Bean

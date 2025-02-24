@@ -25,7 +25,7 @@ public class CommentEventListener extends AbstractEventListener<CommentEvent> {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         handleEvent(message, CommentEvent.class, commentEvent -> {
-            analyticsEventService.saveEvent(analyticsEventMapper.toAnalyticsEvent(commentEvent));
+            analyticsEventService.saveEvent(analyticsEventMapper.toAnalyticsEventEntity(commentEvent));
         });
     }
 }
