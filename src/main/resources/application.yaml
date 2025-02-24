@@ -21,8 +21,9 @@ spring:
     redis:
       port: 6379
       host: localhost
-  channels:
-    profile-view: profile_view_channel
+      channels:
+       profile_view: profile_view_channel
+       comment_create: comment_create_channel
 
 server:
   port: 8086

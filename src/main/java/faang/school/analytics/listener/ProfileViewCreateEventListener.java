@@ -9,17 +9,20 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class ProfileViewEventListener extends AbstractEventListener<ProfileViewEvent> {
+public class ProfileViewCreateEventListener extends AbstractEventListener<ProfileViewEvent> {
 
-    public ProfileViewEventListener(ObjectMapper objectMapper,
-                                    AnalyticsEventService analyticsEventService,
-                                    AnalyticsEventMapper analyticsEventMapper) {
+    public ProfileViewCreateEventListener(
+            ObjectMapper objectMapper,
+            AnalyticsEventService analyticsEventService,
+            AnalyticsEventMapper analyticsEventMapper
+    ) {
         super(objectMapper, analyticsEventService, analyticsEventMapper);
     }
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         ProfileViewEvent event = getEventFromBytes(message.getBody(), ProfileViewEvent.class);
-        analyticsEventService.createProfileViewEvent(event);
+        var eventAnalytic = analyticsEventMapper.toAnalyticsFromUserProfileView(event);
+        analyticsEventService.saveEvent(eventAnalytic);
     }
 }
