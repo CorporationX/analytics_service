@@ -1,1 +1,0 @@
-ALTER TABLE analytics_event ADD COLUMN event_data jsonb;

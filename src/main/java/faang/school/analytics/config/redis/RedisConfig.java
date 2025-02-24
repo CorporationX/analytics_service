@@ -21,12 +21,12 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
 
     @Bean
-    MessageListenerAdapter messageListener(AnalyticsMessageSubscriber subscriber) {
+    public MessageListenerAdapter messageListener(AnalyticsMessageSubscriber subscriber) {
         return new MessageListenerAdapter(subscriber);
     }
 
     @Bean
-    RedisMessageListenerContainer premiumBoughtTopicRedisContainer(AnalyticsServiceProperties properties,
+    public RedisMessageListenerContainer premiumBoughtTopicRedisContainer(AnalyticsServiceProperties properties,
                                                                    AnalyticsMessageSubscriber subscriber) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
@@ -65,7 +65,7 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic premiumBoughtTopic(AnalyticsServiceProperties properties) {
+    public ChannelTopic premiumBoughtTopic(AnalyticsServiceProperties properties) {
         return new ChannelTopic(properties.getRedis().getAnalyticsTopic());
     }
 }
