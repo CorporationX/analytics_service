@@ -27,7 +27,8 @@ public class RecommendationEventListener implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
-            RecommendationEventDto recommendationEventDto = objectMapper.readValue(message.getBody(), RecommendationEventDto.class);
+            RecommendationEventDto recommendationEventDto = objectMapper.readValue(message.getBody(),
+                    RecommendationEventDto.class);
             AnalyticsEventDto analyticsEventDto = recommendationEventMapper.toAnalyticsEvent(recommendationEventDto);
             analyticsEventDto.setEventType(EventType.RECOMMENDATION_RECEIVED);
             analyticsEventService.saveEvent(analyticsEventDto);
