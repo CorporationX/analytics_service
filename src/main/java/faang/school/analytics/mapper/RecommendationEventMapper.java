@@ -9,7 +9,7 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface RecommendationEventMapper {
     @Mapping(source = "requesterId", target = "actorId")
-    @Mapping(source = "createdAt",   target = "receivedAt")
+    @Mapping(source = "createdAt", target = "receivedAt")
     AnalyticsEventDto toAnalyticsEvent(RecommendationEventDto recommendationEvent);
 
     RecommendationEventDto toRecommendationEvent(AnalyticsEventDto analyticsEvent);
