@@ -3,7 +3,7 @@ package faang.school.analytics.message;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.FollowerEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
-import faang.school.analytics.service.AnalyticsEventServiceImpl;
+import faang.school.analytics.service.impl.AnalyticsEventServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
