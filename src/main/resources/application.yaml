@@ -23,10 +23,11 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       enable-auto-commit: false
       auto-offset-reset: earliest
+      properties:
+        spring.json.use.type.headers: false
       project-view:
         topic: "project-view"
         group-id: "project-view-group"
-        trusted-packages: "*.dto.event"
         max.poll.records: 100
         max.poll.interval.ms: 10000
         fetch.max.wait.ms: 5000

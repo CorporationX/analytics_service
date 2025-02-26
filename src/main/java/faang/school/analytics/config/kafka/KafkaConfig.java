@@ -2,6 +2,7 @@ package faang.school.analytics.config.kafka;
 
 import faang.school.analytics.dto.ProjectViewEvent;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
@@ -16,6 +17,7 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.Map;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class KafkaConfig {
@@ -26,13 +28,12 @@ public class KafkaConfig {
     public ConcurrentKafkaListenerContainerFactory<String, ProjectViewEvent> kafkaProjectViewListenerContainerFactory(
             KafkaProperties kafkaProperties) {
         ConsumerFactory<String, ProjectViewEvent> kafkaProjectViewConsumerFactory = getConsumerFactory(kafkaProperties);
-        System.out.println("kafkaProjectViewConsumerFactory: " + kafkaProjectViewConsumerFactory);
         ConcurrentKafkaListenerContainerFactory<String, ProjectViewEvent> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(kafkaProjectViewConsumerFactory);
         factory.setBatchListener(true);
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
-        System.out.println("kafkaProjectViewListenerContainerFactory: " + factory);
+        log.debug("kafkaProjectViewListenerContainerFactory: {}", factory);
         return factory;
     }
 
@@ -46,13 +47,8 @@ public class KafkaConfig {
                 environment.getProperty("spring.kafka.consumer.project-view.max.poll.interval.ms", Integer.class));
         props.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG,
                 environment.getProperty("spring.kafka.consumer.project-view.fetch.max.wait.ms", Integer.class));
-
-
-        JsonDeserializer<ProjectViewEvent> deserializer = new JsonDeserializer<>(ProjectViewEvent.class);
-        deserializer.addTrustedPackages(
-                environment.getProperty("spring.kafka.consumer.project-view.trusted-packages"));
         return new DefaultKafkaConsumerFactory<>(props,
                 new StringDeserializer(),
-                deserializer);
+                new JsonDeserializer<>(ProjectViewEvent.class));
     }
 }
