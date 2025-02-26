@@ -1,6 +1,7 @@
 package faang.school.analytics.config.context;
 
-import faang.school.analytics.message.FollowerEvenListener;
+import faang.school.analytics.listener.comment.CommentEventListener;
+import faang.school.analytics.listener.follower.FollowerEvenListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @RequiredArgsConstructor
 public class RedisConfig {
     private final RedisConfigProperties redisConfigProperties;
+    private final Channels channels;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -39,15 +41,27 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic followerTopic() {
-        return new ChannelTopic(redisConfigProperties.getChannelFollower());
+    MessageListenerAdapter commentListener(CommentEventListener commentEventListener) {
+        return new MessageListenerAdapter(commentEventListener);
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener) {
+    ChannelTopic followerTopic() {
+        return new ChannelTopic(channels.getChannelFollower());
+    }
+
+    @Bean
+    ChannelTopic commentTopic() {
+        return new ChannelTopic(channels.getCommentChannel());
+    }
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener,
+                                                 MessageListenerAdapter commentListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(followerListener, followerTopic());
+        container.addMessageListener(commentListener, commentTopic());
         return container;
     }
 }
