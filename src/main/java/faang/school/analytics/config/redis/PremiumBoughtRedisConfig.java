@@ -1,7 +1,5 @@
 package faang.school.analytics.config.redis;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.properties.AnalyticsServiceProperties;
 import faang.school.analytics.redis.AnalyticsMessageSubscriber;
@@ -18,7 +16,7 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-public class RedisConfig {
+public class PremiumBoughtRedisConfig {
 
     @Bean
     public MessageListenerAdapter messageListener(AnalyticsMessageSubscriber subscriber) {
@@ -41,27 +39,12 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, AnalyticsRedisEvent> redisTemplate() {
+    public RedisTemplate<String, AnalyticsRedisEvent> redisTemplate(ObjectMapper objectMapper) {
         RedisTemplate<String, AnalyticsRedisEvent> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory());
         template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper()));
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
         return template;
-    }
-
-    @Bean("redisObjectMapper")
-    public ObjectMapper objectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-
-        mapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
-
-        mapper.setVisibility(mapper.getSerializationConfig()
-                .getDefaultVisibilityChecker()
-                .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
-                .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
-                .withSetterVisibility(JsonAutoDetect.Visibility.NONE));
-
-        return mapper;
     }
 
     @Bean

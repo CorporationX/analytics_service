@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.mapper.EventMapper;
 import faang.school.analytics.redis.event.AnalyticsRedisEvent;
 import faang.school.analytics.service.AnalyticsEventService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.connection.Message;
@@ -15,18 +16,11 @@ import java.io.IOException;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AnalyticsMessageSubscriber implements MessageListener {
     private final AnalyticsEventService analyticsEventService;
     private final EventMapper eventMapper;
     private final ObjectMapper objectMapper;
-
-    public AnalyticsMessageSubscriber(AnalyticsEventService analyticsEventService,
-                                      EventMapper eventMapper,
-                                      @Qualifier("redisObjectMapper") ObjectMapper objectMapper) {
-        this.analyticsEventService = analyticsEventService;
-        this.eventMapper = eventMapper;
-        this.objectMapper = objectMapper;
-    }
 
     @Override
     public void onMessage(@NonNull Message message, byte[] pattern) {
