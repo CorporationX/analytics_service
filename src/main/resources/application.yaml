@@ -26,7 +26,7 @@ spring:
 
 analytics-service:
   redis:
-    analytics-topic: "pubsub:analytics-service"
+    bought-premium-topic: "pubsub:bought-premium"
 
 server:
   port: 8086

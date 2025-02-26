@@ -66,6 +66,6 @@ public class RedisConfig {
 
     @Bean
     public ChannelTopic premiumBoughtTopic(AnalyticsServiceProperties properties) {
-        return new ChannelTopic(properties.getRedis().getAnalyticsTopic());
+        return new ChannelTopic(properties.getRedis().getBoughtPremiumTopic());
     }
 }

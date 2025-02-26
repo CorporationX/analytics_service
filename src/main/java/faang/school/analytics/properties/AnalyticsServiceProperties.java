@@ -13,6 +13,6 @@ public class AnalyticsServiceProperties {
     @Getter
     @Setter
     public static class Redis {
-        private String analyticsTopic;
+        private String boughtPremiumTopic;
     }
 }
