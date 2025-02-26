@@ -2,7 +2,7 @@ package faang.school.analytics.listener.comment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.event.CommentEvent;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.Message;
 import java.io.IOException;
@@ -24,8 +25,8 @@ public class CommentEventListenerTest {
     @Mock
     private AnalyticsEventService analyticsEventService;
 
-    @Mock
-    private AnalyticsEventMapper analyticsEventMapper;
+    @Spy
+    private AnalyticsEventMapperImpl analyticsEventMapper;
 
     @Mock
     private ObjectMapper objectMapper;
@@ -60,12 +61,12 @@ public class CommentEventListenerTest {
 
         when(message.getBody()).thenReturn(jsonBytes);
         when(objectMapper.readValue(jsonBytes, CommentEvent.class)).thenReturn(commentEvent);
-        when(analyticsEventMapper.toAnalyticsEvent(commentEvent)).thenReturn(analyticsEvent);
+        when(analyticsEventMapper.toAnalyticsEventEntity(commentEvent)).thenReturn(analyticsEvent);
 
         commentEventListener.onMessage(message, null);
 
         verify(objectMapper, times(1)).readValue(jsonBytes, CommentEvent.class);
-        verify(analyticsEventMapper, times(1)).toAnalyticsEvent(commentEvent);
+        verify(analyticsEventMapper, times(1)).toAnalyticsEventEntity(commentEvent);
         verify(analyticsEventService, times(1)).saveEvent(analyticsEvent);
     }
 
@@ -80,7 +81,7 @@ public class CommentEventListenerTest {
         assertThrows(RuntimeException.class, () -> commentEventListener.onMessage(message, null));
 
         verify(objectMapper, times(1)).readValue(jsonBytes, CommentEvent.class);
-        verify(analyticsEventMapper, never()).toAnalyticsEvent(any());
+        verify(analyticsEventMapper, never()).toAnalyticsEventEntity((CommentEvent) any());
         verify(analyticsEventService, never()).saveEvent(any());
     }
 }

@@ -10,16 +10,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class FollowerEvenListener extends AbstractEventListener<FollowerEventDto> {
-    private final AnalyticsEventService analyticsEventService;
-    private final AnalyticsEventMapper analyticsEventMapper;
 
     public FollowerEvenListener(AnalyticsEventService analyticsEventService,
                                 AnalyticsEventMapper analyticsEventMapper,
                                 ObjectMapper objectMapper) {
-        super(objectMapper);
-
-        this.analyticsEventMapper = analyticsEventMapper;
-        this.analyticsEventService = analyticsEventService;
+        super(objectMapper, analyticsEventService, analyticsEventMapper);
     }
 
     @Override

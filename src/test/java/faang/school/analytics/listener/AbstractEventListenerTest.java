@@ -1,10 +1,13 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
+import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.Message;
 import java.io.IOException;
@@ -19,6 +22,12 @@ public class AbstractEventListenerTest {
     private ObjectMapper objectMapper;
 
     @Mock
+    AnalyticsEventService analyticsEventService;
+
+    @Spy
+    AnalyticsEventMapperImpl analyticsEventMapper;
+
+    @Mock
     private Message message;
 
     @Mock
@@ -28,7 +37,7 @@ public class AbstractEventListenerTest {
 
     @BeforeEach
     void setUp() {
-        eventListener = new AbstractEventListener<>(objectMapper) {
+        eventListener = new AbstractEventListener<>(objectMapper, analyticsEventService, analyticsEventMapper) {
             @Override
             public void onMessage(Message message, byte[] pattern) {
 
