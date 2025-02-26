@@ -2,17 +2,18 @@ package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.recommendationevent.RecommendationEvent;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Component
-public class AnalyticsEventMapper {
-    public AnalyticsEvent mapRecommendationToAnalyticsEvent(RecommendationEvent event) {
-        return AnalyticsEvent.builder()
-                .receiverId(event.getReceiverId())
-                .actorId(event.getAuthorId())
-                .eventType(EventType.RECOMMENDATION_RECEIVED)
-                .receivedAt(event.getCreatedAt())
-                .build();
-    }
+@Mapper(componentModel = "spring",
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+public interface AnalyticsEventMapper {
+
+    @Mapping(target = "receiverId", source = "receiverId")
+    @Mapping(target = "actorId", source = "authorId")
+    @Mapping(target = "eventType", constant = "RECOMMENDATION_RECEIVED")
+    @Mapping(target = "receivedAt", source = "createdAt")
+    @Mapping(target = "id", ignore = true)
+    AnalyticsEvent mapRecommendationToAnalyticsEvent(RecommendationEvent event);
 }

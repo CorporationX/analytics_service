@@ -20,7 +20,7 @@ public class RedisConfig {
     private final RedisProperties redisProperties;
 
     @Bean
-    JedisConnectionFactory jedisConnectionFactory(RedisProperties redisProperties) {
+    JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
         config.setHostName(redisProperties.getHost());
         config.setPort(redisProperties.getPort());
@@ -28,9 +28,9 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
+    public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jedisConnectionFactory) {
         final RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(jedisConnectionFactory(redisProperties));
+        template.setConnectionFactory(jedisConnectionFactory);
         template.setValueSerializer(new Jackson2JsonRedisSerializer<>(Object.class));
         return template;
     }
@@ -38,7 +38,7 @@ public class RedisConfig {
     @Bean
     RedisMessageListenerContainer redisContainer(MessageListenerAdapter messageListener) {
         final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(jedisConnectionFactory(redisProperties));
+        container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(messageListener, topic());
         return container;
     }
