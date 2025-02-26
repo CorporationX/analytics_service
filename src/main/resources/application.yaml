@@ -31,7 +31,7 @@ spring:
     topics:
       analytic-topics:
         add-like-topic-name: "user-like-post"
-        listener-group: "group-1"
+        listener-group: "analytic-like-post-group"
     consumer:
       retry-interval-ms: 5000
       max-attempts: 5

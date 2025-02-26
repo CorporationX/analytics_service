@@ -16,7 +16,7 @@ public class LikeListener {
 
     @KafkaListener(topics = "${spring.kafka.topics.analytic-topics.add-like-topic-name}",
             groupId = "${spring.kafka.topics.analytic-topics.listener-group}",
-            containerFactory = "kafkaListenerContainerFactory")
+            containerFactory = "likeKafkaListenerContainerFactory")
     void listener(LikeEvent event) {
         analyticsEventService.addEvent(likeEventMapper.toAnalyticsEvent(event));
     }

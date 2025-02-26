@@ -4,7 +4,9 @@ import faang.school.analytics.event.LikeEvent;
 import faang.school.analytics.exception.NonRetryableException;
 import faang.school.analytics.exception.RetryableException;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.errors.RecordDeserializationException;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +34,7 @@ public class KafkaConsumer {
     @Value("${spring.kafka.consumer.max-attempts}")
     private Long retryMaxAttempts;
 
-    @Bean
+    @Bean("likeConsumerFactory")
     public ConsumerFactory<String, LikeEvent> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -40,14 +42,17 @@ public class KafkaConsumer {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
                 StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
         props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, LikeEvent.class);
-        props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
+        props.put(JsonDeserializer.TYPE_MAPPINGS, "LikeEvent:faang.school.analytics.event.LikeEvent");
+
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
-    @Bean
+    @Bean("likeKafkaListenerContainerFactory")
     public ConcurrentKafkaListenerContainerFactory<String, LikeEvent> kafkaListenerContainerFactory(
-            ConsumerFactory<String, LikeEvent> consumerFactory,
+            @Qualifier("likeConsumerFactory") ConsumerFactory<String, LikeEvent> consumerFactory,
             DefaultErrorHandler kafkaErrorHandler) {
 
         ConcurrentKafkaListenerContainerFactory<String, LikeEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
@@ -57,12 +62,14 @@ public class KafkaConsumer {
     }
 
     @Bean
-    public DefaultErrorHandler kafkaErrorHandler(KafkaTemplate<String, LikeEvent> kafkaTemplate) {
+    public DefaultErrorHandler kafkaErrorHandler(@Qualifier("dltKafkaTemplate") KafkaTemplate<String,
+            Object> kafkaTemplate) {
         DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(kafkaTemplate);
         FixedBackOff backOff = new FixedBackOff(retryIntervalMillis, retryMaxAttempts);
         DefaultErrorHandler errorHandler = new DefaultErrorHandler(recoverer, backOff);
 
         errorHandler.addNotRetryableExceptions(NonRetryableException.class);
+        errorHandler.addNotRetryableExceptions(RecordDeserializationException.class);
         errorHandler.addRetryableExceptions(RetryableException.class);
 
         return errorHandler;
