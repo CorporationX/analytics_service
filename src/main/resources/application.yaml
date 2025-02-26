@@ -26,6 +26,8 @@ spring:
 
   kafka:
     bootstrap-servers: localhost:9092
+    group:
+      id: analytics-group
 
 server:
   port: 8086
@@ -42,3 +44,6 @@ kafka:
   goal:
     completed:
       topic: goal_completed_topic
+
+  comment:
+    topic: comment_event

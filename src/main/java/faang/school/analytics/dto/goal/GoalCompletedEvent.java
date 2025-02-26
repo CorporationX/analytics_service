@@ -1,21 +1,6 @@
 package faang.school.analytics.dto.goal;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class GoalCompletedEvent {
-
-    private Long actorId;
-
-    private Long goalId;
-
-    private String eventType;
-
-    private LocalDateTime receivedAt;
+public record GoalCompletedEvent(Long userId, Long goalId, LocalDateTime date) {
 }
