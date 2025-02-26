@@ -1,4 +1,21 @@
 spring:
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      security:
+        protocol: PLAINTEXT
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      project-view:
+        topic: "project-view"
+        group-id: "recommendation-received-group"
+        trusted-packages: "*"
+        max.poll.records: 100
+        max.poll.interval.ms: 10000
+        fetch.max.wait.ms: 5000
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres
@@ -34,3 +51,8 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+topic:
+  recommendation-topic: "recommendation-topic"
+group-id:
+  recommendation-group: "recommendation-received"

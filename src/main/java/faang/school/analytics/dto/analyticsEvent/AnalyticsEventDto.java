@@ -1,7 +1,9 @@
 package faang.school.analytics.dto.analyticsEvent;
 
 import faang.school.analytics.model.EventType;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -12,4 +14,5 @@ public class AnalyticsEventDto {
     private Long actorId;
     private EventType eventType;
     private LocalDateTime receivedAt;
+
 }
