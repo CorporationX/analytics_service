@@ -34,7 +34,8 @@ public class RecommendationEventListener implements MessageListener {
             analyticsEventService.saveEvent(analyticsEventDto);
             log.info("Received message from channel {}: {}", message.getChannel(), message.getBody());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(String.format("An error occurred while reading message from channel",
+                    message.getChannel()), e);
         }
     }
 }

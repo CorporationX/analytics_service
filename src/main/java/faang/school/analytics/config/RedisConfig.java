@@ -2,7 +2,6 @@ package faang.school.analytics.config;
 
 import faang.school.analytics.message.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
@@ -15,18 +14,12 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 @RequiredArgsConstructor
 public class RedisConfig {
 
-    @Value("${spring.data.redis.host}")
-    private String redisHost;
-
-    @Value("${spring.data.redis.port}")
-    private int redisPort;
-
-    @Value("${spring.data.redis.channel.recommendation-event}")
-    private String redisRecommendationEventTopic;
-
+    private final RedisConfigurationProperties redisConfigurationProperties;
+    private final RedisChannels redisChannels;
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(redisHost, redisPort);
+        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(redisConfigurationProperties
+                .getHost(), redisConfigurationProperties.getPort());
         return new JedisConnectionFactory(redisConfig);
     }
 
@@ -37,7 +30,7 @@ public class RedisConfig {
 
     @Bean
     ChannelTopic redisRecommendationEventTopic() {
-        return new ChannelTopic(redisRecommendationEventTopic);
+        return new ChannelTopic(redisChannels.getRecommendationChannel());
     }
 
     @Bean
