@@ -1,7 +1,6 @@
 package faang.school.analytics.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
+import faang.school.analytics.queue.RecommendationEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,16 +20,6 @@ public class RedisConfig {
     private final RedisProperties redisProperties;
 
     @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
-
-    @PostConstruct
-    public void logProperties() {
-        System.out.println("Recommendation channel: " + redisProperties.getChannel().getRecommendationEvent());
-    }
-
-    @Bean
     JedisConnectionFactory jedisConnectionFactory(RedisProperties redisProperties) {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
         config.setHostName(redisProperties.getHost());
@@ -47,16 +36,16 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer() {
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter messageListener) {
         final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory(redisProperties));
-        container.addMessageListener(messageListener(), topic());
+        container.addMessageListener(messageListener, topic());
         return container;
     }
 
     @Bean
-    MessageListenerAdapter messageListener() {
-        return new MessageListenerAdapter(new RedisMessageSubscriber());
+    MessageListenerAdapter messageListener(RecommendationEventListener listener) {
+        return new MessageListenerAdapter(listener);
     }
 
     @Bean

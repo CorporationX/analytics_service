@@ -13,6 +13,9 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
 
     @Override
     public void saveRecommendationEvent(AnalyticsEvent event) {
+        if (event == null) {
+            throw new IllegalArgumentException("AnalyticsEvent cannot be null");
+        }
         analyticsEventRepository.save(event);
     }
 }
