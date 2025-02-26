@@ -16,6 +16,7 @@ public class RedisConfig {
 
     private final RedisConfigurationProperties redisConfigurationProperties;
     private final RedisChannels redisChannels;
+
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(redisConfigurationProperties
