@@ -22,7 +22,7 @@ spring:
       port: 6379
       host: localhost
       channel:
-        profile-view: profile_view_channel
+        recommendation_event: recommendation_event_channel
 
 server:
   port: 8086
