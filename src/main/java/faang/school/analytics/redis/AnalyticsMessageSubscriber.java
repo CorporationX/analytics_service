@@ -6,16 +6,15 @@ import faang.school.analytics.redis.event.AnalyticsRedisEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
 public class AnalyticsMessageSubscriber implements MessageListener {
     private final AnalyticsEventService analyticsEventService;
@@ -33,7 +32,6 @@ public class AnalyticsMessageSubscriber implements MessageListener {
 
             analyticsEventService.saveEvent(eventMapper.toAnalyticsEvent(event));
         } catch (IOException e) {
-
             log.error("Error while processing message", e);
         }
     }

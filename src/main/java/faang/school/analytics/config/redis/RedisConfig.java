@@ -1,9 +1,8 @@
 package faang.school.analytics.config.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.properties.AnalyticsServiceProperties;
 import faang.school.analytics.redis.AnalyticsMessageSubscriber;
-import faang.school.analytics.redis.event.AnalyticsRedisEvent;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -16,7 +15,7 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-public class PremiumBoughtRedisConfig {
+public class RedisConfig {
 
     @Bean
     public MessageListenerAdapter messageListener(AnalyticsMessageSubscriber subscriber) {
@@ -24,12 +23,12 @@ public class PremiumBoughtRedisConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer premiumBoughtTopicRedisContainer(AnalyticsServiceProperties properties,
-                                                                   AnalyticsMessageSubscriber subscriber) {
+    public RedisMessageListenerContainer premiumBoughtTopicRedisContainer(AnalyticsMessageSubscriber subscriber,
+                                                                          ChannelTopic premiumBoughtTopic) {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
-        container.addMessageListener(messageListener(subscriber), premiumBoughtTopic(properties));
+        container.addMessageListener(messageListener(subscriber), premiumBoughtTopic);
         return container;
     }
 
@@ -39,16 +38,16 @@ public class PremiumBoughtRedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, AnalyticsRedisEvent> redisTemplate(ObjectMapper objectMapper) {
-        RedisTemplate<String, AnalyticsRedisEvent> template = new RedisTemplate<>();
+    public RedisTemplate<String, Object> redisTemplate(ObjectMapper objectMapper) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory());
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
         return template;
     }
 
-    @Bean
-    public ChannelTopic premiumBoughtTopic(AnalyticsServiceProperties properties) {
-        return new ChannelTopic(properties.getRedis().getBoughtPremiumTopic());
+    @Bean("premiumBoughtTopic")
+    public ChannelTopic premiumBoughtTopic(@Value("${analytics-service.redis.bought-premium-topic}") String topic) {
+        return new ChannelTopic(topic);
     }
 }
