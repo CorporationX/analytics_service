@@ -1,4 +1,4 @@
-package faang.school.analytics.service;
+package faang.school.analytics.service.impl;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.Interval;
@@ -6,6 +6,7 @@ import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import faang.school.analytics.service.AnalyticsEventService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
