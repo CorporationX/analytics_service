@@ -9,7 +9,8 @@ public record RedisConfigProperties(
         Channel channel) {
     public record Channel(
             String channelFollower,
-            String profileView
+            String profileView,
+            String commentChannel
     ) {
     }
 }
