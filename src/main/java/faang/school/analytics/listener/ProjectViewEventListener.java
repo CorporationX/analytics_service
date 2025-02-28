@@ -7,7 +7,6 @@ import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,10 +17,9 @@ public class ProjectViewEventListener {
 
     @KafkaListener(topics = "${spring.kafka.consumer.project-view.topic}",
     containerFactory = "kafkaProjectViewListenerContainerFactory")
-    public void projectViewEventListener(ProjectViewEvent projectViewEvent, Acknowledgment ack) {
+    public void projectViewEventListener(ProjectViewEvent projectViewEvent) {
         AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(projectViewEvent);
         analyticsEvent.setEventType(EventType.PROJECT_VIEW);
         analyticsEventService.saveEvent(analyticsEvent);
-        ack.acknowledge();
     }
 }
