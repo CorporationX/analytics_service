@@ -24,6 +24,10 @@ spring:
       channel:
         profile-view: profile_view_channel
 
+analytics-service:
+  redis:
+    bought-premium-topic: "pubsub:bought-premium"
+
 server:
   port: 8086
 
