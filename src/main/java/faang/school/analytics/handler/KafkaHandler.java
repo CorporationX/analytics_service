@@ -1,6 +1,8 @@
 package faang.school.analytics.handler;
 
 import faang.school.analytics.dto.event.CommentEventDto;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KafkaHandler {
     private final AnalyticsEventService analyticsEventService;
+    private final AnalyticsEventMapper analyticsEventMapper;
 
     @KafkaListener(
         topics = "${kafka.topic.comment}",
@@ -19,7 +22,8 @@ public class KafkaHandler {
         containerFactory = "commentEventConcurrentKafkaFactory")
     public void handleCommentCreated(CommentEventDto commentEventDto) {
         log.info("Received comment event: {}", commentEventDto);
-        analyticsEventService.saveCreateComment(commentEventDto);
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(commentEventDto);
+        analyticsEventService.saveCreateComment(analyticsEvent);
         log.debug("Comment event processed successfully");
     }
 }
