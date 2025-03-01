@@ -29,9 +29,9 @@ public class ProfileViewListener implements MessageListener {
 
             AnalyticsEventDTO eventDto = AnalyticsEventDTO.builder()
                     .eventType(EventType.PROFILE_VIEW)
-                    .actorId(profileView.getViewId())
-                    .receiverId(profileView.getProfileId())
-                    .receivedAt(profileView.getTimestamp())
+                    .actorId(profileView.viewId())
+                    .receiverId(profileView.profileId())
+                    .receivedAt(profileView.timestamp())
                     .build();
 
             log.info("Received profile view event: {} ", profileView);
