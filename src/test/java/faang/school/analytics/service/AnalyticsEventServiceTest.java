@@ -14,10 +14,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static faang.school.analytics.service.AnalyticsEventServiceConstant.ANALYTICS_EVENT_DTO;
+import static faang.school.analytics.service.AnalyticsEventServiceConstant.ANALYTICS_EVENT_REQUEST_DTO;
+import static faang.school.analytics.service.AnalyticsEventServiceConstant.ANALYTICS_EVENT_REQUEST_DTO2;
 import static faang.school.analytics.service.AnalyticsEventServiceConstant.EVENT;
 import static faang.school.analytics.service.AnalyticsEventServiceConstant.EVENTS;
 import static faang.school.analytics.service.AnalyticsEventServiceConstant.EVENTS2;
@@ -65,8 +66,7 @@ class AnalyticsEventServiceTest {
                             .build();
                 });
 
-        List<AnalyticsEventDTO> result = analyticsEventService.getAnalytics(1, EventType.PROFILE_VIEW,
-                LocalDateTime.now().minusHours(6), LocalDateTime.now().minusHours(1));
+        List<AnalyticsEventDTO> result = analyticsEventService.getAnalytics(ANALYTICS_EVENT_REQUEST_DTO);
 
         Assertions.assertEquals(2, result.size());
         Assertions.assertTrue(result.get(0).receivedAt().isAfter(result.get(1).receivedAt()));
@@ -83,8 +83,7 @@ class AnalyticsEventServiceTest {
         Mockito.when(analyticsEventRepository.findByReceiverIdAndEventType(1, EventType.PROFILE_VIEW))
                 .thenReturn(EVENTS2);
 
-        List<AnalyticsEventDTO> result = analyticsEventService.getAnalytics(1, EventType.PROFILE_VIEW,
-                LocalDateTime.now().minusDays(7), LocalDateTime.now().minusDays(1));
+        List<AnalyticsEventDTO> result = analyticsEventService.getAnalytics(ANALYTICS_EVENT_REQUEST_DTO2);
 
         Assertions.assertEquals(0, result.size());
     }

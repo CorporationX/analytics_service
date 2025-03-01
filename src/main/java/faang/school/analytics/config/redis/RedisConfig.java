@@ -1,8 +1,7 @@
-package faang.school.analytics.config.context;
+package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.ProfileViewListener;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
@@ -17,29 +16,13 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
 
     private final ProfileViewListener profileViewListener;
-
-    @Value("${spring.data.redis.host}")
-    private String redisHost;
-
-    @Value("${spring.data.redis.port}")
-    private int port;
-
-    @Value("${spring.data.redis.channel.profile-view}")
-    private String profileViewChanel;
-
-    @Value("${spring.data.redis.channel.project-view}")
-    private String projectViewChanel;
-
-    @Value("${spring.data.redis.channel.follower}")
-    private String followerChanel;
-
-    @Value("${spring.data.redis.channel.post-published}")
-    private String postPublishedChanel;
-
+    private final RedisProperties redisProperties;
+    private final RedisChannel redisChannel;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, port);
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisProperties.getHost(),
+                redisProperties.getPort());
         return new JedisConnectionFactory(config);
     }
 
@@ -57,8 +40,7 @@ public class RedisConfig {
     public RedisMessageListenerContainer redisContainer() {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-
-        container.addMessageListener(profileViewListener, new ChannelTopic(profileViewChanel));
+        container.addMessageListener(profileViewListener, new ChannelTopic(redisChannel.getProfileView()));
         return container;
     }
 }

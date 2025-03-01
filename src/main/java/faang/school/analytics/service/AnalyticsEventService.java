@@ -1,16 +1,15 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDTO;
+import faang.school.analytics.dto.AnalyticsEventRequestDTO;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -29,12 +28,14 @@ public class AnalyticsEventService {
     }
 
     @Transactional(readOnly = true)
-    public List<AnalyticsEventDTO> getAnalytics(long receiverId, EventType eventType,
-                                                LocalDateTime from, LocalDateTime to) {
-        log.info("Getting analytics by receiver id: {}, type event: {}", receiverId, eventType);
-        return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
+    public List<AnalyticsEventDTO> getAnalytics(AnalyticsEventRequestDTO analyticsEventRequestDTO) {
+        log.info("Getting analytics by receiver id: {}, type event: {}", analyticsEventRequestDTO.receiverId(),
+                analyticsEventRequestDTO.eventType());
+        return analyticsEventRepository.findByReceiverIdAndEventType(analyticsEventRequestDTO.receiverId(),
+                        analyticsEventRequestDTO.eventType())
                 .filter(event ->
-                        !event.getReceivedAt().isBefore(from) && !event.getReceivedAt().isAfter(to))
+                        !event.getReceivedAt().isBefore(analyticsEventRequestDTO.from()) && !event.getReceivedAt()
+                                .isAfter(analyticsEventRequestDTO.to()))
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .map(analyticsEventMapper::toDto)
                 .toList();

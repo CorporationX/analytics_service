@@ -1,6 +1,7 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDTO;
+import faang.school.analytics.dto.AnalyticsEventRequestDTO;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 
@@ -36,5 +37,17 @@ public class AnalyticsEventServiceConstant {
             .id(1)
             .eventType(EventType.PROFILE_VIEW)
             .receiverId(5)
+            .build();
+    protected static final AnalyticsEventRequestDTO ANALYTICS_EVENT_REQUEST_DTO = AnalyticsEventRequestDTO.builder()
+            .receiverId(1)
+            .eventType(EventType.PROFILE_VIEW)
+            .from(LocalDateTime.now().minusHours(6))
+            .to(LocalDateTime.now().minusHours(1))
+            .build();
+    protected static final AnalyticsEventRequestDTO ANALYTICS_EVENT_REQUEST_DTO2 = AnalyticsEventRequestDTO.builder()
+            .receiverId(1)
+            .eventType(EventType.PROFILE_VIEW)
+            .from(LocalDateTime.now().minusDays(7))
+            .to(LocalDateTime.now().minusDays(1))
             .build();
 }
