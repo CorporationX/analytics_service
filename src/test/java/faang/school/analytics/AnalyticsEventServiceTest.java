@@ -68,15 +68,17 @@ class AnalyticsEventServiceTest {
                 .thenReturn(List.of(event));
         when(mapper.toDto(event)).thenReturn(eventDto);
 
-        List<AnalyticsEventDto> result = service.getAnalytics(2L, EventType.POST_VIEW, null, LocalDateTime.now().minusDays(1), LocalDateTime.now());
+        List<AnalyticsEventDto> result = service.getAnalytics(2L, EventType.POST_VIEW,
+                null, LocalDateTime.now().minusDays(1), LocalDateTime.now());
         assertEquals(1, result.size());
     }
 
     @Test
-    void getAnalytics_ShouldReturnEmptyList_WhenNoEventsFound() {
+    void getAnalytics_ShouldReturnEmptyListWhenNoEventsFound() {
         when(repository.findByReceiverIdAndEventTypeAndReceivedAtBetween(anyLong(), any(), any(), any()))
                 .thenReturn(Collections.emptyList());
-        List<AnalyticsEventDto> result = service.getAnalytics(2L, EventType.POST_VIEW, null, LocalDateTime.now().minusDays(1), LocalDateTime.now());
+        List<AnalyticsEventDto> result = service.getAnalytics(2L, EventType.POST_VIEW,
+                null, LocalDateTime.now().minusDays(1), LocalDateTime.now());
         assertTrue(result.isEmpty());
     }
 

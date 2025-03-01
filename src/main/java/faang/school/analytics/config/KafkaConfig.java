@@ -23,7 +23,7 @@ public class KafkaConfig {
     private String followerGroupId;
 
     @Bean
-    public ConsumerFactory<String, FollowerEvent> consumerFactory(){
+    public ConsumerFactory<String, FollowerEvent> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, followerGroupId);
@@ -36,7 +36,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, FollowerEvent> followerListener(){
+    public ConcurrentKafkaListenerContainerFactory<String, FollowerEvent> followerListener() {
         ConcurrentKafkaListenerContainerFactory<String, FollowerEvent> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
