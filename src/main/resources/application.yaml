@@ -15,10 +15,10 @@ spring:
         format_sql: true
 
   kafka:
+    bootstrap-servers: localhost:9092
     listener:
       ack-mode: record
     consumer:
-      bootstrap-servers: localhost:9092
       security:
         protocol: PLAINTEXT
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -30,9 +30,6 @@ spring:
       project-view:
         topic: "project-view"
         group-id: "project-view-group"
-        max.poll.records: 100
-        max.poll.interval.ms: 10000
-        fetch.max.wait.ms: 5000
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
