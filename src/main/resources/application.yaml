@@ -24,6 +24,13 @@ spring:
       channel:
         profile-view: profile_view_channel
 
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER:localhost:9092}
+    groups:
+      follower-group-id: follower-events
+    topics:
+      follower: follower_topic
+
 server:
   port: 8086
 
