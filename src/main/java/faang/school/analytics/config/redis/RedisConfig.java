@@ -1,24 +1,23 @@
 package faang.school.analytics.config.redis;
 
-import faang.school.analytics.listener.comment.CommentEventListener;
-import faang.school.analytics.listener.follower.FollowerEvenListener;
-import faang.school.analytics.listener.profile.ProjectViewEventListener;
+import faang.school.analytics.listener.AbstractEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfig {
 
     private final RedisConfigProperties redisConfigProperties;
+    private final List<AbstractEventListener> listeners;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -37,43 +36,13 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter followerListener(FollowerEvenListener followerEvenListener) {
-        return new MessageListenerAdapter(followerEvenListener);
-    }
-
-    @Bean
-    public MessageListenerAdapter messageProfileViewListener(ProjectViewEventListener projectViewEventListener) {
-        return new MessageListenerAdapter(projectViewEventListener);
-    }
-
-    @Bean
-    MessageListenerAdapter commentListener(CommentEventListener commentEventListener) {
-        return new MessageListenerAdapter(commentEventListener);
-    }
-
-    @Bean
-    ChannelTopic followerTopic() {
-        return new ChannelTopic(redisConfigProperties.channel().channelFollower());
-    }
-
-    @Bean
-    ChannelTopic profileViewTopic() {
-        return new ChannelTopic(redisConfigProperties.channel().profileView());
-    }
-
-    ChannelTopic commentTopic() {
-        return new ChannelTopic(redisConfigProperties.channel().commentChannel());
-    }
-
-    @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter followerListener,
-                                                 MessageListenerAdapter commentListener,
-                                                 ProjectViewEventListener projectViewEventListener) {
+    RedisMessageListenerContainer redisContainer(RedisListenerRegistrationService registrationService) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(followerListener, followerTopic());
-        container.addMessageListener(projectViewEventListener, profileViewTopic());
-        container.addMessageListener(commentListener, commentTopic());
+
+        listeners.forEach(listener ->
+                registrationService.registerListener(container, listener, listener.getChannelName()));
+
         return container;
     }
 }
