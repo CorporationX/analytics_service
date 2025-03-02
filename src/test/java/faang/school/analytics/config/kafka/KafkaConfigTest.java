@@ -1,6 +1,7 @@
 package faang.school.analytics.config.kafka;
 
 import faang.school.analytics.dto.ProjectViewEvent;
+import faang.school.analytics.model.FundRaisedEvent;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,11 @@ public class KafkaConfigTest {
 
     @Bean
     public KafkaTemplate<String, ProjectViewEvent> projectViewEventKafkaTemplate(KafkaProperties kafkaProperties) {
+        return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(kafkaProperties.buildProducerProperties()));
+    }
+
+    @Bean
+    public KafkaTemplate<String, FundRaisedEvent> fundRaisedEventKafkaTemplate(KafkaProperties kafkaProperties) {
         return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(kafkaProperties.buildProducerProperties()));
     }
 }

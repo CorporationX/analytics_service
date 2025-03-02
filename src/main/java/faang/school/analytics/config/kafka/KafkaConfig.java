@@ -1,6 +1,7 @@
 package faang.school.analytics.config.kafka;
 
 import faang.school.analytics.dto.ProjectViewEvent;
+import faang.school.analytics.model.FundRaisedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -37,6 +38,19 @@ public class KafkaConfig {
         return factory;
     }
 
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, FundRaisedEvent> kafkaFundRaisedListenerContainerFactory(
+            KafkaProperties kafkaProperties) {
+        ConsumerFactory<String, FundRaisedEvent> kafkaFundRaisedConsumerFactory =
+                getFundRaisedConsumerFactory(kafkaProperties);
+        ConcurrentKafkaListenerContainerFactory<String, FundRaisedEvent> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(kafkaFundRaisedConsumerFactory);
+        factory.setBatchListener(true);
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+        return factory;
+    }
+
     private ConsumerFactory<String, ProjectViewEvent> getConsumerFactory(KafkaProperties kafkaProperties) {
         Map<String, Object> props = kafkaProperties.buildConsumerProperties();
         props.put(ConsumerConfig.GROUP_ID_CONFIG,
@@ -50,5 +64,20 @@ public class KafkaConfig {
         return new DefaultKafkaConsumerFactory<>(props,
                 new StringDeserializer(),
                 new JsonDeserializer<>(ProjectViewEvent.class));
+    }
+
+    private ConsumerFactory<String, FundRaisedEvent> getFundRaisedConsumerFactory(KafkaProperties kafkaProperties) {
+        Map<String, Object> props = kafkaProperties.buildConsumerProperties();
+        props.put(ConsumerConfig.GROUP_ID_CONFIG,
+                environment.getProperty("spring.kafka.consumer.fund-raised.group-id"));
+        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG,
+                environment.getProperty("spring.kafka.consumer.fund-raised.max.poll.records", Integer.class));
+        props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG,
+                environment.getProperty("spring.kafka.consumer.fund-raised.max.poll.interval.ms", Integer.class));
+        props.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG,
+                environment.getProperty("spring.kafka.consumer.fund-raised.fetch.max.wait.ms", Integer.class));
+        return new DefaultKafkaConsumerFactory<>(props,
+                new StringDeserializer(),
+                new JsonDeserializer<>(FundRaisedEvent.class));
     }
 }
