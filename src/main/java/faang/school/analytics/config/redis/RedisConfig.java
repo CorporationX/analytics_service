@@ -20,6 +20,8 @@ public class RedisConfig {
     private final ChannelTopic commentTopic;
     private final MessageListenerAdapter profileViewListener;
     private final ChannelTopic profileTopic;
+    private final MessageListenerAdapter likeListenerAdapter;
+    private final ChannelTopic likesTopic;
 
     @Value("${spring.data.redis.host}")
     private String host;
@@ -51,6 +53,7 @@ public class RedisConfig {
 
         container.addMessageListener(commentCreateMessageListenerAdapter, commentTopic);
         container.addMessageListener(profileViewListener, profileTopic);
+        container.addMessageListener(likeListenerAdapter, likesTopic);
         return container;
     }
 }
