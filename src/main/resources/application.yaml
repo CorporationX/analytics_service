@@ -26,7 +26,18 @@ spring:
 
   kafka:
     bootstrap-servers: localhost:9092
-    comment_create_event_topic_name: comment_create_event
+    consumer:
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    group-id: analytics-processing-group
+
+    listener:
+      ack-mode: record
+
+    topics:
+      comment-create: comment-create
 
 server:
   port: 8086
