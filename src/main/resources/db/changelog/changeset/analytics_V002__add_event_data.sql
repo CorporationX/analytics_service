@@ -1,0 +1,1 @@
+ALTER TABLE analytics_event ADD COLUMN IF NOT EXISTS event_data jsonb;
