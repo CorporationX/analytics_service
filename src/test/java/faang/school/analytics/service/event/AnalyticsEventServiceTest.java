@@ -13,8 +13,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AnalyticsEventServiceTest {
@@ -42,15 +44,9 @@ public class AnalyticsEventServiceTest {
     public void testSaveRecommendationEvent_Success() {
         when(analyticsEventRepository.save(analyticsEvent)).thenReturn(analyticsEvent);
 
-        analyticsEventService.saveRecommendationEvent(analyticsEvent);
+        analyticsEventService.saveEvent(analyticsEvent);
 
         verify(analyticsEventRepository, times(1)).save(analyticsEvent);
-    }
-
-    @Test
-    public void testSaveRecommendationEvent_NullEvent() {
-        assertThrows(IllegalArgumentException.class, () -> analyticsEventService.saveRecommendationEvent(null));
-        verify(analyticsEventRepository, never()).save(any());
     }
 
     @Test
@@ -66,8 +62,8 @@ public class AnalyticsEventServiceTest {
         when(analyticsEventRepository.save(analyticsEvent)).thenReturn(analyticsEvent);
         when(analyticsEventRepository.save(anotherEvent)).thenReturn(anotherEvent);
 
-        analyticsEventService.saveRecommendationEvent(analyticsEvent);
-        analyticsEventService.saveRecommendationEvent(anotherEvent);
+        analyticsEventService.saveEvent(analyticsEvent);
+        analyticsEventService.saveEvent(anotherEvent);
 
         verify(analyticsEventRepository, times(1)).save(analyticsEvent);
         verify(analyticsEventRepository, times(1)).save(anotherEvent);

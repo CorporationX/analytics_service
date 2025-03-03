@@ -13,11 +13,6 @@ import org.springframework.stereotype.Service;
 public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
 
-    @Override
-    public void saveRecommendationEvent(AnalyticsEvent event) {
-        if (event == null) {
-            throw new IllegalArgumentException("AnalyticsEvent cannot be null");
-        }
     public void saveEvent(AnalyticsEvent event) {
         analyticsEventRepository.save(event);
         log.info("Event saved successfully: {}", event);

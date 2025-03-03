@@ -1,4 +1,4 @@
-package faang.school.analytics.queue;
+package faang.school.analytics.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.recommendationevent.RecommendationEvent;
@@ -9,22 +9,23 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @Log4j2
 @Component
 @RequiredArgsConstructor
-public class RecommendationEventListener implements MessageListener {
+public class RecommendationEventSubscriber implements MessageListener {
     private final AnalyticsEventService analyticsEventService;
     private final ObjectMapper objectMapper;
     private final AnalyticsEventMapper analyticsEventMapper;
 
     @Override
-    public void onMessage(Message message, byte[] pattern) {
+    public void onMessage(@NonNull Message message, byte[] pattern) {
         try {
             RecommendationEvent event = objectMapper.readValue(message.getBody(), RecommendationEvent.class);
             AnalyticsEvent analyticsEvent = analyticsEventMapper.mapRecommendationToAnalyticsEvent(event);
-            analyticsEventService.saveRecommendationEvent(analyticsEvent);
+            analyticsEventService.saveEvent(analyticsEvent);
         } catch (Exception e) {
             log.error("Failed to process message: {}", e.getMessage());
         }
