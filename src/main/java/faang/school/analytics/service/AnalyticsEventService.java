@@ -37,4 +37,5 @@ public class AnalyticsEventService {
 
         return events.stream().map(analyticsEventMapper::toDto).collect(Collectors.toList());
     }
+
 }

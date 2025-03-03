@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/analytics-service
+    url: jdbc:postgresql://localhost:5432/postgres
     username: user
     password: password
 
@@ -22,10 +22,10 @@ spring:
       port: 6379
       host: localhost
       channels:
-        profile-view: profile_view_channel
-        comment_create: comment_create_channel
-        likes: likes_channel
-
+       profile_view: profile_view_channel
+       comment_create: comment_create_channel
+       likes: likes_channel
+       
 server:
   port: 8086
 
