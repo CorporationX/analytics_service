@@ -27,11 +27,7 @@ public class AnalyticsEventController {
 
     @GetMapping
     public List<AnalyticsEventDTO> getAnalytics(@RequestBody AnalyticsEventRequestDTO analyticsEventRequestDTO) {
-        log.info("Was received request on event analytics: receiverId={}, type={}, from={}, to={}",
-                analyticsEventRequestDTO.receiverId(),
-                analyticsEventRequestDTO.eventType(),
-                analyticsEventRequestDTO.from(),
-                analyticsEventRequestDTO.to());
+        log.info("Was received request on event analytics: {}", analyticsEventRequestDTO);
         return analyticsEventService.getAnalytics(analyticsEventRequestDTO);
     }
 }

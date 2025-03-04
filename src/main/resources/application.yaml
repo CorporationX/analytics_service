@@ -22,22 +22,22 @@ spring:
       port: 6379
       host: localhost
       channel:
-        profileView: profile_view_channel
-        projectView: project_view_channel
+        profile-view: profile_view_channel
+        project-view: project_view_channel
         follower: follower_channel
-        postPublished: post_published_channel
-        postView: post_view_channel
-        postLike: post_like_channel
-        postComment: post_comment_channel
-        skillReceived: skill_received_channel
-        recommendationReceived: recommendation_received_channel
-        addedToFavorites: added_to_favorites_channel
-        projectInvite: project_invite_channel
-        taskCompleted: task_completed_channel
-        goalCompleted: goal_completed_channel
-        achievementReceived: achievement_received_channel
-        profileAppearedResearch: profile_appeared_research
-        projectAppearedResearch: project_appeared_research
+        post-published: post_published_channel
+        post-view: post_view_channel
+        post-like: post_like_channel
+        post-comment: post_comment_channel
+        skill-received: skill_received_channel
+        recommendation-received: recommendation_received_channel
+        added-to-favorites: added_to_favorites_channel
+        project-invite: project_invite_channel
+        task-completed: task_completed_channel
+        goal-completed: goal_completed_channel
+        achievement-received: achievement_received_channel
+        profile-appeared-research: profile_appeared_research
+        project-appeared-research: project_appeared_research
 
 server:
   port: 8086

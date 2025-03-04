@@ -15,6 +15,5 @@ public record AnalyticsEventRequestDTO(
         LocalDateTime from,
 
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-        LocalDateTime to
-) {
+        LocalDateTime to) {
 }

@@ -40,8 +40,6 @@ class ProfileViewListenerTest {
     @Captor
     private ArgumentCaptor<AnalyticsEventDTO> argumentCaptor;
 
-
-
     @Test
     @DisplayName("The test must process valid message")
     void testProcessValidMessage() throws Exception {
