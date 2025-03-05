@@ -1,8 +1,9 @@
 package faang.school.analytics.config.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.config.AnalyticsServiceProperties;
 import faang.school.analytics.redis.AnalyticsMessageSubscriber;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -15,7 +16,9 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@RequiredArgsConstructor
 public class RedisConfig {
+    private final AnalyticsServiceProperties properties;
 
     @Bean
     public MessageListenerAdapter messageListener(AnalyticsMessageSubscriber subscriber) {
@@ -29,6 +32,15 @@ public class RedisConfig {
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(messageListener(subscriber), premiumBoughtTopic);
+        return container;
+    }
+
+    @Bean
+    public RedisMessageListenerContainer recommendationEventRedisContainer(
+            MessageListenerAdapter messageListener, ChannelTopic recommendationEventTopic) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(redisConnectionFactory());
+        container.addMessageListener(messageListener, recommendationEventTopic);
         return container;
     }
 
@@ -47,7 +59,12 @@ public class RedisConfig {
     }
 
     @Bean("premiumBoughtTopic")
-    public ChannelTopic premiumBoughtTopic(@Value("${analytics-service.redis.bought-premium-topic}") String topic) {
-        return new ChannelTopic(topic);
+    public ChannelTopic premiumBoughtTopic() {
+        return new ChannelTopic(properties.getRedis().getChannel().getBoughtPremiumTopic());
+    }
+
+    @Bean("recommendationEventTopic")
+    public ChannelTopic recommendationEventTopic() {
+        return new ChannelTopic(properties.getRedis().getChannel().getRecommendationEvent());
     }
 }

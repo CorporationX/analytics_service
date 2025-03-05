@@ -10,7 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-@EnableFeignClients("school.faang.analytics.client")
+@EnableFeignClients("faang.school.analytics.client")
 @ConfigurationPropertiesScan
 public class AnalyticsServiceApp {
     public static void main(String[] args) {

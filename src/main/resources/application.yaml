@@ -17,16 +17,13 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
 
-  data:
-    redis:
-      port: 6379
-      host: localhost
-      channel:
-        profile-view: profile_view_channel
-
 analytics-service:
   redis:
-    bought-premium-topic: "pubsub:bought-premium"
+    port: 6379
+    host: localhost
+    channel:
+      bought-premium-topic: "pubsub:bought-premium"
+      recommendation-event: recommendation_event_channel
 
 server:
   port: 8086
