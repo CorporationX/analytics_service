@@ -19,7 +19,6 @@ spring:
     listener:
       ack-mode: record
     consumer:
-      bootstrap-servers: localhost:9092
       security:
         protocol: PLAINTEXT
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -31,15 +30,9 @@ spring:
       project-view:
         topic: "project-view"
         group-id: "project-view-group"
-        max.poll.records: 100
-        max.poll.interval.ms: 10000
-        fetch.max.wait.ms: 5000
       fund-raised:
         topic: "fund-raised"
         group-id: "fund-raised-group"
-        max.poll.records: 150
-        max.poll.interval.ms: 100000
-        fetch.max.wait.ms: 3000
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml

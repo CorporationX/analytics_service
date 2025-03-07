@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -28,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @EmbeddedKafka(partitions = 1, topics = "fund_raised")
+@ActiveProfiles("test")
 public class FundRaisedEventListenerTest {
     @Autowired
     private KafkaTemplate<String, FundRaisedEvent> fundRaisedEventKafkaTemplate;
@@ -35,21 +37,6 @@ public class FundRaisedEventListenerTest {
     private AnalyticsEventRepository analyticsEventRepository;
     @Value("${spring.kafka.consumer.fund-raised.topic}")
     private String fundRaisedTopic;
-
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:13.3")
-            .withDatabaseName("testdb")
-            .withUsername("testUser")
-            .withPassword("testPassword");
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        postgres.start();
-
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
 
     @Test
     void testFundRaisedEventListener_ShouldSaveEvent() throws InterruptedException {
@@ -74,5 +61,20 @@ public class FundRaisedEventListenerTest {
                 .toList();
 
         assertEquals(expected, actual);
+    }
+
+    @Container
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:13.3")
+            .withDatabaseName("testdb")
+            .withUsername("testUser")
+            .withPassword("testPassword");
+
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        postgres.start();
+
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
     }
 }
