@@ -19,6 +19,7 @@ spring:
     listener:
       ack-mode: record
     consumer:
+      bootstrap-servers: localhost:9092
       security:
         protocol: PLAINTEXT
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
