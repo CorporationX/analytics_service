@@ -21,6 +21,7 @@ public class AnalyticsServiceProperties {
         public static class Channel {
             private String boughtPremiumTopic;
             private String recommendationEvent;
+            private String filterUserEvent;
         }
     }
 }

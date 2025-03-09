@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class AnalyticsEventServiceImpl implements AnalyticsEventService {
 
     private final AnalyticsEventRepository analyticsEventRepository;
@@ -38,6 +37,8 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
         } catch (Exception e) {
             log.error("error when saving analytics", e);
         }
+    }
+
     public void saveEvent(AnalyticsEvent event) {
         analyticsEventRepository.save(event);
         log.info("Event saved successfully: {}", event);

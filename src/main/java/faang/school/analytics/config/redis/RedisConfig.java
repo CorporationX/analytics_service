@@ -2,6 +2,7 @@ package faang.school.analytics.config.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.config.AnalyticsServiceProperties;
+import faang.school.analytics.queue.SearchAppearanceEventListener;
 import faang.school.analytics.redis.AnalyticsMessageSubscriber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,11 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter searchEventListener(SearchAppearanceEventListener listener) {
+        return new MessageListenerAdapter(listener);
+    }
+
+    @Bean
     public RedisMessageListenerContainer premiumBoughtTopicRedisContainer(AnalyticsMessageSubscriber subscriber,
                                                                           ChannelTopic premiumBoughtTopic) {
         RedisMessageListenerContainer container
@@ -41,6 +47,15 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
         container.addMessageListener(messageListener, recommendationEventTopic);
+        return container;
+    }
+
+    @Bean
+    public RedisMessageListenerContainer filterUserEventRedisContainer(
+            SearchAppearanceEventListener messageListener, ChannelTopic filterUserEventTopic) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(redisConnectionFactory());
+        container.addMessageListener(messageListener, filterUserEventTopic);
         return container;
     }
 
@@ -66,5 +81,10 @@ public class RedisConfig {
     @Bean("recommendationEventTopic")
     public ChannelTopic recommendationEventTopic() {
         return new ChannelTopic(properties.getRedis().getChannel().getRecommendationEvent());
+    }
+
+    @Bean("filterUserEventTopic")
+    public ChannelTopic filterUserEventTopic() {
+        return new ChannelTopic(properties.getRedis().getChannel().getFilterUserEvent());
     }
 }
