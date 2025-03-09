@@ -27,7 +27,7 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter searchEventListener(SearchAppearanceEventListener listener) {
+    public MessageListenerAdapter searchEventListener(SearchAppearanceEventListener listener) {
         return new MessageListenerAdapter(listener);
     }
 
