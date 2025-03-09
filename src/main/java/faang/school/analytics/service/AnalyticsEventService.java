@@ -21,6 +21,9 @@ public class AnalyticsEventService {
     public void saveViewPostEvent(AnalyticsEvent event) {
         analyticsEventRepository.save(event);
         log.info("Event #Post view# with id {} successfully saved", event.getId());
+    }
+
+    @Transactional
     public void addEvent(@NonNull AnalyticsEvent event) {
 
         AnalyticsEvent analyticsEventSaved = analyticsEventRepository.save(event);

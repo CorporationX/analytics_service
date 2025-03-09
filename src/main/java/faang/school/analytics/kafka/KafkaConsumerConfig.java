@@ -20,7 +20,7 @@ import java.util.Map;
 @Configuration
 public class KafkaConsumerConfig {
 
-    @Value(value = "${kafka.consumer.bootstrap-servers}")
+    @Value(value = "${spring.kafka.bootstrap-servers}")
     private List<String> bootstrapServers;
 
     @Value(value = "${kafka.consumer.group-id}")
@@ -46,7 +46,7 @@ public class KafkaConsumerConfig {
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
-    @Bean
+    @Bean(name = "profileViewEventConcurrentKafkaFactory")
     public ConcurrentKafkaListenerContainerFactory<String, Object>
     kafkaListenerContainerFactory() {
 

@@ -12,9 +12,9 @@ public class PostViewListener {
     private final AnalyticsEventService analyticsEventService;
     private final PostViewEventMapper mapper;
 
-    @KafkaListener(topics = "user-post-viewed", groupId = "user-post-viewed-group",
+    @KafkaListener(topics = "${user-post-viewed.topic-name}", groupId = "notification-group",
                     containerFactory = "postViewEventConcurrentKafkaFactory")
-    public void listenEvent(PostViewEvent dto) {
+    public void listen(PostViewEvent dto) {
         analyticsEventService.saveViewPostEvent(mapper.toEntity(dto));
     }
 }

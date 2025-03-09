@@ -1,2 +1,5 @@
 user-profile-viewed:
   topic-name: "user-profile-viewed"
+
+user-post-viewed:
+  topic-name: "user-post-viewed"
