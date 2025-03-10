@@ -41,7 +41,7 @@ public class RedisConfig {
         container.setConnectionFactory(jedisConnectionFactory());
 
         listeners.forEach(listener ->
-                registrationService.registerListener(container, listener, listener.getChannelName()));
+                registrationService.registerListener(container, listener, listener.getChannel()));
 
         return container;
     }

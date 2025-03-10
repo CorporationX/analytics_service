@@ -39,9 +39,6 @@ public class AnalyticsEvent {
     @Column(name = "event_type", nullable = false)
     private EventType eventType;
 
-    @Column(name = "post_id", nullable = false)
-    private long postId;
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "received_at", nullable = false)
     private LocalDateTime receivedAt;

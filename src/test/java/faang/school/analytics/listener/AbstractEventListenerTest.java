@@ -37,7 +37,7 @@ public class AbstractEventListenerTest {
 
     @BeforeEach
     void setUp() {
-        eventListener = new AbstractEventListener<>(objectMapper, analyticsEventService, analyticsEventMapper) {
+        eventListener = new AbstractEventListener<>(objectMapper, analyticsEventService, analyticsEventMapper, "") {
             @Override
             public void onMessage(Message message, byte[] pattern) {
 

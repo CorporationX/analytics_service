@@ -72,5 +72,4 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
         log.debug("Found {} AnalyticsEvents", result.size());
         return result;
     }
-
 }
