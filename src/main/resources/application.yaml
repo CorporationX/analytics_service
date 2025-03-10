@@ -24,6 +24,7 @@ analytics-service:
     channel:
       bought-premium-topic: "pubsub:bought-premium"
       recommendation-event: recommendation_event_channel
+      filter-user-event: "pubsub:filter-user-event-channel"
 
 server:
   port: 8086

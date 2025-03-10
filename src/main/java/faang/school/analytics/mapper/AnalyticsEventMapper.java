@@ -1,6 +1,7 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.recommendationevent.RecommendationEvent;
+import faang.school.analytics.dto.SearchAppearanceEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -10,6 +11,13 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AnalyticsEventMapper {
 
+    @Mapping(target = "receiverId", source = "foundUserId")
+    @Mapping(target = "actorId", source = "userId")
+    @Mapping(target = "eventType", constant = "PROFILE_APPEARED_IN_SEARCH")
+    @Mapping(target = "receivedAt", source = "time")
+    @Mapping(target = "id", ignore = true)
+    AnalyticsEvent mapSearchAppearanceToAnalyticEvent(SearchAppearanceEvent event);
+
     @Mapping(target = "receiverId", source = "receiverId")
     @Mapping(target = "actorId", source = "authorId")
     @Mapping(target = "eventType", constant = "RECOMMENDATION_RECEIVED")
@@ -17,3 +25,5 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "id", ignore = true)
     AnalyticsEvent mapRecommendationToAnalyticsEvent(RecommendationEvent event);
 }
+
+
