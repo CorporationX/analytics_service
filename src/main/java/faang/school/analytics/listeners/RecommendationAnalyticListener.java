@@ -1,7 +1,7 @@
 package faang.school.analytics.listeners;
 
 
-import faang.school.analytics.dto.RecommendationAnalyticDto;
+import faang.school.analytics.dto.analyticsEvent.RecommendationAnalyticDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -16,8 +16,8 @@ public class RecommendationAnalyticListener {
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper analyticsEventMapper;
 
-    @KafkaListener(topics = "${topic.recommendation-topic}",
-    containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "${spring.kafka.consumer.recommendation-create.topic}",
+    containerFactory = "recommendationContainerFactory")
     public void recommendationAnalytic(RecommendationAnalyticDto recommendationAnalyticDto) {
         AnalyticsEvent event = analyticsEventMapper.toEntityForRecomendation(recommendationAnalyticDto);
         event.setEventType(EventType.RECOMMENDATION_RECEIVED);

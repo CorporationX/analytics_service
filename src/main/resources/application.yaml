@@ -10,11 +10,14 @@ spring:
       auto-offset-reset: earliest
       project-view:
         topic: "project-view"
-        group-id: "recommendation-received-group"
+        group-id: "project-view-group"
         trusted-packages: "*"
         max.poll.records: 100
         max.poll.interval.ms: 10000
         fetch.max.wait.ms: 5000
+      recommendation-create:
+        topic: "recommendation-create"
+        group-id: "recommendation-create-group"
 
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -51,8 +54,3 @@ logging:
 project-service:
   host: localhost
   port: 8082
-
-topic:
-  recommendation-topic: "recommendation-topic"
-group-id:
-  recommendation-group: "recommendation-received"
