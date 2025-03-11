@@ -34,6 +34,23 @@ spring:
       hibernate:
         format_sql: true
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    listener:
+      ack-mode: record
+    consumer:
+      security:
+        protocol: PLAINTEXT
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      properties:
+        spring.json.use.type.headers: false
+      project-view:
+        topic: "project-view"
+        group-id: "project-view-group"
+
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
 
