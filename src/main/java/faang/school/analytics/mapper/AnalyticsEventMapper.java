@@ -1,8 +1,9 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.event.CommentEvent;
 import faang.school.analytics.dto.FollowerEventDto;
+import faang.school.analytics.dto.LikeEventDto;
+import faang.school.analytics.event.CommentEvent;
 import faang.school.analytics.event.ProjectViewProfileEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.Mapper;
@@ -34,4 +35,9 @@ public interface AnalyticsEventMapper {
     @Mapping(constant  = "POST_COMMENT", target = "eventType")
     AnalyticsEvent toAnalyticsEventEntity(CommentEvent commentEvent);
 
+    @Mapping(source = "postAuthorId", target = "receiverId")
+    @Mapping(source = "userId", target = "actorId")
+    @Mapping(constant = "POST_LIKE", target = "eventType")
+    @Mapping(source = "createdAt", target = "receivedAt")
+    AnalyticsEvent toLikeEventEntity(LikeEventDto likeEventDto);
 }

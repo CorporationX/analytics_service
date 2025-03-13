@@ -19,5 +19,4 @@ public interface AnalyticsEventService {
             LocalDateTime from,
             LocalDateTime to
     );
-
 }
