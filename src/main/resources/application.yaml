@@ -1,19 +1,4 @@
 spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: user
-    password: password
-
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-
   kafka:
     bootstrap-servers: localhost:9092
     listener:
@@ -30,6 +15,28 @@ spring:
       project-view:
         topic: "project-view"
         group-id: "project-view-group"
+        trusted-packages: "*"
+        max.poll.records: 100
+        max.poll.interval.ms: 10000
+        fetch.max.wait.ms: 5000
+      recommendation-create:
+        topic: "recommendation-create"
+        group-id: "recommendation-create-group"
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: user
+    password: password
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml

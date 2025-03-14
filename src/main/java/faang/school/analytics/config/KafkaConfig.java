@@ -1,6 +1,8 @@
-package faang.school.analytics.config.kafka;
+package faang.school.analytics.config;
+
 
 import faang.school.analytics.dto.ProjectViewEvent;
+import faang.school.analytics.dto.analyticsEvent.RecommendationAnalyticDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -16,8 +18,8 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.Map;
 
-@Slf4j
 @Configuration
+@Slf4j
 @RequiredArgsConstructor
 public class KafkaConfig {
 
@@ -42,4 +44,27 @@ public class KafkaConfig {
                 new StringDeserializer(),
                 new JsonDeserializer<>(ProjectViewEvent.class));
     }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, RecommendationAnalyticDto> recommendationContainerFactory(
+            KafkaProperties kafkaProperties) {
+        ConsumerFactory<String, RecommendationAnalyticDto> kafkaProjectViewConsumerFactory =
+                getConsumerFactory(kafkaProperties);
+        ConcurrentKafkaListenerContainerFactory<String, RecommendationAnalyticDto> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(kafkaProjectViewConsumerFactory);
+        return factory;
+    }
+
+    private ConsumerFactory<String, RecommendationAnalyticDto> getConsumerFactory(KafkaProperties kafkaProperties) {
+        Map<String, Object> props = kafkaProperties.buildConsumerProperties();
+        props.put(ConsumerConfig.GROUP_ID_CONFIG,
+                environment.getProperty("spring.kafka.consumer.recommendation-create.group-id"));
+
+
+        return new DefaultKafkaConsumerFactory<>(props,
+                new StringDeserializer(),
+                new JsonDeserializer<>(RecommendationAnalyticDto.class));
+    }
 }
+
