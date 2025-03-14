@@ -38,6 +38,7 @@ spring:
 
     topics:
       comment-create: comment-create
+      recomendation-create: recomendation-create
 
 server:
   port: 8086
