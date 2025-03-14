@@ -14,13 +14,16 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @RequiredArgsConstructor
 public class AnalyticsEventService {
-
     private final AnalyticsEventRepository analyticsEventRepository;
+
+    public void saveCreateComment(AnalyticsEvent analyticsEvent) {
+        analyticsEventRepository.save(analyticsEvent);
+    }
 
     @Transactional
     public void addEvent(@NonNull AnalyticsEvent event) {
-
         AnalyticsEvent analyticsEventSaved = analyticsEventRepository.save(event);
         log.info("Added event: {} ", analyticsEventSaved);
     }
 }
+
