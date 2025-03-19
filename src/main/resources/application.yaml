@@ -20,12 +20,12 @@ spring:
   config:
     import: classpath:kafka-topics.yaml
 
-kafka:
-  bootstrap-servers: localhost:9092
-  consumer:
-    group-id: "notification-group"
-    retry-interval-ms: 5000
-    max-attempts: 5
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+     group-id: "notification-group"
+     retry-interval-ms: 5000
+     max-attempts: 5
 
   data:
     redis:

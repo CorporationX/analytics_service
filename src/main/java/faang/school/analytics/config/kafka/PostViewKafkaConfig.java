@@ -26,7 +26,7 @@ public class PostViewKafkaConfig {
     @Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Value(value = "${kafka.consumer.group-id}")
+    @Value(value = "${spring.kafka.consumer.group-id}")
     private String groupId;
 
     @Bean(name = "postViewEventFactory")
