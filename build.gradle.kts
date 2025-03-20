@@ -30,6 +30,7 @@ dependencies {
      */
     implementation("org.liquibase:liquibase-core")
     implementation("redis.clients:jedis:4.3.2")
+    implementation("org.springframework.kafka:spring-kafka:3.3.2")
     runtimeOnly("org.postgresql:postgresql")
 
     /**
@@ -57,6 +58,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
     testImplementation("org.assertj:assertj-core:3.24.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.testcontainers:kafka:1.17.6")
 }
 
 tasks.withType<Test> {

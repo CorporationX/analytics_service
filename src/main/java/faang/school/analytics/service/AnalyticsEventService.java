@@ -9,15 +9,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-@Service
 @Slf4j
 @Validated
 @RequiredArgsConstructor
+@Service
 public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
 
     public void saveCreateComment(AnalyticsEvent analyticsEvent) {
         analyticsEventRepository.save(analyticsEvent);
+    }
+
+    @Transactional
+    public void saveViewPostEvent(AnalyticsEvent event) {
+        analyticsEventRepository.save(event);
+        log.info("Event #Post view# with id {} successfully saved", event.getId());
     }
 
     @Transactional

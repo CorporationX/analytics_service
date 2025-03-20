@@ -5,7 +5,6 @@ import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +16,8 @@ public class ProfileViewEventListener {
     private final AnalyticsEventMapper eventMapper;
     private final AnalyticsEventService analyticsEventService;
 
-    @Value(value = "${user-profile-viewed.topic-name}")
-    private String topics;
-
-    @KafkaListener(topics = "user-profile-viewed", groupId = "notification-group")
+    @KafkaListener(topics = "${user-profile-viewed.topic-name}", groupId = "notification-group",
+                    containerFactory = "profileViewEventConcurrentKafkaFactory")
     public void listen(ProfileViewEventDto eventDto) {
 
         analyticsEventService.addEvent(eventMapper.toAnalyticsEvent(eventDto));
