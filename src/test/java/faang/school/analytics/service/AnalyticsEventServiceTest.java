@@ -3,6 +3,7 @@ package faang.school.analytics.service;
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.AnalyticsRequest;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
@@ -55,6 +56,13 @@ class AnalyticsEventServiceTest {
         LocalDateTime from = LocalDateTime.now().minusDays(1);
         LocalDateTime to = LocalDateTime.now();
 
+        var request = AnalyticsRequest.builder()
+                .receiverId(receiverId)
+                .type(type)
+                .interval(interval)
+                .from(from).to(to)
+                .build();
+
         var event1 = AnalyticsEvent.builder().build();
         var event2 = AnalyticsEvent.builder().build();
 
@@ -67,12 +75,11 @@ class AnalyticsEventServiceTest {
         var eventDto1 = analyticsEventMapper.toDto(event1);
         var eventDto2 = analyticsEventMapper.toDto(event2);
 
-        List<AnalyticsEventDto> result = analyticsEventService.getAnalytics(receiverId, type, interval, from, to);
+        List<AnalyticsEventDto> result = analyticsEventService.getAnalytics(request);
 
         assertEquals(eventDto1, result.get(0));
         assertEquals(eventDto2, result.get(1));
-        verify(analyticsValidator, times(1)).validateEventType(type);
-        verify(analyticsValidator, times(1)).validateInterval(interval, from, to);
+        verify(analyticsValidator, times(1)).validate(request);
         verify(analyticsEventRepository, times(1)).findByReceiverIdAndEventType(receiverId, type);
     }
 

@@ -3,7 +3,7 @@ package faang.school.analytics.service;
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
+import faang.school.analytics.model.AnalyticsRequest;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.validator.AnalyticsValidator;
@@ -29,27 +29,19 @@ public class AnalyticsEventService {
         return analyticsEventMapper.toDto(analyticsEventRepository.save(event));
     }
 
-    @Transactional
-    public List<AnalyticsEventDto> getAnalytics(long receiverId,
-                                                EventType type,
-                                                Interval interval,
-                                                LocalDateTime from,
-                                                LocalDateTime to) {
+    public List<AnalyticsEventDto> getAnalytics(AnalyticsRequest request) {
 
-        analyticsValidator.validateEventType(type);
-        analyticsValidator.validateInterval(interval, from, to);
+        analyticsValidator.validate(request);
 
-        List<AnalyticsEvent> analyticsEvents = analyticsEventRepository
-                .findByReceiverIdAndEventType(receiverId, type)
-                .toList();
+        Interval interval = request.getInterval();
 
-        analyticsEvents = analyticsEvents.stream()
-                .filter(interval == null ? periodFilter(from, to) :
+        return analyticsEventRepository
+                .findByReceiverIdAndEventType(request.getReceiverId(), request.getType())
+                .filter(interval == null ? periodFilter(request.getFrom(), request.getTo()) :
                         periodFilter(interval.getStart(), interval.getEnd()))
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
+                .map(analyticsEventMapper::toDto)
                 .toList();
-
-        return analyticsEvents.stream().map(analyticsEventMapper::toDto).toList();
     }
 
     private Predicate<AnalyticsEvent> periodFilter(LocalDateTime from, LocalDateTime to) {
