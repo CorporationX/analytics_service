@@ -17,9 +17,9 @@ import java.time.LocalDateTime;
 public class EventListener {
     private final AnalyticsEventService analyticsEventService;
 
-    @KafkaListener(topics = "${spring.kafka.topics.comment-create}",
-            properties = "spring.json.value.default.type=faang.school.analytics.dto.CommentCreateEvent",
-            groupId = "${spring.kafka.group-id}"
+    @KafkaListener(
+            topics = "${spring.kafka.topics.comment-create}",
+            properties = "spring.json.value.default.type:faang.school.analytics.dto.CommentCreateEvent"
     )
     public void onCommentCreate(CommentCreateEvent event) {
         sendEvent(event.authorId(), event.postId(), EventType.POST_COMMENT);
