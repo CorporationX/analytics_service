@@ -12,3 +12,5 @@ spring:
         spring.json.add.type.headers: false
       project_view:
         topic: "project-view"
+      fund_raised:
+        topic: "fund-raised"

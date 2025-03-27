@@ -15,13 +15,12 @@ spring:
       project-view:
         topic: "project-view"
         group-id: "project-view-group"
-        trusted-packages: "*"
-        max.poll.records: 100
-        max.poll.interval.ms: 10000
-        fetch.max.wait.ms: 5000
       recommendation-create:
         topic: "recommendation-create"
         group-id: "recommendation-create-group"
+      fund-raised:
+        topic: "fund-raised"
+        group-id: "fund-raised-group"
 
   datasource:
     driver-class-name: org.postgresql.Driver

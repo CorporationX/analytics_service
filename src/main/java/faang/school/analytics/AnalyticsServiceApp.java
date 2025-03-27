@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.EnableKafka;
 
 @SpringBootApplication
-@EnableFeignClients("school.faang.analytics.client")
+@EnableFeignClients("faang.school.analytics.client")
 @EnableKafka
 public class AnalyticsServiceApp {
     public static void main(String[] args) {

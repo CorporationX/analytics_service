@@ -1,8 +1,8 @@
 package faang.school.analytics.config;
 
-
 import faang.school.analytics.dto.ProjectViewEvent;
 import faang.school.analytics.dto.analyticsEvent.RecommendationAnalyticDto;
+import faang.school.analytics.model.FundRaisedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -14,6 +14,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.Map;
@@ -46,6 +47,28 @@ public class KafkaConfig {
     }
 
     @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, FundRaisedEvent> kafkaFundRaisedListenerContainerFactory(
+            KafkaProperties kafkaProperties) {
+        ConsumerFactory<String, FundRaisedEvent> kafkaFundRaisedConsumerFactory =
+                getFundRaisedConsumerFactory(kafkaProperties);
+        ConcurrentKafkaListenerContainerFactory<String, FundRaisedEvent> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(kafkaFundRaisedConsumerFactory);
+        factory.setBatchListener(true);
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+        return factory;
+    }
+
+    private ConsumerFactory<String, FundRaisedEvent> getFundRaisedConsumerFactory(KafkaProperties kafkaProperties) {
+        Map<String, Object> props = kafkaProperties.buildConsumerProperties();
+        props.put(ConsumerConfig.GROUP_ID_CONFIG,
+                environment.getProperty("spring.kafka.consumer.fund-raised.group-id"));
+        return new DefaultKafkaConsumerFactory<>(props,
+                new StringDeserializer(),
+                new JsonDeserializer<>(FundRaisedEvent.class));
+    }
+
+    @Bean
     public ConcurrentKafkaListenerContainerFactory<String, RecommendationAnalyticDto> recommendationContainerFactory(
             KafkaProperties kafkaProperties) {
         ConsumerFactory<String, RecommendationAnalyticDto> kafkaProjectViewConsumerFactory =
@@ -67,4 +90,3 @@ public class KafkaConfig {
                 new JsonDeserializer<>(RecommendationAnalyticDto.class));
     }
 }
-
