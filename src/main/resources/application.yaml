@@ -25,10 +25,19 @@ spring:
         profile-view: profile_view_channel
 
   kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER:localhost:9092}
-    groups:
-      follower-group-id: follower-events
+    bootstrap-servers: localhost:9092
+    consumer:
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    group-id: analytics-processing-group
+
+    listener:
+      ack-mode: record
+
     topics:
+      comment-create: comment-create
       follower: follower_topic
 
 server:
