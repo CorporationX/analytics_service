@@ -28,5 +28,5 @@ public interface AnalyticsEventMapper {
 
     @Mapping(target = "receiverId", source = "recommendationId")
     @Mapping(target = "actorId", source = "receivedId")
-    AnalyticsEvent toEntityForRecomendation(RecommendationAnalyticDto recommendationAnalyticDto);
+    AnalyticsEvent toEntityForRecommendation(RecommendationAnalyticDto recommendationAnalyticDto);
 }

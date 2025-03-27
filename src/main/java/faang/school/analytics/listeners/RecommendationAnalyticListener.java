@@ -19,7 +19,7 @@ public class RecommendationAnalyticListener {
     @KafkaListener(topics = "${spring.kafka.consumer.recommendation-create.topic}",
     containerFactory = "recommendationContainerFactory")
     public void recommendationAnalytic(RecommendationAnalyticDto recommendationAnalyticDto) {
-        AnalyticsEvent event = analyticsEventMapper.toEntityForRecomendation(recommendationAnalyticDto);
+        AnalyticsEvent event = analyticsEventMapper.toEntityForRecommendation(recommendationAnalyticDto);
         event.setEventType(EventType.RECOMMENDATION_RECEIVED);
         analyticsEventService.saveEvent(event);
     }
