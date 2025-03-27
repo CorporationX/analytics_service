@@ -1,5 +1,6 @@
 package faang.school.analytics.mapper;
 
+import faang.school.analytics.dto.analyticsEvent.RecommendationAnalyticDto;
 import faang.school.analytics.dto.ProjectViewEvent;
 import faang.school.analytics.dto.analyticsEvent.AnalyticsEventDto;
 import faang.school.analytics.model.FundRaisedEvent;
@@ -24,4 +25,8 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "actorId", source = "userId")
     @Mapping(target = "receivedAt", source = "timestamp")
     AnalyticsEvent toAnalyticsEvent(ProjectViewEvent projectViewEvent);
+
+    @Mapping(target = "receiverId", source = "recommendationId")
+    @Mapping(target = "actorId", source = "receivedId")
+    AnalyticsEvent toEntityForRecomendation(RecommendationAnalyticDto recommendationAnalyticDto);
 }
