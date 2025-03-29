@@ -9,9 +9,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.EnableKafka;
 
+@EnableKafka
 @SpringBootApplication
 @EnableFeignClients("faang.school.analytics.client")
-@EnableKafka
 public class AnalyticsServiceApp {
     public static void main(String[] args) {
         new SpringApplicationBuilder(AnalyticsServiceApp.class)
