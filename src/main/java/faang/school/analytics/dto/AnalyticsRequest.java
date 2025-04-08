@@ -1,5 +1,7 @@
-package faang.school.analytics.model;
+package faang.school.analytics.dto;
 
+import faang.school.analytics.model.EventType;
+import faang.school.analytics.model.Interval;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

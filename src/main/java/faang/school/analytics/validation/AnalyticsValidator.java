@@ -1,7 +1,7 @@
 package faang.school.analytics.validation;
 
 import faang.school.analytics.exception.DataValidationException;
-import faang.school.analytics.model.AnalyticsRequest;
+import faang.school.analytics.dto.AnalyticsRequest;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import org.springframework.stereotype.Component;
@@ -18,8 +18,18 @@ public class AnalyticsValidator {
 
     private void validateInterval(Interval interval, LocalDateTime from, LocalDateTime to) {
         if (interval == null && (from == null || to == null)) {
-            throw new DataValidationException
-                    ("The 'from' and 'to' parameters must not be 'null' unless an interval is specified");
+            throw new DataValidationException(
+                    "The 'from' and 'to' parameters must not be 'null' unless an interval is specified");
+        }
+
+        if (from != null && to != null && from.isAfter(to)) {
+            throw new DataValidationException(
+                    "The 'from' date must be before or equal to the 'to' date");
+        }
+
+        if (interval != null && (from != null || to != null)) {
+            throw new DataValidationException(
+                    "Either specify an interval or from/to dates, but not both");
         }
     }
 

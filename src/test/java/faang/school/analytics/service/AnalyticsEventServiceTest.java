@@ -3,7 +3,7 @@ package faang.school.analytics.service;
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.AnalyticsRequest;
+import faang.school.analytics.dto.AnalyticsRequest;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
@@ -46,7 +46,7 @@ public class AnalyticsEventServiceTest {
 
         when(analyticsEventRepository.save(event)).thenReturn(event);
 
-        assertEquals(analyticsEventService.saveEvent(event), dto);
+        assertEquals(analyticsEventService.saveEvent(dto), dto);
     }
 
     @Test

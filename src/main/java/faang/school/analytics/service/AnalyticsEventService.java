@@ -3,13 +3,15 @@ package faang.school.analytics.service;
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.AnalyticsRequest;
+import faang.school.analytics.dto.AnalyticsRequest;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.validation.AnalyticsValidator;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -18,6 +20,7 @@ import java.util.function.Predicate;
 
 @Service
 @RequiredArgsConstructor
+@Validated
 public class AnalyticsEventService {
 
     private final AnalyticsEventRepository analyticsEventRepository;
@@ -25,10 +28,13 @@ public class AnalyticsEventService {
     private final AnalyticsValidator analyticsValidator;
 
     @Transactional
-    public AnalyticsEventDto saveEvent(AnalyticsEvent event) {
-        return analyticsEventMapper.toDto(analyticsEventRepository.save(event));
+    public AnalyticsEventDto saveEvent(@Valid AnalyticsEventDto eventDto) {
+        AnalyticsEvent event = analyticsEventMapper.toEntity(eventDto);
+        AnalyticsEvent savedEvent = analyticsEventRepository.save(event);
+        return analyticsEventMapper.toDto(savedEvent);
     }
 
+    @Transactional(readOnly = true)
     public List<AnalyticsEventDto> getAnalytics(AnalyticsRequest request) {
 
         analyticsValidator.validate(request);
@@ -44,6 +50,10 @@ public class AnalyticsEventService {
     }
 
     private Predicate<AnalyticsEvent> periodFilter(LocalDateTime from, LocalDateTime to) {
+        if (from.isAfter(to)) {
+            throw new IllegalArgumentException("'from' date must be before or equal to 'to' date");
+        }
+
         return event -> {
             LocalDateTime eventTime = event.getReceivedAt();
             return eventTime.isAfter(from) && eventTime.isBefore(to);
