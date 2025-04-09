@@ -8,7 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface PostViewEventMapper {
 
-
     @Mapping(source = "idPost",target = "actorId")
     @Mapping(source = "idUser",target = "receiverId")
     @Mapping(source = "date",target = "receivedAt")
