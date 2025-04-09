@@ -1,0 +1,21 @@
+package faang.school.analytics.filter;
+
+import faang.school.analytics.dto.AnalyticsEventFilterDto;
+import faang.school.analytics.model.AnalyticsEvent;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
+
+@Component
+public class AnalyticsEventReceiverFilter implements AnalyticsEventFilter {
+
+    @Override
+    public boolean isApplicable(AnalyticsEventFilterDto filter) {
+        return true;
+    }
+
+    @Override
+    public Specification<AnalyticsEvent> apply(AnalyticsEventFilterDto filter) {
+        return ((root, query, builder) ->
+                builder.equal(root.get("receiverId"), filter.receiverId()));
+    }
+}
