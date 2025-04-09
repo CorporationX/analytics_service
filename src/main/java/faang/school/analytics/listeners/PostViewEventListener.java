@@ -1,14 +1,17 @@
 package faang.school.analytics.listeners;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.PostViewEvent;
 import faang.school.analytics.mapper.PostViewEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class PostViewEventListener implements MessageListener {
@@ -19,11 +22,18 @@ public class PostViewEventListener implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        PostViewEvent event = objectMapper.convertValue(
-                message.getBody(), PostViewEvent.class);
-        postViewEventMapper.postViewToAnalyticEventDto(event);
-
-        analyticsEventService.saveEvent(
-                postViewEventMapper.postViewToAnalyticEventDto(event));
+        if (message == null || message.getBody() == null) {
+            log.warn("Received a null message or message body. Ignoring.");
+            return;
+        }
+        try {
+            PostViewEvent event = objectMapper.convertValue(message.getBody(), PostViewEvent.class);
+            log.info("Received PostViewEvent: {}", event);
+            AnalyticsEventDto analyticsEventDto = postViewEventMapper.postViewToAnalyticEventDto(event);
+            analyticsEventService.saveEvent(analyticsEventDto);
+            log.info("Saved AnalyticsEventDto: {}", analyticsEventDto);
+        } catch (Exception e) {
+            log.error("Error processing message: {}", e.getMessage(), e);
+        }
     }
 }
