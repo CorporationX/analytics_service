@@ -1,6 +1,8 @@
 package faang.school.analytics.config.redis;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.listener.GoalCompletedEventListener;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +19,10 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import java.util.List;
 
 @Configuration
+@RequiredArgsConstructor
 public class RedisConfig {
+
+    private final ObjectMapper mapper;
 
     @Value("${spring.data.redis.host}")
     private String redisHost;
@@ -32,8 +37,14 @@ public class RedisConfig {
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
+
+        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(mapper);
+        template.setDefaultSerializer(serializer);
         template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.setValueSerializer(serializer);
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(serializer);
+
         return template;
     }
 

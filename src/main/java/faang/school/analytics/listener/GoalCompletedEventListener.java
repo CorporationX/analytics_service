@@ -21,14 +21,14 @@ public class GoalCompletedEventListener implements MessageListener {
 
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsService;
-    private final GoalCompletedEventMapper eventMapper;
+    private final GoalCompletedEventMapper goalCompletedEventMapper;
 
     @Override
     public void onMessage(Message message, @Nullable byte[] pattern) {
         try {
             log.debug("Received new goal completed event: {}", message.getBody());
             GoalCompletedEvent event = objectMapper.readValue(message.getBody(), GoalCompletedEvent.class);
-            analyticsService.saveEvent(eventMapper.toAnalyticsDto(event));
+            analyticsService.saveEvent(goalCompletedEventMapper.toAnalyticsDto(event));
         } catch (IOException e) {
             throw new AnalyticsConvertingException("Failed to deserialize message", e);
         }
