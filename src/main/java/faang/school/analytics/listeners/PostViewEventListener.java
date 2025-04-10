@@ -22,12 +22,12 @@ public class PostViewEventListener implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        if (message == null || message.getBody() == null) {
+        if (message.getBody() == null) {
             log.warn("Received a null message or message body. Ignoring.");
             return;
         }
         try {
-            PostViewEvent event = objectMapper.convertValue(message.getBody(), PostViewEvent.class);
+            PostViewEvent event = objectMapper.readValue(message.getBody(), PostViewEvent.class);
             log.info("Received PostViewEvent: {}", event);
             AnalyticsEventDto analyticsEventDto = postViewEventMapper.postViewToAnalyticEventDto(event);
             analyticsEventService.saveEvent(analyticsEventDto);

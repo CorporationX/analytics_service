@@ -7,7 +7,8 @@ import java.time.LocalDateTime;
 @Builder
 public record PostViewEvent(
         Long idPost,
-        Long idUser, Long idAuthor,
+        Long idUser,
+        Long idAuthor,
         LocalDateTime date) {
 }
 
