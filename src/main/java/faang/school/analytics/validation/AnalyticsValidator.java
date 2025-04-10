@@ -1,7 +1,7 @@
 package faang.school.analytics.validation;
 
-import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.dto.AnalyticsRequest;
+import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import org.springframework.stereotype.Component;
@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 public class AnalyticsValidator {
 
     public void validate(AnalyticsRequest request) {
+        if (request == null) {
+            throw new DataValidationException("AnalyticsRequest cannot be null");
+        }
         validateInterval(request.getInterval(), request.getFrom(), request.getTo());
         validateEventType(request.getType());
     }

@@ -10,55 +10,58 @@ import java.util.Locale;
 public enum Interval {
     DAY {
         @Override
-        public LocalDateTime getStart() {
-            return LocalDate.now().atStartOfDay();
+        public LocalDateTime getStart(LocalDateTime baseTime) {
+            return baseTime.toLocalDate().atStartOfDay();
         }
 
         @Override
-        public LocalDateTime getEnd() {
-            return LocalDate.now().plusDays(1).atStartOfDay();
+        public LocalDateTime getEnd(LocalDateTime baseTime) {
+            return baseTime.toLocalDate().plusDays(1).atStartOfDay();
         }
     },
     WEEK {
+        private static final WeekFields WEEK_FIELDS = WeekFields.of(Locale.getDefault());
+
         @Override
-        public LocalDateTime getStart() {
-            WeekFields weekFields = WeekFields.of(Locale.getDefault());
-            LocalDate startOfWeek = LocalDate.now()
-                    .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
-            return startOfWeek.atStartOfDay();
+        public LocalDateTime getStart(LocalDateTime baseTime) {
+            LocalDate baseDate = baseTime.toLocalDate();
+            return baseDate
+                    .with(TemporalAdjusters.previousOrSame(WEEK_FIELDS.getFirstDayOfWeek()))
+                    .atStartOfDay();
         }
 
         @Override
-        public LocalDateTime getEnd() {
-            WeekFields weekFields = WeekFields.of(Locale.getDefault());
-            LocalDate endOfWeek = LocalDate.now()
-                    .with(TemporalAdjusters.nextOrSame(weekFields.getFirstDayOfWeek())).plusWeeks(1);
-            return endOfWeek.atStartOfDay();
+        public LocalDateTime getEnd(LocalDateTime baseTime) {
+            LocalDate baseDate = baseTime.toLocalDate();
+            return baseDate
+                    .with(TemporalAdjusters.nextOrSame(WEEK_FIELDS.getFirstDayOfWeek()))
+                    .atStartOfDay();
         }
     },
     MONTH {
         @Override
-        public LocalDateTime getStart() {
-            return YearMonth.now().atDay(1).atStartOfDay();
+        public LocalDateTime getStart(LocalDateTime baseTime) {
+            return YearMonth.from(baseTime).atDay(1).atStartOfDay();
         }
 
         @Override
-        public LocalDateTime getEnd() {
-            return YearMonth.now().plusMonths(1).atDay(1).atStartOfDay();
+        public LocalDateTime getEnd(LocalDateTime baseTime) {
+            return YearMonth.from(baseTime).plusMonths(1).atDay(1).atStartOfDay();
         }
     },
     YEAR {
         @Override
-        public LocalDateTime getStart() {
-            return LocalDate.of(LocalDate.now().getYear(), 1, 1).atStartOfDay();
+        public LocalDateTime getStart(LocalDateTime baseTime) {
+            return LocalDate.of(baseTime.getYear(), 1, 1).atStartOfDay();
         }
 
         @Override
-        public LocalDateTime getEnd() {
-            return LocalDate.of(LocalDate.now().getYear() + 1, 1, 1).atStartOfDay();
+        public LocalDateTime getEnd(LocalDateTime baseTime) {
+            return LocalDate.of(baseTime.getYear() + 1, 1, 1).atStartOfDay();
         }
     };
 
-    public abstract LocalDateTime getStart();
-    public abstract LocalDateTime getEnd();
+    public abstract LocalDateTime getStart(LocalDateTime baseTime);
+
+    public abstract LocalDateTime getEnd(LocalDateTime baseTime);
 }

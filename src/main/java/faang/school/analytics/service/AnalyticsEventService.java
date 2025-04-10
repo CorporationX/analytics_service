@@ -1,9 +1,9 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.AnalyticsRequest;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.dto.AnalyticsRequest;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.validation.AnalyticsValidator;
@@ -39,24 +39,33 @@ public class AnalyticsEventService {
 
         analyticsValidator.validate(request);
         Interval interval = request.getInterval();
+        LocalDateTime from;
+        LocalDateTime to;
+
+        if (interval != null) {
+            LocalDateTime baseTime = LocalDateTime.now();
+            from = interval.getStart(baseTime);
+            to = interval.getEnd(baseTime);
+        } else {
+            from = request.getFrom();
+            to = request.getTo();
+        }
 
         return analyticsEventRepository
                 .findByReceiverIdAndEventType(request.getReceiverId(), request.getType())
-                .filter(interval == null ? periodFilter(request.getFrom(), request.getTo()) :
-                        periodFilter(interval.getStart(), interval.getEnd()))
+                .filter(periodFilter(from, to))
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .map(analyticsEventMapper::toDto)
                 .toList();
     }
 
     private Predicate<AnalyticsEvent> periodFilter(LocalDateTime from, LocalDateTime to) {
-        if (from.isAfter(to)) {
-            throw new IllegalArgumentException("'from' date must be before or equal to 'to' date");
-        }
 
         return event -> {
             LocalDateTime eventTime = event.getReceivedAt();
-            return eventTime.isAfter(from) && eventTime.isBefore(to);
+            return eventTime != null
+                    && !eventTime.isBefore(from)
+                    && !eventTime.isAfter(to);
         };
     }
 
