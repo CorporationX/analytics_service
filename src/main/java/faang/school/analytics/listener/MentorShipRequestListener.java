@@ -25,6 +25,7 @@ public class MentorShipRequestListener implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         try {
             MentorshipRequestedEvent mentorshipRequestedEvent = mapper.readValue(message.getBody(), MentorshipRequestedEvent.class);
+            log.info("Mentorship requested was received: {}", mentorshipRequestedEvent);
             AnalyticsEventDto analyticsEventDto = AnalyticsEventDto.builder()
                     .actorId(mentorshipRequestedEvent.getRequesterUserId())
                     .receiverId(mentorshipRequestedEvent.getReceiverUserId())
