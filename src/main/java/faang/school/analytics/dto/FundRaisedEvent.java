@@ -3,6 +3,7 @@ package faang.school.analytics.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -10,6 +11,6 @@ import java.time.LocalDate;
 public class FundRaisedEvent {
     private Long userId;
     private Long projectId;
-    private Double raisedAmount;
+    private BigDecimal raisedAmount;
     private LocalDate raiseDate;
 }
