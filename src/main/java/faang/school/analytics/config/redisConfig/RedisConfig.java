@@ -2,6 +2,7 @@ package faang.school.analytics.config.redisConfig;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import faang.school.analytics.listeners.FundRaisedEventListener;
 import faang.school.analytics.listeners.PostViewEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +25,8 @@ public class RedisConfig {
     private int port;
     @Value("${spring.data.redis.channel.PostViewEvent}")
     private String channelPostViewEvent;
-
+    @Value("${spring.data.redis.channel.FundRaised}")
+    private String channelFundRaised;
 
     @Bean
     JedisConnectionFactory JedisConnectionFactory() {
@@ -50,6 +52,18 @@ public class RedisConfig {
     }
 
     @Bean
+    ChannelTopic FundRaisedTopic() {
+        return new ChannelTopic(channelFundRaised);
+    }
+
+    @Bean
+    MessageListenerAdapter fundRaisedListenerAdapter(
+            FundRaisedEventListener fundRaisedEventListener) {
+        return new MessageListenerAdapter(fundRaisedEventListener);
+    }
+
+
+    @Bean
     MessageListenerAdapter postViewListenerAdapter(
             PostViewEventListener postViewEventListener) {
         return new MessageListenerAdapter(postViewEventListener);
@@ -57,10 +71,12 @@ public class RedisConfig {
 
     @Bean
     RedisMessageListenerContainer redisContainer(
-            MessageListenerAdapter postViewListenerAdapter) {
+            MessageListenerAdapter postViewListenerAdapter,
+            MessageListenerAdapter fundRaisedListenerAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(JedisConnectionFactory());
-        container.addMessageListener(postViewListenerAdapter,PostViewTopic());
+        container.addMessageListener(postViewListenerAdapter, PostViewTopic());
+        container.addMessageListener(fundRaisedListenerAdapter, FundRaisedTopic());
         return container;
     }
 }
