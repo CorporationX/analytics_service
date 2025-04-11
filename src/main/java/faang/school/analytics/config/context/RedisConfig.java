@@ -23,7 +23,6 @@ public class RedisConfig {
     private int port;
     @Value("${spring.data.redis.channel.mentorship-request}")
     private String mentorshipRequest;
-    private MentorShipRequestListener mentorShipRequestListener;
 
     @Bean
     JedisConnectionFactory JedisConnectionFactory() {
@@ -33,9 +32,9 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisTemplate<String, Object> redisTemplate() {
+    RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(JedisConnectionFactory());
+        template.setConnectionFactory(connectionFactory);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         template.setKeySerializer(new StringRedisSerializer());
@@ -49,7 +48,7 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter mentorShipListener() {
+    MessageListenerAdapter mentorShipListener(MentorShipRequestListener mentorShipRequestListener) {
         return new MessageListenerAdapter(mentorShipRequestListener);
     }
 
