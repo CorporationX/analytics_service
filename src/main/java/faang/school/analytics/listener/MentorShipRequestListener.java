@@ -29,7 +29,7 @@ public class MentorShipRequestListener implements MessageListener {
                     .actorId(mentorshipRequestedEvent.getRequesterUserId())
                     .receiverId(mentorshipRequestedEvent.getReceiverUserId())
                     .receivedAt(mentorshipRequestedEvent.getRequestedTime())
-                    .eventType(EventType.PROJECT_INVITE)
+                    .eventType(EventType.MENTORSHIP_REQUESTED)
                     .build();
             analyticsEventService.saveEvent(analyticsEventDto);
         } catch (IOException e) {
