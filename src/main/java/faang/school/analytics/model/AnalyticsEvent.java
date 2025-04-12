@@ -1,5 +1,6 @@
 package faang.school.analytics.model;
 
+import faang.school.analytics.enums.EventType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
