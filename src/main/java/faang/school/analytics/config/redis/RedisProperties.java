@@ -14,4 +14,9 @@ public class RedisProperties {
     @Value("${spring.data.redis.port}")
     private int port;
 
+    @Value("${spring.data.redis.connect_timeout}")
+    private int connectTimeout;
+
+    @Value("${spring.data.redis.read_timeout}")
+    private int readTimeout;
 }

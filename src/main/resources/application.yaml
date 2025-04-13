@@ -21,8 +21,8 @@ spring:
     redis:
       port: 6379
       host: localhost
-      channel:
-        profile-view: profile_view_channel
+      connect_timeout: 5000
+      read_timeout: 3000
 
 server:
   port: 8086
