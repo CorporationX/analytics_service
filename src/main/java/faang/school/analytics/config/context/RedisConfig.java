@@ -52,10 +52,10 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter projectViewEventListener) {
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter projectViewListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(JedisConnectionFactory());
-        container.addMessageListener(projectViewEventListener, projectViewTopic());
+        container.addMessageListener(projectViewListener, projectViewTopic());
         return container;
     }
 }
