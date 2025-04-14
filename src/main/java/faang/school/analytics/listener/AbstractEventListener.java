@@ -35,6 +35,7 @@ public abstract class AbstractEventListener<T> implements MessageListener {
             handleEvent(event);
         } catch (IOException e) {
             log.error("Failed to deserialize message", e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -45,7 +46,6 @@ public abstract class AbstractEventListener<T> implements MessageListener {
     protected abstract void handleEvent(T event);
 
     /**
-     * Сохраняет аналитическое событие в базу данных.
      * Создает и сохраняет объект AnalyticsEvent с указанными параметрами.
      */
     protected void saveAnalyticsEvent(Long actorId, Long receiverId, EventType eventType) {
