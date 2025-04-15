@@ -24,6 +24,12 @@ spring:
       channel:
         profile-view: profile_view_channel
         goal-completing-channel: goal-completing-channel
+        PostViewEvent: PostViewEvent_topic
+
+mentorship:
+  host: localhost
+  port: 6379
+  channel: MentorShipRequestTopic
 
 server:
   port: 8086
