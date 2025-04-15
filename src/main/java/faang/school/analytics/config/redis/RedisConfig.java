@@ -2,6 +2,8 @@ package faang.school.analytics.config.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.listener.GoalCompletedEventListener;
+import faang.school.analytics.listener.MentorShipRequestListener;
+import faang.school.analytics.listener.PostViewEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +34,12 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.goal-completing-channel}")
     private String goalEventsTopic;
+
+    @Value("${spring.data.redis.channel.PostViewEvent}")
+    private String channelPostViewEvent;
+
+    @Value("${spring.data.redis.channel.mentorship-request-channel}")
+    private String channelMentorshipRequest;
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
@@ -78,5 +86,25 @@ public class RedisConfig {
     @Bean
     public MessageListenerAdapter messageListenerAdapter(GoalCompletedEventListener listener) {
         return new MessageListenerAdapter(listener);
+    }
+
+    @Bean
+    public ChannelTopic PostViewTopic() {
+        return new ChannelTopic(channelPostViewEvent);
+    }
+
+    @Bean
+    public MessageListenerAdapter postViewListenerAdapter(PostViewEventListener postViewEventListener) {
+        return new MessageListenerAdapter(postViewEventListener);
+    }
+
+    @Bean
+    public ChannelTopic MentorShipRequestTopic() {
+        return new ChannelTopic(channelMentorshipRequest);
+    }
+
+    @Bean
+    public MessageListenerAdapter mentorShipListener(MentorShipRequestListener mentorShipRequestListener) {
+        return new MessageListenerAdapter(mentorShipRequestListener);
     }
 }
