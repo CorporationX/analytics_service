@@ -2,8 +2,9 @@ package faang.school.analytics.config.context;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import faang.school.analytics.config.context.properties.RedisProperties;
 import faang.school.analytics.listener.MentorShipRequestListener;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
@@ -15,19 +16,16 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+@RequiredArgsConstructor
 @Configuration
 public class RedisConfig {
-    @Value("${spring.data.redis.host}")
-    private String host;
-    @Value("${spring.data.redis.port}")
-    private int port;
-    @Value("${spring.data.redis.channel.mentorship-request}")
-    private String mentorshipRequest;
+
+    private final RedisProperties redisProperties;
 
     @Bean
     JedisConnectionFactory JedisConnectionFactory() {
         RedisStandaloneConfiguration redisConfiguration =
-                new RedisStandaloneConfiguration(host, port);
+                new RedisStandaloneConfiguration(redisProperties.getHost(), redisProperties.getPort());
         return new JedisConnectionFactory(redisConfiguration);
     }
 
@@ -44,7 +42,7 @@ public class RedisConfig {
 
     @Bean
     ChannelTopic MentorShipRequestTopic() {
-        return new ChannelTopic(mentorshipRequest);
+        return new ChannelTopic(redisProperties.getChannel());
     }
 
     @Bean
@@ -53,11 +51,12 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(
-            MessageListenerAdapter mentorShipRequestListener) {
+    RedisMessageListenerContainer redisContainer(JedisConnectionFactory connectionFactory,
+                                                 MessageListenerAdapter mentorShipRequestListener,
+                                                 ChannelTopic mentorShipRequestTopic) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(JedisConnectionFactory());
-        container.addMessageListener(mentorShipRequestListener, MentorShipRequestTopic());
+        container.setConnectionFactory(connectionFactory);
+        container.addMessageListener(mentorShipRequestListener, mentorShipRequestTopic);
         return container;
     }
     

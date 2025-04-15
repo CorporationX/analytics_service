@@ -23,7 +23,11 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
-        mentorship-request: MentorShipRequestTopic
+
+mentorship:
+  host: localhost
+  port: 6379
+  channel: MentorShipRequestTopic
 
 server:
   port: 8086
