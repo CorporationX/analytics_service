@@ -24,6 +24,7 @@ spring:
       channel:
         profile-view: profile_view_channel
         PostViewEvent: PostViewEvent_topic
+        FundRaised: fundRaised_topic
 
 server:
   port: 8086
