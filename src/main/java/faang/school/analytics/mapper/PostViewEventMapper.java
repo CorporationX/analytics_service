@@ -8,8 +8,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface PostViewEventMapper {
 
-    @Mapping(source = "idPost",target = "actorId")
-    @Mapping(source = "idUser",target = "receiverId")
+    @Mapping(source = "postId",target = "actorId")
+    @Mapping(source = "userId",target = "receiverId")
     @Mapping(source = "date",target = "receivedAt")
     @Mapping(target = "eventType", constant = "POST_VIEW")
     AnalyticsEventDto postViewToAnalyticEventDto(PostViewEvent postViewEvent);

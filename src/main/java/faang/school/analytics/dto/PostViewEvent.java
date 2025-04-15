@@ -6,9 +6,9 @@ import java.time.LocalDateTime;
 
 @Builder
 public record PostViewEvent(
-        Long idPost,
-        Long idUser,
-        Long idAuthor,
+        Long postId,
+        Long userId,
+        Long authorId,
         LocalDateTime date) {
 }
 
