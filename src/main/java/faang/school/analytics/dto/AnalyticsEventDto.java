@@ -14,6 +14,6 @@ public class AnalyticsEventDto {
     private Long id;
     private Long receiverId;
     private Long actorId;
-    private EventTypeDto eventTypeDto;
+    private EventType eventType;
     private LocalDateTime receivedAt;
 }
