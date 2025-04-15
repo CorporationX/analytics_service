@@ -23,7 +23,7 @@ public class FollowerEventListener extends AbstractEventListener<FollowerEventDt
     }
 
     @Override
-    protected void handleEvent(FollowerEventDto event) {
+    public void handleEvent(FollowerEventDto event) {
         log.info("Received follower event: {}", event);
         saveAnalyticsEvent(event.getFollowerId(), event.getFolloweeId(), EventType.FOLLOWER);
     }
