@@ -1,7 +1,6 @@
-package faang.school.analytics.listener.data;
+package faang.school.analytics.listener;
 
 import faang.school.analytics.dto.subscription.FollowerEventDto;
-import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
