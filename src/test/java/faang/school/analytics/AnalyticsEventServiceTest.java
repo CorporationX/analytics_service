@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,6 +54,14 @@ public class AnalyticsEventServiceTest {
                 () -> analyticsEventService.saveEvent(null));
 
         assertEquals(EVENT_NULL_EXCEPTION, exception.getMessage());
+    }
+
+    @Test
+    void shouldSaveEvent() {
+        AnalyticsEvent event = new AnalyticsEvent();
+        analyticsEventService.saveEvent(event);
+
+        verify(analyticsEventRepository).save(event);
     }
 
     @Test

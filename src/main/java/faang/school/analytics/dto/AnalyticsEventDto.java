@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class AnalyticsEventDto {
-    private long id;
-    private long receiverId;
-    private long actorId;
+    private Long id;
+    private Long receiverId;
+    private Long actorId;
     private EventType eventType;
     private LocalDateTime receivedAt;
 }

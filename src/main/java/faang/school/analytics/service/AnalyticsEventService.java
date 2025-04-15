@@ -6,6 +6,7 @@ import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventMapper analyticsEventMapper;
 
+    @Transactional
     public AnalyticsEventDto saveEvent(AnalyticsEvent event) {
         if (event == null) {
             log.info(EVENT_NULL_EXCEPTION);
