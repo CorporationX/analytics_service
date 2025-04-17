@@ -4,7 +4,7 @@ import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.model.Interval;
+import faang.school.analytics.dto.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,7 +39,7 @@ public class AnalyticsEventService {
         LocalDateTime finalTo = to;
 
         return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
-                .filter(event -> !event.getReceivedAt().isBefore(finalFrom) && !event.getReceivedAt().isAfter(finalTo))
+                .filter(event -> event.getReceivedAt().isAfter(finalFrom) && event.getReceivedAt().isBefore(finalTo))
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .map(analyticsEventMapper::toDto)
                 .collect(Collectors.toList());

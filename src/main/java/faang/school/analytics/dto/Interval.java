@@ -1,4 +1,4 @@
-package faang.school.analytics.model;
+package faang.school.analytics.dto;
 
 public enum Interval {
     LAST_HOUR,

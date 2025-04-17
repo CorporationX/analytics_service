@@ -4,7 +4,7 @@ import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.model.Interval;
+import faang.school.analytics.dto.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -94,19 +94,3 @@ class AnalyticsEventServiceTest {
         assertEquals(analyticsBetweenFromAndTo, analyticsEventDtos);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
