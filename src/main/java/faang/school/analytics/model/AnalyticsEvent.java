@@ -17,28 +17,47 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * Сущность, представляющая событие аналитики в системе.
+ * Хранит информацию о событиях, их участниках и времени возникновения.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="analytics_event")
+@Table(name = "analytics_event")
 public class AnalyticsEvent {
 
+    /**
+     * Уникальный идентификатор события.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name="receiver_id", nullable = false)
+    /**
+     * Идентификатор получателя события.
+     */
+    @Column(name = "receiver_id", nullable = false)
     private long receiverId;
 
+    /**
+     * Идентификатор инициатора события.
+     */
     @Column(name = "actor_id", nullable = false)
     private long actorId;
 
+    /**
+     * Тип события.
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "event_type", nullable = false)
     private EventType eventType;
 
+    /**
+     * Дата и время получения события.
+     */
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "received_at", nullable = false)
     private LocalDateTime receivedAt;
