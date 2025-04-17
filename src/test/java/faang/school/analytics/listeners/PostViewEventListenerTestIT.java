@@ -31,13 +31,7 @@ public class PostViewEventListenerTestIT {
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private AnalyticsEventRepository analyticsEventRepository;
-
-
-    @Test
-    public void test() {
-
-    }
-
+    
     @Test
     public void testPostViewEventListener() {
         PostViewEvent postViewEvent = PostViewEvent.builder()
