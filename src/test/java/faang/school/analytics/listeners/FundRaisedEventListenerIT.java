@@ -32,7 +32,6 @@ public class FundRaisedEventListenerIT {
     @Autowired
     private AnalyticsEventRepository analyticsEventRepository;
 
-
     @Test
             public void testPositiveFundRaisedEventListener() {
         FundRaisedEvent event = FundRaisedEvent.builder()
