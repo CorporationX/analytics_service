@@ -1,7 +1,6 @@
 package faang.school.analytics.listener;
 
-import faang.school.analytics.dto.event.RecommendationEvent;
-import faang.school.analytics.service.AnalyticsEventService;
+import faang.school.analytics.dto.event.AnalyticDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,10 +15,10 @@ public class RecommendationEventListenerTest {
     private ObjectMapper objectMapper;
 
     @Mock
-    private AnalyticsEventService analyticsEventService;
+    private AnalyticsEventSaver analyticsEventSaver;
 
     @Mock
-    private RecommendationEvent recommendationEvent;
+    private AnalyticDto analyticDto;
 
     @InjectMocks
     private RecommendationEventListener recommendationEventListener;
@@ -27,9 +26,9 @@ public class RecommendationEventListenerTest {
     @Test
     @DisplayName("Проверка на успешное выполенение метода handleEvent")
     public void givenValidData_whenHandleEvent_thenSuccess() {
-        recommendationEvent.setAuthorId(1L);
-        recommendationEvent.setReceiverId(2L);
+        analyticDto.setAuthorId(1L);
+        analyticDto.setReceiverId(2L);
 
-        recommendationEventListener.handleEvent(recommendationEvent);
+        recommendationEventListener.handleEvent(analyticDto);
     }
 }
