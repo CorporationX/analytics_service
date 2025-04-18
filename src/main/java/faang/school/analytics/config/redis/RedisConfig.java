@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.MentorShipRequestListener;
 import faang.school.analytics.listener.PostViewEventListener;
+import faang.school.analytics.listener.ProfileViewEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -40,6 +41,9 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.mentorship-request-channel}")
     private String channelMentorshipRequest;
+
+    @Value("${spring.data.redis.channel.profile-view}")
+    private String channelProfileView;
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
@@ -106,5 +110,15 @@ public class RedisConfig {
     @Bean
     public MessageListenerAdapter mentorShipListener(MentorShipRequestListener mentorShipRequestListener) {
         return new MessageListenerAdapter(mentorShipRequestListener);
+    }
+
+    @Bean
+    public MessageListenerAdapter ProfileViewListener(ProfileViewEventListener profileViewEventListener) {
+        return new MessageListenerAdapter(profileViewEventListener);
+    }
+
+    @Bean
+     public ChannelTopic ProfileViewTopic() {
+        return new ChannelTopic(channelProfileView);
     }
 }
