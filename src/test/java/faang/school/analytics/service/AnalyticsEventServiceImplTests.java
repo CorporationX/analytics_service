@@ -1,9 +1,9 @@
-package faang.school.analytics.AnalyticsEventServiceImpl;
+package faang.school.analytics.service;
 
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
+import faang.school.analytics.parser.AnalyticsRequestParser;
 import faang.school.analytics.repository.AnalyticsEventRepository;
-import faang.school.analytics.service.AnalyticsEventServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,11 +23,18 @@ public class AnalyticsEventServiceImplTests {
     @Mock
     private AnalyticsEventRepository eventRepository;
 
+    @Mock
+    private AnalyticsRequestParser parser;
+
     @InjectMocks
     private AnalyticsEventServiceImpl analyticsEventService;
 
     private final long receiverId = 123L;
     private final EventType eventType = EventType.PROJECT_VIEW;
+    private final String eventTypeRaw = "PROJECT_VIEW";
+    private final String startRaw = "2025-01-01T00:00:00";
+    private final String endRaw = "2025-12-31T23:59:59";
+
     private final LocalDateTime start = LocalDateTime.of(2025, 1, 1, 0, 0);
     private final LocalDateTime end = LocalDateTime.of(2025, 12, 31, 23, 59);
 
@@ -57,6 +64,10 @@ public class AnalyticsEventServiceImplTests {
                 .receivedAt(end.plusDays(5))
                 .actorId(3L)
                 .build();
+
+        when(parser.parseEventType(eventTypeRaw)).thenReturn(eventType);
+        when(parser.parseDate(startRaw)).thenReturn(start);
+        when(parser.parseDate(endRaw)).thenReturn(end);
     }
 
     @Test
@@ -64,7 +75,8 @@ public class AnalyticsEventServiceImplTests {
         when(eventRepository.findByReceiverIdAndEventType(receiverId, eventType))
                 .thenReturn(Stream.of(within, before, after));
 
-        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventType, start, end);
+        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventTypeRaw, null, startRaw,
+                endRaw);
 
         assertThat(result).containsExactly(within);
     }
@@ -73,7 +85,8 @@ public class AnalyticsEventServiceImplTests {
     public void testGetAnalytics_returnsEmptyListWhenNoEventsInRange() {
         when(eventRepository.findByReceiverIdAndEventType(receiverId, eventType)).thenReturn(Stream.of(before, after));
 
-        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventType, start, end);
+        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventTypeRaw, null, startRaw,
+                endRaw);
 
         assertThat(result).isEmpty();
     }
@@ -90,7 +103,8 @@ public class AnalyticsEventServiceImplTests {
         when(eventRepository.findByReceiverIdAndEventType(receiverId, eventType))
                 .thenReturn(Stream.of(within, another, before, after));
 
-        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventType, start, end);
+        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventTypeRaw, null, startRaw,
+                endRaw);
 
         assertThat(result).containsExactlyInAnyOrder(within, another);
     }
@@ -99,7 +113,8 @@ public class AnalyticsEventServiceImplTests {
     public void testGetAnalytics_returnsEmptyListWhenRepositoryIsEmpty() {
         when(eventRepository.findByReceiverIdAndEventType(receiverId, eventType)).thenReturn(Stream.empty());
 
-        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventType, start, end);
+        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventTypeRaw, null, startRaw,
+                endRaw);
 
         assertThat(result).isEmpty();
     }
