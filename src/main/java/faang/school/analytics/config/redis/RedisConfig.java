@@ -93,7 +93,7 @@ public class RedisConfig {
     }
 
     @Bean
-    public ChannelTopic PostViewTopic() {
+    public ChannelTopic postViewTopic() {
         return new ChannelTopic(channelPostViewEvent);
     }
 
@@ -103,7 +103,7 @@ public class RedisConfig {
     }
 
     @Bean
-    public ChannelTopic MentorShipRequestTopic() {
+    public ChannelTopic mentorShipRequestTopic() {
         return new ChannelTopic(channelMentorshipRequest);
     }
 
@@ -113,12 +113,12 @@ public class RedisConfig {
     }
 
     @Bean
-    public MessageListenerAdapter ProfileViewListener(ProfileViewEventListener profileViewEventListener) {
+    public MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
         return new MessageListenerAdapter(profileViewEventListener);
     }
 
     @Bean
-     public ChannelTopic ProfileViewTopic() {
+     public ChannelTopic profileViewTopic() {
         return new ChannelTopic(channelProfileView);
     }
 }
