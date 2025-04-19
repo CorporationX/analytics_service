@@ -29,7 +29,7 @@ public class RedisConfig {
     private String channelFundRaised;
 
     @Bean
-    JedisConnectionFactory JedisConnectionFactory() {
+    JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration redisConfiguration =
                 new RedisStandaloneConfiguration(host, port);
         return new JedisConnectionFactory(redisConfiguration);
@@ -38,7 +38,7 @@ public class RedisConfig {
     @Bean
     RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(JedisConnectionFactory());
+        template.setConnectionFactory(jedisConnectionFactory());
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         template.setKeySerializer(new StringRedisSerializer());
@@ -47,12 +47,12 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic PostViewTopic() {
+    ChannelTopic postViewTopic() {
         return new ChannelTopic(channelPostViewEvent);
     }
 
     @Bean
-    ChannelTopic FundRaisedTopic() {
+    ChannelTopic fundRaisedTopic() {
         return new ChannelTopic(channelFundRaised);
     }
 
@@ -74,9 +74,9 @@ public class RedisConfig {
             MessageListenerAdapter postViewListenerAdapter,
             MessageListenerAdapter fundRaisedListenerAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(JedisConnectionFactory());
-        container.addMessageListener(postViewListenerAdapter, PostViewTopic());
-        container.addMessageListener(fundRaisedListenerAdapter, FundRaisedTopic());
+        container.setConnectionFactory(jedisConnectionFactory());
+        container.addMessageListener(postViewListenerAdapter, postViewTopic());
+        container.addMessageListener(fundRaisedListenerAdapter, fundRaisedTopic());
         return container;
     }
 }
