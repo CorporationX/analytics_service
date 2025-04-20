@@ -27,6 +27,19 @@ spring:
         PostViewEvent: PostViewEvent_topic
         mentorship-request-channel: mentorship-request-channel
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: analytics-group
+      auto-offset-reset: earliest
+    producer:
+      acks: "1"
+    topics:
+      hashtag-analytics:
+        name: "hashtag-analytics"
+        partitions: 3
+        replicas: 1
+
 server:
   port: 8086
 
