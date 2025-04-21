@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
-public class AnalyticsEventControllerIT {
+public class AnalyticsEventControllerIt {
 
     @Container
     public static PostgreSQLContainer<?> POSTGRESQL_CONTAINER =
