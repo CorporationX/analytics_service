@@ -22,7 +22,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            AnalyticsConvertingException.class
+            AnalyticsConvertingException.class,
+            JsonDeserializationException.class
     })
     public ResponseEntity<ErrorResponse> handleExceptionsWithStatusBadRequest(Exception ex) {
         return ResponseEntity.status(BAD_REQUEST).body(getErrorResponse(ex));
