@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public interface HashtagRequestEventMapper {
+public interface HashtagEventMapper {
 
     @Mapping(target = "receiverId", source = "userId")
     @Mapping(target = "actorId", source = "hashtagId")

@@ -40,12 +40,15 @@ spring:
         partitions: 3
         replicas: 1
 
+  profiles:
+    active: local
+
 server:
   port: 8086
 
 logging:
   level:
-    root: info
+    root: debug
 
 project-service:
   host: localhost
