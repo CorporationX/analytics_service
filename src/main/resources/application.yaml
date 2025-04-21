@@ -26,6 +26,7 @@ spring:
         goal-completing-channel: goal-completing-channel
         PostViewEvent: PostViewEvent_topic
         mentorship-request-channel: mentorship-request-channel
+        follower: follower_channel
 
   kafka:
     bootstrap-servers: localhost:9092
