@@ -2,6 +2,7 @@ package faang.school.analytics;
 
 import faang.school.analytics.dto.AggregatedAnalyticDto;
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.AnalyticsGetDto;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -78,14 +79,17 @@ public class AnalyticsEventServiceImplTest {
         event2.setReceivedAt(now.plusHours(1));
         event2.setEventType(EventType.TASK_COMPLETED);
         event2.setReceiverId(1L);
+        AnalyticsGetDto analyticsGetDto = AnalyticsGetDto.builder()
+                .receiverId(1L)
+                .eventType(EventType.TASK_COMPLETED)
+                .interval(Interval.HOUR)
+                .from(now.minusHours(1))
+                .to(now.plusHours(2)).build();
 
         Mockito.when(analyticsEventRepository.findByReceiverIdAndEventType(anyLong(), Mockito.any(EventType.class)))
                 .thenReturn(Stream.of(event1, event2));
 
-        List<AggregatedAnalyticDto> result = analyticsEventService.getAnalytics(
-                1L, EventType.TASK_COMPLETED, Interval.HOUR,
-                now.minusHours(1),
-                now.plusHours(2));
+        List<AggregatedAnalyticDto> result = analyticsEventService.getAnalytics(analyticsGetDto);
 
         assertThat(result).hasSize(2);
         verify(analyticsEventMapper, times(0)).toDto(Mockito.any());
