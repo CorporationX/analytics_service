@@ -1,5 +1,7 @@
 package faang.school.analytics.model;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
@@ -9,6 +11,7 @@ import java.util.function.Supplier;
  * Каждая константа содержит логику вычисления начальной даты интервала
  * относительно текущего момента времени.
  */
+@Slf4j
 public enum Interval {
     LAST_DAY(() -> LocalDateTime.now().minusDays(1)),
     LAST_WEEK(() -> LocalDateTime.now().minusWeeks(1)),
@@ -44,6 +47,7 @@ public enum Interval {
                 return interval;
             }
         }
+        log.error("Unknown interval type requested: {}", type);
         throw new IllegalArgumentException("Unknown event type: " + type);
     }
 }

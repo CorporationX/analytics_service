@@ -14,7 +14,7 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Analytics Service API")
-                        .description("API для управления Analytics Service")
+                        .description("Analytics Service management API")
                         .version("1.0"))
                 .addServersItem(new Server()
                         .url("http://localhost:8086")

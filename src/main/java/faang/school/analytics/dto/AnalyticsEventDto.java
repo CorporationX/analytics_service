@@ -10,21 +10,21 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "DTO для представления события аналитики")
+@Schema(description = "DTO representing an analytics event")
 public class AnalyticsEventDto {
 
-    @Schema(description = "Уникальный идентификатор события", example = "12345")
+    @Schema(description = "Unique event identifier", example = "12345")
     private long id;
 
-    @Schema(description = "ID получателя события", example = "1001")
+    @Schema(description = "Event recipient ID", example = "1001")
     private long receiverId;
 
-    @Schema(description = "ID инициатора события", example = "2002")
+    @Schema(description = "Event initiator ID", example = "2002")
     private long actorId;
 
-    @Schema(description = "Тип события", example = "POST_LIKE")
+    @Schema(description = "Event type", example = "POST_LIKE")
     private String eventType;
 
-    @Schema(description = "Дата и время получения события", example = "2025-04-18T12:00:00")
+    @Schema(description = "Event reception timestamp", example = "2025-04-18T12:00:00")
     private LocalDateTime receivedAt;
 }

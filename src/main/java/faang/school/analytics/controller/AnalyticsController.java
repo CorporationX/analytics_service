@@ -22,46 +22,46 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Tag(
-        name = "API аналитики",
-        description = "API для получения аналитических данных о событиях"
+        name = "Analytics API",
+        description = "API for retrieving analytical data about events"
 )
 public class AnalyticsController {
     private final AnalyticsService analyticsService;
 
     @Operation(
-            summary = "Получить аналитику событий",
-            description = "Возвращает список событий с фильтрацией по получателю, типу события и временному диапазону " +
-                    "(либо через intervalId, либо через явное указание fromDate/toDate)."
+            summary = "Get event analytics",
+            description = "Returns a list of events filtered by recipient, event type, and time range " +
+                    "(either via intervalId or by explicitly specifying fromDate/toDate)."
     )
     @GetMapping("/analytics")
     public List<AnalyticsEventDto> getAnalytics(
             @Parameter(
-                    description = "ID получателя",
+                    description = "Recipient ID",
                     required = true,
                     example = "12345"
             )
             @RequestParam Long receiverId,
 
             @Parameter(
-                    description = "ID типа события",
+                    description = "Event type ID",
                     required = true,
                     example = "1"
             )
             @RequestParam int eventTypeId,
 
             @Parameter(
-                    description = "ID временного интервала (если не указан, обязательны fromDate/toDate)"
+                    description = "Time interval ID (if not specified, fromDate/toDate are required)"
             )
             @RequestParam(required = false) Integer intervalId,
 
             @Parameter(
-                    description = "Начальная дата",
+                    description = "Start date",
                     example = "2023-01-01T00:00:00"
             )
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
 
             @Parameter(
-                    description = "Конечная дата",
+                    description = "End date",
                     example = "2023-01-31T23:59:59"
             )
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate
