@@ -2,6 +2,7 @@ package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AggregatedAnalyticDto;
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.AnalyticsGetDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -32,27 +33,24 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     }
 
     @Override
-    public List<AggregatedAnalyticDto> getAnalytics(long receiverId,
-                                                    EventType eventType,
-                                                    Interval interval,
-                                                    LocalDateTime from,
-                                                    LocalDateTime to) {
-        if (to.isBefore(from)) {
+    public List<AggregatedAnalyticDto> getAnalytics(AnalyticsGetDto analyticsGetDto) {
+        if (analyticsGetDto.getTo().isBefore(analyticsGetDto.getFrom())) {
             throw new IllegalArgumentException("To date must be after From date");
         }
         List<AnalyticsEvent> analyticsEvents = analyticsEventRepository
-                .findByReceiverIdAndEventType(receiverId, eventType)
-                .filter(event -> event.getReceivedAt().isAfter(from) &&
-                        event.getReceivedAt().isBefore(to))
+                .findByReceiverIdAndEventType(analyticsGetDto.getReceiverId(), analyticsGetDto.getEventType())
+                .filter(event -> event.getReceivedAt().isAfter(analyticsGetDto.getFrom()) &&
+                        event.getReceivedAt().isBefore(analyticsGetDto.getTo()))
                 .toList();
         return analyticsEvents.stream()
                 .collect(Collectors.groupingBy(
-                        event -> truncateToInterval(event.getReceivedAt(), interval),
+                        event -> truncateToInterval(event.getReceivedAt(), analyticsGetDto.getInterval()),
                         Collectors.collectingAndThen(
                                 Collectors.toList(),
                                 eventList -> AggregatedAnalyticDto.builder()
-                                        .intervalStart(truncateToInterval(eventList.get(0).getReceivedAt(), interval))
-                                        .interval(interval)
+                                        .intervalStart(truncateToInterval(
+                                                eventList.get(0).getReceivedAt(), analyticsGetDto.getInterval()))
+                                        .interval(analyticsGetDto.getInterval())
                                         .eventCount(eventList.size())
                                         .build()
                         )))

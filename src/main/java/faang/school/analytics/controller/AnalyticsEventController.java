@@ -21,13 +21,7 @@ public class AnalyticsEventController {
 
     @PostMapping
     public ResponseEntity<List<AggregatedAnalyticDto>> getAnalytics(@RequestBody AnalyticsGetDto analyticsGetDto) {
-        List<AggregatedAnalyticDto> aggregatedAnalyticDtos = analyticsEventService.getAnalytics(
-                analyticsGetDto.getReceiverId(),
-                analyticsGetDto.getEventType(),
-                analyticsGetDto.getInterval(),
-                analyticsGetDto.getFrom(),
-                analyticsGetDto.getTo()
-        );
+        List<AggregatedAnalyticDto> aggregatedAnalyticDtos = analyticsEventService.getAnalytics(analyticsGetDto);
         return ResponseEntity.ok(aggregatedAnalyticDtos);
     }
 }
