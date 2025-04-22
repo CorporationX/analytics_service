@@ -1,6 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.MentorShipRequestListener;
 import faang.school.analytics.listener.PostViewEventListener;
@@ -40,6 +41,9 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.mentorship-request-channel}")
     private String channelMentorshipRequest;
+
+    @Value("${spring.data.redis.channel.follower}")
+    private String channelFollower;
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
@@ -106,5 +110,15 @@ public class RedisConfig {
     @Bean
     public MessageListenerAdapter mentorShipListener(MentorShipRequestListener mentorShipRequestListener) {
         return new MessageListenerAdapter(mentorShipRequestListener);
+    }
+
+    @Bean
+    public ChannelTopic followerTopic() {
+        return new ChannelTopic(channelFollower);
+    }
+
+    @Bean
+    public MessageListenerAdapter followerAdapter(FollowerEventListener followerAdapter) {
+        return new MessageListenerAdapter(followerAdapter);
     }
 }
