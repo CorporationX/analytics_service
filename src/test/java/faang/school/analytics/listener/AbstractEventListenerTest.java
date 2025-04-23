@@ -2,7 +2,6 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.listener.data.TestEventListener;
-import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,9 +25,6 @@ public class AbstractEventListenerTest {
     private ObjectMapper objectMapper;
 
     @Mock
-    private AnalyticsEventService analyticsEventService;
-
-    @Mock
     private Message message;
 
     @InjectMocks
@@ -36,7 +32,7 @@ public class AbstractEventListenerTest {
 
     @BeforeEach
     public void setUp() {
-        eventListener = new TestEventListener(objectMapper, analyticsEventService);
+        eventListener = new TestEventListener(objectMapper);
     }
 
     @Test
