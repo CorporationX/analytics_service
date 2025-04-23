@@ -25,7 +25,9 @@ spring:
         profile-view: profile_view_channel
         goal-completing-channel: goal-completing-channel
         PostViewEvent: PostViewEvent_topic
+        FundRaised: fundRaised_topic
         mentorship-request-channel: mentorship-request-channel
+        follower: follower_channel
 
 server:
   port: 8086

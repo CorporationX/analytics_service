@@ -1,10 +1,12 @@
 package faang.school.analytics.config.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.MentorShipRequestListener;
 import faang.school.analytics.listener.PostViewEventListener;
 import faang.school.analytics.listener.ProfileViewEventListener;
+import faang.school.analytics.listener.FundRaisedEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -41,6 +43,12 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.mentorship-request-channel}")
     private String channelMentorshipRequest;
+
+    @Value("${spring.data.redis.channel.follower}")
+    private String channelFollower;
+
+    @Value("${spring.data.redis.channel.FundRaised}")
+    private String channelFundRaised;
 
     @Value("${spring.data.redis.channel.profile-view}")
     private String channelProfileView;
@@ -120,5 +128,26 @@ public class RedisConfig {
     @Bean
      public ChannelTopic profileViewTopic() {
         return new ChannelTopic(channelProfileView);
+    }
+
+    @Bean
+    public ChannelTopic followerTopic() {
+        return new ChannelTopic(channelFollower);
+    }
+
+    @Bean
+    public MessageListenerAdapter followerAdapter(FollowerEventListener followerAdapter) {
+        return new MessageListenerAdapter(followerAdapter);
+    }
+
+    @Bean
+    ChannelTopic fundRaisedTopic() {
+        return new ChannelTopic(channelFundRaised);
+    }
+
+    @Bean
+    MessageListenerAdapter fundRaisedListenerAdapter(
+            FundRaisedEventListener fundRaisedEventListener) {
+        return new MessageListenerAdapter(fundRaisedEventListener);
     }
 }
