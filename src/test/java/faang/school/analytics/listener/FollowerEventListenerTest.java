@@ -1,6 +1,7 @@
 package faang.school.analytics.listener;
 
 import faang.school.analytics.dto.subscription.FollowerEventDto;
+import faang.school.analytics.mapper.AnalyticDtoMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,10 +19,12 @@ public class FollowerEventListenerTest {
     private AnalyticsEventSaver analyticsEventSaver;
 
     @Mock
-    private FollowerEventDto followerEvent;
+    private AnalyticDtoMapper analyticDtoMapper;
 
     @InjectMocks
     private FollowerEventListener followerEventListener;
+
+    private final FollowerEventDto followerEvent = new FollowerEventDto();
 
     @Test
     @DisplayName("Проверка на успешное выполенение метода handleEvent")
