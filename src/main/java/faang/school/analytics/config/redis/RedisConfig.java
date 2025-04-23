@@ -5,6 +5,7 @@ import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.MentorShipRequestListener;
 import faang.school.analytics.listener.PostViewEventListener;
+import faang.school.analytics.listener.ProfileViewEventListener;
 import faang.school.analytics.listener.FundRaisedEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,6 +49,9 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.FundRaised}")
     private String channelFundRaised;
+
+    @Value("${spring.data.redis.channel.profile-view}")
+    private String channelProfileView;
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
@@ -107,13 +111,23 @@ public class RedisConfig {
     }
 
     @Bean
-    public ChannelTopic MentorShipRequestTopic() {
+    public ChannelTopic mentorShipRequestTopic() {
         return new ChannelTopic(channelMentorshipRequest);
     }
 
     @Bean
     public MessageListenerAdapter mentorShipListener(MentorShipRequestListener mentorShipRequestListener) {
         return new MessageListenerAdapter(mentorShipRequestListener);
+    }
+
+    @Bean
+    public MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
+        return new MessageListenerAdapter(profileViewEventListener);
+    }
+
+    @Bean
+     public ChannelTopic profileViewTopic() {
+        return new ChannelTopic(channelProfileView);
     }
 
     @Bean
