@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.config.redis.RedisListener;
 import faang.school.analytics.dto.subscription.FollowerEventDto;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.service.AnalyticsEventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -18,13 +17,16 @@ import org.springframework.stereotype.Component;
 @Component
 @RedisListener(topic = "follower_event")
 public class FollowerEventListener extends AbstractEventListener<FollowerEventDto> {
-    public FollowerEventListener(ObjectMapper objectMapper, AnalyticsEventService analyticsEventService) {
-        super(objectMapper, analyticsEventService, FollowerEventDto.class);
+    private final AnalyticsEventSaver analyticsEventSaver;
+
+    public FollowerEventListener(ObjectMapper objectMapper, AnalyticsEventSaver analyticsEventSaver) {
+        super(objectMapper, FollowerEventDto.class);
+        this.analyticsEventSaver = analyticsEventSaver;
     }
 
     @Override
     public void handleEvent(FollowerEventDto event) {
         log.info("Received follower event: {}", event);
-        saveAnalyticsEvent(event.getFollowerId(), event.getFolloweeId(), EventType.FOLLOWER);
+        analyticsEventSaver.saveAnalyticsEvent(event, EventType.FOLLOWER);
     }
 }

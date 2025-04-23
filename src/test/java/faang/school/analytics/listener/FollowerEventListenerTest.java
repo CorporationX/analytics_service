@@ -1,7 +1,6 @@
 package faang.school.analytics.listener;
 
 import faang.school.analytics.dto.subscription.FollowerEventDto;
-import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +15,7 @@ public class FollowerEventListenerTest {
     private ObjectMapper objectMapper;
 
     @Mock
-    private AnalyticsEventService analyticsEventService;
+    private AnalyticsEventSaver analyticsEventSaver;
 
     @Mock
     private FollowerEventDto followerEvent;

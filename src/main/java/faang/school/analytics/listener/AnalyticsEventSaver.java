@@ -1,6 +1,7 @@
 package faang.school.analytics.listener;
 
 import faang.school.analytics.dto.event.AnalyticDto;
+import faang.school.analytics.dto.subscription.FollowerEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -20,6 +21,17 @@ public class AnalyticsEventSaver {
                 .actorId(event.getAuthorId())
                 .receiverId(event.getReceiverId())
                 .receivedAt(event.getCreatedAt())
+                .build();
+        analyticsEventService.save(analyticsEvent);
+    }
+
+    @Transactional
+    public void saveAnalyticsEvent(FollowerEventDto event, EventType eventType) {
+        AnalyticsEvent analyticsEvent = AnalyticsEvent.builder()
+                .eventType(eventType)
+                .actorId(event.getFollowerId())
+                .receiverId(event.getFolloweeId())
+                .receivedAt(event.getTimestamp())
                 .build();
         analyticsEventService.save(analyticsEvent);
     }
