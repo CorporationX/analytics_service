@@ -1,13 +1,14 @@
-package faang.school.analytics.listeners;
+package faang.school.analytics.listener;
 
 import com.redis.testcontainers.RedisContainer;
-import faang.school.analytics.config.redisConfig.RedisConfig;
+import faang.school.analytics.config.redis.RedisConfig;
 import faang.school.analytics.dto.FundRaisedEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -25,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Testcontainers
+@AutoConfigureMockMvc
 @Import(RedisConfig.class)
 public class FundRaisedEventListenerIT {
     @Autowired

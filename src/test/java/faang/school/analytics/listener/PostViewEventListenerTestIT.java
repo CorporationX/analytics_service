@@ -1,7 +1,7 @@
-package faang.school.analytics.listeners;
+package faang.school.analytics.listener;
 
 import com.redis.testcontainers.RedisContainer;
-import faang.school.analytics.config.redisConfig.RedisConfig;
+import faang.school.analytics.config.redis.RedisConfig;
 import faang.school.analytics.dto.PostViewEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
