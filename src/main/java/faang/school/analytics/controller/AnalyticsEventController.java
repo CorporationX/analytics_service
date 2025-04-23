@@ -3,6 +3,7 @@ package faang.school.analytics.controller;
 import faang.school.analytics.dto.AggregatedAnalyticDto;
 import faang.school.analytics.dto.AnalyticsGetDto;
 import faang.school.analytics.service.AnalyticsEventService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ public class AnalyticsEventController {
     private final AnalyticsEventService analyticsEventService;
 
     @PostMapping
-    public ResponseEntity<List<AggregatedAnalyticDto>> getAnalytics(@RequestBody AnalyticsGetDto analyticsGetDto) {
+    public ResponseEntity<List<AggregatedAnalyticDto>> getAnalytics(@Valid @RequestBody AnalyticsGetDto analyticsGetDto) {
         List<AggregatedAnalyticDto> aggregatedAnalyticDtos = analyticsEventService.getAnalytics(analyticsGetDto);
         return ResponseEntity.ok(aggregatedAnalyticDtos);
     }

@@ -5,9 +5,10 @@ import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.AnalyticsGetDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
+import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AnalyticsEventServiceImpl implements AnalyticsEventService {
 
     private final AnalyticsEventRepository analyticsEventRepository;
@@ -29,6 +31,7 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     public AnalyticsEventDto saveAnalytics(AnalyticsEventDto analyticsEventDto) {
         AnalyticsEvent analyticsEvent =
                 analyticsEventRepository.save(analyticsEventMapper.toEntity(analyticsEventDto));
+        log.info("Analytic event has been saved {}", analyticsEventDto.getEventType());
         return analyticsEventMapper.toDto(analyticsEvent);
     }
 
@@ -42,6 +45,7 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
                 .filter(event -> event.getReceivedAt().isAfter(analyticsGetDto.getFrom()) &&
                         event.getReceivedAt().isBefore(analyticsGetDto.getTo()))
                 .toList();
+        log.debug("List of {} lines of analytics has been formed", analyticsEvents.size());
         return analyticsEvents.stream()
                 .collect(Collectors.groupingBy(
                         event -> truncateToInterval(event.getReceivedAt(), analyticsGetDto.getInterval()),

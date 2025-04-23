@@ -1,4 +1,4 @@
-package faang.school.analytics.service;
+package faang.school.analytics.model;
 
 import lombok.Getter;
 

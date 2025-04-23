@@ -8,7 +8,7 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.service.AnalyticsEventServiceImpl;
-import faang.school.analytics.service.Interval;
+import faang.school.analytics.model.Interval;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
