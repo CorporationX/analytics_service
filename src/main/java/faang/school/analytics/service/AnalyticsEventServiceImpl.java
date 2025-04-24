@@ -1,10 +1,10 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.enums.EventType;
 import faang.school.analytics.exceptions.InvalidRequestException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.parser.AnalyticsRequestParser;
 import faang.school.analytics.repository.AnalyticsEventRepository;

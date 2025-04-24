@@ -1,8 +1,8 @@
 package faang.school.analytics.parser;
 
+import faang.school.analytics.enums.EventType;
 import faang.school.analytics.exceptions.InvalidEventTypeException;
 import faang.school.analytics.exceptions.InvalidRequestException;
-import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

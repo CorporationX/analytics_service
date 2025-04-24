@@ -1,10 +1,10 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.enums.EventType;
 import faang.school.analytics.exceptions.InvalidRequestException;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.parser.AnalyticsRequestParser;
 import faang.school.analytics.repository.AnalyticsEventRepository;
@@ -181,14 +181,14 @@ public class AnalyticsEventServiceImplTests {
     }
 
     @Test
-   public void saveEvent_throwsWhenEventIsNull() {
+    public void saveEvent_throwsWhenEventIsNull() {
         assertThatThrownBy(() -> analyticsEventService.saveEvent(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(EVENT_NULL_EXCEPTION);
     }
 
     @Test
-   public void saveEvent_successfullySavesEvent() {
+    public void saveEvent_successfullySavesEvent() {
         AnalyticsEvent event = new AnalyticsEvent();
         analyticsEventService.saveEvent(event);
         verify(eventRepository).save(event);
@@ -210,7 +210,7 @@ public class AnalyticsEventServiceImplTests {
     }
 
     @Test
-   public void getAnalytics_filtersByLastHourInterval() {
+    public void getAnalytics_filtersByLastHourInterval() {
         when(eventMapper.toAnalyticsEventDtoList(any())).thenCallRealMethod();
         AnalyticsEvent eventNow = AnalyticsEvent.builder().receivedAt(LocalDateTime.now()).build();
         when(eventRepository.findByReceiverIdAndEventType(anyLong(), any()))
@@ -221,7 +221,7 @@ public class AnalyticsEventServiceImplTests {
     }
 
     @Test
-   public void getAnalytics_filtersByLastMonthInterval() {
+    public void getAnalytics_filtersByLastMonthInterval() {
         when(eventMapper.toAnalyticsEventDtoList(any())).thenCallRealMethod();
 
         AnalyticsEvent eventThreeMonthAgo = AnalyticsEvent.builder()
