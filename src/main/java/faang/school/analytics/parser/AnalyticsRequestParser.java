@@ -25,7 +25,8 @@ public class AnalyticsRequestParser {
     public EventType parseEventType(String raw) {
         try {
             if (raw.matches("\\d+")) {
-                return EventType.of(Integer.parseInt(raw));
+                int code = Integer.parseInt(raw);
+                return EventType.of(code);
             }
             return EventType.valueOf(raw.toUpperCase());
         } catch (Exception e) {
@@ -44,7 +45,8 @@ public class AnalyticsRequestParser {
         for (DateTimeFormatter formatter : FORMATTERS) {
             try {
                 return LocalDateTime.parse(dateStr, formatter);
-            } catch (DateTimeParseException ignored) {}
+            } catch (DateTimeParseException ignored) {
+            }
         }
         log.error("Invalid date format: {}", dateStr);
         throw new InvalidRequestException(INVALID_DATE_FORMAT + dateStr);

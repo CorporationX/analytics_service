@@ -11,7 +11,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface AnalyticsEventMapper {
-
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "eventType", source = "eventType")
     AnalyticsEvent toAnalyticsEvent(AnalyticsEventDto analyticsEventDto);
 

@@ -83,6 +83,9 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
             throw new IllegalArgumentException(FROM_OR_TO_NULL_EXCEPTION);
         }
 
+        LocalDateTime start = interval != null ? interval.getStartDate() : from;
+        LocalDateTime end = interval != null ? interval.getEndDate() : to;
+
         List<AnalyticsEvent> events =
                 eventRepository.findByReceiverIdAndEventType(receiverId, eventType).toList();
 
