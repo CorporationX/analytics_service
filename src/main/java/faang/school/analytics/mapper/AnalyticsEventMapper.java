@@ -6,17 +6,15 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface AnalyticsEventMapper {
 
-    @Mapping(target = "eventType", source = "eventTypeDto")
+    @Mapping(target = "eventType", source = "eventType")
     AnalyticsEvent toAnalyticsEvent(AnalyticsEventDto analyticsEventDto);
 
-    @Mapping(target = "eventTypeDto", source = "eventType")
     AnalyticsEventDto toAnalyticsEventDto(AnalyticsEvent analyticsEvent);
 
     List<AnalyticsEvent> toAnalyticsEventList(List<AnalyticsEventDto> analyticsEventDtoList);

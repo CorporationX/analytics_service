@@ -5,6 +5,7 @@ import faang.school.analytics.exceptions.InvalidIntervalException;
 import java.time.LocalDateTime;
 
 public enum Interval {
+    LAST_HOUR,
     TODAY,
     YESTERDAY,
     LAST_WEEK,
@@ -21,10 +22,11 @@ public enum Interval {
 
     public LocalDateTime getStartDate() {
         return switch (this) {
+            case LAST_HOUR -> LocalDateTime.now().minusHours(1);
             case TODAY -> LocalDateTime.now().toLocalDate().atStartOfDay();
             case YESTERDAY -> LocalDateTime.now().minusDays(1).toLocalDate().atStartOfDay();
-            case LAST_WEEK -> LocalDateTime.now().minusDays(7).toLocalDate().atStartOfDay();
-            case LAST_MONTH -> LocalDateTime.now().minusDays(30).toLocalDate().atStartOfDay();
+            case LAST_WEEK -> LocalDateTime.now().minusWeeks(1).toLocalDate().atStartOfDay();
+            case LAST_MONTH -> LocalDateTime.now().minusMonths(1).toLocalDate().atStartOfDay();
         };
     }
 

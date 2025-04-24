@@ -34,8 +34,8 @@ public class AnalyticsEventController {
         log.info("Received analytics request for receiverId={}, eventType={}, interval={}, startDate={}, endDate={}",
                 receiverId, eventType, interval, startDate, endDate);
 
-        List<AnalyticsEvent> result = analyticsEventService.getAnalytics(receiverId, eventType, interval, startDate,
-                endDate);
+        List<AnalyticsEvent> result = analyticsEventService.getParseAnalytics(receiverId, eventType, interval,
+                startDate, endDate);
 
         log.info("Analytics data returned: {} events", result.size());
 
