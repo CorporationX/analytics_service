@@ -1,5 +1,7 @@
 databaseChangeLog:
   - include:
       file: db/changelog/changeset/analytics_V001__initial.sql
+
+
   - include:
-      file: db/changelog/changeset/analytics_V002__addPostIdAndCommentId.sql
+      file: db/changelog/changeset/analytics_V003__addPostIdAndCommentId.sql
