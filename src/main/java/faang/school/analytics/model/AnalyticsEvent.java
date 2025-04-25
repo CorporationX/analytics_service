@@ -12,8 +12,9 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -21,11 +22,12 @@ import java.time.LocalDateTime;
  * Сущность, представляющая событие аналитики в системе.
  * Хранит информацию о событиях, их участниках и времени возникновения.
  */
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
+@Getter
+@Setter
 @Table(name = "analytics_event")
 public class AnalyticsEvent {
 
@@ -34,19 +36,19 @@ public class AnalyticsEvent {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     /**
      * Идентификатор получателя события.
      */
     @Column(name = "receiver_id", nullable = false)
-    private long receiverId;
+    private Long receiverId;
 
     /**
      * Идентификатор инициатора события.
      */
     @Column(name = "actor_id", nullable = false)
-    private long actorId;
+    private Long actorId;
 
     /**
      * Тип события.
@@ -61,4 +63,8 @@ public class AnalyticsEvent {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "received_at", nullable = false)
     private LocalDateTime receivedAt;
+
+    public boolean isReceivedAtBetween(LocalDateTime fromDate, LocalDateTime toDate) {
+        return receivedAt.isAfter(fromDate) && receivedAt.isBefore(toDate);
+    }
 }

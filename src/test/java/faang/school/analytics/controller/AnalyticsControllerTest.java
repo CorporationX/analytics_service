@@ -58,4 +58,14 @@ public class AnalyticsControllerTest {
                         .param("eventTypeId", eventTypeId))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @DisplayName("Возвращает ошибку при отсутствии обязательного параметра")
+    public void givenRequestWithoutReceiverId_WhenGetAnalytics_ThenReturnBadRequest() throws Exception {
+        mockMvc.perform(get("/analytics")
+                        .header("x-user-id", x_user_id)
+                        .param("eventTypeId", eventTypeId)
+                        .param("intervalId", intervalId))
+                .andExpect(status().isBadRequest());
+    }
 }

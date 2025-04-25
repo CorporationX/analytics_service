@@ -38,8 +38,7 @@ public class AnalyticsService {
                                                 LocalDateTime fromDate, LocalDateTime toDate) {
         Stream<AnalyticsEvent> events = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
         return events.filter(event ->
-                        event.getReceivedAt().isAfter(fromDate) &&
-                                event.getReceivedAt().isBefore(toDate))
+                        event.isReceivedAtBetween(fromDate, toDate))
                 .map(analyticsEventMapper::toDto)
                 .toList();
     }

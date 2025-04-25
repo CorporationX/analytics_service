@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 public class AnalyticsEventDto {
 
     @Schema(description = "Unique event identifier", example = "12345")
-    private long id;
+    private Long id;
 
     @Schema(description = "Event recipient ID", example = "1001")
-    private long receiverId;
+    private Long receiverId;
 
     @Schema(description = "Event initiator ID", example = "2002")
-    private long actorId;
+    private Long actorId;
 
     @Schema(description = "Event type", example = "POST_LIKE")
     private String eventType;
