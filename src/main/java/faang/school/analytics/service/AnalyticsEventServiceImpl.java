@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     private final AnalyticsEventMapper analyticsEventMapper;
     private final AnalyticsEventRepository analyticsEventRepository;
-    
+
     @Override
     public void saveCommentEvent(CommentEvent commentEvent) {
         AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(commentEvent);
