@@ -1,5 +1,6 @@
 package faang.school.analytics.model;
 
+import faang.school.analytics.enums.EventType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -27,13 +28,13 @@ public class AnalyticsEvent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name="receiver_id", nullable = false)
-    private long receiverId;
+    private Long receiverId;
 
     @Column(name = "actor_id", nullable = false)
-    private long actorId;
+    private Long actorId;
 
     @Column(name = "comment_id", nullable = false)
     private long commentId;

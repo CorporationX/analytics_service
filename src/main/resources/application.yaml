@@ -28,6 +28,21 @@ spring:
       channel:
         profile-view: profile_view_channel
 
+  kafka:
+    consumer:
+      enable-auto-commit: false
+      isolation-level: "read-committed"
+      auto.offset.reset: "latest"
+
+      topics:
+        premium-topic: "premium-analytics-topic"
+
+      groups:
+        premium-group: "premium-analytics-group"
+
+    listener:
+      ack-mode: "manual"
+
 server:
   port: 8086
 
