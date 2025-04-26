@@ -34,7 +34,7 @@ public class AnalyticsService {
      * @return список {@link AnalyticsEventDto}
      */
     @Transactional(readOnly = true)
-    public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType,
+    public List<AnalyticsEventDto> getAnalytics(Long receiverId, EventType eventType,
                                                 LocalDateTime fromDate, LocalDateTime toDate) {
         Stream<AnalyticsEvent> events = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
         return events.filter(event ->
