@@ -1,7 +1,7 @@
 app:
   redis:
     topic:
-      comment_analytics: comment_analytics_topic
+      comment-analytics: comment_analytics_topic
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
