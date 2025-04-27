@@ -12,34 +12,59 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Data
+/**
+ * Сущность, представляющая событие аналитики в системе.
+ * Хранит информацию о событиях, их участниках и времени возникновения.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="analytics_event")
+@Getter
+@Setter
+@Table(name = "analytics_event")
 public class AnalyticsEvent {
 
+    /**
+     * Уникальный идентификатор события.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(name="receiver_id", nullable = false)
-    private long receiverId;
+    /**
+     * Идентификатор получателя события.
+     */
+    @Column(name = "receiver_id", nullable = false)
+    private Long receiverId;
 
+    /**
+     * Идентификатор инициатора события.
+     */
     @Column(name = "actor_id", nullable = false)
-    private long actorId;
+    private Long actorId;
 
+    /**
+     * Тип события.
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "event_type", nullable = false)
     private EventType eventType;
 
+    /**
+     * Дата и время получения события.
+     */
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "received_at", nullable = false)
     private LocalDateTime receivedAt;
+
+    public boolean isReceivedAtBetween(LocalDateTime fromDate, LocalDateTime toDate) {
+        return receivedAt.isAfter(fromDate) && receivedAt.isBefore(toDate);
+    }
 }
