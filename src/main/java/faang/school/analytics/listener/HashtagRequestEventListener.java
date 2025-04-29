@@ -14,8 +14,8 @@ public class HashtagRequestEventListener {
     private final HashtagEventMapper hashtagEventMapper;
 
     @KafkaListener(
-            topics = "${spring.kafka.topics.hashtag-analytics.name}",
-            groupId = "${spring.kafka.consumer.group-id}"
+            topics = "${spring.data.kafka.topics.hashtag-analytics.name}",
+            groupId = "${spring.data.kafka.consumer.group-id}"
     )
     public void receive(String message) {
         eventListener.processEvent(message, HashtagRequestEvent.class, hashtagEventMapper::toDto);

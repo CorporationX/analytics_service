@@ -21,7 +21,9 @@ import org.testcontainers.utility.DockerImageName;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 @SpringBootTest
 @Testcontainers
@@ -40,9 +42,11 @@ public class PostViewEventListenerTestIT {
                 .date(LocalDateTime.now())
                 .build();
         redisTemplate.convertAndSend("PostViewEvent_topic", postViewEvent);
-        List<AnalyticsEvent> list = IterableUtils.toList(analyticsEventRepository.findAll());
-        assertEquals(1, list.size());
-        assertEquals(postViewEvent.userId(), list.get(0).getReceiverId());
+        await().atMost(3, SECONDS).untilAsserted(() -> {
+            List<AnalyticsEvent> events = IterableUtils.toList(analyticsEventRepository.findAll());
+            assertEquals(1, events.size());
+            assertEquals(postViewEvent.userId(), events.get(0).getReceiverId());
+        });
     }
 
     @Container

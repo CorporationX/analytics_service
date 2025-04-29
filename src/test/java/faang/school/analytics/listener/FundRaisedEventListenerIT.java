@@ -22,7 +22,9 @@ import org.testcontainers.utility.DockerImageName;
 import java.time.LocalDate;
 import java.util.List;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 @SpringBootTest
 @Testcontainers
@@ -35,16 +37,18 @@ public class FundRaisedEventListenerIT {
     private AnalyticsEventRepository analyticsEventRepository;
 
     @Test
-            public void testPositiveFundRaisedEventListener() {
+    public void testPositiveFundRaisedEventListener() {
         FundRaisedEvent event = FundRaisedEvent.builder()
                 .userId(1L)
                 .raiseDate(LocalDate.now())
                 .projectId(2L)
                 .build();
         redisTemplate.convertAndSend("fundRaised_topic",event);
-        List<AnalyticsEvent> analyticsEvents = IterableUtils.toList(analyticsEventRepository.findAll());
-        assertEquals(analyticsEvents.size(), 1);
-        assertEquals(event.getUserId(),analyticsEvents.get(0).getReceiverId());
+        await().atMost(3, SECONDS).untilAsserted(() -> {
+            List<AnalyticsEvent> events = IterableUtils.toList(analyticsEventRepository.findAll());
+            assertEquals(1, events.size());
+            assertEquals(event.getUserId(), events.get(0).getReceiverId());
+        });
     }
 
     @Container
