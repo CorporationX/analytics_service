@@ -1,11 +1,13 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.event.LikeEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.dto.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +45,15 @@ public class AnalyticsEventService {
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .map(analyticsEventMapper::toDto)
                 .collect(Collectors.toList());
+    }
+    @Transactional
+    public void handleLikeEvent(LikeEvent event){
+        AnalyticsEvent analyticsEvent = AnalyticsEvent.builder()
+                .receiverId(event.getUserId())
+                .actorId(event.getAuthorId())
+                .eventType(EventType.POST_LIKE)
+                .receivedAt(event.getLikedAt()).
+                build();
+        analyticsEventRepository.save(analyticsEvent);
     }
 }

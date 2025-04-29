@@ -1,6 +1,7 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.event.LikeEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -92,5 +93,28 @@ class AnalyticsEventServiceTest {
                 analyticsEventService.getAnalytics(receiverId, eventType, null, from, to);
 
         assertEquals(analyticsBetweenFromAndTo, analyticsEventDtos);
+    }
+
+    @Test
+    void handleLikeEventSaveSuccess() {
+        LikeEvent event = LikeEvent.builder()
+                .postId(1L)
+                .authorId(1L)
+                .userId(1L)
+                .likedAt(LocalDateTime.parse("2024-04-01T12:00:00"))
+                .type(faang.school.analytics.until.EventType.LIKED_POST)
+                .build();
+
+        // ВАЖНО: вызываем метод, который должен вызывать .save()
+        analyticsEventService.handleLikeEvent(event);
+
+        AnalyticsEvent expected = AnalyticsEvent.builder()
+                .receiverId(1L)
+                .actorId(1L)
+                .eventType(EventType.POST_LIKE)
+                .receivedAt(LocalDateTime.parse("2024-04-01T12:00:00"))
+                .build();
+
+        verify(analyticsEventRepository, times(1)).save(expected);
     }
 }

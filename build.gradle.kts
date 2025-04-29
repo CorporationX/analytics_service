@@ -25,6 +25,11 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     /**
+     * Json
+     */
+    implementation ("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+
+    /**
      * Database
      */
     implementation("org.liquibase:liquibase-core")
