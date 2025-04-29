@@ -5,6 +5,8 @@ import faang.school.analytics.listener.FollowerEventListener;
 import faang.school.analytics.listener.GoalCompletedEventListener;
 import faang.school.analytics.listener.MentorShipRequestListener;
 import faang.school.analytics.listener.PostViewEventListener;
+import faang.school.analytics.listener.ProfileViewEventListener;
+import faang.school.analytics.listener.FundRaisedEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -44,6 +46,12 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.channel.follower}")
     private String channelFollower;
+
+    @Value("${spring.data.redis.channel.FundRaised}")
+    private String channelFundRaised;
+
+    @Value("${spring.data.redis.channel.profile-view}")
+    private String channelProfileView;
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
@@ -93,7 +101,7 @@ public class RedisConfig {
     }
 
     @Bean
-    public ChannelTopic PostViewTopic() {
+    public ChannelTopic postViewTopic() {
         return new ChannelTopic(channelPostViewEvent);
     }
 
@@ -103,13 +111,23 @@ public class RedisConfig {
     }
 
     @Bean
-    public ChannelTopic MentorShipRequestTopic() {
+    public ChannelTopic mentorShipRequestTopic() {
         return new ChannelTopic(channelMentorshipRequest);
     }
 
     @Bean
     public MessageListenerAdapter mentorShipListener(MentorShipRequestListener mentorShipRequestListener) {
         return new MessageListenerAdapter(mentorShipRequestListener);
+    }
+
+    @Bean
+    public MessageListenerAdapter profileViewListener(ProfileViewEventListener profileViewEventListener) {
+        return new MessageListenerAdapter(profileViewEventListener);
+    }
+
+    @Bean
+     public ChannelTopic profileViewTopic() {
+        return new ChannelTopic(channelProfileView);
     }
 
     @Bean
@@ -120,5 +138,16 @@ public class RedisConfig {
     @Bean
     public MessageListenerAdapter followerAdapter(FollowerEventListener followerAdapter) {
         return new MessageListenerAdapter(followerAdapter);
+    }
+
+    @Bean
+    ChannelTopic fundRaisedTopic() {
+        return new ChannelTopic(channelFundRaised);
+    }
+
+    @Bean
+    MessageListenerAdapter fundRaisedListenerAdapter(
+            FundRaisedEventListener fundRaisedEventListener) {
+        return new MessageListenerAdapter(fundRaisedEventListener);
     }
 }

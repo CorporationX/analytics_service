@@ -62,6 +62,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.kafka:spring-kafka-test")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+
 }
 
 tasks.withType<Test> {
