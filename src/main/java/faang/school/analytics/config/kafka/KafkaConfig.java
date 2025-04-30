@@ -2,6 +2,7 @@ package faang.school.analytics.config.kafka;
 
 import faang.school.analytics.config.properties.KafkaProperties;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -20,6 +21,7 @@ import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
+@Slf4j
 public class KafkaConfig {
 
     private final KafkaProperties kafkaProperties;
