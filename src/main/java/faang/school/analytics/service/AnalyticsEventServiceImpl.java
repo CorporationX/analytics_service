@@ -1,6 +1,7 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.CommentEvent;
 import faang.school.analytics.enums.EventType;
 import faang.school.analytics.exceptions.InvalidRequestException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -8,6 +9,7 @@ import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.parser.AnalyticsRequestParser;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,20 +22,29 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static faang.school.analytics.constants.Constants.EVENT_NULL_EXCEPTION;
-import static faang.school.analytics.constants.Constants.EVENT_TYPE_NULL_EXCEPTION;
-import static faang.school.analytics.constants.Constants.FROM_OR_TO_NULL_EXCEPTION;
-import static faang.school.analytics.constants.Constants.MISSING_DATE_PARAMS;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AnalyticsEventServiceImpl implements AnalyticsEventService {
+    public static final String FROM_OR_TO_NULL_EXCEPTION = "Both 'from' and 'to' must be provided" +
+            " when interval is null";
+    public static final String EVENT_TYPE_NULL_EXCEPTION = "Event type can't be null";
+    public static final String EVENT_NULL_EXCEPTION = "Event can't be null";
 
     private final AnalyticsEventMapper analyticsEventMapper;
     private final AnalyticsEventRepository eventRepository;
     private final AnalyticsRequestParser parser;
 
+    @Override
+    public void saveCommentEvent(CommentEvent commentEvent) {
+        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(commentEvent);
+        analyticsEvent.setEventType(EventType.POST_COMMENT);
+        analyticsEventRepository.save(analyticsEvent);
+        log.info("Saved CommentEvent to AnalyticsEvent: id={}, userId={}, commentId={}",
+                analyticsEvent.getId(), analyticsEvent.getActorId(), analyticsEvent.getCommentId());
+    }
+
+    @Override
     @Transactional
     public AnalyticsEventDto saveEvent(AnalyticsEvent event) {
         if (event == null) {

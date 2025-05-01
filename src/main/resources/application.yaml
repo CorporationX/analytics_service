@@ -1,3 +1,7 @@
+app:
+  redis:
+    topic:
+      comment-analytics: comment_analytics_topic
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver

@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changeset/analytics_V001__initial.sql
   - include:
       file: db/changelog/changeset/analytics_v002__premium.sql
+  - include:
+      file: db/changelog/changeset/analytics_V003__addPostIdAndCommentId.sql
