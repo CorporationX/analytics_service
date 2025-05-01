@@ -1,5 +1,8 @@
 package faang.school.analytics.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -7,6 +10,8 @@ import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 
+@AllArgsConstructor
+@Getter
 public enum Interval {
     DAY {
         @Override
@@ -60,6 +65,14 @@ public enum Interval {
             return LocalDate.of(baseTime.getYear() + 1, 1, 1).atStartOfDay();
         }
     };
+    public static LocalDateTime getFromDate(Interval interval) {
+        return switch (interval) {
+            case YEAR -> LocalDateTime.now().minusYears(1);
+            case MONTH -> LocalDateTime.now().minusMonths(1);
+            case WEEK -> LocalDateTime.now().minusWeeks(1);
+            case DAY -> LocalDateTime.now().minusDays(1);
+        };
+    }
 
     public abstract LocalDateTime getStart(LocalDateTime baseTime);
 
