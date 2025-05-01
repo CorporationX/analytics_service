@@ -28,6 +28,7 @@ spring:
         FundRaised: fundRaised_topic
         mentorship-request-channel: mentorship-request-channel
         follower: follower_channel
+        project-view: project_view_channel
     kafka:
       bootstrap-servers: localhost:9092
       consumer:
