@@ -1,14 +1,15 @@
 package faang.school.analytics;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
+import faang.school.analytics.enums.EventType;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
-import faang.school.analytics.service.AnalyticsEventService;
+import faang.school.analytics.service.AnalyticsEventServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -18,9 +19,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static faang.school.analytics.service.AnalyticsEventService.EVENT_NULL_EXCEPTION;
-import static faang.school.analytics.service.AnalyticsEventService.EVENT_TYPE_NULL_EXCEPTION;
-import static faang.school.analytics.service.AnalyticsEventService.FROM_OR_TO_NULL_EXCEPTION;
+import static faang.school.analytics.service.AnalyticsEventServiceImpl.EVENT_NULL_EXCEPTION;
+import static faang.school.analytics.service.AnalyticsEventServiceImpl.EVENT_TYPE_NULL_EXCEPTION;
+import static faang.school.analytics.service.AnalyticsEventServiceImpl.FROM_OR_TO_NULL_EXCEPTION;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,9 +44,9 @@ public class AnalyticsEventServiceTest {
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
     @Spy
-    private AnalyticsEventMapperImpl analyticsEventMapper = new AnalyticsEventMapperImpl();
+    private AnalyticsEventMapper analyticsEventMapper = Mappers.getMapper(AnalyticsEventMapper.class);
     @InjectMocks
-    private AnalyticsEventService analyticsEventService;
+    private AnalyticsEventServiceImpl analyticsEventService;
 
     @Test
     void testSaveEventWithEventNull() {
