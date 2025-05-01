@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -52,10 +53,12 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
         LocalDateTime start;
         LocalDateTime end;
 
+        ZoneId zoneId = ZoneId.systemDefault();
+
         if (StringUtils.hasText(interval)) {
             Interval parsedInterval = parser.parseInterval(interval);
-            start = parsedInterval.getStartDate();
-            end = parsedInterval.getEndDate();
+            start = parsedInterval.getStartDate(zoneId);
+            end = parsedInterval.getEndDate(zoneId);
         } else if (StringUtils.hasText(startDate) && StringUtils.hasText(endDate)) {
             start = parser.parseDate(startDate);
             end = parser.parseDate(endDate);
@@ -83,8 +86,10 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
             throw new IllegalArgumentException(FROM_OR_TO_NULL_EXCEPTION);
         }
 
-        LocalDateTime start = interval != null ? interval.getStartDate() : from;
-        LocalDateTime end = interval != null ? interval.getEndDate() : to;
+        ZoneId zoneId = ZoneId.systemDefault();
+
+        LocalDateTime start = interval != null ? interval.getStartDate(zoneId) : from;
+        LocalDateTime end = interval != null ? interval.getEndDate(zoneId) : to;
 
         List<AnalyticsEvent> events =
                 eventRepository.findByReceiverIdAndEventType(receiverId, eventType).toList();
@@ -112,8 +117,10 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     }
 
     private boolean isEventInInterval(LocalDateTime receivedAt, Interval interval) {
-        LocalDateTime start = interval.getStartDate();
-        LocalDateTime end = interval.getEndDate();
+        ZoneId zoneId = ZoneId.systemDefault();
+
+        LocalDateTime start = interval.getStartDate(zoneId);
+        LocalDateTime end = interval.getEndDate(zoneId);
         return !receivedAt.isBefore(start) && !receivedAt.isAfter(end);
     }
 }

@@ -17,6 +17,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -163,8 +164,10 @@ public class AnalyticsEventServiceImplTests {
         when(parser.parseEventType(eventTypeRaw)).thenReturn(eventType);
         when(parser.parseInterval(intervalRaw)).thenReturn(interval);
 
-        LocalDateTime intervalStart = interval.getStartDate();
-        LocalDateTime intervalEnd = interval.getEndDate();
+        ZoneId zoneId = ZoneId.systemDefault();
+
+        LocalDateTime intervalStart = interval.getStartDate(zoneId);
+        LocalDateTime intervalEnd = interval.getEndDate(zoneId);
 
         AnalyticsEvent event = AnalyticsEvent.builder()
                 .receiverId(receiverId)

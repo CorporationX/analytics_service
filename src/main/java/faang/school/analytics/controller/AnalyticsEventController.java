@@ -1,19 +1,19 @@
 package faang.school.analytics.controller;
 
+import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.AnalyticsRequestDto;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-
-import static faang.school.analytics.constants.Constants.DATE_FORMAT;
 
 @RestController
 @RequestMapping("/analytics")
@@ -21,26 +21,30 @@ import static faang.school.analytics.constants.Constants.DATE_FORMAT;
 @Slf4j
 public class AnalyticsEventController {
     private final AnalyticsEventService analyticsEventService;
-    private final List<DateTimeFormatter> formatters = List.of(DateTimeFormatter.ofPattern(DATE_FORMAT),
-            DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+    private final AnalyticsEventMapper eventMapper;
 
-    @GetMapping
-    public ResponseEntity<List<AnalyticsEvent>> getAnalytics(@RequestParam long receiverId,
-                                                             @RequestParam String eventType,
-                                                             @RequestParam(required = false) String interval,
-                                                             @RequestParam(required = false) String startDate,
-                                                             @RequestParam(required = false) String endDate) {
+    @PostMapping
+    public ResponseEntity<List<AnalyticsEventDto>> getAnalytics(@RequestBody AnalyticsRequestDto requestDto) {
 
         log.info("Received analytics request for receiverId={}, eventType={}, interval={}, startDate={}, endDate={}",
-                receiverId, eventType, interval, startDate, endDate);
+                requestDto.getReceiverId(),
+                requestDto.getEventType(),
+                requestDto.getInterval(),
+                requestDto.getStartDate(),
+                requestDto.getEndDate());
 
-        List<AnalyticsEvent> result = analyticsEventService.getParseAnalytics(receiverId, eventType, interval,
-                startDate, endDate);
+        List<AnalyticsEvent> events = analyticsEventService.getParseAnalytics(
+                requestDto.getReceiverId(),
+                requestDto.getEventType(),
+                requestDto.getInterval(),
+                requestDto.getStartDate(),
+                requestDto.getEndDate()
+        );
 
-        log.info("Analytics data returned: {} events", result.size());
+        log.info("Analytics data returned: {} events", events.size());
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(eventMapper.toAnalyticsEventDtoList(events));
     }
-
 }
+
 

@@ -29,7 +29,7 @@ public class AnalyticsRequestParser {
                 return EventType.of(code);
             }
             return EventType.valueOf(raw.toUpperCase());
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             log.error("Failed to parse event type: {}", raw, e);
             throw new InvalidEventTypeException(INVALID_EVENT_TYPE + raw);
         }
@@ -45,7 +45,8 @@ public class AnalyticsRequestParser {
         for (DateTimeFormatter formatter : FORMATTERS) {
             try {
                 return LocalDateTime.parse(dateStr, formatter);
-            } catch (DateTimeParseException ignored) {
+            } catch (DateTimeParseException e) {
+                log.debug("Failed to parse with formatter {}: {}", formatter, e.getMessage());
             }
         }
         log.error("Invalid date format: {}", dateStr);
