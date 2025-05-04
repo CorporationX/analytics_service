@@ -21,6 +21,8 @@ spring:
     bootstrap-servers: localhost:9092
     consumer:
       group-id: analytics-group
+    listener:
+      ack-mode: batch
     topics:
       comment-topic:
         name: analytics_comment_topic
@@ -28,6 +30,8 @@ spring:
         name: analytics-like-events
       user-profile-view-topic:
         name: analytics_user_view_profile_topic
+      post-viewed:
+        name: post-viewed
 
   data:
     redis:

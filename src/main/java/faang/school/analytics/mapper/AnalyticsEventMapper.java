@@ -5,6 +5,7 @@ import faang.school.analytics.events.AnalyticsCommentEvent;
 import faang.school.analytics.events.AnalyticsLikeEvent;
 import faang.school.analytics.events.CommentEvent;
 import faang.school.analytics.events.ProfileViewEvent;
+import faang.school.analytics.events.post.view.PostViewEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -44,4 +45,10 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "eventType", constant = "PROFILE_VIEW")
     @Mapping(source = "timestamp", target = "receivedAt")
     AnalyticsEvent toAnalyticsEvent(ProfileViewEvent profileViewEvent);
+
+    @Mapping(source = "postId", target = "receiverId")
+    @Mapping(source = "viewerId", target = "actorId")
+    @Mapping(target = "eventType", constant = "POST_VIEW")
+    @Mapping(source = "timestamp", target = "receivedAt")
+    AnalyticsEvent toAnalyticsEvent(PostViewEvent postViewEvent);
 }
