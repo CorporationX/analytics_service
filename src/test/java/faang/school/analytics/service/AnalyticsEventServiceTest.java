@@ -104,8 +104,6 @@ class AnalyticsEventServiceTest {
                 .likedAt(LocalDateTime.parse("2024-04-01T12:00:00"))
                 .type(faang.school.analytics.until.EventType.LIKED_POST)
                 .build();
-
-        // ВАЖНО: вызываем метод, который должен вызывать .save()
         analyticsEventService.handleLikeEvent(event);
 
         AnalyticsEvent expected = AnalyticsEvent.builder()

@@ -61,7 +61,7 @@ public class LikeEventListenerTest {
         when(message.getBody()).thenReturn(json.getBytes((StandardCharsets.UTF_8)));
         when(objectMapper.readValue(any(byte[].class),eq(LikeEvent.class))).thenReturn(event);
 
-        likeEventListener.onMessage(message, "liked_post_topic".getBytes(StandardCharsets.UTF_8));
+        likeEventListener.onMessage(message);
 
         verify(analyticsEventService, times(1)).handleLikeEvent(event);
     }
@@ -72,7 +72,7 @@ public class LikeEventListenerTest {
         when(objectMapper.readValue(any(byte[].class), eq(LikeEvent.class))).thenThrow(new IOException());
 
         RuntimeException exception = assertThrows(RuntimeException.class,
-                () ->likeEventListener.onMessage(message, "liked_post_topic".getBytes(StandardCharsets.UTF_8)));
+                () ->likeEventListener.onMessage(message));
 
         assertTrue(exception.getMessage().contains("Ошибка обработки сообщения Redis"));
     }

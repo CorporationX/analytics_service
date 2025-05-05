@@ -3,6 +3,7 @@ package faang.school.analytics.config;
 import faang.school.analytics.dto.event.LikeEvent;
 import faang.school.analytics.listener.LikeEventListener;
 import faang.school.analytics.properties.RedisProperties;
+import faang.school.analytics.until.EventType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -15,8 +16,6 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -42,30 +41,31 @@ public class RedisConfig {
         template.setConnectionFactory(jedisConnectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new Jackson2JsonRedisSerializer<>(LikeEvent.class));
-        log.info("Initialized RedisTemplate with EventDto serializer");
+        log.info("Initialized RedisTemplate with LikeEvent serializer");
         return template;
     }
 
     @Bean
-    public List<ChannelTopic> eventTopics() {
-        List<ChannelTopic> topics = redisProperties.getTopics().values().stream()
-                .map(ChannelTopic::new)
-                .toList();
-
-        log.info("Subscribe to Redis topics: {}", topics.stream().map(ChannelTopic::getTopic).toList());
-        return topics;
+    public ChannelTopic likeTopic() {
+        String topicName = redisProperties.getTopic(EventType.LIKED_POST);
+        ChannelTopic topic = new ChannelTopic(topicName);
+        log.info("Subscribe to Redis topic: {}", topic.getTopic());
+        return topic;
     }
 
     @Bean
     MessageListenerAdapter likeEventListenerAdapter(LikeEventListener likeEventListener){
-        return new MessageListenerAdapter(likeEventListener, "onMessage");
+        MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(likeEventListener);
+        messageListenerAdapter.setSerializer(new Jackson2JsonRedisSerializer<>(LikeEvent.class));
+        messageListenerAdapter.setDefaultListenerMethod("onMessage");
+        return messageListenerAdapter;
     }
 
     @Bean
     public RedisMessageListenerContainer redisContainer(MessageListenerAdapter likeEventListenerAdapter){
-        RedisMessageListenerContainer redisContainer = new RedisMessageListenerContainer();
-        redisContainer.setConnectionFactory(jedisConnectionFactory());
-        redisContainer.addMessageListener(likeEventListenerAdapter, eventTopics());
-        return redisContainer;
+        RedisMessageListenerContainer messageListener = new RedisMessageListenerContainer();
+        messageListener.setConnectionFactory(jedisConnectionFactory());
+        messageListener.addMessageListener(likeEventListenerAdapter, likeTopic());
+        return messageListener;
     }
 }
