@@ -2,9 +2,8 @@ package faang.school.analytics.model;
 
 import faang.school.analytics.exceptions.InvalidIntervalException;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 public enum Interval {
     LAST_HOUR,
@@ -22,18 +21,18 @@ public enum Interval {
         throw new InvalidIntervalException("Invalid interval: " + rawValue);
     }
 
-    public LocalDateTime getStartDate(ZoneId zoneId) {
-        ZonedDateTime now = ZonedDateTime.now(zoneId);
+    public LocalDateTime getStartDate(Clock clock) {
+        LocalDateTime now = LocalDateTime.now(clock);
         return switch (this) {
-            case LAST_HOUR -> now.minusHours(1).toLocalDateTime();
+            case LAST_HOUR -> now.minusHours(1);
             case TODAY -> now.toLocalDate().atStartOfDay();
-            case YESTERDAY -> now.minusDays(1).toLocalDate().atStartOfDay();
-            case LAST_WEEK -> now.minusWeeks(1).toLocalDate().atStartOfDay();
-            case LAST_MONTH -> now.minusMonths(1).toLocalDate().atStartOfDay();
+            case YESTERDAY -> now.toLocalDate().minusDays(1).atStartOfDay();
+            case LAST_WEEK -> now.toLocalDate().minusWeeks(1).atStartOfDay();
+            case LAST_MONTH -> now.toLocalDate().minusMonths(1).atStartOfDay();
         };
     }
 
-    public LocalDateTime getEndDate(ZoneId zoneId) {
-        return ZonedDateTime.now(zoneId).toLocalDateTime();
+    public LocalDateTime getEndDate(Clock clock) {
+        return LocalDateTime.now(clock);
     }
 }

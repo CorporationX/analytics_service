@@ -13,14 +13,14 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Stream;
+
+import static faang.school.analytics.constants.Constants.MISSING_DATE_PARAMS;
 
 @Slf4j
 @Service
@@ -34,12 +34,13 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     private final AnalyticsEventMapper analyticsEventMapper;
     private final AnalyticsEventRepository eventRepository;
     private final AnalyticsRequestParser parser;
+    private final Clock clock;
 
     @Override
     public void saveCommentEvent(CommentEvent commentEvent) {
         AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(commentEvent);
         analyticsEvent.setEventType(EventType.POST_COMMENT);
-        analyticsEventRepository.save(analyticsEvent);
+        eventRepository.save(analyticsEvent);
         log.info("Saved CommentEvent to AnalyticsEvent: id={}, userId={}, commentId={}",
                 analyticsEvent.getId(), analyticsEvent.getActorId(), analyticsEvent.getCommentId());
     }
@@ -64,12 +65,10 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
         LocalDateTime start;
         LocalDateTime end;
 
-        ZoneId zoneId = ZoneId.systemDefault();
-
         if (StringUtils.hasText(interval)) {
             Interval parsedInterval = parser.parseInterval(interval);
-            start = parsedInterval.getStartDate(zoneId);
-            end = parsedInterval.getEndDate(zoneId);
+            start = parsedInterval.getStartDate(clock);
+            end = parsedInterval.getEndDate(clock);
         } else if (StringUtils.hasText(startDate) && StringUtils.hasText(endDate)) {
             start = parser.parseDate(startDate);
             end = parser.parseDate(endDate);
@@ -97,41 +96,25 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
             throw new IllegalArgumentException(FROM_OR_TO_NULL_EXCEPTION);
         }
 
-        ZoneId zoneId = ZoneId.systemDefault();
+        LocalDateTime start = interval != null
+                ? interval.getStartDate(clock)
+                : from;
+        LocalDateTime end = interval != null
+                ? interval.getEndDate(clock)
+                : to;
 
-        LocalDateTime start = interval != null ? interval.getStartDate(zoneId) : from;
-        LocalDateTime end = interval != null ? interval.getEndDate(zoneId) : to;
+        List<AnalyticsEvent> events = eventRepository
+                .findByReceiverIdAndEventType(receiverId, eventType)
+                .toList();
 
-        List<AnalyticsEvent> events =
-                eventRepository.findByReceiverIdAndEventType(receiverId, eventType).toList();
-
-        Stream<AnalyticsEvent> eventStream = events.stream()
-                .filter(event -> isEventTimeInRange(event.getReceivedAt(), from, to, interval));
-
-        return analyticsEventMapper.toAnalyticsEventDtoList(
-                eventStream.sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed()).toList()
+        List<AnalyticsEventDto> dtos = analyticsEventMapper.toAnalyticsEventDtoList(
+                events.stream()
+                        .filter(e -> !e.getReceivedAt().isBefore(start) && !e.getReceivedAt().isAfter(end))
+                        .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
+                        .toList()
         );
-    }
 
-    private boolean isEventTimeInRange(LocalDateTime receivedAt, LocalDateTime from,
-                                       LocalDateTime to, Interval interval) {
-        if (interval != null) {
-            return isEventInInterval(receivedAt, interval);
-        }
-
-        if (from == null || to == null) {
-            log.info(FROM_OR_TO_NULL_EXCEPTION);
-            throw new IllegalArgumentException(FROM_OR_TO_NULL_EXCEPTION);
-        }
-
-        return receivedAt.isAfter(from) && receivedAt.isBefore(to);
-    }
-
-    private boolean isEventInInterval(LocalDateTime receivedAt, Interval interval) {
-        ZoneId zoneId = ZoneId.systemDefault();
-
-        LocalDateTime start = interval.getStartDate(zoneId);
-        LocalDateTime end = interval.getEndDate(zoneId);
-        return !receivedAt.isBefore(start) && !receivedAt.isAfter(end);
+        return dtos;
     }
 }
+

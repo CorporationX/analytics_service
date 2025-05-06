@@ -12,19 +12,11 @@ import java.util.List;
 public interface AnalyticsEventService {
     void saveCommentEvent(CommentEvent commentEvent);
 
-    public AnalyticsEventDto saveEvent(AnalyticsEvent event);
-
-    public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval,
-                                                LocalDateTime from, LocalDateTime to);
-}
-
-public interface AnalyticsEventService {
-    List<AnalyticsEvent> getParseAnalytics(Long receiverId, String eventTypeRaw, String interval, String startDate,
-                                           String endDate);
+    AnalyticsEventDto saveEvent(AnalyticsEvent event);
 
     List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval,
                                          LocalDateTime from, LocalDateTime to);
 
-    AnalyticsEventDto saveEvent(AnalyticsEvent event);
-
+    List<AnalyticsEvent> getParseAnalytics(Long receiverId, String eventTypeRaw, String interval, String startDate,
+                                           String endDate);
 }
