@@ -21,11 +21,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(NOT_FOUND).body(getErrorResponse(ex));
     }
 
-    @ExceptionHandler({
-            AnalyticsConvertingException.class,
-            JsonDeserializationException.class
-    })
-    public ResponseEntity<ErrorResponse> handleExceptionsWithStatusBadRequest(Exception ex) {
+    @ExceptionHandler(AnalyticsConvertingException.class)
+    public ResponseEntity<ErrorResponse> handleAnalyticsConvertingException(AnalyticsConvertingException ex) {
+        return ResponseEntity.status(BAD_REQUEST).body(getErrorResponse(ex));
+    }
+
+    @ExceptionHandler(JsonDeserializationException.class)
+    public ResponseEntity<ErrorResponse> handleJsonDeserializationException(JsonDeserializationException ex) {
         return ResponseEntity.status(BAD_REQUEST).body(getErrorResponse(ex));
     }
 

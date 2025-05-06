@@ -1,19 +1,11 @@
 package faang.school.analytics.config.properties;
 
-import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@Getter
-@Configuration
-public class HashtagAnalyticsTopicProperties {
-
-    @Value("${spring.data.kafka.topics.hashtag-analytics.name}")
-    private String name;
-
-    @Value("${spring.data.kafka.topics.hashtag-analytics.partitions}")
-    private int partitions;
-
-    @Value("${spring.data.kafka.topics.hashtag-analytics.replicas}")
-    private int replicas;
+@ConfigurationProperties(prefix = "spring.data.kafka.topics.hashtag-analytics")
+public record HashtagAnalyticsTopicProperties(
+        String name,
+        int partitions,
+        int replicas
+) {
 }
