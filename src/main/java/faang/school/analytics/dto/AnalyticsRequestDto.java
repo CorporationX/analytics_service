@@ -1,21 +1,22 @@
 package faang.school.analytics.dto;
 
 import faang.school.analytics.enums.EventType;
+import faang.school.analytics.model.Interval;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Data
-@RequiredArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class AnalyticsEventDto {
-    private Long id;
+public class AnalyticsRequestDto {
     private Long receiverId;
-    private Long actorId;
     private EventType eventType;
-    private LocalDateTime receivedAt;
+    private Interval interval;
+    private Instant startDate;
+    private Instant endDate;
 }
