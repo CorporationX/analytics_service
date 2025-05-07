@@ -26,20 +26,9 @@ public class AnalyticsEventController {
     @PostMapping
     public ResponseEntity<List<AnalyticsEventDto>> getAnalytics(@RequestBody AnalyticsRequestDto requestDto) {
 
-        log.info("Received analytics request for receiverId={}, eventType={}, interval={}, startDate={}, endDate={}",
-                requestDto.getReceiverId(),
-                requestDto.getEventType(),
-                requestDto.getInterval(),
-                requestDto.getStartDate(),
-                requestDto.getEndDate());
+        log.info("Received analytics request: {}", requestDto);
 
-        List<AnalyticsEvent> events = analyticsEventService.getParseAnalytics(
-                requestDto.getReceiverId(),
-                requestDto.getEventType(),
-                requestDto.getInterval(),
-                requestDto.getStartDate(),
-                requestDto.getEndDate()
-        );
+        List<AnalyticsEvent> events = analyticsEventService.getParseAnalytics(requestDto);
 
         log.info("Analytics data returned: {} events", events.size());
 

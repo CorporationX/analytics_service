@@ -3,7 +3,9 @@ package faang.school.analytics.model;
 import faang.school.analytics.exceptions.InvalidIntervalException;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 
 public enum Interval {
     LAST_HOUR,
@@ -21,18 +23,18 @@ public enum Interval {
         throw new InvalidIntervalException("Invalid interval: " + rawValue);
     }
 
-    public LocalDateTime getStartDate(Clock clock) {
-        LocalDateTime now = LocalDateTime.now(clock);
+    public Instant getStartDate(Clock clock) {
+        ZonedDateTime now = ZonedDateTime.now(clock);
         return switch (this) {
-            case LAST_HOUR -> now.minusHours(1);
-            case TODAY -> now.toLocalDate().atStartOfDay();
-            case YESTERDAY -> now.toLocalDate().minusDays(1).atStartOfDay();
-            case LAST_WEEK -> now.toLocalDate().minusWeeks(1).atStartOfDay();
-            case LAST_MONTH -> now.toLocalDate().minusMonths(1).atStartOfDay();
+            case LAST_HOUR -> now.minusHours(1).toInstant();
+            case TODAY -> now.truncatedTo(ChronoUnit.DAYS).toInstant();
+            case YESTERDAY -> now.truncatedTo(ChronoUnit.DAYS).minusDays(1).toInstant();
+            case LAST_WEEK -> now.truncatedTo(ChronoUnit.DAYS).minusWeeks(1).toInstant();
+            case LAST_MONTH -> now.truncatedTo(ChronoUnit.DAYS).minusMonths(1).toInstant();
         };
     }
 
-    public LocalDateTime getEndDate(Clock clock) {
-        return LocalDateTime.now(clock);
+    public Instant getEndDate(Clock clock) {
+        return Instant.now(clock);
     }
 }

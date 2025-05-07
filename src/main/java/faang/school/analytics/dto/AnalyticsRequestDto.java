@@ -1,9 +1,13 @@
 package faang.school.analytics.dto;
 
+import faang.school.analytics.enums.EventType;
+import faang.school.analytics.model.Interval;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.Instant;
 
 @Data
 @AllArgsConstructor
@@ -11,8 +15,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AnalyticsRequestDto {
     private Long receiverId;
-    private String eventType;
-    private String interval;
-    private String startDate;
-    private String endDate;
+    private EventType eventType;
+    private Interval interval;
+    private Instant startDate;
+    private Instant endDate;
 }

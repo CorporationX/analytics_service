@@ -1,9 +1,9 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.AnalyticsRequestDto;
 import faang.school.analytics.dto.CommentEvent;
 import faang.school.analytics.enums.EventType;
-import faang.school.analytics.exceptions.InvalidRequestException;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.Interval;
@@ -20,15 +20,13 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static faang.school.analytics.constants.Constants.EVENT_NULL_EXCEPTION;
-import static faang.school.analytics.constants.Constants.EVENT_TYPE_NULL_EXCEPTION;
-import static faang.school.analytics.constants.Constants.FROM_OR_TO_NULL_EXCEPTION;
-import static faang.school.analytics.constants.Constants.MISSING_DATE_PARAMS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,54 +55,27 @@ public class AnalyticsEventServiceImplTest {
 
     private Clock fixedClock;
     private final long receiverId = 123L;
-    private final String eventTypeRaw = "PROJECT_VIEW";
     private final EventType eventType = EventType.PROJECT_VIEW;
-    private final String startRaw = "2025-01-01T00:00:00";
-    private final String endRaw = "2025-12-31T23:59:59";
-    private final LocalDateTime start = LocalDateTime.of(2025, 1, 1, 0, 0);
-    private final LocalDateTime end = LocalDateTime.of(2025, 12, 31, 23, 59);
-    private final LocalDateTime fixedNow = LocalDateTime.of(2025, 5, 2, 22, 0);
+    private final Instant start = Instant.parse("2025-01-01T00:00:00Z");
+    private final Instant end = Instant.parse("2025-12-31T23:59:59Z");
+    private final Instant fixedNow = LocalDateTime.of(2025, 5, 2, 22, 0)
+            .atZone(ZoneId.systemDefault()).toInstant();
 
     private AnalyticsEvent eventLastHour;
     private AnalyticsEvent eventLastDay;
     private AnalyticsEvent eventLastWeek;
     private AnalyticsEvent eventLastMonth;
 
-    private AnalyticsEvent within;
-    private AnalyticsEvent before;
-    private AnalyticsEvent after;
-
     @BeforeEach
     void setUp() {
-        fixedClock = Clock.fixed(fixedNow.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
+        fixedClock = Clock.fixed(fixedNow, ZoneId.systemDefault());
         analyticsEventService = new AnalyticsEventServiceImpl(eventMapper, eventRepository, parser, fixedClock);
 
-        eventLastHour = AnalyticsEvent.builder().receivedAt(fixedNow.minusMinutes(59)).build();
-        eventLastDay = AnalyticsEvent.builder().receivedAt(fixedNow.minusHours(23)).build();
-        eventLastWeek = AnalyticsEvent.builder().receivedAt(fixedNow.minusDays(5)).build();
-        eventLastMonth = AnalyticsEvent.builder().receivedAt(fixedNow.minusDays(20)).build();
-
-
-        within = AnalyticsEvent.builder()
-                .receiverId(receiverId)
-                .eventType(eventType)
-                .receivedAt(LocalDateTime.of(2025, 4, 18, 16, 0))
-                .actorId(1L)
-                .build();
-
-        before = AnalyticsEvent.builder()
-                .receiverId(receiverId)
-                .eventType(eventType)
-                .receivedAt(start.minusDays(5))
-                .actorId(2L)
-                .build();
-
-        after = AnalyticsEvent.builder()
-                .receiverId(receiverId)
-                .eventType(eventType)
-                .receivedAt(end.plusDays(5))
-                .actorId(3L)
-                .build();
+        LocalDateTime fixedDateTime = LocalDateTime.ofInstant(fixedNow, ZoneId.systemDefault());
+        eventLastHour = AnalyticsEvent.builder().receivedAt(fixedDateTime.minusMinutes(59)).build();
+        eventLastDay = AnalyticsEvent.builder().receivedAt(fixedDateTime.minusHours(23)).build();
+        eventLastWeek = AnalyticsEvent.builder().receivedAt(fixedDateTime.minusDays(5)).build();
+        eventLastMonth = AnalyticsEvent.builder().receivedAt(fixedDateTime.minusDays(20)).build();
     }
 
     @Test
@@ -132,108 +103,135 @@ public class AnalyticsEventServiceImplTest {
     }
 
     @Test
-    public void testGetParseAnalytics_returnsOnlyEventsWithinRange() {
-        when(parser.parseEventType(eventTypeRaw)).thenReturn(eventType);
-        when(parser.parseDate(startRaw)).thenReturn(start);
-        when(parser.parseDate(endRaw)).thenReturn(end);
+    public void testGetParseAnalytics_returnsOnlyEventsWithDateRange() {
+        AnalyticsRequestDto dto = AnalyticsRequestDto.builder()
+                .receiverId(receiverId)
+                .eventType(eventType)
+                .startDate(start)
+                .endDate(end)
+                .build();
+
+        LocalDateTime withinTime = LocalDateTime.ofInstant(Instant.parse("2025-06-01T12:00:00Z"), ZoneId.systemDefault());
+        AnalyticsEvent within = AnalyticsEvent.builder()
+                .receiverId(receiverId)
+                .eventType(eventType)
+                .receivedAt(withinTime)
+                .build();
+        AnalyticsEvent before = AnalyticsEvent.builder()
+                .receiverId(receiverId)
+                .eventType(eventType)
+                .receivedAt(LocalDateTime.ofInstant(start.minusSeconds(1), ZoneId.systemDefault()))
+                .build();
+        AnalyticsEvent after = AnalyticsEvent.builder()
+                .receiverId(receiverId)
+                .eventType(eventType)
+                .receivedAt(LocalDateTime.ofInstant(end.plusSeconds(1), ZoneId.systemDefault()))
+                .build();
         when(eventRepository.findByReceiverIdAndEventType(receiverId, eventType))
                 .thenReturn(Stream.of(within, before, after));
 
-        List<AnalyticsEvent> result = analyticsEventService.getParseAnalytics(
-                receiverId, eventTypeRaw, null, startRaw, endRaw);
+        List<AnalyticsEvent> result = analyticsEventService.getParseAnalytics(dto);
 
         assertThat(result).containsExactly(within);
     }
 
     @Test
     public void testGetParseAnalytics_returnsEmptyListWhenNoEventsInRange() {
-        when(parser.parseEventType(eventTypeRaw)).thenReturn(eventType);
-        when(parser.parseDate(startRaw)).thenReturn(start);
-        when(parser.parseDate(endRaw)).thenReturn(end);
+        AnalyticsRequestDto dto = AnalyticsRequestDto.builder()
+                .receiverId(receiverId)
+                .eventType(eventType)
+                .startDate(start)
+                .endDate(end)
+                .build();
         when(eventRepository.findByReceiverIdAndEventType(receiverId, eventType))
-                .thenReturn(Stream.of(before, after));
+                .thenReturn(Stream.empty());
 
-        List<AnalyticsEvent> result = analyticsEventService.getParseAnalytics(
-                receiverId, eventTypeRaw, null, startRaw, endRaw);
-
+        List<AnalyticsEvent> result = analyticsEventService.getParseAnalytics(dto);
         assertThat(result).isEmpty();
     }
 
     @Test
     public void testGetParseAnalytics_returnsMultipleEventsWithinRange() {
-        when(parser.parseEventType(eventTypeRaw)).thenReturn(eventType);
-        when(parser.parseDate(startRaw)).thenReturn(start);
-        when(parser.parseDate(endRaw)).thenReturn(end);
+        AnalyticsRequestDto dto = AnalyticsRequestDto.builder()
+                .receiverId(receiverId)
+                .eventType(eventType)
+                .startDate(start)
+                .endDate(end)
+                .build();
+        LocalDateTime anotherTime = LocalDateTime.of(2025, 3, 15, 10, 0);
         AnalyticsEvent another = AnalyticsEvent.builder()
                 .receiverId(receiverId)
                 .eventType(eventType)
-                .receivedAt(LocalDateTime.of(2025, 3, 15, 10, 0))
-                .actorId(4L)
+                .receivedAt(anotherTime)
+                .build();
+        LocalDateTime withinTime = LocalDateTime.ofInstant(Instant.parse("2025-06-01T12:00:00Z"), ZoneId.systemDefault());
+        AnalyticsEvent within = AnalyticsEvent.builder()
+                .receiverId(receiverId)
+                .eventType(eventType)
+                .receivedAt(withinTime)
                 .build();
         when(eventRepository.findByReceiverIdAndEventType(receiverId, eventType))
-                .thenReturn(Stream.of(within, another, before, after));
+                .thenReturn(Stream.of(within, another));
 
-        List<AnalyticsEvent> result = analyticsEventService.getParseAnalytics(
-                receiverId, eventTypeRaw, null, startRaw, endRaw);
-
+        List<AnalyticsEvent> result = analyticsEventService.getParseAnalytics(dto);
         assertThat(result).containsExactlyInAnyOrder(within, another);
     }
 
     @Test
     public void testGetParseAnalytics_throwsWhenNoIntervalAndNoDates() {
-        when(parser.parseEventType(eventTypeRaw)).thenReturn(eventType);
-        assertThatThrownBy(() -> analyticsEventService.getParseAnalytics(
-                receiverId, eventTypeRaw, null, null, null))
-                .isInstanceOf(InvalidRequestException.class)
-                .hasMessage(MISSING_DATE_PARAMS);
+        AnalyticsRequestDto dto = AnalyticsRequestDto.builder()
+                .receiverId(receiverId)
+                .eventType(eventType)
+                .build();
+        assertThatThrownBy(() -> analyticsEventService.getParseAnalytics(dto))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(AnalyticsEventServiceImpl.FROM_OR_TO_NULL_EXCEPTION);
     }
 
     @Test
     public void testGetParseAnalytics_withInterval() {
-        String intervalRaw = "LAST_MONTH";
-        Interval interval = Interval.LAST_MONTH;
-        when(parser.parseEventType(eventTypeRaw)).thenReturn(eventType);
-        when(parser.parseInterval(intervalRaw)).thenReturn(interval);
+        AnalyticsRequestDto dto = AnalyticsRequestDto.builder()
+                .receiverId(receiverId)
+                .eventType(eventType)
+                .interval(Interval.LAST_MONTH)
+                .build();
 
-        LocalDateTime intervalStart = interval.getStartDate(fixedClock);
-        LocalDateTime intervalEnd = interval.getEndDate(fixedClock);
-
+        Instant intervalStart = Interval.LAST_MONTH.getStartDate(fixedClock);
+        LocalDateTime eventTime = LocalDateTime.ofInstant(intervalStart.plusSeconds(3600), ZoneId.systemDefault());
         AnalyticsEvent event = AnalyticsEvent.builder()
                 .receiverId(receiverId)
                 .eventType(eventType)
-                .receivedAt(intervalStart.plusHours(2))
-                .actorId(1L)
+                .receivedAt(eventTime)
                 .build();
         when(eventRepository.findByReceiverIdAndEventType(receiverId, eventType))
                 .thenReturn(Stream.of(event));
 
-        List<AnalyticsEvent> result = analyticsEventService.getParseAnalytics(
-                receiverId, eventTypeRaw, intervalRaw, null, null);
+        List<AnalyticsEvent> result = analyticsEventService.getParseAnalytics(dto);
         assertThat(result).containsExactly(event);
     }
 
     @Test
     public void testGetAnalytics_throwsWhenEventTypeIsNull() {
         assertThatThrownBy(() -> analyticsEventService.getAnalytics(
-                receiverId, null, null, start, end))
+                receiverId, null, null, null, null))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(EVENT_TYPE_NULL_EXCEPTION);
+                .hasMessage(AnalyticsEventServiceImpl.EVENT_TYPE_NULL_EXCEPTION);
     }
 
     @Test
     public void testGetAnalytics_throwsWhenFromDateNull() {
         assertThatThrownBy(() -> analyticsEventService.getAnalytics(
-                receiverId, EventType.FOLLOWER, null, null, LocalDateTime.now()))
+                receiverId, EventType.FOLLOWER, null, null, Instant.now()))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(FROM_OR_TO_NULL_EXCEPTION);
+                .hasMessage(AnalyticsEventServiceImpl.FROM_OR_TO_NULL_EXCEPTION);
     }
 
     @Test
     public void testGetAnalytics_throwsWhenToDateNull() {
         assertThatThrownBy(() -> analyticsEventService.getAnalytics(
-                receiverId, EventType.FOLLOWER, null, LocalDateTime.now(), null))
+                receiverId, EventType.FOLLOWER, null, Instant.now(), null))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(FROM_OR_TO_NULL_EXCEPTION);
+                .hasMessage(AnalyticsEventServiceImpl.FROM_OR_TO_NULL_EXCEPTION);
     }
 
     @Test
@@ -286,14 +284,15 @@ public class AnalyticsEventServiceImplTest {
 
     @Test
     public void testGetAnalyticsByDateFromAndToWithIntervalNull() {
-        LocalDateTime from = LocalDateTime.now().minusDays(3);
-        LocalDateTime to = LocalDateTime.now().minusDays(1);
-        AnalyticsEvent eventInRange = AnalyticsEvent.builder()
-                .receivedAt(LocalDateTime.now().minusDays(2))
-                .build();
-        AnalyticsEvent eventOutOfRange = AnalyticsEvent.builder()
-                .receivedAt(LocalDateTime.now().minusDays(5))
-                .build();
+        LocalDateTime fromLT = LocalDateTime.now().minusDays(3);
+        LocalDateTime toLT = LocalDateTime.now().minusDays(1);
+        Instant from = fromLT.atZone(ZoneId.systemDefault()).toInstant();
+        Instant to = toLT.atZone(ZoneId.systemDefault()).toInstant();
+
+        LocalDateTime inRangeLT = LocalDateTime.now().minusDays(2);
+        LocalDateTime outOfRangeLT = LocalDateTime.now().minusDays(5);
+        AnalyticsEvent eventInRange = AnalyticsEvent.builder().receivedAt(inRangeLT).build();
+        AnalyticsEvent eventOutOfRange = AnalyticsEvent.builder().receivedAt(outOfRangeLT).build();
         when(eventRepository.findByReceiverIdAndEventType(anyLong(), any()))
                 .thenReturn(Stream.of(eventInRange, eventOutOfRange));
 

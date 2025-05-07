@@ -1,9 +1,9 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.AnalyticsRequestDto;
 import faang.school.analytics.dto.CommentEvent;
 import faang.school.analytics.enums.EventType;
-import faang.school.analytics.exceptions.InvalidRequestException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.Interval;
@@ -13,14 +13,15 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
-
-import static faang.school.analytics.constants.Constants.MISSING_DATE_PARAMS;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -58,34 +59,44 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     }
 
     @Override
-    public List<AnalyticsEvent> getParseAnalytics(Long receiverId, String eventTypeRaw, String interval,
-                                                  String startDate, String endDate) {
-
-        EventType eventType = parser.parseEventType(eventTypeRaw);
-        LocalDateTime start;
-        LocalDateTime end;
-
-        if (StringUtils.hasText(interval)) {
-            Interval parsedInterval = parser.parseInterval(interval);
-            start = parsedInterval.getStartDate(clock);
-            end = parsedInterval.getEndDate(clock);
-        } else if (StringUtils.hasText(startDate) && StringUtils.hasText(endDate)) {
-            start = parser.parseDate(startDate);
-            end = parser.parseDate(endDate);
-        } else {
-            throw new InvalidRequestException(MISSING_DATE_PARAMS);
+    public List<AnalyticsEvent> getParseAnalytics(AnalyticsRequestDto requestDto) {
+        if (requestDto.getEventType() == null) {
+            log.info(EVENT_TYPE_NULL_EXCEPTION);
+            throw new IllegalArgumentException(EVENT_TYPE_NULL_EXCEPTION);
         }
 
-        log.info("Fetching analytics for receiverId={}, eventType={}, start={}, end={}", receiverId, eventType, start,
-                end);
-        return eventRepository.findByReceiverIdAndEventType(receiverId, eventType)
-                .filter(event -> !event.getReceivedAt().isBefore(start) && !event.getReceivedAt().isAfter(end))
-                .toList();
+        Instant startInstant;
+        Instant endInstant;
+
+        if (requestDto.getInterval() != null) {
+            startInstant = requestDto.getInterval().getStartDate(clock);
+            endInstant = requestDto.getInterval().getEndDate(clock);
+        } else if (requestDto.getStartDate() != null && requestDto.getEndDate() != null) {
+            startInstant = requestDto.getStartDate();
+            endInstant = requestDto.getEndDate();
+        } else {
+            log.info(FROM_OR_TO_NULL_EXCEPTION);
+            throw new IllegalArgumentException(FROM_OR_TO_NULL_EXCEPTION);
+        }
+
+        ZoneId zone = ZoneId.systemDefault();
+        LocalDateTime start = LocalDateTime.ofInstant(startInstant, zone);
+        LocalDateTime end = LocalDateTime.ofInstant(endInstant, zone);
+
+
+        log.info("Fetching analytics for receiverId={}, eventType={}, start={}, end={}", requestDto.getReceiverId(),
+                requestDto.getEventType(), start, end);
+
+        Stream<AnalyticsEvent> all = eventRepository.findByReceiverIdAndEventType(
+                requestDto.getReceiverId(), requestDto.getEventType());
+
+        return all.filter(e -> !e.getReceivedAt().isBefore(start) && !e.getReceivedAt().isAfter(end))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval,
-                                                LocalDateTime from, LocalDateTime to) {
+    public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval, Instant from,
+                                                Instant to) {
         if (eventType == null) {
             log.info(EVENT_TYPE_NULL_EXCEPTION);
             throw new IllegalArgumentException(EVENT_TYPE_NULL_EXCEPTION);
@@ -96,23 +107,23 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
             throw new IllegalArgumentException(FROM_OR_TO_NULL_EXCEPTION);
         }
 
-        LocalDateTime start = interval != null
+        Instant startInstant = interval != null
                 ? interval.getStartDate(clock)
                 : from;
-        LocalDateTime end = interval != null
+        Instant endInstant = interval != null
                 ? interval.getEndDate(clock)
                 : to;
 
-        List<AnalyticsEvent> events = eventRepository
-                .findByReceiverIdAndEventType(receiverId, eventType)
-                .toList();
+        ZoneId zone = ZoneId.systemDefault();
+        LocalDateTime start = LocalDateTime.ofInstant(startInstant, zone);
+        LocalDateTime end = LocalDateTime.ofInstant(endInstant, zone);
 
-        List<AnalyticsEventDto> dtos = analyticsEventMapper.toAnalyticsEventDtoList(
-                events.stream()
-                        .filter(e -> !e.getReceivedAt().isBefore(start) && !e.getReceivedAt().isAfter(end))
-                        .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
-                        .toList()
-        );
+        Stream<AnalyticsEvent> all = eventRepository.findByReceiverIdAndEventType(receiverId, eventType);
+
+        List<AnalyticsEventDto> dtos = analyticsEventMapper.toAnalyticsEventDtoList(all
+                .filter(e -> !e.getReceivedAt().isBefore(start) && !e.getReceivedAt().isAfter(end))
+                .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
+                .collect(Collectors.toList()));
 
         return dtos;
     }
