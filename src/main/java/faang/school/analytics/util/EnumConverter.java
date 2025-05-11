@@ -7,9 +7,13 @@ import java.util.Optional;
 
 public class EnumConverter {
     public static <T extends Enum<T>> T fromValue(Class<T> enumClass, String value) {
-        if (value == null || enumClass == null || !enumClass.isEnum()) {
-            return null;
+        if (value == null) {
+            throw new DataValidationException("Value cannot be null");
         }
+        if (enumClass == null || !enumClass.isEnum()) {
+            throw new DataValidationException("Invalid enum class provided");
+        }
+
         Optional<T> enumValue = parseAsNumber(enumClass, value);
 
         return enumValue.orElseGet(() -> parseAsString(enumClass, value));
