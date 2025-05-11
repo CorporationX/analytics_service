@@ -29,13 +29,28 @@ spring:
         mentorship-request-channel: mentorship-request-channel
         follower: follower_channel
         project-view: project_view_channel
+    kafka:
+      bootstrap-servers: localhost:9092
+      consumer:
+        group-id: analytics-group
+        auto-offset-reset: earliest
+      producer:
+        acks: "1"
+      topics:
+        hashtag-analytics:
+          name: "hashtag-analytics"
+          partitions: 3
+          replicas: 1
+
+  profiles:
+    active: local
 
 server:
   port: 8086
 
 logging:
   level:
-    root: info
+    root: debug
 
 project-service:
   host: localhost
