@@ -1,12 +1,12 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.dto.AnalyticsRequest;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
-import faang.school.analytics.validation.AnalyticsValidator;
+import faang.school.analytics.util.EnumConverter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,6 @@ public class AnalyticsEventService {
 
     private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventMapper analyticsEventMapper;
-    private final AnalyticsValidator analyticsValidator;
 
     @Transactional
     public AnalyticsEventDto saveEvent(@Valid AnalyticsEventDto eventDto) {
@@ -35,26 +35,23 @@ public class AnalyticsEventService {
     }
 
     @Transactional(readOnly = true)
-    public List<AnalyticsEventDto> getAnalytics(AnalyticsRequest request) {
+    public List<AnalyticsEventDto> getAnalytics(long receiverId, String eventType, String interval, LocalDateTime from, LocalDateTime to) {
 
-        analyticsValidator.validate(request);
-        Interval interval = request.getInterval();
-        LocalDateTime from;
-        LocalDateTime to;
+        EventType type = EnumConverter.fromValue(EventType.class, eventType);
+        Interval intervalObj = EnumConverter.fromValue(Interval.class, interval);
+
+        Stream<AnalyticsEvent> analyticsEvents = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, type);
 
         if (interval != null) {
-            LocalDateTime baseTime = LocalDateTime.now();
-            from = interval.getStart(baseTime);
-            to = interval.getEnd(baseTime);
+            LocalDateTime fromDate = Interval.getFromDate(intervalObj);
+            analyticsEvents = analyticsEvents.filter(event -> event.getReceivedAt().isAfter(fromDate));
+
         } else {
-            from = request.getFrom();
-            to = request.getTo();
+            analyticsEvents = analyticsEvents.filter(event -> event.getReceivedAt().isAfter(from) && event.getReceivedAt().isBefore(to));
         }
 
-        return analyticsEventRepository
-                .findByReceiverIdAndEventType(request.getReceiverId(), request.getType())
-                .filter(periodFilter(from, to))
-                .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
+        return analyticsEvents
+                .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt))
                 .map(analyticsEventMapper::toDto)
                 .toList();
     }
