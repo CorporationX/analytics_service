@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -41,12 +42,33 @@ public class AnalyticsEventServiceTest {
 
     @Test
     public void shouldSave() {
-        AnalyticsEvent event = AnalyticsEvent.builder().build();
-        AnalyticsEventDto dto = analyticsEventMapper.toDto(event);
+        AnalyticsEventDto dto = AnalyticsEventDto.builder()
+                .actorId(1L)
+                .receiverId(2L)
+                .eventType(EventType.POST_LIKE)
+                .build();
 
-        when(analyticsEventRepository.save(event)).thenReturn(event);
+        AnalyticsEvent entity = AnalyticsEvent.builder()
+                .id(1L)
+                .actorId(1L)
+                .receiverId(2L)
+                .eventType(EventType.POST_LIKE)
+                .build();
 
-        assertEquals(analyticsEventService.saveEvent(dto), dto);
+        when(analyticsEventMapper.toEntity(dto)).thenReturn(entity);
+        when(analyticsEventRepository.save(entity)).thenReturn(entity);
+        when(analyticsEventMapper.toDto(entity)).thenReturn(dto);
+
+        AnalyticsEventDto result = analyticsEventService.saveEvent(dto);
+
+        assertNotNull(result);
+        assertEquals(dto.getActorId(), result.getActorId());
+        assertEquals(dto.getReceiverId(), result.getReceiverId());
+        assertEquals(dto.getEventType(), result.getEventType());
+
+        verify(analyticsEventMapper).toEntity(dto);
+        verify(analyticsEventRepository).save(entity);
+        verify(analyticsEventMapper).toDto(entity);
     }
 
     @Test

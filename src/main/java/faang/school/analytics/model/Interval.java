@@ -1,8 +1,5 @@
 package faang.school.analytics.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -10,8 +7,6 @@ import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 
-@AllArgsConstructor
-@Getter
 public enum Interval {
     DAY {
         @Override
