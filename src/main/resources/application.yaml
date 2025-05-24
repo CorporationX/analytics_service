@@ -21,8 +21,9 @@ spring:
     redis:
       port: 6379
       host: localhost
-      channel:
+      topics:
         profile-view: profile_view_channel
+        likedPost: liked_post_topic
 
 server:
   port: 8086
