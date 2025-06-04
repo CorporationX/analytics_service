@@ -45,6 +45,12 @@ logging:
   level:
     root: info
 
-project-service:
-  host: localhost
-  port: 8082
+services:
+  project-service:
+    name: project-service
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,loggers,env,refresh
