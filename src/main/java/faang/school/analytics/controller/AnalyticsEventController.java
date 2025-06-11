@@ -59,4 +59,18 @@ public class AnalyticsEventController {
                     receiverId, type, analyticsInterval, startDate, endDate);
             return analyticsEventService.getAnalytics(receiverId, type, analyticsInterval, startDate, endDate);
     }
+
+    private LocalDateTime parseDateTime(String limit, DateTimeFormatter formatter, long receiverId) {
+        LocalDateTime limitDate = null;
+        if (limit != null) {
+            try {
+                limitDate = LocalDateTime.parse(limit, formatter);
+            } catch (DateTimeParseException e) {
+                log.error("Invalid date format {} in analytics request for receiver {}", limit, receiverId, e);
+                throw new IllegalArgumentException(String.format("Invalid date format %s." +
+                        " Format should be like yyyy-MM-dd HH:mm", limit));
+            }
+        }
+        return limitDate;
+    }
 }
