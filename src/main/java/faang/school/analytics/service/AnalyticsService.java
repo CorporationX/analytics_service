@@ -1,7 +1,9 @@
 package faang.school.analytics.service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -27,12 +29,12 @@ public class AnalyticsService {
 
     @Transactional
     public List<AnalyticsEventDto> getAnalytics(
-            long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to) {
+            long receiverId, EventType eventType, Optional<Interval> interval, LocalDateTime from, LocalDateTime to) {
         
         LocalDateTime fromDate;
         LocalDateTime toDate;
-        if (interval != null) {
-            fromDate = interval.getStartDate();
+        if (interval.isPresent()) {
+            fromDate = interval.get().getStartDate();
             toDate = LocalDateTime.now();
         } else {
             fromDate = from;
@@ -41,7 +43,7 @@ public class AnalyticsService {
 
         List<AnalyticsEvent> analyticsEvents = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
             .filter(event -> event.getReceivedAt().isBefore(toDate) && event.getReceivedAt().isAfter(fromDate))
-            .sorted((event1, event2) -> event1.getReceivedAt().compareTo(event2.getReceivedAt()))
+            .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
             .toList();
 
         return analyticsEventMapper.toDtoList(analyticsEvents);

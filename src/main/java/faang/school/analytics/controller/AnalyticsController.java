@@ -2,6 +2,7 @@ package faang.school.analytics.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,8 +29,8 @@ public class AnalyticsController {
     }
 
     @GetMapping
-    public List<AnalyticsEventDto> getEvent(@RequestBody AnalyticsEventRequestDto analyticsEventRequestDto) {
-        Interval interval = analyticsEventRequestDto.getInterval() == null ? null : Interval.valueOf(analyticsEventRequestDto.getInterval().toUpperCase());
+    public List<AnalyticsEventDto> getEvents(@RequestBody AnalyticsEventRequestDto analyticsEventRequestDto) {
+        Optional<Interval> interval = analyticsEventRequestDto.getInterval() == null ? null : Optional.of(Interval.valueOf(analyticsEventRequestDto.getInterval().toUpperCase()));
 
         return analyticsService.getAnalytics(
             analyticsEventRequestDto.getReceiverId(), 
