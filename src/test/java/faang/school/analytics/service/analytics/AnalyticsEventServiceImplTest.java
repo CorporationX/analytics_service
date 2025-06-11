@@ -55,6 +55,8 @@ class AnalyticsEventServiceImplTest {
 
     @Test
     public void testSaveEvent() {
+        when(analyticsRepository.save(event1)).thenReturn(event1);
+
         analyticsEventService.saveEvent(event1);
 
         verify(analyticsRepository, times(1)).save(event1);
