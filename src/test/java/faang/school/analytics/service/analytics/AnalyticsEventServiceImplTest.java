@@ -1,7 +1,7 @@
 package faang.school.analytics.service.analytics;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -29,63 +30,83 @@ class AnalyticsEventServiceImplTest {
     @Mock
     private AnalyticsEventRepository analyticsRepository;
 
-    @Mock
-    private AnalyticsEventMapper analyticsEventMapper;
+    @Spy
+    private AnalyticsEventMapperImpl analyticsEventMapper;
 
     @InjectMocks
     private AnalyticsEventServiceImpl analyticsEventService;
 
-    private AnalyticsEvent event;
+    private AnalyticsEvent event1;
 
     private AnalyticsEventDto eventDto;
 
     @BeforeEach
     public void setUp() {
         analyticsEventService = new AnalyticsEventServiceImpl(analyticsRepository, analyticsEventMapper);
-        event = new AnalyticsEvent();
-        event.setEventType(EventType.POST_PUBLISHED);
-        event.setReceiverId(1L);
-        event.setActorId(2L);
-        event.setId(3L);
-        event.setReceivedAt(LocalDateTime.now());
+        event1 = new AnalyticsEvent();
+        event1.setEventType(EventType.POST_PUBLISHED);
+        event1.setReceiverId(1L);
+        event1.setActorId(1L);
+        event1.setId(3L);
+        event1.setReceivedAt(LocalDateTime.now());
 
         eventDto = new AnalyticsEventDto();
     }
 
     @Test
     public void testSaveEvent() {
-        analyticsEventService.saveEvent(event);
+        analyticsEventService.saveEvent(event1);
 
-        verify(analyticsRepository, times(1)).save(event);
+        verify(analyticsRepository, times(1)).save(event1);
     }
 
     @Test
-    public void testGetAnalyticsWithInterval() {
+    public void testGetAnalytics_WithInterval_Filtered() {
+        AnalyticsEvent event2 = new AnalyticsEvent();
+        event2.setEventType(EventType.POST_PUBLISHED);
+        event2.setReceiverId(1L);
+        event2.setActorId(1L);
+        event2.setId(1L);
+        event2.setReceivedAt(LocalDateTime.now().minusWeeks(2));
         when(analyticsRepository.findByReceiverIdAndEventType(1L, EventType.POST_PUBLISHED))
-                .thenReturn(Stream.of(event));
-
-        when(analyticsEventMapper.toDto(event)).thenReturn(eventDto);
+                .thenReturn(Stream.of(event1, event2));
 
         List<AnalyticsEventDto> result = analyticsEventService.getAnalytics(
                 1L, EventType.POST_PUBLISHED, Interval.DAY, LocalDateTime.now().minusDays(2), LocalDateTime.now());
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(eventDto, result.get(0));
+        assertEquals(eventDto.getClass(), result.get(0).getClass());
+        assertEquals("POST_PUBLISHED", result.get(0).getEventType());
     }
 
     @Test
-    public void testGetAnalyticsWithoutInterval() {
-        when(analyticsRepository.findByReceiverIdAndEventType(1L, EventType.POST_PUBLISHED))
-                .thenReturn(Stream.of(event));
+    public void testGetAnalytics_WithoutInterval_Sorted() {
+        AnalyticsEvent event2 = new AnalyticsEvent();
+        event2.setEventType(EventType.POST_PUBLISHED);
+        event2.setReceiverId(1L);
+        event2.setActorId(1L);
+        event2.setId(1L);
+        event2.setReceivedAt(LocalDateTime.now().minusDays(2));
 
-        when(analyticsEventMapper.toDto(event)).thenReturn(eventDto);
+        AnalyticsEvent event3 = new AnalyticsEvent();
+        event3.setEventType(EventType.POST_PUBLISHED);
+        event3.setReceiverId(1L);
+        event3.setActorId(1L);
+        event3.setId(2L);
+        event3.setReceivedAt(LocalDateTime.now().minusDays(1));
+
+        when(analyticsRepository.findByReceiverIdAndEventType(1L, EventType.POST_PUBLISHED))
+                .thenReturn(Stream.of(event2, event3, event1));
 
         List<AnalyticsEventDto> result = analyticsEventService.getAnalytics(
-                1L, EventType.POST_PUBLISHED, null, LocalDateTime.now().minusDays(2), LocalDateTime.now());
+                1L, EventType.POST_PUBLISHED, null, LocalDateTime.now().minusDays(4), LocalDateTime.now());
 
         assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(eventDto, result.get(0));
+        assertEquals(3, result.size());
+        assertEquals(eventDto.getClass(), result.get(0).getClass());
+        assertEquals(3L, result.get(0).getId());
+        assertEquals(2L, result.get(1).getId());
+        assertEquals(1L, result.get(2).getId());
     }
 }

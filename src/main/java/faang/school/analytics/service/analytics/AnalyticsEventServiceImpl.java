@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -23,10 +24,10 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
 
     @Override
     public void saveEvent(AnalyticsEvent event) {
-        analyticsRepository.save(event);
+        AnalyticsEvent saved = analyticsRepository.save(event);
         log.info("event has been saved to DB," +
                         " event type = {}, receiver = {}, actor = {}, event id = {}, received at = {}",
-                event.getEventType(), event.getReceiverId(), event.getActorId(), event.getId(), event.getReceivedAt());
+                saved.getEventType(), saved.getReceiverId(), saved.getActorId(), saved.getId(), saved.getReceivedAt());
     }
 
     @Override
@@ -37,6 +38,7 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
                 .filter(event ->
                         event.getReceivedAt().isAfter(analyticsInterval.startDate)
                                 && event.getReceivedAt().isBefore(analyticsInterval.endDate))
+                .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .toList();
 
         return analyticsEventList.stream()
@@ -48,7 +50,6 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
             LocalDateTime startDate,
             LocalDateTime endDate
     ){}
-
 
     private AnalyticsInterval setAnalyticsInterval(Interval interval, LocalDateTime from, LocalDateTime to){
         LocalDateTime startDate;
@@ -66,5 +67,4 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
         }
         return new AnalyticsInterval(startDate, endDate);
     }
-
 }
