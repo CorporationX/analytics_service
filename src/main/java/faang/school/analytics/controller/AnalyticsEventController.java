@@ -35,6 +35,7 @@ public class AnalyticsEventController {
         Interval analyticsInterval = null;
         LocalDateTime startDate = null;
         LocalDateTime endDate = null;
+        EventType type;
         if (interval != null) {
             try {
                 analyticsInterval = Interval.valueOf(interval.toUpperCase());
@@ -54,7 +55,12 @@ public class AnalyticsEventController {
             startDate = parseDateTime(start, formatter, receiverId);
             endDate = parseDateTime(end, formatter, receiverId);
         }
-        EventType type = EventType.valueOf(eventType);
+        try {
+            type = EventType.valueOf(eventType);
+        } catch (IllegalArgumentException e) {
+            log.error("Incorrect event type {} in analytics request for receiver {}", eventType, receiverId, e);
+            throw new IllegalArgumentException("Incorrect event type.");
+        }
 
         log.info("Start getting analytics for receiver {}, type {}, interval {}, start {}, end{}",
                 receiverId, type, analyticsInterval, startDate, endDate);
@@ -63,14 +69,12 @@ public class AnalyticsEventController {
 
     private LocalDateTime parseDateTime(String limit, DateTimeFormatter formatter, long receiverId) {
         LocalDateTime limitDate = null;
-        if (limit != null) {
-            try {
-                limitDate = LocalDateTime.parse(limit, formatter);
-            } catch (DateTimeParseException e) {
-                log.error("Invalid date format {} in analytics request for receiver {}", limit, receiverId, e);
-                throw new IllegalArgumentException(String.format("Invalid date format %s." +
-                        " Format should be like yyyy-MM-dd HH:mm", limit));
-            }
+        try {
+            limitDate = LocalDateTime.parse(limit, formatter);
+        } catch (DateTimeParseException e) {
+            log.error("Invalid date format {} in analytics request for receiver {}", limit, receiverId, e);
+            throw new IllegalArgumentException(String.format("Invalid date format %s." +
+                    " Format should be like yyyy-MM-dd HH:mm", limit));
         }
         return limitDate;
     }
