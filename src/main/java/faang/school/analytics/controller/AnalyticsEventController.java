@@ -36,6 +36,12 @@ public class AnalyticsEventController {
         LocalDateTime startDate = null;
         LocalDateTime endDate = null;
         EventType type;
+        try {
+            type = EventType.valueOf(eventType.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            log.error("Incorrect event type {} in analytics request for receiver {}", eventType, receiverId, e);
+            throw new IllegalArgumentException("Incorrect event type.");
+        }
         if (interval != null) {
             try {
                 analyticsInterval = Interval.valueOf(interval.toUpperCase());
@@ -54,12 +60,6 @@ public class AnalyticsEventController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             startDate = parseDateTime(start, formatter, receiverId);
             endDate = parseDateTime(end, formatter, receiverId);
-        }
-        try {
-            type = EventType.valueOf(eventType);
-        } catch (IllegalArgumentException e) {
-            log.error("Incorrect event type {} in analytics request for receiver {}", eventType, receiverId, e);
-            throw new IllegalArgumentException("Incorrect event type.");
         }
 
         log.info("Start getting analytics for receiver {}, type {}, interval {}, start {}, end{}",
