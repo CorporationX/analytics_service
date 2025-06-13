@@ -48,7 +48,7 @@ class AnalyticsEventServiceImplTest {
         event1.setReceiverId(1L);
         event1.setActorId(1L);
         event1.setId(3L);
-        event1.setReceivedAt(LocalDateTime.now());
+        event1.setReceivedAt(LocalDateTime.now().minusMinutes(1));
 
         eventDto = new AnalyticsEventDto();
     }
