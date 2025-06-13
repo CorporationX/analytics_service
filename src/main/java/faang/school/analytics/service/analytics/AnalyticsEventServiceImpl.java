@@ -24,15 +24,14 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     private final AnalyticsEventMapper analyticsEventMapper;
 
     @Override
+    @Transactional
     public void saveEvent(AnalyticsEvent event) {
         AnalyticsEvent saved = analyticsRepository.save(event);
-        log.info("event has been saved to DB," +
-                        " event type = {}, receiver = {}, actor = {}, event id = {}, received at = {}",
-                saved.getEventType(), saved.getReceiverId(), saved.getActorId(), saved.getId(), saved.getReceivedAt());
+        log.info("event has been saved to DB, event id = {}", saved.getId());
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<AnalyticsEventDto> getAnalytics(
             long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to) {
         AnalyticsInterval analyticsInterval = setAnalyticsInterval(interval, from, to);
@@ -51,18 +50,15 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     private record AnalyticsInterval(
             LocalDateTime startDate,
             LocalDateTime endDate
-    ){}
+    ) {
+    }
 
-    private AnalyticsInterval setAnalyticsInterval(Interval interval, LocalDateTime from, LocalDateTime to){
+    private AnalyticsInterval setAnalyticsInterval(Interval interval, LocalDateTime from, LocalDateTime to) {
         LocalDateTime startDate;
         LocalDateTime endDate;
         if (interval != null) {
             endDate = LocalDateTime.now();
-            startDate = switch (interval) {
-                case DAY -> endDate.minusDays(1);
-                case WEEK -> endDate.minusWeeks(1);
-                case MONTH -> endDate.minusMonths(1);
-            };
+            startDate = interval.getStartDate();
         } else {
             startDate = from;
             endDate = to;
