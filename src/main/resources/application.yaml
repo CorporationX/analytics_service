@@ -23,6 +23,7 @@ spring:
       host: localhost
       channel_names:
         profile_view: profile_view_channel
+        comment_topic: comment_topic
 
 server:
   port: 8086
