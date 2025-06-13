@@ -119,7 +119,7 @@ class AnalyticsEventControllerTest {
                         .param("start", "INVALID_Date")
                         .param("end", "2025-06-12 00:00"))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("Invalid date format INVALID_Date." +
+                .andExpect(jsonPath("$.message").value(containsString("Invalid date format INVALID_Date 2025-06-12 00:00." +
                         " Format should be like yyyy-MM-dd HH:mm")));
     }
 
