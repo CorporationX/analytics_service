@@ -10,6 +10,7 @@ import faang.school.analytics.model.Interval;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -31,6 +32,7 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     }
 
     @Override
+    @Transactional
     public List<AnalyticsEventDto> getAnalytics(
             long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to) {
         AnalyticsInterval analyticsInterval = setAnalyticsInterval(interval, from, to);
