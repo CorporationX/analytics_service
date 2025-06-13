@@ -58,24 +58,18 @@ public class AnalyticsEventController {
                         " both start and end dates of the search interval should be specified");
             }
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            startDate = parseDateTime(start, formatter, receiverId);
-            endDate = parseDateTime(end, formatter, receiverId);
+            try {
+                startDate = LocalDateTime.parse(start, formatter);
+                endDate = LocalDateTime.parse(end, formatter);
+            } catch (DateTimeParseException e) {
+                log.error("Invalid date format {} in analytics request for receiver {}, {}", start, end, receiverId, e);
+                throw new IllegalArgumentException(String.format("Invalid date format %s %s." +
+                        " Format should be like yyyy-MM-dd HH:mm", start, end));
+            }
         }
 
         log.info("Start getting analytics for receiver {}, type {}, interval {}, start {}, end{}",
                 receiverId, type, analyticsInterval, startDate, endDate);
         return analyticsEventService.getAnalytics(receiverId, type, analyticsInterval, startDate, endDate);
-    }
-
-    private LocalDateTime parseDateTime(String limit, DateTimeFormatter formatter, long receiverId) {
-        LocalDateTime limitDate = null;
-        try {
-            limitDate = LocalDateTime.parse(limit, formatter);
-        } catch (DateTimeParseException e) {
-            log.error("Invalid date format {} in analytics request for receiver {}", limit, receiverId, e);
-            throw new IllegalArgumentException(String.format("Invalid date format %s." +
-                    " Format should be like yyyy-MM-dd HH:mm", limit));
-        }
-        return limitDate;
     }
 }
