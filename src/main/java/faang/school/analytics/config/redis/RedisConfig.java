@@ -1,6 +1,7 @@
 package faang.school.analytics.config.redis;
 
-import faang.school.analytics.listener.AnalyticsEventListener;
+import faang.school.analytics.listener.PostViewEventListener;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,8 +16,8 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
 
-    @Value("${spring.data.redis.channel.analytics}")
-    private String analyticsChannel;
+    @Value("${spring.data.redis.channel.postView}")
+    private String postViewChannel;
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
@@ -33,21 +34,23 @@ public class RedisConfig {
     @Bean
     public RedisMessageListenerContainer redisContainer(
             RedisConnectionFactory connectionFactory,
-            MessageListenerAdapter listenerAnalyticsEventAdapter,
-            ChannelTopic analyticsTopic) {
+            @Qualifier("listenerPostViewEventAdapter") MessageListenerAdapter listenerPostViewEventAdapter,
+            @Qualifier("postViewTopic") ChannelTopic postViewTopic) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(listenerAnalyticsEventAdapter, analyticsTopic);
+        container.addMessageListener(listenerPostViewEventAdapter, postViewTopic);
         return container;
     }
 
     @Bean
-    public MessageListenerAdapter listenerAnalyticsEventAdapter(AnalyticsEventListener analyticsEventListener) {
-        return new MessageListenerAdapter(analyticsEventListener);
+    @Qualifier("listenerPostViewEventAdapter")
+    public MessageListenerAdapter listenerPostViewChannelAdapter(PostViewEventListener postViewEventListener) {
+        return new MessageListenerAdapter(postViewEventListener);
     }
 
     @Bean
-    public ChannelTopic analyticsTopic() {
-        return new ChannelTopic(analyticsChannel);
+    @Qualifier("postViewTopic")
+    public ChannelTopic postViewTopic() {
+        return new ChannelTopic(postViewChannel);
     }
 }
