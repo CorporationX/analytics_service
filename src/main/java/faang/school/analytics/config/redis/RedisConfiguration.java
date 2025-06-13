@@ -1,12 +1,15 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.listener.LikeEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 
 @Configuration
@@ -15,15 +18,26 @@ public class RedisConfiguration {
     private final RedisProperties redisProperties;
 
     @Bean
-    public RedisMessageListenerContainer redisContainer() {
+    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter likeListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         /**
          * Добавлять обработчики тут:
          * container.addMessageListener(userBanListener, topic());
          */
+        container.addMessageListener(likeListener, likeEventTopic());
 
         return container;
+    }
+
+    @Bean
+    MessageListenerAdapter likeListener(LikeEventListener likeEventListener) {
+        return new MessageListenerAdapter(likeEventListener);
+    }
+
+    @Bean
+    ChannelTopic likeEventTopic() {
+        return new ChannelTopic(redisProperties.channelNames().likeEventName());
     }
 
     @Bean
