@@ -19,7 +19,7 @@ public class RedisConfig {
     @Value("${spring.data.redis.channel.analytics}")
     private String analyticsChannel;
 
-    @Value("${app.redis.topic.comment-analytics}")
+    @Value("${spring.data.redis.channel.comment-analytics}")
     private String commentAnalyticsTopicName;
 
     @Bean
