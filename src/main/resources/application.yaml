@@ -24,6 +24,7 @@ spring:
       channel:
         profile-view: profile_view_channel
         analytics: analytics_channel
+        comment-analytics: comment-analytics-channel
 
 server:
   port: 8086
