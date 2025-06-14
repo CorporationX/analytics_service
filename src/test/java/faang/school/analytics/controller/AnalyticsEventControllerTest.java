@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AnalyticsEventController.class)
-@Import({ErrorHandler.class, UserHeaderFilter.class}) // Импортируем ErrorHandler и UserHeaderFilter
+@Import({ErrorHandler.class, UserHeaderFilter.class})
 class AnalyticsEventControllerTest {
 
     @Autowired
@@ -140,5 +140,4 @@ class AnalyticsEventControllerTest {
         verify(analyticsEventService, times(1)).getAnalytics(1L, EventType.POST_PUBLISHED, null,
                 LocalDateTime.parse("2025-06-11T00:00"), LocalDateTime.parse("2025-06-12T00:00"));
     }
-
 }
