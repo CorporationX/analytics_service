@@ -43,13 +43,13 @@ class AnalyticsEventServiceImplTest {
     @BeforeEach
     public void setUp() {
         analyticsEventService = new AnalyticsEventServiceImpl(analyticsRepository, analyticsEventMapper);
-        event1 = new AnalyticsEvent();
-        event1.setEventType(EventType.POST_PUBLISHED);
-        event1.setReceiverId(1L);
-        event1.setActorId(1L);
-        event1.setId(3L);
-        event1.setReceivedAt(LocalDateTime.now().minusMinutes(1));
-
+        event1 = AnalyticsEvent.builder()
+                .id(3L)
+                .receiverId(1L)
+                .actorId(1L)
+                .eventType(EventType.POST_PUBLISHED)
+                .receivedAt(LocalDateTime.now().minusMinutes(1))
+                .build();
         eventDto = new AnalyticsEventDto();
     }
 
@@ -64,12 +64,13 @@ class AnalyticsEventServiceImplTest {
 
     @Test
     public void testGetAnalytics_WithInterval_Filtered() {
-        AnalyticsEvent event2 = new AnalyticsEvent();
-        event2.setEventType(EventType.POST_PUBLISHED);
-        event2.setReceiverId(1L);
-        event2.setActorId(1L);
-        event2.setId(1L);
-        event2.setReceivedAt(LocalDateTime.now().minusWeeks(2));
+        AnalyticsEvent event2 = AnalyticsEvent.builder()
+                .id(1L)
+                .receiverId(1L)
+                .actorId(1L)
+                .eventType(EventType.POST_PUBLISHED)
+                .receivedAt(LocalDateTime.now().minusWeeks(2))
+                .build();
         when(analyticsRepository.findByReceiverIdAndEventType(1L, EventType.POST_PUBLISHED))
                 .thenReturn(Stream.of(event1, event2));
 
@@ -84,19 +85,21 @@ class AnalyticsEventServiceImplTest {
 
     @Test
     public void testGetAnalytics_WithoutInterval_Sorted() {
-        AnalyticsEvent event2 = new AnalyticsEvent();
-        event2.setEventType(EventType.POST_PUBLISHED);
-        event2.setReceiverId(1L);
-        event2.setActorId(1L);
-        event2.setId(1L);
-        event2.setReceivedAt(LocalDateTime.now().minusDays(2));
+        AnalyticsEvent event2 = AnalyticsEvent.builder()
+                .id(1L)
+                .receiverId(1L)
+                .actorId(1L)
+                .eventType(EventType.POST_PUBLISHED)
+                .receivedAt(LocalDateTime.now().minusDays(2))
+                .build();
 
-        AnalyticsEvent event3 = new AnalyticsEvent();
-        event3.setEventType(EventType.POST_PUBLISHED);
-        event3.setReceiverId(1L);
-        event3.setActorId(1L);
-        event3.setId(2L);
-        event3.setReceivedAt(LocalDateTime.now().minusDays(1));
+        AnalyticsEvent event3 = AnalyticsEvent.builder()
+                .id(2L)
+                .receiverId(1L)
+                .actorId(1L)
+                .eventType(EventType.POST_PUBLISHED)
+                .receivedAt(LocalDateTime.now().minusDays(1))
+                .build();
 
         when(analyticsRepository.findByReceiverIdAndEventType(1L, EventType.POST_PUBLISHED))
                 .thenReturn(Stream.of(event2, event3, event1));
