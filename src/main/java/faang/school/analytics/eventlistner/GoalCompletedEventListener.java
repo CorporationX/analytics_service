@@ -3,6 +3,7 @@ package faang.school.analytics.eventlistner;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.config.redis.RedisProperties;
 import faang.school.analytics.dto.GoalCompletedEvent;
+import faang.school.analytics.mapper.goalcompleted.UserServiceEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,13 +22,14 @@ public class GoalCompletedEventListener extends AbstractEventListener {
     private final List<String> topicNameKeys = List.of("goal-complete");
     private final RedisProperties properties;
     private final ObjectMapper objectMapper;
+    private final UserServiceEventMapper userServiceEventMapper;
     private final AnalyticsEventService service;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
             GoalCompletedEvent event = objectMapper.readValue(message.getBody(), GoalCompletedEvent.class);
-            service.saveGoalCompleteEvent(event);
+            service.saveEvent(userServiceEventMapper.goalCompleteToAnalytics(event));
             log.info("Goal {} completion was saved, goalId: {}", event.goalName(), event.goalId());
 
         } catch (IOException e) {

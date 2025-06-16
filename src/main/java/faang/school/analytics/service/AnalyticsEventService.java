@@ -4,7 +4,6 @@ import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
-import faang.school.analytics.dto.GoalCompletedEvent;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,7 +13,4 @@ public interface AnalyticsEventService {
 
     List<AnalyticsEventDto> getAnalytics(
             long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to);
-
-    void saveGoalCompleteEvent(GoalCompletedEvent event);
-
 }

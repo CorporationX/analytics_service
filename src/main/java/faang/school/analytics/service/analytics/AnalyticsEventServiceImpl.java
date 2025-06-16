@@ -4,9 +4,9 @@ import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
+import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.service.AnalyticsEventService;
-import faang.school.analytics.model.Interval;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,14 +20,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class AnalyticsEventServiceImpl implements AnalyticsEventService {
-    private final AnalyticsEventRepository analyticsRepository;
+
+    private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventMapper analyticsEventMapper;
 
     @Override
     @Transactional
     public void saveEvent(AnalyticsEvent event) {
-        AnalyticsEvent saved = analyticsRepository.save(event);
-        log.info("event has been saved to DB, event id = {}", saved.getId());
+        analyticsEventRepository.save(event);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     public List<AnalyticsEventDto> getAnalytics(
             long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to) {
         AnalyticsInterval analyticsInterval = setAnalyticsInterval(interval, from, to);
-        List<AnalyticsEvent> analyticsEventList = analyticsRepository.findByReceiverIdAndEventType(receiverId, eventType)
+        List<AnalyticsEvent> analyticsEventList = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
                 .filter(event ->
                         event.getReceivedAt().isAfter(analyticsInterval.startDate)
                                 && event.getReceivedAt().isBefore(analyticsInterval.endDate))

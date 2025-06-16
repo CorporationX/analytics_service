@@ -16,7 +16,6 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfiguration {
-    private final RedisProperties redisProperties;
     private final List<AbstractEventListener> eventListeners;
 
     @Bean
