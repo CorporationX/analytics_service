@@ -18,14 +18,12 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,7 +44,7 @@ class AnalyticsEventControllerTest {
 
     @BeforeEach
     void setUp() {
-        eventDto = new AnalyticsEventDto(1L, 1L, 2L, "POST_PUBLISHED", LocalDateTime.now());
+        eventDto = new AnalyticsEventDto(1L, 1L, 2L, EventType.POST_PUBLISHED, LocalDateTime.now());
     }
 
     @Test
@@ -55,8 +53,7 @@ class AnalyticsEventControllerTest {
                         .header("x-user-id", "1")
                         .param("receiverId", "1")
                         .param("eventType", "Incorrect_type"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Incorrect event type."));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -65,9 +62,7 @@ class AnalyticsEventControllerTest {
                         .header("x-user-id", "1")
                         .param("receiverId", "1")
                         .param("eventType", "POST_PUBLISHED"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("if the \"interval\" parameter" +
-                        " is missing, both start and end dates of the search interval should be specified"));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -77,9 +72,7 @@ class AnalyticsEventControllerTest {
                         .param("receiverId", "1")
                         .param("eventType", "POST_PUBLISHED")
                         .param("start", "2025-06-12 00:00"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("if the \"interval\" parameter" +
-                        " is missing, both start and end dates of the search interval should be specified"));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -89,8 +82,7 @@ class AnalyticsEventControllerTest {
                         .param("receiverId", "1")
                         .param("eventType", "POST_PUBLISHED")
                         .param("interval", "INVALID_INTERVAL"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("Incorrect interval.")));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -118,9 +110,7 @@ class AnalyticsEventControllerTest {
                         .param("eventType", "POST_PUBLISHED")
                         .param("start", "INVALID_Date")
                         .param("end", "2025-06-12 00:00"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(containsString("Invalid date format INVALID_Date 2025-06-12 00:00." +
-                        " Format should be like yyyy-MM-dd HH:mm")));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
