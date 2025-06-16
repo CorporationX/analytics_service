@@ -26,8 +26,8 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     @Override
     @Transactional
     public void saveEvent(AnalyticsEvent event) {
-        AnalyticsEvent saved = analyticsRepository.save(event);
-        log.info("event has been saved to DB, event id = {}", saved.getId());
+        AnalyticsEvent savedEvent = analyticsRepository.save(event);
+        log.info("event has been saved to DB, event id = {}", savedEvent.getId());
     }
 
     @Override

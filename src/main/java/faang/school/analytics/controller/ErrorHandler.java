@@ -1,6 +1,7 @@
 package faang.school.analytics.controller;
 
 import faang.school.analytics.dto.error.ErrorResponseDto;
+import faang.school.analytics.exception.DataValidationException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,9 @@ import java.time.format.DateTimeFormatter;
 public class ErrorHandler {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler(DataValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponseDto handleIllegalArgument (IllegalArgumentException e){
+    public ErrorResponseDto handleIllegalArgument (DataValidationException e){
         log.error("Illegal Argument", e);
         return new ErrorResponseDto(
                 HttpStatus.BAD_REQUEST.name(),

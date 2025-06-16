@@ -1,6 +1,7 @@
 package faang.school.analytics.controller;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -24,7 +25,7 @@ public class AnalyticsEventController {
 
     private final AnalyticsEventService analyticsEventService;
 
-    @GetMapping()
+    @GetMapping
     List<AnalyticsEventDto> getAnalytics(
             @RequestParam long receiverId,
             @RequestParam String eventType,
@@ -36,40 +37,26 @@ public class AnalyticsEventController {
         LocalDateTime startDate = null;
         LocalDateTime endDate = null;
         EventType type;
+        if (interval == null && (start == null || end == null)) {
+            throw new DataValidationException("if the \"interval\" parameter is missing," +
+                    " both start and end dates of the search interval should be specified");
+        }
         try {
             type = EventType.valueOf(eventType.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            log.error("Incorrect event type {} in analytics request for receiver {}", eventType, receiverId, e);
-            throw new IllegalArgumentException("Incorrect event type.");
-        }
-        if (interval != null) {
-            try {
+            if (interval != null) {
                 analyticsInterval = Interval.valueOf(interval.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                log.error("Incorrect interval {} in analytics request for receiver {}", interval, receiverId, e);
-                throw new IllegalArgumentException("Incorrect interval. Do not use \"interval\" parameter " +
-                        "if you want to specify both start and end dates of the search");
-            }
-        } else {
-            if (start == null || end == null) {
-                log.error("Start or end date is null: {}, {} in analytics request for receiver {}",
-                        start, end, receiverId);
-                throw new IllegalArgumentException("if the \"interval\" parameter is missing," +
-                        " both start and end dates of the search interval should be specified");
-            }
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            try {
+            } else {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
                 startDate = LocalDateTime.parse(start, formatter);
                 endDate = LocalDateTime.parse(end, formatter);
-            } catch (DateTimeParseException e) {
-                log.error("Invalid date format {} in analytics request for receiver {}, {}", start, end, receiverId, e);
-                throw new IllegalArgumentException(String.format("Invalid date format %s %s." +
-                        " Format should be like yyyy-MM-dd HH:mm", start, end));
             }
+        } catch (IllegalArgumentException | DateTimeParseException e){
+            log.error("Invalid values in analytics request: receiverId={}, eventType={}, interval={}, start={}, end={}",
+                    receiverId, eventType, interval, start, end, e);
+            throw new DataValidationException("Invalid request values");
         }
-
-        log.info("Start getting analytics for receiver {}, type {}, interval {}, start {}, end{}",
-                receiverId, type, analyticsInterval, startDate, endDate);
-        return analyticsEventService.getAnalytics(receiverId, type, analyticsInterval, startDate, endDate);
+            log.debug("Start getting analytics for receiver {}, type {}, interval {}, start {}, end{}",
+                    receiverId, type, analyticsInterval, startDate, endDate);
+            return analyticsEventService.getAnalytics(receiverId, type, analyticsInterval, startDate, endDate);
     }
 }
