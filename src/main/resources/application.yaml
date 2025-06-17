@@ -38,6 +38,15 @@ spring:
       channel:
         profile-view: profile_view_channel
 
+    kafka:
+      consumer:
+        bootstrap-servers: localhost:9092, localhost:9094
+        group-id: analytics-created
+      topics:
+        follower-events:
+          name: follower_events
+
+
 server:
   port: 8086
 
