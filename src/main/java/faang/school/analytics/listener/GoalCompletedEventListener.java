@@ -1,9 +1,9 @@
-package faang.school.analytics.eventlistner;
+package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.config.redis.RedisProperties;
 import faang.school.analytics.dto.GoalCompletedEvent;
-import faang.school.analytics.mapper.goalcompleted.UserServiceEventMapper;
+import faang.school.analytics.mapper.event.UserServiceEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,6 @@ public class GoalCompletedEventListener extends AbstractEventListener {
 
         } catch (IOException e) {
             log.error(e.getMessage(), e);
-            throw new RuntimeException("Analytics write exception");//todo make it custom on whole events refactor
         }
     }
 

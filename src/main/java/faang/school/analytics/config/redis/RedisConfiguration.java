@@ -1,8 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.eventlistner.AbstractEventListener;
-import lombok.RequiredArgsConstructor;
+import faang.school.analytics.listener.AbstractEventListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -14,12 +13,11 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import java.util.List;
 
 @Configuration
-@RequiredArgsConstructor
 public class RedisConfiguration {
-    private final List<AbstractEventListener> eventListeners;
 
     @Bean
-    public RedisMessageListenerContainer redisContainer(RedisConnectionFactory connectionFactory) {
+    public RedisMessageListenerContainer redisContainer(RedisConnectionFactory connectionFactory,
+                                                        List<AbstractEventListener> eventListeners) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         eventListeners.forEach(listener -> container.addMessageListener(listener, listener.getChannelTopics()));

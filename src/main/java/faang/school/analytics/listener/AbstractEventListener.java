@@ -1,4 +1,4 @@
-package faang.school.analytics.eventlistner;
+package faang.school.analytics.listener;
 
 import faang.school.analytics.config.redis.RedisProperties;
 import org.springframework.data.redis.connection.MessageListener;

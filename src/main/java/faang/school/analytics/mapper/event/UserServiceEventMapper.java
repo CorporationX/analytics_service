@@ -1,4 +1,4 @@
-package faang.school.analytics.mapper.goalcompleted;
+package faang.school.analytics.mapper.event;
 
 import faang.school.analytics.dto.GoalCompletedEvent;
 import faang.school.analytics.model.AnalyticsEvent;
