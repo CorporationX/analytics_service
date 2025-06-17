@@ -30,7 +30,7 @@ public class GoalCompletedEventListener extends AbstractEventListener {
         try {
             GoalCompletedEvent event = objectMapper.readValue(message.getBody(), GoalCompletedEvent.class);
             service.saveEvent(userServiceEventMapper.goalCompleteToAnalytics(event));
-            log.info("Goal {} completion was saved, goalId: {}", event.goalName(), event.goalId());
+            log.info("Goal {} completion was saved, goalId: {}", event.goalTitle(), event.goalId());
 
         } catch (IOException e) {
             log.error(e.getMessage(), e);

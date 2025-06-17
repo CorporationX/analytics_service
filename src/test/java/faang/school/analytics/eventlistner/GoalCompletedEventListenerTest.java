@@ -17,6 +17,7 @@ import org.springframework.data.redis.connection.Message;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -43,7 +44,7 @@ class GoalCompletedEventListenerTest {
     @Test
     void onMessage_shouldParseAndSaveEvent() throws IOException {
         LocalDateTime time = LocalDateTime.of(2025, Month.JUNE, 16, 12, 0, 0);
-        GoalCompletedEvent event = new GoalCompletedEvent(1L, "goalName", time); // adjust constructor as needed
+        GoalCompletedEvent event = new GoalCompletedEvent(1L, "goalName", List.of(1L, 2L), time); // adjust constructor as needed
         AnalyticsEvent mappedEvent = new AnalyticsEvent(); // dummy mapped object
 
         byte[] json = "{\"goalId\":1,\"goalName\":\"goalName\",\"userId\":2,\"ownerId\":3}".getBytes();
