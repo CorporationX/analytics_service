@@ -1,13 +1,19 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.config.redis.RedisProperties;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.data.redis.listener.ChannelTopic;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 public abstract class AbstractEventListener<T> implements MessageListener {
@@ -17,6 +23,16 @@ public abstract class AbstractEventListener<T> implements MessageListener {
     protected AbstractEventListener(AnalyticsEventService analyticsEventService, ObjectMapper objectMapper) {
         this.analyticsEventService = analyticsEventService;
         this.objectMapper = objectMapper;
+    }
+
+    public abstract Set<ChannelTopic> getChannelTopics();
+
+    public Set<ChannelTopic> getChanelTopics(List<String> topicNames, RedisProperties properties) {
+        return properties.getChannels().entrySet().stream()
+                .filter(entry -> topicNames.contains(entry.getKey()))
+                .map(Map.Entry::getValue)
+                .map(ChannelTopic::new)
+                .collect(Collectors.toSet());
     }
 
     @Override
