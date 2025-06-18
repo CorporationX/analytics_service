@@ -2,13 +2,11 @@ package faang.school.analytics.service.analytics;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
-import faang.school.analytics.dto.LikeEvent;
-import faang.school.analytics.mapper.like.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
+import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.service.AnalyticsEventService;
-import faang.school.analytics.model.Interval;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,8 +21,6 @@ import java.util.List;
 @Slf4j
 public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     private final AnalyticsEventRepository analyticsRepository;
-
-    private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventMapper analyticsEventMapper;
 
     @Override
@@ -49,10 +45,8 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
         return analyticsEventList.stream()
                 .map(analyticsEventMapper::toDto)
                 .toList();
-    public void addLikeEvent(LikeEvent event) {
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.likeEventToAnalytics(event);
-        analyticsEventRepository.save(analyticsEvent);
     }
+
 
     private record AnalyticsInterval(
             LocalDateTime startDate,

@@ -4,11 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import faang.school.analytics.dto.LikeEvent;
+import faang.school.analytics.mapper.like.PostServiceEventMapperImpl;
+import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.Message;
 
@@ -30,6 +33,9 @@ class LikeEventListenerTest {
 
     private LikeEventListener likeEventListener;
 
+    @Spy
+    private PostServiceEventMapperImpl postServiceEventMapper;
+
     @Mock
     private Message message;
 
@@ -37,7 +43,7 @@ class LikeEventListenerTest {
     void setUp() {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        likeEventListener = new LikeEventListener(analyticsEventService, objectMapper);
+        likeEventListener = new LikeEventListener(analyticsEventService, objectMapper, postServiceEventMapper);
     }
 
     @Test
@@ -50,6 +56,8 @@ class LikeEventListenerTest {
                 .userId(1L)
                 .createdAt(date)
                 .build();
+
+        AnalyticsEvent analyticsEvent = postServiceEventMapper.likeEventToAnalytics(expectedEvent);
         // Преобразуем объект в JSON, чтобы симулировать входящее сообщение
         String jsonMessage = objectMapper.writeValueAsString(expectedEvent);
 
@@ -57,7 +65,7 @@ class LikeEventListenerTest {
 
         likeEventListener.onMessage(message, null);
 
-        verify(analyticsEventService, times(1)).addLikeEvent(expectedEvent);
+        verify(analyticsEventService, times(1)).saveEvent(analyticsEvent);
         verifyNoMoreInteractions(analyticsEventService);
     }
 
@@ -79,7 +87,7 @@ class LikeEventListenerTest {
         when(message.getBody()).thenReturn(corruptedBytes);
         when(mockObjectMapper.readValue(any(byte[].class), eq(LikeEvent.class))).thenThrow(new IOException("Simulated deserialization error"));
 
-        likeEventListener = new LikeEventListener(analyticsEventService, mockObjectMapper);
+        likeEventListener = new LikeEventListener(analyticsEventService, mockObjectMapper, postServiceEventMapper);
 
         assertThrows(RuntimeException.class, () -> likeEventListener.onMessage(message, null));
         verifyNoInteractions(analyticsEventService);
