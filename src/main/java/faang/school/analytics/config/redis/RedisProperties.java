@@ -10,7 +10,8 @@ public record RedisProperties(
         @NestedConfigurationProperty ChannelNames channelNames
 ) {
     public record ChannelNames(
-            String profileView
+            String profileView,
+            String recommendationEvent
     ) {
     }
 }
