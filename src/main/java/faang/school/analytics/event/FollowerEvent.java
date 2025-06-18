@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FollowerEvent {
-    private String followerId;
-    private String targetId;
+    private Long followerId;
+    private Long targetId;
     private EventType eventType;
     @JsonProperty("occurredAt")
     private LocalDateTime timestamp;
