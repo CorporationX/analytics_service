@@ -7,9 +7,10 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ProfileViewEventMapper {
-    @Mapping(source = "localDateTime", target = "receivedAt")
-    @Mapping(source = "viewedUserId", target = "receiverId")
-    @Mapping(source = "viewerUserId", target = "actorId")
-    @Mapping(source = "eventType", target = "eventType")
+
+    @Mapping(source = "occurredAt", target = "receivedAt")
+    @Mapping(source = "authorId", target = "actorId")
+    @Mapping(source = "eventTypeEnum", target = "eventType")
+    @Mapping(target = "id", ignore = true)
     AnalyticsEvent toAnalyticsEvent(ProfileViewEvent profileViewEvent);
 }
