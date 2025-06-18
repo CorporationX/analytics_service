@@ -24,7 +24,7 @@ spring:
       channels:
         profile-view: profile_view_channel
         goal-complete: goal_complete
-        recommendation_event: recommendation_event
+        recommendation-event: recommendation_event
 
 server:
   port: 8086
