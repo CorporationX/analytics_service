@@ -1,6 +1,5 @@
 package faang.school.analytics.config.redis;
 
-import faang.school.analytics.listener.AnalyticsEventListener;
 import faang.school.analytics.listener.LikeEventListener;
 import faang.school.analytics.listener.PostViewEventListener;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -39,15 +38,12 @@ public class RedisConfig {
     @Bean
     public RedisMessageListenerContainer redisContainer(
             RedisConnectionFactory connectionFactory,
-            MessageListenerAdapter listenerAnalyticsEventAdapter,
-            ChannelTopic analyticsTopic,
             MessageListenerAdapter listenerLikesEventAdapter,
             ChannelTopic likesTopic,
             @Qualifier("listenerPostViewEventAdapter") MessageListenerAdapter listenerPostViewEventAdapter,
             @Qualifier("postViewTopic") ChannelTopic postViewTopic) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(listenerAnalyticsEventAdapter, analyticsTopic);
         container.addMessageListener(listenerLikesEventAdapter, likesTopic);
         container.addMessageListener(listenerPostViewEventAdapter, postViewTopic);
         return container;
@@ -64,10 +60,6 @@ public class RedisConfig {
         return new MessageListenerAdapter(likesEventListener);
     }
 
-    @Bean
-    public ChannelTopic analyticsTopic() {
-        return new ChannelTopic(analyticsChannel);
-      
     @Qualifier("postViewTopic")
     public ChannelTopic postViewTopic() {
         return new ChannelTopic(postViewChannel);
