@@ -23,10 +23,6 @@ public class RedisConfiguration {
     public RedisMessageListenerContainer redisContainer(RedisConnectionFactory connectionFactory, MessageListenerAdapter adapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        /**
-         * Добавлять обработчики тут:
-         * container.addMessageListener(userBanListener, topic());
-         */
 
         container.addMessageListener(adapter, recommendationTopic());
 
