@@ -1,6 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import faang.school.analytics.listener.AnalyticsEventListener;
+import faang.school.analytics.listener.LikeEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.channel.analytics}")
     private String analyticsChannel;
 
+    @Value("${spring.data.redis.channel.likesReceived}")
+    private String likesChannel;
+
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
@@ -34,10 +38,13 @@ public class RedisConfig {
     public RedisMessageListenerContainer redisContainer(
             RedisConnectionFactory connectionFactory,
             MessageListenerAdapter listenerAnalyticsEventAdapter,
-            ChannelTopic analyticsTopic) {
+            ChannelTopic analyticsTopic,
+            MessageListenerAdapter listenerLikesEventAdapter,
+            ChannelTopic likesTopic) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.addMessageListener(listenerAnalyticsEventAdapter, analyticsTopic);
+        container.addMessageListener(listenerLikesEventAdapter, likesTopic);
         return container;
     }
 
@@ -47,7 +54,17 @@ public class RedisConfig {
     }
 
     @Bean
+    public MessageListenerAdapter listenerLikesEventAdapter(LikeEventListener likesEventListener) {
+        return new MessageListenerAdapter(likesEventListener);
+    }
+
+    @Bean
     public ChannelTopic analyticsTopic() {
         return new ChannelTopic(analyticsChannel);
+    }
+
+    @Bean
+    public ChannelTopic likesTopic() {
+        return new ChannelTopic(likesChannel);
     }
 }
