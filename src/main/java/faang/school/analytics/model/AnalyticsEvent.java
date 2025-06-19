@@ -24,7 +24,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="analytics_event")
 public class AnalyticsEvent {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
