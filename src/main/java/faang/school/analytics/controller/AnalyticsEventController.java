@@ -50,13 +50,12 @@ public class AnalyticsEventController {
                 startDate = LocalDateTime.parse(start, formatter);
                 endDate = LocalDateTime.parse(end, formatter);
             }
-        } catch (IllegalArgumentException | DateTimeParseException e){
-            log.error("Invalid values in analytics request: receiverId={}, eventType={}, interval={}, start={}, end={}",
-                    receiverId, eventType, interval, start, end, e);
+        } catch (IllegalArgumentException | DateTimeParseException e) {
+            log.error("Invalid values in analytics request", e);
             throw new DataValidationException("Invalid request values");
         }
-            log.debug("Start getting analytics for receiver {}, type {}, interval {}, start {}, end{}",
-                    receiverId, type, analyticsInterval, startDate, endDate);
-            return analyticsEventService.getAnalytics(receiverId, type, analyticsInterval, startDate, endDate);
+        log.debug("Start getting analytics for receiver {}, type {}, interval {}, start {}, end{}",
+                receiverId, type, analyticsInterval, startDate, endDate);
+        return analyticsEventService.getAnalytics(receiverId, type, analyticsInterval, startDate, endDate);
     }
 }

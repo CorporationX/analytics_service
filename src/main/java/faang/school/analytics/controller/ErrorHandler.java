@@ -19,14 +19,14 @@ public class ErrorHandler {
 
     @ExceptionHandler(DataValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponseDto handleIllegalArgument (DataValidationException e){
+    public ErrorResponseDto handleIllegalArgument(DataValidationException e) {
         log.error("Illegal Argument", e);
         return new ErrorResponseDto(
                 HttpStatus.BAD_REQUEST.name(),
                 "Invalid data provided.",
                 e.getMessage(),
                 LocalDateTime.now().format(formatter)
-                );
+        );
     }
 
     @ExceptionHandler(Exception.class)
@@ -35,7 +35,7 @@ public class ErrorHandler {
         log.error("Exception was thrown", e);
         return new ErrorResponseDto(
                 HttpStatus.INTERNAL_SERVER_ERROR.name(),
-                "Something get wrong.",
+                "Something went wrong.",
                 e.getMessage(),
                 LocalDateTime.now().format(formatter)
         );

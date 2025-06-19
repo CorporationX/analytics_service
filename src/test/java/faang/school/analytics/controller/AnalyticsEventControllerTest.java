@@ -39,6 +39,8 @@ class AnalyticsEventControllerTest {
 
     @MockBean
     private UserContext userContext;
+    @InjectMocks
+    private AnalyticsEventController analyticsEventController;
 
     private AnalyticsEventDto eventDto;
 
