@@ -12,11 +12,11 @@ public interface UserServiceEventMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "actorId", source = "goalId")
-    @Mapping(target = "eventType", expression = "java(setEventType())")
+    @Mapping(target = "eventType", expression = "java(setEventType(\"GOAL_COMPLETED\"))")
     @Mapping(target = "receivedAt", source = "time")
     AnalyticsEvent goalCompleteToAnalytics(GoalCompletedEvent event);
 
-    default EventType setEventType() {
-        return EventType.GOAL_COMPLETED;
+    default EventType setEventType(String type) {
+        return EventType.valueOf(type);
     }
 }

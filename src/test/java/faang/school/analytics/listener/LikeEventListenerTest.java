@@ -3,15 +3,15 @@ package faang.school.analytics.listener;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import faang.school.analytics.config.redis.RedisProperties;
 import faang.school.analytics.dto.LikeEvent;
-import faang.school.analytics.mapper.like.PostServiceEventMapperImpl;
+import faang.school.analytics.mapper.event.PostServiceEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.connection.Message;
 
@@ -33,8 +33,11 @@ class LikeEventListenerTest {
 
     private LikeEventListener likeEventListener;
 
-    @Spy
-    private PostServiceEventMapperImpl postServiceEventMapper;
+    @Mock
+    private RedisProperties redisProperties;
+
+    @Mock
+    private PostServiceEventMapper postServiceEventMapper;
 
     @Mock
     private Message message;
@@ -43,7 +46,7 @@ class LikeEventListenerTest {
     void setUp() {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        likeEventListener = new LikeEventListener(analyticsEventService, objectMapper, postServiceEventMapper);
+        likeEventListener = new LikeEventListener(analyticsEventService, objectMapper, postServiceEventMapper, redisProperties);
     }
 
     @Test
@@ -87,7 +90,7 @@ class LikeEventListenerTest {
         when(message.getBody()).thenReturn(corruptedBytes);
         when(mockObjectMapper.readValue(any(byte[].class), eq(LikeEvent.class))).thenThrow(new IOException("Simulated deserialization error"));
 
-        likeEventListener = new LikeEventListener(analyticsEventService, mockObjectMapper, postServiceEventMapper);
+        likeEventListener = new LikeEventListener(analyticsEventService, mockObjectMapper, postServiceEventMapper, redisProperties);
 
         assertThrows(RuntimeException.class, () -> likeEventListener.onMessage(message, null));
         verifyNoInteractions(analyticsEventService);

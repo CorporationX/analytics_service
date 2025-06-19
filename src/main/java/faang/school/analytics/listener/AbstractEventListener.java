@@ -19,20 +19,14 @@ import java.util.stream.Collectors;
 public abstract class AbstractEventListener<T> implements MessageListener {
     protected final AnalyticsEventService analyticsEventService;
     protected final ObjectMapper objectMapper;
+    protected final RedisProperties redisProperties;
 
-    protected AbstractEventListener(AnalyticsEventService analyticsEventService, ObjectMapper objectMapper) {
+    protected AbstractEventListener(AnalyticsEventService analyticsEventService,
+                                    ObjectMapper objectMapper,
+                                    RedisProperties redisProperties) {
         this.analyticsEventService = analyticsEventService;
         this.objectMapper = objectMapper;
-    }
-
-    public abstract Set<ChannelTopic> getChannelTopics();
-
-    public Set<ChannelTopic> getChanelTopics(List<String> topicNames, RedisProperties properties) {
-        return properties.getChannels().entrySet().stream()
-                .filter(entry -> topicNames.contains(entry.getKey()))
-                .map(Map.Entry::getValue)
-                .map(ChannelTopic::new)
-                .collect(Collectors.toSet());
+        this.redisProperties = redisProperties;
     }
 
     @Override
@@ -51,11 +45,25 @@ public abstract class AbstractEventListener<T> implements MessageListener {
         }
     }
 
+    public Set<ChannelTopic> getChannelTopics() {
+        return getChanelTopics(getTopicNameKeys(), redisProperties);
+    }
+
+    protected abstract List<String> getTopicNameKeys();
+
     protected abstract Class<T> getEventClass();
 
     protected abstract AnalyticsEvent mapToAnalyticsEvent(T event);
 
     private T convertMessage(Message message) throws IOException {
         return objectMapper.readValue(message.getBody(), getEventClass());
+    }
+
+    private Set<ChannelTopic> getChanelTopics(List<String> topicNames, RedisProperties properties) {
+        return properties.getChannels().entrySet().stream()
+                .filter(entry -> topicNames.contains(entry.getKey()))
+                .map(Map.Entry::getValue)
+                .map(ChannelTopic::new)
+                .collect(Collectors.toSet());
     }
 }
