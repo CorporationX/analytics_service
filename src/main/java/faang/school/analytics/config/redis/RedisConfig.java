@@ -38,8 +38,8 @@ public class RedisConfig {
     @Bean
     public RedisMessageListenerContainer redisContainer(
             RedisConnectionFactory connectionFactory,
-            MessageListenerAdapter listenerLikesEventAdapter,
-            ChannelTopic likesTopic,
+            @Qualifier("listenerLikesEventAdapter") MessageListenerAdapter listenerLikesEventAdapter,
+            @Qualifier("likesTopic") ChannelTopic likesTopic,
             @Qualifier("listenerPostViewEventAdapter") MessageListenerAdapter listenerPostViewEventAdapter,
             @Qualifier("postViewTopic") ChannelTopic postViewTopic) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
@@ -56,6 +56,7 @@ public class RedisConfig {
     }
 
     @Bean
+    @Qualifier("listenerLikesEventAdapter")
     public MessageListenerAdapter listenerLikesEventAdapter(LikeEventListener likesEventListener) {
         return new MessageListenerAdapter(likesEventListener);
     }
@@ -66,6 +67,7 @@ public class RedisConfig {
     }
 
     @Bean
+    @Qualifier("likesTopic")
     public ChannelTopic likesTopic() {
         return new ChannelTopic(likesChannel);
     }
