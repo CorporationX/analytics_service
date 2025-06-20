@@ -61,6 +61,7 @@ public class RedisConfig {
         return new MessageListenerAdapter(likesEventListener);
     }
 
+    @Bean
     @Qualifier("postViewTopic")
     public ChannelTopic postViewTopic() {
         return new ChannelTopic(postViewChannel);
