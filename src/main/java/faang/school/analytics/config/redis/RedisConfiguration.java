@@ -17,10 +17,11 @@ public class RedisConfiguration {
 
     @Bean
     public <T> RedisMessageListenerContainer redisContainer(RedisConnectionFactory connectionFactory,
-                                                            List<AbstractEventListener<T>> eventListeners) {
+                                                            List<AbstractEventListener> eventListeners) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        eventListeners.forEach(listener -> container.addMessageListener(listener, listener.getChannelTopics()));
+        eventListeners.forEach(listener ->
+                container.addMessageListener(listener, listener.getChannelTopics()));
 
         return container;
     }

@@ -4,36 +4,41 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.config.redis.RedisProperties;
 import faang.school.analytics.dto.LikeEvent;
 import faang.school.analytics.mapper.event.PostServiceEventMapper;
-import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.connection.Message;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
+@Slf4j
 @Component
-public class LikeEventListener extends AbstractEventListener<LikeEvent> {
+@RequiredArgsConstructor
+public class LikeEventListener extends AbstractEventListener {
+    private final List<String> topicNameKeys = List.of("like-event");
+    private final AnalyticsEventService service;
+    private final ObjectMapper objectMapper;
     private final PostServiceEventMapper postServiceEventMapper;
+    private final RedisProperties properties;
 
-    public LikeEventListener(AnalyticsEventService analyticsEventService,
-                             ObjectMapper objectMapper,
-                             PostServiceEventMapper postServiceEventMapper,
-                             RedisProperties redisProperties) {
-        super(analyticsEventService, objectMapper, redisProperties);
-        this.postServiceEventMapper = postServiceEventMapper;
+    @Override
+    public void onMessage(Message message, byte[] pattern) {
+        try {
+            LikeEvent event = objectMapper.readValue(message.getBody(), LikeEvent.class);
+            service.saveEvent(postServiceEventMapper.likeEventToAnalytics(event));
+            log.debug("Like event was saved, for post with ID: {}", event.getPostId());
+        } catch (IOException e) {
+            log.warn("Failed to process message. Message body:\n{}", message.getBody());
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public List<String> getTopicNameKeys() {
-        return List.of("like-event");
-    }
-
-    @Override
-    protected Class<LikeEvent> getEventClass() {
-        return LikeEvent.class;
-    }
-
-    @Override
-    protected AnalyticsEvent mapToAnalyticsEvent(LikeEvent event) {
-        return postServiceEventMapper.likeEventToAnalytics(event);
+    public Set<ChannelTopic> getChannelTopics() {
+        return super.getChannelTopics(topicNameKeys, properties);
     }
 }
