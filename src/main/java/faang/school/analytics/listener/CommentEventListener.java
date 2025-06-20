@@ -25,9 +25,8 @@ public class CommentEventListener implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        CommentEvent commentEvent;
         try {
-            commentEvent = objectMapper.readValue(message.getBody(), CommentEvent.class);
+            CommentEvent commentEvent = objectMapper.readValue(message.getBody(), CommentEvent.class);
             log.info("Received comment event: {}", commentEvent);
 
             AnalyticsEventDto analyticsEventDto = analyticsEventMapper.fromCommentEvent(commentEvent);
@@ -40,7 +39,7 @@ public class CommentEventListener implements MessageListener {
             log.error(errorMessage, e);
             throw new CommentEventDeserializationException(errorMessage, e);
         } catch (Exception e) {
-            log.error("Error processing comment event: {}", message.toString(), e);
+            log.error("Error processing comment event: {}", message, e);
         }
     }
 }

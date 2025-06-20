@@ -1,9 +1,8 @@
 package faang.school.analytics.errorMessage;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class ErrorMessage {
     private static final String ERROR_DESERIALIZATION = "Ошибка десериализации события комментария: %s";
 

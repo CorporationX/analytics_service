@@ -21,18 +21,11 @@ public class CommentAnalyticsController {
     @GetMapping("/post/{postId}")
     public List<AnalyticsEventDto> getPostCommentAnalytics(
             @PathVariable long postId,
-            @RequestParam(required = false) String interval,
+            @RequestParam(required = false) Interval interval,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
 
-        Optional<Interval> intervalOpt = Optional.ofNullable(interval)
-                .map(intervalStr -> {
-                    try {
-                        return Interval.valueOf(intervalStr.toUpperCase());
-                    } catch (IllegalArgumentException e) {
-                        throw new IllegalArgumentException("Недопустимый интервал: " + intervalStr);
-                    }
-                });
+        Optional<Interval> intervalOpt = Optional.ofNullable(interval);
 
         if (intervalOpt.isEmpty() && (from == null || to == null)) {
             throw new IllegalArgumentException("Необходимо указать либо интервал, либо обе даты (from и to)");

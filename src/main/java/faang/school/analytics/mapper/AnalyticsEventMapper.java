@@ -27,8 +27,8 @@ public interface AnalyticsEventMapper {
     List<AnalyticsEvent> toEntityList(List<AnalyticsEventDto> dtos);
 
     @Mapping(source = "postId", target = "receiverId")
-    @Mapping(source = "autorId", target = "actorId")
-    @Mapping(target = "eventType", expression = "java(EventType.POST_COMMENT.name())")
+    @Mapping(source = "authorId", target = "actorId")
+    @Mapping(target = "eventType", constant = "POST_COMMENT")
     @Mapping(source = "timestamp", target = "receivedAt")
-    AnalyticsEventDto fromCommentEvent(CommentEvent comentEvent);
+    AnalyticsEventDto fromCommentEvent(CommentEvent commentEvent);
 }
