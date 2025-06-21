@@ -11,9 +11,8 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserServiceEventMapper {
 
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "actorId", source = "goalId")
-    @Mapping(target = "eventType", expression = "java(setEventType())")
+    @Mapping(target = "eventType", expression = "java(setEventType(\"GOAL_COMPLETED\"))")
     @Mapping(target = "receivedAt", source = "time")
     AnalyticsEvent goalCompleteToAnalytics(GoalCompletedEvent event);
 
