@@ -7,5 +7,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface AnalyticsEventMapper {
+    @Mapping(target = "eventType", source = "eventType")
     AnalyticsEventDto toDto(AnalyticsEvent event);
 }
