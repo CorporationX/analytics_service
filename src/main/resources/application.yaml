@@ -24,6 +24,7 @@ spring:
       channels:
         profile-view: profile_view_channel
         goal-complete: goal_complete
+        recommendation-event: recommendation_event
         comment_topic: comment_topic
 
 server:

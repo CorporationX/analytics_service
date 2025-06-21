@@ -33,26 +33,38 @@ public class AnalyticsEventController {
             @RequestParam(required = false) String start,
             @RequestParam(required = false) String end
     ) {
+        EventType type;
+        try {
+            type = EventType.valueOf(eventType.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            log.error("Invalid values in analytics request", e);
+            throw new DataValidationException("Invalid request value eventType");
+        }
+
         Interval analyticsInterval = null;
         LocalDateTime startDate = null;
         LocalDateTime endDate = null;
-        EventType type;
         if (interval == null && (start == null || end == null)) {
             throw new DataValidationException("if the \"interval\" parameter is missing," +
                     " both start and end dates of the search interval should be specified");
         }
-        try {
-            type = EventType.valueOf(eventType.toUpperCase());
-            if (interval != null) {
+        if (interval != null) {
+            try {
                 analyticsInterval = Interval.valueOf(interval.toUpperCase());
-            } else {
+            } catch (IllegalArgumentException e) {
+                log.error("Invalid values in analytics request", e);
+                throw new DataValidationException("Invalid request value interval");
+            }
+        } else {
+            try {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
                 startDate = LocalDateTime.parse(start, formatter);
                 endDate = LocalDateTime.parse(end, formatter);
+            } catch (DateTimeParseException e) {
+                log.error("Invalid date format in analytics request for receiver {}", receiverId, e);
+                throw new DataValidationException("Invalid date format." +
+                        " Format should be like yyyy-MM-dd HH:mm");
             }
-        } catch (IllegalArgumentException | DateTimeParseException e) {
-            log.error("Invalid values in analytics request", e);
-            throw new DataValidationException("Invalid request values");
         }
         log.debug("Start getting analytics for receiver {}, type {}, interval {}, start {}, end{}",
                 receiverId, type, analyticsInterval, startDate, endDate);
