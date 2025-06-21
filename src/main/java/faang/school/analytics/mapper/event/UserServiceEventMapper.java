@@ -1,6 +1,7 @@
 package faang.school.analytics.mapper.event;
 
 import faang.school.analytics.dto.GoalCompletedEvent;
+import faang.school.analytics.dto.RecommendationReceivedEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.mapstruct.Mapper;
@@ -16,7 +17,12 @@ public interface UserServiceEventMapper {
     @Mapping(target = "receivedAt", source = "time")
     AnalyticsEvent goalCompleteToAnalytics(GoalCompletedEvent event);
 
-    default EventType setEventType() {
-        return EventType.GOAL_COMPLETED;
+    @Mapping(target = "actorId", source = "authorId")
+    @Mapping(target = "eventType", expression = "java(setEventType(\"RECOMMENDATION_RECEIVED\"))")
+    @Mapping(target = "receivedAt", source = "createdAt")
+    AnalyticsEvent recommendationReceivedToAnalytics(RecommendationReceivedEvent event);
+
+    default EventType setEventType(String type) {
+        return EventType.valueOf(type);
     }
 }
