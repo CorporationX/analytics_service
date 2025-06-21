@@ -33,7 +33,6 @@ public class LikeEventListener extends AbstractEventListener {
             log.debug("Like event was saved, for post with ID: {}", event.getPostId());
         } catch (IOException e) {
             log.warn("Failed to process message. Message body:\n{}", message.getBody());
-            throw new RuntimeException(e);
         }
     }
 
