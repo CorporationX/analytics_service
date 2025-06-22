@@ -1,5 +1,6 @@
 package faang.school.analytics.service;
 
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -43,7 +44,8 @@ public class AnalyticsEventServiceTest {
                 .thenReturn(
                         Stream.of(event)
                 );
-        assertEquals(List.of(mapper.toDto(event)), service.getAnalytics(1, EventType.FOLLOWER, null, LocalDateTime.now().minusMonths(2), LocalDateTime.now()));
+        List<AnalyticsEventDto> result = service.getAnalytics(1, EventType.FOLLOWER, null, LocalDateTime.now().minusMonths(2), LocalDateTime.now());
+        assertEquals(List.of(mapper.toDto(event)), result);
     }
 
     @Test
@@ -53,6 +55,8 @@ public class AnalyticsEventServiceTest {
                 .thenReturn(
                         Stream.of(event)
                 );
-        assertEquals(List.of(mapper.toDto(event)), service.getAnalytics(1, EventType.FOLLOWER, Interval.TWO_MONTHS_AGO, LocalDateTime.now().minusMonths(2), LocalDateTime.now()));
+        List<AnalyticsEventDto> result = service
+                .getAnalytics(1, EventType.FOLLOWER, Interval.TWO_MONTHS_AGO, LocalDateTime.now().minusMonths(2), LocalDateTime.now());
+        assertEquals(List.of(mapper.toDto(event)), result);
     }
 }

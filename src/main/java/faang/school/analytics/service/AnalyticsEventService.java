@@ -8,6 +8,7 @@ import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -19,6 +20,7 @@ public class AnalyticsEventService {
     private final AnalyticsEventRepository repository;
     private final AnalyticsEventMapper mapper;
 
+    @Transactional
     public AnalyticsEventDto saveEvent(AnalyticsEvent event) {
         return mapper.toDto(repository.save(event));
     }
