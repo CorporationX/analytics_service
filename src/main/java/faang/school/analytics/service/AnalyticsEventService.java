@@ -30,7 +30,7 @@ public class AnalyticsEventService {
                     if (interval == null) {
                         return event.getReceivedAt().isAfter(from) && event.getReceivedAt().isBefore(to);
                     }
-                    return event.getReceivedAt().isAfter(interval.getDate().atStartOfDay());
+                    return event.getReceivedAt().isAfter(interval.getDate());
                 })
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .map(mapper::toDto)
