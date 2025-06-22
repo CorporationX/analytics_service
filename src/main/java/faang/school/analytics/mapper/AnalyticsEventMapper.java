@@ -1,17 +1,16 @@
 package faang.school.analytics.mapper;
 
-import java.util.List;
-
+import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.CommentEvent;
+import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import org.mapstruct.ReportingPolicy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-import faang.school.analytics.dto.CommentEvent;
+import org.mapstruct.ReportingPolicy;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
-import faang.school.analytics.model.AnalyticsEvent;
+import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,

@@ -3,7 +3,6 @@ package faang.school.analytics.listener;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.CommentEvent;
-import faang.school.analytics.errorMessage.ErrorMessage;
 import faang.school.analytics.exception.CommentEventDeserializationException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.service.AnalyticsService;
@@ -35,11 +34,14 @@ public class CommentEventListener implements MessageListener {
             log.info("Saved analytics event from comment: {}", analyticsEventDto);
 
         } catch (IOException e) {
-            String errorMessage = ErrorMessage.formatDeserializationError(e.getClass().getSimpleName() + ": " + e.getMessage());
-            log.error(errorMessage, e);
-            throw new CommentEventDeserializationException(errorMessage, e);
+            CommentEventDeserializationException exception =
+                    CommentEventDeserializationException.fromIOException(e);
+            log.error(exception.getMessage(), e);
+            throw exception;
+
         } catch (Exception e) {
-            log.error("Error processing comment event: {}", message, e);
+            log.error("Ошибка обработки события комментария: {}", message, e);
+            throw new RuntimeException("Неожиданная ошибка при обработке события комментария", e);
         }
     }
 }

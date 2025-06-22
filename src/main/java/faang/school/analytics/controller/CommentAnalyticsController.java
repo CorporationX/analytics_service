@@ -6,7 +6,11 @@ import faang.school.analytics.model.Interval;
 import faang.school.analytics.service.AnalyticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,16 +29,10 @@ public class CommentAnalyticsController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
 
-        Optional<Interval> intervalOpt = Optional.ofNullable(interval);
-
-        if (intervalOpt.isEmpty() && (from == null || to == null)) {
-            throw new IllegalArgumentException("Необходимо указать либо интервал, либо обе даты (from и to)");
-        }
-
         return analyticsService.getAnalytics(
                 postId,
                 EventType.POST_COMMENT,
-                intervalOpt,
+                Optional.ofNullable(interval),
                 from,
                 to
         );
