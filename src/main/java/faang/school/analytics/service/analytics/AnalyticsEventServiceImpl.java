@@ -20,14 +20,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class AnalyticsEventServiceImpl implements AnalyticsEventService {
-
-    private final AnalyticsEventRepository analyticsEventRepository;
+    private final AnalyticsEventRepository analyticsRepository;
     private final AnalyticsEventMapper analyticsEventMapper;
 
     @Override
     @Transactional
     public void saveEvent(AnalyticsEvent event) {
-        analyticsEventRepository.save(event);
+        AnalyticsEvent savedEvent = analyticsRepository.save(event);
+        log.info("event has been saved to DB, event id = {}", savedEvent.getId());
     }
 
     @Override
@@ -35,7 +35,7 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     public List<AnalyticsEventDto> getAnalytics(
             long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to) {
         AnalyticsInterval analyticsInterval = setAnalyticsInterval(interval, from, to);
-        List<AnalyticsEvent> analyticsEventList = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
+        List<AnalyticsEvent> analyticsEventList = analyticsRepository.findByReceiverIdAndEventType(receiverId, eventType)
                 .filter(event ->
                         event.getReceivedAt().isAfter(analyticsInterval.startDate)
                                 && event.getReceivedAt().isBefore(analyticsInterval.endDate))

@@ -80,7 +80,7 @@ class AnalyticsEventServiceImplTest {
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(eventDto.getClass(), result.get(0).getClass());
-        assertEquals("POST_PUBLISHED", result.get(0).getEventType());
+        assertEquals(EventType.POST_PUBLISHED, result.get(0).getEventType());
     }
 
     @Test

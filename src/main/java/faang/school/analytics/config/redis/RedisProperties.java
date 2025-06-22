@@ -16,4 +16,3 @@ public class RedisProperties {
     private int port;
     private Map<String, String> channels = new HashMap<>();
 }
-
