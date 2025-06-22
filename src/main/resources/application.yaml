@@ -37,6 +37,28 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092, localhost:9094
+      client-id: user-service
+      acks: all
+      properties:
+        linger:
+          ms: 0
+    consumer:
+      bootstrap-servers: localhost:9092, localhost:9094
+      group-id: analytics-created
+      max-poll-records: 50
+      offset-reset-config: latest
+    topics:
+      recommendation-events:
+        name: recommendation-events-topic
+        partitions: 1
+        replication-factor: 3
+        dlt:
+          name: ${spring.kafka.topics.recommendation-events-topic.name}.DLT
+          partitions: 1
+          replication-factor: 3
 
 server:
   port: 8086
