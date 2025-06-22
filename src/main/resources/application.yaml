@@ -25,6 +25,7 @@ spring:
         profile-view: profile_view_channel
         goal-complete: goal_complete
         recommendation-event: recommendation_event
+        premium-bought: premium_bought
 
 server:
   port: 8086
