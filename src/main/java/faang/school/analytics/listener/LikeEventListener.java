@@ -30,7 +30,7 @@ public class LikeEventListener extends AbstractEventListener {
         try {
             LikeEvent event = objectMapper.readValue(message.getBody(), LikeEvent.class);
             service.saveEvent(postServiceEventMapper.likeEventToAnalytics(event));
-            log.debug("Like event was saved, for post with ID: {}", event.getPostId());
+            log.debug("Like event was saved, for post with ID: {}", event.postId());
         } catch (IOException e) {
             log.warn("Failed to process message. Message body:\n{}", message.getBody());
         }
