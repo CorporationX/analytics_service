@@ -41,6 +41,6 @@ public class RecommendationReceivedEventListener extends AbstractEventListener {
 
     @Override
     public Set<ChannelTopic> getChannelTopics() {
-        return super.getChanelTopics(topicNameKeys, properties);
+        return super.getChannelTopics(topicNameKeys, properties);
     }
 }

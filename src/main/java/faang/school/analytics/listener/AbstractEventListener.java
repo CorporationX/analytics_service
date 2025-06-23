@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractEventListener implements MessageListener {
     public abstract Set<ChannelTopic> getChannelTopics();
 
-    public Set<ChannelTopic> getChanelTopics(List<String> topicNames, RedisProperties properties) {
+    public Set<ChannelTopic> getChannelTopics(List<String> topicNames, RedisProperties properties) {
         return properties.getChannels().entrySet().stream()
                 .filter(entry -> topicNames.contains(entry.getKey()))
                 .map(Map.Entry::getValue)

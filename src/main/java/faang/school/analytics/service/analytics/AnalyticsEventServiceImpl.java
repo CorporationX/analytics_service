@@ -47,6 +47,7 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
                 .toList();
     }
 
+
     private record AnalyticsInterval(
             LocalDateTime startDate,
             LocalDateTime endDate
