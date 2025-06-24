@@ -1,15 +1,15 @@
 package faang.school.analytics.listener;
 
-import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.service.AnalyticsEventService;
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PostLikeEventListener extends EventListener {
+@RequiredArgsConstructor
+public class PostLikeEventListener {
 
     @Value("${kafka.topic-name}")
     private String topicName;
@@ -17,13 +17,10 @@ public class PostLikeEventListener extends EventListener {
     @Value("${kafka.group}")
     private String groupName;
 
-    public PostLikeEventListener(AnalyticsEventService analyticsEventService,
-                                 AnalyticsEventMapper analyticsEventMapper) {
-        super(analyticsEventService, analyticsEventMapper);
-    }
+    private EventListener eventListener;
 
     @KafkaListener(topics = "${kafka.topic-name}", groupId = "${kafka.group}")
     public void consume(ConsumerRecord<String, Object> event) {
-        saveEvent(event, EventType.POST_LIKE);
+        eventListener.saveEvent(event, EventType.POST_LIKE);
     }
 }
