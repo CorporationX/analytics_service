@@ -28,9 +28,8 @@ public class CommentEventListener extends AbstractEventListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        CommentEvent event;
         try {
-            event = objectMapper.readValue(message.getBody(), CommentEvent.class);
+            CommentEvent event = objectMapper.readValue(message.getBody(), CommentEvent.class);
             AnalyticsEvent analyticsEvent = commentEventMapper.toAnalyticsEvent(event);
             analyticsEventService.saveEvent(analyticsEvent);
             log.info("Comment received event was saved, eventId: {}", analyticsEvent.getId());
@@ -41,6 +40,6 @@ public class CommentEventListener extends AbstractEventListener {
 
     @Override
     public Set<ChannelTopic> getChannelTopics() {
-        return super.getChanelTopics(topicNameKeys, properties);
+        return super.getChannelTopics(topicNameKeys, properties);
     }
 }
