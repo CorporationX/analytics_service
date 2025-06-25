@@ -28,6 +28,7 @@ spring:
         like-event: like_event
         comment-topic: comment_topic
         premium-bought: premium_bought
+        post-view: post_view
 
 server:
   port: 8086
