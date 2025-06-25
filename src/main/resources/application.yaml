@@ -26,6 +26,7 @@ spring:
         goal-complete: goal_complete
         recommendation-event: recommendation_event
         like-event: like_event
+        comment-topic: comment_topic
 
 server:
   port: 8086
