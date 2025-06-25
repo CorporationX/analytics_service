@@ -26,6 +26,9 @@ public class KafkaConsumerConfig {
     @Value("${kafka.group}")
     private String groupName;
 
+    @Value("${kafka.concurrency}")
+    private Integer concurrency;
+
     @Bean
     public ConsumerFactory<String, Object> consumerFactory() {
         Map<String, Object> config = new HashMap<>();
@@ -47,7 +50,7 @@ public class KafkaConsumerConfig {
                 new ConcurrentKafkaListenerContainerFactory<>();
 
         factory.setConsumerFactory(consumerFactory());
-        factory.setConcurrency(3);
+        factory.setConcurrency(concurrency);
         return factory;
     }
 }

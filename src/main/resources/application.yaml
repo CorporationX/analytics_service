@@ -40,6 +40,7 @@ kafka:
   host: "localhost:9092"
   topic-name: "like"
   group: "likes"
+  concurrency: 3
   properties:
     security.protocol: SSL
     ssl.truststore.location: /path/to/truststore.jks
