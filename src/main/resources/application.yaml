@@ -38,19 +38,14 @@ spring:
       channel:
         profile-view: profile_view_channel
   kafka:
-    producer:
-      bootstrap-servers: localhost:9092, localhost:9094
-      client-id: user-service
-      acks: all
-      properties:
-        linger:
-          ms: 0
     consumer:
       bootstrap-servers: localhost:9092, localhost:9094
       group-id: analytics-created
       max-poll-records: 50
       offset-reset-config: latest
     topics:
+      profile-view-event-topic:
+        name: profile-view-event-topic
       recommendation-events:
         name: recommendation-events-topic
         partitions: 1
