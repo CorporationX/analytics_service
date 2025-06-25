@@ -25,6 +25,8 @@ spring:
         profile-view: profile_view_channel
         goal-complete: goal_complete
         recommendation-event: recommendation_event
+        like-event: like_event
+        comment-topic: comment_topic
         premium-bought: premium_bought
 
 server:
