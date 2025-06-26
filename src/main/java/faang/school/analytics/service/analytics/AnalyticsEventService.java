@@ -18,7 +18,7 @@ public class AnalyticsEventService {
     public Iterable<AnalyticsEvent> findAll() {
         return analyticsEventRepository.findAll();
     }
-    public List<AnalyticsEvent> findByRecipientId(Long recipientId) {
-        return analyticsEventRepository.findByRecipientId(recipientId);
+    public List<AnalyticsEvent> findByRecipientId(Long receiverId) {
+        return analyticsEventRepository.findByReceiverId(receiverId);
     }
 }

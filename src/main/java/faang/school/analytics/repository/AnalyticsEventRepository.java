@@ -12,5 +12,5 @@ import java.util.stream.Stream;
 public interface AnalyticsEventRepository extends CrudRepository<AnalyticsEvent, Long> {
 
     Stream<AnalyticsEvent> findByReceiverIdAndEventType(long receiverId, EventType eventType);
-    List<AnalyticsEvent> findByRecipientId(Long recipientId);
+    List<AnalyticsEvent> findByReceiverId(Long receiverId);
 }

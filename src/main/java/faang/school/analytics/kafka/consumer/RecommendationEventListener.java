@@ -17,7 +17,7 @@ public class RecommendationEventListener {
 
     @KafkaListener(
             topics = "${spring.kafka.topics.recommendation-events.name}",
-            containerFactory = "recommendationKafkaListenerContainerFactory"
+            containerFactory = "kafkaListenerContainerFactory"
     )
     public void listen(RecommendationEvent event){
         log.info("Received RecommendationEvent: {}", event);
