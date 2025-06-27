@@ -1,6 +1,6 @@
 package faang.school.analytics.service.event;
 
-import faang.school.analytics.AnalyticsEventMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.event.FollowerEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
