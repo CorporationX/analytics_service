@@ -46,6 +46,8 @@ spring:
     topics:
       profile-view-event-topic:
         name: profile-view-event-topic
+      premium-bought-event-topic:
+        name: premium-bought-event-topic
 
 server:
   port: 8086
@@ -53,6 +55,7 @@ server:
 logging:
   level:
     root: info
+    org.springframework.kafka.support.serializer: DEBUG
 
 services:
   project-service:
