@@ -1,5 +1,6 @@
 package faang.school.analytics.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -24,7 +25,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="analytics_event")
 public class AnalyticsEvent {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

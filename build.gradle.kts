@@ -28,9 +28,6 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-consul-discovery")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework.kafka:spring-kafka")
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-
 
     /**
      * Database
