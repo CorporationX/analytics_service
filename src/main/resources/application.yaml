@@ -47,11 +47,6 @@ spring:
       profile-view-event-topic:
         name: profile-view-event-topic
 
-  kafka:
-    consumer:
-      bootstrap-servers: localhost:9092, localhost:9094
-      group-id: analytics-created
-    topics:
       follower-events:
         name: follower_events
 
