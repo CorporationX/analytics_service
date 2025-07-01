@@ -21,9 +21,14 @@ spring:
     redis:
       port: 6379
       host: localhost
-      channel:
+      channels:
         profile-view: profile_view_channel
         follower_event: follower_event
+        goal-complete: goal_complete
+        recommendation-event: recommendation_event
+        like-event: like_event
+        comment-topic: comment_topic
+        premium-bought: premium_bought
 
 server:
   port: 8086
