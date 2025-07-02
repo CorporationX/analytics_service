@@ -38,8 +38,10 @@ project-service:
 
 kafka:
   host: "localhost:9092"
-  topic-name: "like"
-  group: "likes"
+  topics:
+    like: "like-post"
+  groups:
+    analytic: "analytic-group"
   concurrency: 3
   properties:
     security.protocol: SSL

@@ -23,7 +23,7 @@ public class KafkaConsumerConfig {
     @Value("${kafka.host}")
     private String host;
 
-    @Value("${kafka.group}")
+    @Value("${kafka.groups.analytic}")
     private String groupName;
 
     @Value("${kafka.concurrency}")
