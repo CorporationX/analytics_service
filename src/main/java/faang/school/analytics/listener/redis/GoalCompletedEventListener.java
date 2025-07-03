@@ -1,18 +1,15 @@
-package faang.school.analytics.listener;
+package faang.school.analytics.listener.redis;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.config.redis.RedisProperties;
 import faang.school.analytics.dto.GoalCompletedEvent;
 import faang.school.analytics.mapper.event.UserServiceEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -36,26 +33,11 @@ public class GoalCompletedEventListener extends AbstractEventListener {
         if (useKafka) return;
         try {
             GoalCompletedEvent event = objectMapper.readValue(message.getBody(), GoalCompletedEvent.class);
-            saveAsAnalytics(event);
+            service.saveEvent(userServiceEventMapper.goalCompleteToAnalytics(event));
+            log.info("Goal {} completion was saved, goalId: {}", event.goalTitle(), event.goalId());
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
-    }
-
-    @KafkaListener(topics = "${spring.data.redis.channels.goal-complete}")
-    public void listen(String json) {
-        if (!useKafka) return;
-        try {
-            GoalCompletedEvent event = objectMapper.readValue(json, GoalCompletedEvent.class);
-            saveAsAnalytics(event);
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage(), e);
-        }
-    }
-
-    private void saveAsAnalytics(GoalCompletedEvent event) {
-        service.saveEvent(userServiceEventMapper.goalCompleteToAnalytics(event));
-        log.info("Goal {} completion was saved, goalId: {}", event.goalTitle(), event.goalId());
     }
 
     @Override

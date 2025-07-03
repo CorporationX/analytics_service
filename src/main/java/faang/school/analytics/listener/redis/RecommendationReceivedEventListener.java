@@ -1,9 +1,10 @@
-package faang.school.analytics.listener;
+package faang.school.analytics.listener.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.config.redis.RedisProperties;
-import faang.school.analytics.dto.premium.PremiumBoughtEvent;
+import faang.school.analytics.dto.RecommendationReceivedEvent;
 import faang.school.analytics.mapper.event.UserServiceEventMapper;
+import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,23 +16,24 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
-public class PremiumBoughtEventListener extends AbstractEventListener {
-    private final List<String> topicNameKeys = List.of("premium-bought");
+@Slf4j
+public class RecommendationReceivedEventListener extends AbstractEventListener {
+    private final List<String> topicNameKeys = List.of("recommendation-event");
     private final RedisProperties properties;
     private final ObjectMapper objectMapper;
-    private final UserServiceEventMapper userServiceEventMapper;
+    private final UserServiceEventMapper eventMapper;
     private final AnalyticsEventService service;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
-            log.debug("Received premium bought event");
-            PremiumBoughtEvent event = objectMapper.readValue(message.getBody(), PremiumBoughtEvent.class);
-            service.saveEvent(userServiceEventMapper.premiumBoughtToAnalytics(event));
-            log.info("Premium bought event for user with id {} analytics successfully saved", event.userId());
+            RecommendationReceivedEvent eventDto = objectMapper.readValue(message.getBody(),
+                    RecommendationReceivedEvent.class);
+            AnalyticsEvent event = eventMapper.recommendationReceivedToAnalytics(eventDto);
+            service.saveEvent(event);
+            log.info("Recommendation received event was saved, eventId: {}", event.getId());
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
