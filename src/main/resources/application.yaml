@@ -50,7 +50,6 @@ spring:
       follower-events:
         name: follower_events
 
-
 server:
   port: 8086
 
