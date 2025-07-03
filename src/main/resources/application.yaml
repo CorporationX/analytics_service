@@ -28,6 +28,7 @@ spring:
         like-event: like_event
         comment-topic: comment_topic
         premium-bought: premium_bought
+        post-view: post_view
     kafka:
       use-kafka: true
       bootstrap-servers: localhost:9092, localhost:9192, localhost:9292
