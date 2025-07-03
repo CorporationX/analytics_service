@@ -1,14 +1,18 @@
 package faang.school.analytics.listener;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.config.redis.RedisProperties;
 import faang.school.analytics.dto.GoalCompletedEvent;
 import faang.school.analytics.mapper.event.UserServiceEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -24,17 +28,34 @@ public class GoalCompletedEventListener extends AbstractEventListener {
     private final ObjectMapper objectMapper;
     private final UserServiceEventMapper userServiceEventMapper;
     private final AnalyticsEventService service;
+    @Value("${spring.data.kafka.use-kafka}")
+    private boolean useKafka;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
+        if (useKafka) return;
         try {
             GoalCompletedEvent event = objectMapper.readValue(message.getBody(), GoalCompletedEvent.class);
-            service.saveEvent(userServiceEventMapper.goalCompleteToAnalytics(event));
-            log.info("Goal {} completion was saved, goalId: {}", event.goalTitle(), event.goalId());
-
+            saveAsAnalytics(event);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    @KafkaListener(topics = "${spring.data.redis.channels.goal-complete}")
+    public void listen(String json) {
+        if (!useKafka) return;
+        try {
+            GoalCompletedEvent event = objectMapper.readValue(json, GoalCompletedEvent.class);
+            saveAsAnalytics(event);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    private void saveAsAnalytics(GoalCompletedEvent event) {
+        service.saveEvent(userServiceEventMapper.goalCompleteToAnalytics(event));
+        log.info("Goal {} completion was saved, goalId: {}", event.goalTitle(), event.goalId());
     }
 
     @Override
