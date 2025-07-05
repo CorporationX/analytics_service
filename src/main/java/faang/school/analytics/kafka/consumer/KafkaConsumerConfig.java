@@ -63,8 +63,8 @@ public class KafkaConsumerConfig {
         return new DefaultKafkaConsumerFactory<>(properties);
     }
 
-    @Bean
-    ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory(
+    @Bean(name = "recommendationContainerFactory")
+    ConcurrentKafkaListenerContainerFactory<String, Object> recommendationContainerFactory(
             ConsumerFactory<String, Object> consumerFactory,
             @Qualifier("dltKafkaTemplate") KafkaTemplate<String, Object> dlqTemplate) {
         DefaultErrorHandler errorHandler = new DefaultErrorHandler(new DeadLetterPublishingRecoverer(dlqTemplate));
@@ -93,6 +93,30 @@ public class KafkaConsumerConfig {
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return new DefaultKafkaProducerFactory<>(properties);
+    }
+
+    @Bean
+    public ConsumerFactory<String, FollowerEvent> followerEventConsumerFactory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, FollowerEvent.class.getName());
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, "faang.school.analytics.*");
+
+        JsonDeserializer<FollowerEvent> valueDeserializer =
+                new JsonDeserializer<>(FollowerEvent.class, false);
+
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), valueDeserializer);
+    }
+
+    @Bean(name = "kafkaListenerContainerFactory")
+    public ConcurrentKafkaListenerContainerFactory<String, FollowerEvent> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, FollowerEvent> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(followerEventConsumerFactory());
+        return factory;
     }
 
     public Map<String, Object> generalConsumerConfigs() {

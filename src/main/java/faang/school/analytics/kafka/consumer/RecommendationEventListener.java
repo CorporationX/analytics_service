@@ -1,8 +1,8 @@
 package faang.school.analytics.kafka.consumer;
 
 import faang.school.analytics.kafka.events.RecommendationEvent;
-import faang.school.analytics.mapper.analytics.AnalyticsEventMapper;
-import faang.school.analytics.service.analytics.AnalyticsEventService;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -17,7 +17,7 @@ public class RecommendationEventListener {
 
     @KafkaListener(
             topics = "${spring.kafka.topics.recommendation-events.name}",
-            containerFactory = "kafkaListenerContainerFactory"
+            containerFactory = "recommendationContainerFactory"
     )
     public void listen(RecommendationEvent event){
         log.info("Received RecommendationEvent: {}", event);
