@@ -47,6 +47,9 @@ spring:
       profile-view-event-topic:
         name: profile-view-event-topic
 
+      follower-events:
+        name: follower_events
+
 server:
   port: 8086
 
