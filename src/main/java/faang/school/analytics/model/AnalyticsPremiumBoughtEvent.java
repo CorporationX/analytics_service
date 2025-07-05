@@ -26,7 +26,7 @@ public class AnalyticsPremiumBoughtEvent extends AnalyticsEvent {
     private BigDecimal paymentAmount;
 
     @Column(name = "subscription_duration")
-    private Integer subscriptionDuration;
+    private Integer subscriptionDurationDays;
 
     @Column(name = "sent_at")
     private LocalDateTime sentAt;

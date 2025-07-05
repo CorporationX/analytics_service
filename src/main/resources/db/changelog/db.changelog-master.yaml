@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changeset/analytics_V001__initial.sql
   - include:
       file: db/changelog/changeset/analytics_V002_premium_bought_event_initial.sql
+  - include:
+      file: db/changelog/changeset/analytics_V003_premium_bought_change_to_timestamp.sql
