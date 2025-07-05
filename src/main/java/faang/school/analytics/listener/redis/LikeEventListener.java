@@ -1,4 +1,4 @@
-package faang.school.analytics.listener;
+package faang.school.analytics.listener.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.config.redis.RedisProperties;
