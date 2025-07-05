@@ -30,7 +30,6 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework.kafka:spring-kafka")
 
-
     /**
      * Database
      */

@@ -1,5 +1,6 @@
 package faang.school.analytics.kafka.consumer;
 
+import faang.school.analytics.event.FollowerEvent;
 import faang.school.analytics.kafka.events.ProfileViewEvent;
 
 import faang.school.analytics.exception.NonRetryableException;

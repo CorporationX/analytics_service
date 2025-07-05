@@ -55,6 +55,9 @@ spring:
           partitions: 1
           replication-factor: 3
 
+      follower-events:
+        name: follower_events
+
 server:
   port: 8086
 
