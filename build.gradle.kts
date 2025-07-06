@@ -1,7 +1,9 @@
 plugins {
-    java
+    id("java")
     id("org.springframework.boot") version "3.0.6"
     id("io.spring.dependency-management") version "1.1.0"
+    id("jacoco")
+    id("checkstyle")
 }
 
 group = "faang.school"
@@ -32,6 +34,11 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
 
     /**
+     * kafka
+     */
+    implementation("org.springframework.kafka:spring-kafka")
+
+    /**
      * Utils & Logging
      */
     implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
@@ -58,12 +65,79 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-tasks.withType<Test> {
+tasks.test {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport, tasks.jacocoTestCoverageVerification)
 }
 
 val test by tasks.getting(Test::class) { testLogging.showStandardStreams = true }
 
+checkstyle {
+    toolVersion = "10.17.0"
+    configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml")
+    checkstyle.enableExternalDtdLoad.set(true)
+}
+
+tasks.checkstyleMain {
+    source = fileTree("${project.rootDir}/src/main/java")
+    include("**/*.java")
+    exclude("**/resources/**")
+    classpath = files()
+}
+
+tasks.checkstyleTest {
+    source = fileTree("${project.rootDir}/src/test")
+    include("**/*.java")
+    classpath = files()
+}
+
 tasks.bootJar {
     archiveFileName.set("service.jar")
+}
+
+val jacocoExclude = listOf(
+    "faang/school/analytics/AnalyticsServiceApp*",
+    "faang/school/analytics/client/Feign*",
+    "**/model/**",
+    "**/dto/**",
+    "**/mapper/**"
+)
+
+tasks.jacocoTestReport {
+    reports {
+        xml.required.set(false)
+        csv.required.set(false)
+        html.required.set(true)
+    }
+    classDirectories.setFrom(classDirectories.files.map {
+        fileTree(it).matching {
+            exclude(jacocoExclude)
+        }
+    })
+}
+
+val jacocoClassExclude = listOf(
+    "faang.school.analytics.config.*",
+    "faang.school.analytics.model.*",
+    "faang.school.analytics.dto.*",
+    "faang.school.analytics.mapper.*",
+    "faang.school.analytics.AnalyticsServiceApp",
+    "faang.school.analytics.client.Feign*",
+    "faang.school.analytics.producer.KafkaProducer",
+    "faang.school.analytics.publisher.CommentEventPublisher"
+)
+
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            element = "CLASS"
+            isEnabled = true
+            excludes = jacocoClassExclude
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = "0.8".toBigDecimal()
+            }
+        }
+    }
 }
