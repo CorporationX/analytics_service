@@ -18,7 +18,7 @@ import java.util.Set;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class FollowerEventListner extends AbstractEventListener {
+public class FollowerEventListener extends AbstractEventListener {
     private final List<String> topicNameKeys = List.of("follower-event");
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
