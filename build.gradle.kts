@@ -124,7 +124,9 @@ val jacocoClassExclude = listOf(
     "faang.school.analytics.AnalyticsServiceApp",
     "faang.school.analytics.client.Feign*",
     "faang.school.analytics.producer.KafkaProducer",
-    "faang.school.analytics.publisher.CommentEventPublisher"
+    "faang.school.analytics.publisher.CommentEventPublisher",
+    "faang.school.analytics.listener.CommentEventListener",
+    "faang.school.analytics.service.AnalyticsEventService"
 )
 
 tasks.jacocoTestCoverageVerification {

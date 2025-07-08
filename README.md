@@ -76,9 +76,9 @@ RESTful приложения калькулятор с единственным 
 вычитаяни, умножения и деления
 
 * Обычная трёхслойная
-  архитектура – [Controller](src/main/java/faang/school/analytics/controller), [Service](src/main/java/faang/school/analytics/service), [Repository](src/main/java/faang/school/analytics/repository)
+  архитектура – [Controller](src/main/java/faang/school/analytics/mapper), [Service](src/main/java/faang/school/analytics/service), [Repository](src/main/java/faang/school/analytics/repository)
 * Слой Repository реализован и на jdbcTemplate, и на JPA (Hibernate)
-* Написан [GlobalExceptionHandler](src/main/java/faang/school/analytics/controller/GlobalExceptionHandler.java)
+* Написан [GlobalExceptionHandler](src/main/java/faang/school/analytics/mapper/GlobalExceptionHandler.java)
   который умеет возвращать ошибки в формате `{"code":"CODE", "message": "message"}`
 * Используется TTL кэширование вычислений
   в [CalculationTtlCacheService](src/main/java/faang/school/analytics/service/cache/CalculationTtlCacheService.java)
