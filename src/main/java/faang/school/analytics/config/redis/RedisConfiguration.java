@@ -1,7 +1,7 @@
 package faang.school.analytics.config.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.listener.AbstractEventListener;
+import faang.school.analytics.listener.redis.AbstractEventListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import faang.school.analytics.config.redis.RedisProperties;
 import faang.school.analytics.dto.LikeEvent;
+import faang.school.analytics.listener.redis.LikeEventListener;
 import faang.school.analytics.mapper.event.PostServiceEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
