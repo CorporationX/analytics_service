@@ -2,6 +2,7 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.config.redis.RedisProperties;
+import faang.school.analytics.listener.redis.AbstractEventListener;
 import faang.school.analytics.mapper.event.UserServiceEventMapper;
 import faang.school.analytics.model.FollowerEvent;
 import faang.school.analytics.service.AnalyticsEventService;
