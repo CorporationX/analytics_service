@@ -3,6 +3,7 @@ package faang.school.analytics.mapper.event;
 import faang.school.analytics.dto.GoalCompletedEvent;
 import faang.school.analytics.dto.RecommendationReceivedEvent;
 import faang.school.analytics.dto.premium.PremiumBoughtEvent;
+import faang.school.analytics.dto.post.PostViewEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.FollowerEvent;
@@ -33,6 +34,12 @@ public interface UserServiceEventMapper {
     @Mapping(target = "eventType", expression = "java(setEventType(\"FOLLOWER\"))")
     @Mapping(target = "receivedAt", source = "subscriptionTime")
     AnalyticsEvent followerToAnalytics(FollowerEvent followerEvent);
+
+    @Mapping(target = "receiverId", source = "postId")
+    @Mapping(target = "actorId", source = "viewerId")
+    @Mapping(target = "eventType", expression = "java(setEventType(\"POST_VIEW\"))")
+    @Mapping(target = "receivedAt", source = "createdAt")
+    AnalyticsEvent postViewToAnalytics(PostViewEvent event);
 
     default EventType setEventType(String type) {
         return EventType.valueOf(type);

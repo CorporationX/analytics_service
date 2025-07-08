@@ -1,9 +1,10 @@
-package faang.school.analytics.listener;
+package faang.school.analytics.listener.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.config.redis.RedisProperties;
-import faang.school.analytics.dto.GoalCompletedEvent;
-import faang.school.analytics.mapper.event.UserServiceEventMapper;
+import faang.school.analytics.mapper.CommentEventMapper;
+import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.CommentEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,22 +19,22 @@ import java.util.Set;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GoalCompletedEventListener extends AbstractEventListener {
-    private final List<String> topicNameKeys = List.of("goal-complete");
+public class CommentEventListener extends AbstractEventListener {
+    private final List<String> topicNameKeys = List.of("comment-topic");
     private final RedisProperties properties;
     private final ObjectMapper objectMapper;
-    private final UserServiceEventMapper userServiceEventMapper;
-    private final AnalyticsEventService service;
+    private final AnalyticsEventService analyticsEventService;
+    private final CommentEventMapper commentEventMapper;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
-            GoalCompletedEvent event = objectMapper.readValue(message.getBody(), GoalCompletedEvent.class);
-            service.saveEvent(userServiceEventMapper.goalCompleteToAnalytics(event));
-            log.info("Goal {} completion was saved, goalId: {}", event.goalTitle(), event.goalId());
-
+            CommentEvent event = objectMapper.readValue(message.getBody(), CommentEvent.class);
+            AnalyticsEvent analyticsEvent = commentEventMapper.toAnalyticsEvent(event);
+            analyticsEventService.saveEvent(analyticsEvent);
+            log.info("Comment received event was saved, eventId: {}", analyticsEvent.getId());
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            log.error("Something went wrong while converting event message to CommentEvent", e);
         }
     }
 

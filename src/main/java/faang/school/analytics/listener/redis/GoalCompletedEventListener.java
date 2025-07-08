@@ -1,12 +1,13 @@
-package faang.school.analytics.listener;
+package faang.school.analytics.listener.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.config.redis.RedisProperties;
-import faang.school.analytics.dto.premium.PremiumBoughtEvent;
+import faang.school.analytics.dto.GoalCompletedEvent;
 import faang.school.analytics.mapper.event.UserServiceEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Component;
@@ -18,20 +19,22 @@ import java.util.Set;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PremiumBoughtEventListener extends AbstractEventListener {
-    private final List<String> topicNameKeys = List.of("premium-bought");
+public class GoalCompletedEventListener extends AbstractEventListener {
+    private final List<String> topicNameKeys = List.of("goal-complete");
     private final RedisProperties properties;
     private final ObjectMapper objectMapper;
     private final UserServiceEventMapper userServiceEventMapper;
     private final AnalyticsEventService service;
+    @Value("${spring.data.kafka.use-kafka}")
+    private boolean useKafka;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
+        if (useKafka) return;
         try {
-            log.debug("Received premium bought event");
-            PremiumBoughtEvent event = objectMapper.readValue(message.getBody(), PremiumBoughtEvent.class);
-            service.saveEvent(userServiceEventMapper.premiumBoughtToAnalytics(event));
-            log.info("Premium bought event for user with id {} analytics successfully saved", event.userId());
+            GoalCompletedEvent event = objectMapper.readValue(message.getBody(), GoalCompletedEvent.class);
+            service.saveEvent(userServiceEventMapper.goalCompleteToAnalytics(event));
+            log.info("Goal {} completion was saved, goalId: {}", event.goalTitle(), event.goalId());
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
