@@ -25,6 +25,11 @@ public class AnalyticsEventService {
         return mapper.toDto(repository.save(event));
     }
 
+    @Transactional
+    public void save(AnalyticsEvent event) {
+        repository.save(event);
+    }
+
     public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval,
                                                 LocalDateTime from, LocalDateTime to) {
         return repository.findByReceiverIdAndEventType(receiverId, eventType)
