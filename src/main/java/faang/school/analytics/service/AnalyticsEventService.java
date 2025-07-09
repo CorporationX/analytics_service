@@ -26,7 +26,8 @@ public class AnalyticsEventService {
     }
 
     @Transactional
-    public void save(AnalyticsEvent event) {
+    public void save(AnalyticsEvent event, EventType eventType) {
+        event.setEventType(eventType);
         repository.save(event);
     }
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.event.FollowerEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,20 +31,22 @@ public class FollowerEventListenerTest {
     private faang.school.analytics.listener.FollowerEventListener listener;
 
     @Test
-    void testOnMessage_savesMappedEvent() throws Exception {
+    void testOnMessage() throws Exception {
         FollowerEvent followerEvent = new FollowerEvent();
         followerEvent.setFollowerId(1L);
         followerEvent.setPublisherId(2L);
+
         ObjectMapper objectMapper = new ObjectMapper();
         byte[] json = objectMapper.writeValueAsBytes(followerEvent);
         Message redisMessage = mock(Message.class);
         when(redisMessage.getBody()).thenReturn(json);
+
         AnalyticsEvent mappedEvent = new AnalyticsEvent();
         when(analyticsEventMapper.toEntity(any(FollowerEvent.class))).thenReturn(mappedEvent);
 
         listener.onMessage(redisMessage, null);
 
         verify(analyticsEventMapper).toEntity(any(FollowerEvent.class));
-        verify(analyticsEventService).save(mappedEvent);
+        verify(analyticsEventService).save(mappedEvent, EventType.FOLLOWER);
     }
 }

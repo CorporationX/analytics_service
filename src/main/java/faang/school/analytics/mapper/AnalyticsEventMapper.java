@@ -13,6 +13,8 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "eventType", ignore = true)
     AnalyticsEvent toEntity(AnalyticsEventDto dto);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "eventType", ignore = true)
     @Mapping(target = "receiverId", source = "publisherId")
     @Mapping(target = "actorId", source = "followerId")
     @Mapping(target = "receivedAt", source = "followedAt")

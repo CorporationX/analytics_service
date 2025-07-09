@@ -1,6 +1,7 @@
 package faang.school.analytics.config;
 
 import faang.school.analytics.listener.FollowerEventListener;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -12,6 +13,9 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 
 @Configuration
 public class RedisConfig {
+
+    @Value("${spring.data.redis.channel.follower_events}")
+    private String followerEventChannel;
 
     @Bean
     public RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory,
@@ -25,15 +29,12 @@ public class RedisConfig {
 
     @Bean
     public MessageListenerAdapter listenerAdapter(FollowerEventListener listener) {
-        final MessageListenerAdapter adapter =
-                new MessageListenerAdapter(listener, "onMessage");
-        adapter.setSerializer(new GenericJackson2JsonRedisSerializer());
-        return adapter;
+        return new MessageListenerAdapter(listener, "onMessage");
     }
 
     @Bean
     public ChannelTopic topic() {
-        return new ChannelTopic("follower-events");
+        return new ChannelTopic(followerEventChannel);
     }
 
     @Bean

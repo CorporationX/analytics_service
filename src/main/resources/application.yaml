@@ -24,6 +24,7 @@ spring:
       topic-name: "like"
       channel:
         profile-view: profile_view_channel
+        follower_events: follower-events
 
 server:
   port: 8086
