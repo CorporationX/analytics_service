@@ -48,6 +48,17 @@ spring:
         name: profile-view-event-topic
       premium-bought-event-topic:
         name: premium-bought-event-topic
+      recommendation-events:
+        name: recommendation-events-topic
+        partitions: 1
+        replication-factor: 3
+        dlt:
+          name: ${spring.kafka.topics.recommendation-events-topic.name}.DLT
+          partitions: 1
+          replication-factor: 3
+
+      follower-events:
+        name: follower_events
 
 server:
   port: 8086
@@ -55,7 +66,6 @@ server:
 logging:
   level:
     root: info
-    org.springframework.kafka.support.serializer: DEBUG
 
 services:
   project-service:
