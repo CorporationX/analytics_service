@@ -1,7 +1,10 @@
 package faang.school.analytics.kafka.consumer;
 
+import faang.school.analytics.event.FollowerEvent;
+import faang.school.analytics.exception.NonRetryableException;
 import faang.school.analytics.kafka.events.PremiumBoughtEvent;
 import faang.school.analytics.kafka.events.ProfileViewEvent;
+import feign.RetryableException;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
