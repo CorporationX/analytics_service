@@ -46,6 +46,8 @@ spring:
     topics:
       profile-view-event-topic:
         name: profile-view-event-topic
+      premium-bought-event-topic:
+        name: premium-bought-event-topic
       recommendation-events:
         name: recommendation-events-topic
         partitions: 1

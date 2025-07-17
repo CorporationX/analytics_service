@@ -1,9 +1,9 @@
 package faang.school.analytics.kafka.consumer;
 
 import faang.school.analytics.event.FollowerEvent;
-import faang.school.analytics.kafka.events.ProfileViewEvent;
-
 import faang.school.analytics.exception.NonRetryableException;
+import faang.school.analytics.kafka.events.PremiumBoughtEvent;
+import faang.school.analytics.kafka.events.ProfileViewEvent;
 import feign.RetryableException;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -149,5 +149,19 @@ public class KafkaConsumerConfig {
     public DefaultErrorHandler errorHandler(KafkaTemplate<String,Object> kafkaTemplate) {
         DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(kafkaTemplate);
         return new DefaultErrorHandler(recoverer, new FixedBackOff(1000L, 2));
+    }
+
+    @Bean
+    public ConsumerFactory<String, Object> deserealizeInPremiumBoughtEventFactory() {
+        Map<String, Object> generalConfigs = generalConsumerConfigs();
+        generalConfigs.put(JsonDeserializer.VALUE_DEFAULT_TYPE, PremiumBoughtEvent.class);
+        return new DefaultKafkaConsumerFactory<>(generalConfigs);
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerPremiumBoughtEvent() {
+        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(deserealizeInPremiumBoughtEventFactory());
+        return factory;
     }
 }
