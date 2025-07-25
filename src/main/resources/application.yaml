@@ -23,6 +23,7 @@ spring:
       host: localhost
       channels:
         profile-view: profile_view_channel
+        follower_event: follower_event
         goal-complete: goal_complete
         recommendation-event: recommendation_event
         like-event: like_event

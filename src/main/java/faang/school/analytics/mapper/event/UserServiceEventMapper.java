@@ -6,6 +6,7 @@ import faang.school.analytics.dto.premium.PremiumBoughtEvent;
 import faang.school.analytics.dto.post.PostViewEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
+import faang.school.analytics.model.FollowerEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -27,6 +28,12 @@ public interface UserServiceEventMapper {
     @Mapping(target = "eventType", expression = "java(setEventType(\"PREMIUM_BOUGHT\"))")
     @Mapping(target = "receivedAt", source = "startDate")
     AnalyticsEvent premiumBoughtToAnalytics(PremiumBoughtEvent event);
+
+    @Mapping(target = "actorId", source = "followerId")
+    @Mapping(target = "receiverId", source = "followeeId")
+    @Mapping(target = "eventType", expression = "java(setEventType(\"FOLLOWER\"))")
+    @Mapping(target = "receivedAt", source = "subscriptionTime")
+    AnalyticsEvent followerToAnalytics(FollowerEvent followerEvent);
 
     @Mapping(target = "receiverId", source = "postId")
     @Mapping(target = "actorId", source = "viewerId")
