@@ -1,4 +1,25 @@
 spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: analytic-service-group
+    topics:
+      goal-completed-topic:
+        name: goal-completed
+      subscription:
+        new-follower-topic:
+          name: new-follower-events
+        unfollow-topic:
+          name: unfollow-events
+      profile:
+        name: view-profile
+      recover:
+        name: transfer-events-dlt
+      event-start-topic:
+        name: event-start
+      comment-topic:
+        name: comment-event
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres
