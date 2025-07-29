@@ -1,9 +1,9 @@
 package faang.school.analytics.config.kafka;
 
-import org.apache.kafka.common.serialization.StringDeserializer;
 import faang.school.analytics.model.AnalyticsEvent;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,10 +35,10 @@ public class KafkaConsumerConfig {
 
         ConcurrentKafkaListenerContainerFactory<String, T> factory = new ConcurrentKafkaListenerContainerFactory<>();
 
-        ConsumerFactory<String, T> consumerFactory = new DefaultKafkaConsumerFactory<String , T> (
-            jsonFactoryConfig,
-                    new StringDeserializer(),
-                    new JsonDeserializer<>(AnalyticsEvent.class, true)
+        ConsumerFactory<String, T> consumerFactory = new DefaultKafkaConsumerFactory<String, T>(
+                jsonFactoryConfig,
+                new StringDeserializer(),
+                new JsonDeserializer<>(AnalyticsEvent.class, true)
         );
 
         factory.setConsumerFactory(consumerFactory);

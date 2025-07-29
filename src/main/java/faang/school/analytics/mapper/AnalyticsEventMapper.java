@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AnalyticsEventMapper {
 
-    public static AnalyticsDto toDto(AnalyticsEvent entity) {
+    public AnalyticsDto toDto(AnalyticsEvent entity) {
         return new AnalyticsDto(
                 entity.getId(),
                 entity.getReceiverId(),
@@ -17,7 +17,7 @@ public class AnalyticsEventMapper {
         );
     }
 
-    public static AnalyticsEvent toEntity(AnalyticsDto dto) {
+    public AnalyticsEvent toEntity(AnalyticsDto dto) {
         AnalyticsEvent entity = new AnalyticsEvent();
         entity.setEventType(dto.getEventType());
         entity.setReceiverId(dto.getReceiverId());
