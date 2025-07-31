@@ -1,10 +1,13 @@
 package faang.school.analytics.config;
 
 import faang.school.analytics.listener.FollowerEventListener;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
@@ -12,10 +15,21 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 
 @Configuration
+@RequiredArgsConstructor
 public class RedisConfig {
+
+    private final RedisProperties redisProperties;
 
     @Value("${spring.data.redis.channel.follower_events}")
     private String followerEventChannel;
+
+    @Bean
+    public LettuceConnectionFactory redisConnectionFactory() {
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
+        config.setHostName(redisProperties.getHost());
+        config.setPort(redisProperties.getPort());
+        return new LettuceConnectionFactory(config);
+    }
 
     @Bean
     public RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory,

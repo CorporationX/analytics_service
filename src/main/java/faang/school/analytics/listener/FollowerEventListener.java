@@ -29,7 +29,8 @@ public class FollowerEventListener implements MessageListener {
         try {
             FollowerEvent event = objectMapper.readValue(message.getBody(), FollowerEvent.class);
             AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(event);
-            analyticsEventService.save(analyticsEvent, FOLLOWER);
+            analyticsEvent.setEventType(FOLLOWER);
+            analyticsEventService.saveEvent(analyticsEvent);
             log.info("Handled follower event: {}", event);
         } catch (Exception e) {
             log.error("Failed to process message", e);
