@@ -15,7 +15,7 @@ public enum Interval {
     private final Integer days;
     private final TemporalUnit unit = ChronoUnit.DAYS;
 
-    Interval(int days) {
+    private Interval(int days) {
         this.days = days;
     }
 }

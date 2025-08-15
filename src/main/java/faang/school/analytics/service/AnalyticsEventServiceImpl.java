@@ -1,6 +1,7 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.exception.EventSavingFailureException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -46,13 +47,14 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
                     .minus(interval.getDays(), interval.getUnit())
                     .isBefore(dateReceived);
         } else {
-            return (dateReceived.isAfter(from) && dateReceived.isBefore(to));
+            return (dateReceived.isAfter(from) && dateReceived.isBefore(to)
+                    && !dateReceived.isAfter(LocalDateTime.now()));
         }
     }
 
     private void isExistingEvent(AnalyticsEvent event) {
-        if (analyticsEventRepository.findById(event.getId()).isPresent()) {
-            throw new IllegalArgumentException("Save operation not permitted: event already exists");
+        if (analyticsEventRepository.existsById(event.getId())) {
+            throw new EventSavingFailureException("Save operation not permitted: event already exists");
         }
     }
 }
