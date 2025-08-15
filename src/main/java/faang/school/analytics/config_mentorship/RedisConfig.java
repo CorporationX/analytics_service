@@ -16,9 +16,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @RequiredArgsConstructor
-public class RedisConfig {
+public class RedisConfig{
 
-   @Value("${spring.redis.host}")
+    @Value("${spring.redis.host}")
     private String redisHost;
 
     @Value("${spring.redis.port}")
@@ -26,7 +26,7 @@ public class RedisConfig {
 
     @Bean
     public RedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(redisHost,redisPort);
+        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(redisHost, redisPort);
         return new JedisConnectionFactory(redisConfig);
     }
 
