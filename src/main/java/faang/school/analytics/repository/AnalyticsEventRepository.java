@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.stream.Stream;
 
 @Repository
-public interface AnalyticsEventRepository extends CrudRepository<AnalyticsEvent, Long> {
+public interface AnalyticsEventRepository extends CrudRepository<AnalyticsEvent, Long>, AnalyticsEventRepositoryCustom {
 
     Stream<AnalyticsEvent> findByReceiverIdAndEventType(long receiverId, EventType eventType);
 }

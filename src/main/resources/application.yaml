@@ -20,6 +20,8 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
     group-id: analytics_service
+    topics:
+      recommendationReceived: recommendation-received-topic
 
   data:
     redis:
