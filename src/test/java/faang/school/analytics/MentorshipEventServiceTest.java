@@ -1,55 +1,60 @@
 package faang.school.analytics;
 
 import faang.school.analytics.dto.MentorshipEventDto;
-import faang.school.analytics.exception.AnalyticsException;
-import faang.school.analytics.repository.MentorshipEventRepository;
 import faang.school.analytics.mapper.MentorshipEventMapper;
+import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.service.MentorshipEventService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class MentorshipEventServiceTest {
+@ExtendWith(MockitoExtension.class)
+public class MentorshipEventServiceTest {
 
-    private MentorshipEventRepository repository;
+    @Mock
+    private AnalyticsEventRepository repository;
+
+    @Mock
     private MentorshipEventMapper mapper;
-    private MentorshipEventService service;
 
-    @BeforeEach
-    void setUp() {
-        repository = mock(MentorshipEventRepository.class);
-        mapper = mock(MentorshipEventMapper.class);
-        service = new MentorshipEventService(repository, mapper);
-    }
+    @InjectMocks
+    private MentorshipEventService mentorshipEventService;
+
+    @Captor
+    private ArgumentCaptor<AnalyticsEvent> eventCaptor;
 
     @Test
-    void testGetProcessMentorshipEventValidEvent() {
-        MentorshipEventDto dto = new MentorshipEventDto(1L, 2L, LocalDateTime.now());
+    void shouldSaveMentorshipEvent_whenValidDto() {
+        long senderId = 1L;
+        long receiverId = 2L;
+        LocalDateTime timestamp = LocalDateTime.now();
+        MentorshipEventDto dto = new MentorshipEventDto(senderId, receiverId, timestamp);
 
-        service.processMentorshipEvent(dto);
+        AnalyticsEvent mappedEvent = AnalyticsEvent.builder()
+                .actorId(senderId)
+                .receiverId(receiverId)
+                .receivedAt(timestamp)
+                .eventType(faang.school.analytics.model.EventType.PROJECT_INVITE)
+                .build();
 
-        verify(repository).save(dto);
-    }
+        when(mapper.toEntity(dto)).thenReturn(mappedEvent);
 
-    @Test
-    void testGetAnalyticsValidDateRange() {
-        LocalDateTime from = LocalDateTime.now().minusDays(1);
-        LocalDateTime to = LocalDateTime.now();
+        mentorshipEventService.saveEvent(dto);
 
-        List<MentorshipEventDto> result = service.getUserMentorshipAnalytics(1L, from, to);
+        verify(mapper).toEntity(dto);
+        verify(repository).save(eventCaptor.capture());
 
-        assertNull(result);
-    }
-
-    @Test
-    void testProcessMentorshipEventInvalidSenderId() {
-        MentorshipEventDto dto = new MentorshipEventDto(0L, 1L, LocalDateTime.now());
-
-        assertThrows(AnalyticsException.class, () -> service.processMentorshipEvent(dto));
+        AnalyticsEvent capturedEvent = eventCaptor.getValue();
+        org.assertj.core.api.Assertions.assertThat(capturedEvent)
+                .hasFieldOrPropertyWithValue("actorId", senderId)
+                .hasFieldOrPropertyWithValue("receiverId", receiverId)
+                .hasFieldOrPropertyWithValue("receivedAt", timestamp)
+                .hasFieldOrPropertyWithValue("eventType", faang.school.analytics.model.EventType.PROJECT_INVITE);
     }
 }
