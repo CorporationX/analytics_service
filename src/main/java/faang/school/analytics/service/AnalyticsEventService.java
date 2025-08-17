@@ -11,5 +11,7 @@ public interface AnalyticsEventService {
 
     AnalyticsEvent saveEvent(AnalyticsEvent event);
 
-    List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to);
+    List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval,
+                                         LocalDateTime from, LocalDateTime to);
+
 }

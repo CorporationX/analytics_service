@@ -28,8 +28,10 @@ import static org.mockito.Mockito.when;
 public class AnalyticsEventServiceTest {
 
     private AnalyticsEventServiceImpl analyticsEventService;
+
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
+
     @Spy
     private AnalyticsEventMapperImpl analyticsEventMapper;
 
