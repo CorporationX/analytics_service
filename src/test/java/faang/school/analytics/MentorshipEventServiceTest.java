@@ -30,7 +30,7 @@ public class MentorshipEventServiceTest {
     private ArgumentCaptor<AnalyticsEvent> eventCaptor;
 
     @Test
-    void shouldSaveMentorshipEvent_whenValidDto() {
+    void testSaveMentorshipEvent_whenValidDto() {
         long senderId = 1L;
         long receiverId = 2L;
         LocalDateTime timestamp = LocalDateTime.now();
