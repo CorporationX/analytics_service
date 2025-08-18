@@ -1,6 +1,7 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.exception.EventSavingFailureException;
 import faang.school.analytics.mapper.AnalyticsEventMapperImpl;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -15,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,22 +44,23 @@ public class AnalyticsEventServiceTest {
     @Test
     @DisplayName("Save fail due to existing entity")
     public void saveEventFailTest() {
-        AnalyticsEvent testEvent = getEventBuild(1, 2, 3,
+        AnalyticsEvent testEvent = getEventBuild(1L, 2L, 3L,
                 EventType.FOLLOWER, LocalDateTime.of(2025, 8,
                         8, 0, 0));
-        when(analyticsEventRepository.findById(1L)).thenReturn(Optional.ofNullable(testEvent));
+        when(analyticsEventRepository.existsById(1L)).thenReturn(true);
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(EventSavingFailureException.class,
                 () -> analyticsEventService.saveEvent(testEvent));
     }
 
     @Test
     @DisplayName("Successfully saving an event")
     public void saveEventTest() {
-        AnalyticsEvent testEvent = getEventBuild(1, 2, 3,
+        AnalyticsEvent testEvent = getEventBuild(1L, 2L, 3L,
                 EventType.FOLLOWER, LocalDateTime.of(2025, 8,
                         8, 0, 0));
-        when(analyticsEventRepository.findById(1L)).thenReturn(Optional.empty());
+        when(analyticsEventRepository.existsById(1L)).thenReturn(false);
+        when(analyticsEventRepository.save(testEvent)).thenReturn(testEvent);
 
         analyticsEventService.saveEvent(testEvent);
 
@@ -125,7 +126,7 @@ public class AnalyticsEventServiceTest {
         assertEquals(2, result.get(0).id());
     }
 
-    private AnalyticsEvent getEventBuild(int id, long receiverId,
+    private AnalyticsEvent getEventBuild(long id, long receiverId,
                                          long actorId, EventType type, LocalDateTime dateReceived) {
         return AnalyticsEvent.builder()
                 .id(id)
