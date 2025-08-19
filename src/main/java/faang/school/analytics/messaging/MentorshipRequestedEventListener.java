@@ -3,6 +3,8 @@ package faang.school.analytics.messaging;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.client.UserServiceClient;
 import faang.school.analytics.dto.MentorshipRequestedEvent;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -18,8 +20,8 @@ public class MentorshipRequestedEventListener implements MessageListener {
 
     private final ObjectMapper objectMapper;
     private final UserServiceClient userServiceClient;
-    //private final AnalyticsEventService analyticsEventService; //раскоменчу когда в мастере появится сервис
-    //private final AnalyticsEventMapper analyticsEventMapper; //раскоменчу когда в мастере появится маппер
+    private final AnalyticsEventService analyticsEventService;
+    private final AnalyticsEventMapper analyticsEventMapper;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
@@ -30,7 +32,7 @@ public class MentorshipRequestedEventListener implements MessageListener {
             String actorName = userServiceClient.getById(mentorshipRequestedEvent.actorId()).username();
             log.debug("Mentorship Request Event (receiver={}, actor={}) received from User Service.",
                     receiverName, actorName);
-            //analyticsEventService.saveEvent(analyticsEventMapper.toAnalyticsEvent(mentorshipRequestedEvent));
+            analyticsEventService.saveEvent(analyticsEventMapper.toAnalyticsEvent(mentorshipRequestedEvent));
         } catch (IOException e) {
             throw new RuntimeException("Couldn't parse message into MentorshipRequestedEvent");
         }
