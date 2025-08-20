@@ -3,12 +3,14 @@ package faang.school.analytics.event;
 import faang.school.analytics.model.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-public class AnaliticsEvent {
+@NoArgsConstructor
+public class EventDto {
 
     private long receiverId;
 

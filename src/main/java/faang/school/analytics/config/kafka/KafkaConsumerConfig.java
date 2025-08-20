@@ -1,11 +1,15 @@
 package faang.school.analytics.config.kafka;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import faang.school.analytics.config.property.AuditKafkaProperties;
 import faang.school.analytics.exception.NonRetryableException;
 import feign.RetryableException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -17,54 +21,57 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.ExponentialBackOffWithMaxRetries;
+import org.springframework.kafka.support.converter.StringJsonMessageConverter;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
+@EnableConfigurationProperties(AuditKafkaProperties.class)
 public class KafkaConsumerConfig {
-    private final KafkaProperty property;
 
     @Bean
-    public ConsumerFactory<String, String> analiticsEventConsumerFactory() {
-        Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, property.bootstrapServers());
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, property.consumer().groupId());
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, property.consumer().autoOffsetReset());
-        return new DefaultKafkaConsumerFactory<>(props);
+    public ConsumerFactory<String, String> analiticsEventConsumerFactory(KafkaProperties kafkaProperties) {
+        Map<String, Object> consumerProperties = kafkaProperties.buildConsumerProperties();
+        return new DefaultKafkaConsumerFactory<>(
+                consumerProperties,
+                new StringDeserializer(),
+                new StringDeserializer()
+        );
     }
 
     @Bean
     public KafkaListenerContainerFactory<
                 ConcurrentMessageListenerContainer<String, String>> analiticsEventListenerContainerFactory(
-            ConsumerFactory<String, String> analiticsEventConsumerFactory, DefaultErrorHandler errorHandler) {
+            ConsumerFactory<String, String> analiticsEventConsumerFactory,
+//            DefaultErrorHandler errorHandler,
+            ObjectMapper objectMapper
+    ) {
 
         ConcurrentKafkaListenerContainerFactory<String, String> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(analiticsEventConsumerFactory);
-        factory.setCommonErrorHandler(errorHandler);
+//        factory.setCommonErrorHandler(errorHandler);
+        factory.setRecordMessageConverter(new StringJsonMessageConverter(objectMapper));
 
         return factory;
     }
 
+//    @Bean
+//    public DefaultErrorHandler errorHandler(KafkaTemplate<String, Object> kafkaTemplate,
+//                                            ExponentialBackOffWithMaxRetries expBackOffRetries) {
+//
+//        DefaultErrorHandler errorHandler = new DefaultErrorHandler(
+//                new DeadLetterPublishingRecoverer(kafkaTemplate), expBackOffRetries);
+//        errorHandler.addNotRetryableExceptions(NonRetryableException.class);
+//        errorHandler.addRetryableExceptions(RetryableException.class);
+//
+//        return errorHandler;
+//    }
+
     @Bean
-    public DefaultErrorHandler errorHandler(KafkaTemplate<String, Object> kafkaTemplate,
-                                            ExponentialBackOffWithMaxRetries expBackOffRetries) {
-
-        DefaultErrorHandler errorHandler = new DefaultErrorHandler(
-                new DeadLetterPublishingRecoverer(kafkaTemplate), expBackOffRetries);
-        errorHandler.addNotRetryableExceptions(NonRetryableException.class);
-        errorHandler.addRetryableExceptions(RetryableException.class);
-
-        return errorHandler;
-    }
-
-    @Bean
-    public ExponentialBackOffWithMaxRetries expBackOffRetries() {
+    public ExponentialBackOffWithMaxRetries expBackOffRetries(AuditKafkaProperties property) {
         ExponentialBackOffWithMaxRetries backOff =
                 new ExponentialBackOffWithMaxRetries(property.backoff().maxRetries());
         backOff.setInitialInterval(property.backoff().initInterval());
@@ -72,5 +79,12 @@ public class KafkaConsumerConfig {
         backOff.setMultiplier(property.backoff().multiplier());
 
         return backOff;
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        return objectMapper;
     }
 }

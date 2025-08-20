@@ -1,12 +1,9 @@
-package faang.school.analytics.config.kafka;
+package faang.school.analytics.config.property;
 
-import faang.school.analytics.service.Interval;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
-import java.time.LocalDateTime;
-
-import static faang.school.analytics.service.Interval.LAST_MONTH;
-
+@ConfigurationProperties(prefix = "audit-kafka.backoff")
 public record BackOffProperty(
         @DefaultValue("1000") long initInterval,
         @DefaultValue("2") int maxRetries,

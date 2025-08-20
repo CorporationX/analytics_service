@@ -24,18 +24,16 @@ spring:
       channel:
         profile-view: profile_view_channel
 
-  kafka:
-    bootstrap-servers: localhost:9092
-    backoff:
-      init-interval: 1000
-      max-retries: 2
-      max-interval: 5000
-      multiplier: 2
-    consumer:
-      group-id: events
-      auto-offset-reset: earliest
-    topic:
-      analiticsEventNew: analiticsEvent.new
+audit-kafka:
+  enabled: true
+  backoff:
+    init-interval: 1000
+    max-retries: 2
+    max-interval: 5000
+    multiplier: 2
+  consumer:
+    group-id: events
+  topic: analiticsEvent
 
 server:
   port: 8086
