@@ -1,14 +1,21 @@
 package faang.school.analytics.repository;
 
+import faang.school.analytics.dto.RecommendationFilterDto;
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
+import faang.school.analytics.repository.specification.SpecificationBuilder;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 @Repository
-public interface AnalyticsEventRepository extends CrudRepository<AnalyticsEvent, Long> {
+public interface AnalyticsEventRepository extends CrudRepository<AnalyticsEvent, Long>,
+        JpaSpecificationExecutor<AnalyticsEvent> {
 
-    Stream<AnalyticsEvent> findByReceiverIdAndEventType(long receiverId, EventType eventType);
+    default List<AnalyticsEvent> findByFilter(RecommendationFilterDto filterDto) {
+        Specification<AnalyticsEvent> filter = SpecificationBuilder.buildSpecification(filterDto);
+        return findAll(filter);
+    }
 }
