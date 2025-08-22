@@ -1,6 +1,6 @@
 package faang.school.analytics.mapper;
 
-import faang.school.analytics.event.EventDto;
+import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.Mapper;
 

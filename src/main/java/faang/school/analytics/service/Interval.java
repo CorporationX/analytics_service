@@ -1,6 +1,9 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.model.EventType;
+import org.springframework.data.util.Pair;
+
+import java.time.LocalDateTime;
 
 public enum Interval {
     LAST_DAY,
@@ -8,12 +11,15 @@ public enum Interval {
     LAST_MONTH,
     LAST_YEAR;
 
-    public static Interval of(int type) {
-        for (Interval interval : Interval.values()) {
-            if (interval.ordinal() == type) {
-                return interval;
-            }
-        }
-        throw new IllegalArgumentException("Unknown interval: " + type);
+//    Pair<from, to>
+    public Pair<LocalDateTime, LocalDateTime> getInterval() {
+        return switch (this) {
+            case LAST_DAY -> Pair.of(LocalDateTime.now().minusDays(1), LocalDateTime.now());
+            case LAST_WEEK -> Pair.of(LocalDateTime.now().minusWeeks(1), LocalDateTime.now());
+            case LAST_MONTH -> Pair.of(LocalDateTime.now().minusMonths(1), LocalDateTime.now());
+            case LAST_YEAR -> Pair.of(LocalDateTime.now().minusYears(1), LocalDateTime.now());
+            default -> null;
+        };
+
     }
 }
