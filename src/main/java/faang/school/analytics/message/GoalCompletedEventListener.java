@@ -25,7 +25,7 @@ public class GoalCompletedEventListener implements MessageListener {
         try {
             GoalCompletedEvent event = objectMapper.readValue(message.getBody(), GoalCompletedEvent.class);
             AnalyticsEvent entity = mapper.toAnalyticsEvent(event);
-            service.save(entity);
+            service.saveEvent(entity);
             log.info("Saved AnalyticsEvent for userId={}, type={}", event.userId(), entity.getEventType());
         } catch (Exception e) {
             log.error("Failed to process GoalCompletedEvent from Redis", e);
