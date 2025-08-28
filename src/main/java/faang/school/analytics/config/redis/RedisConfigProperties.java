@@ -19,6 +19,11 @@ public class RedisConfigProperties {
     @NotBlank
     private String host;
 
-    @NotBlank
-    private String mentorshipRequestChannel;
+    private Channel channel;
+
+    @Data
+    public static class Channel {
+        @NotBlank
+        private String mentorshipRequest;
+    }
 }
