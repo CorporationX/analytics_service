@@ -3,6 +3,7 @@ package faang.school.analytics.messaging;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.client.UserServiceClient;
 import faang.school.analytics.dto.MentorshipRequestedEvent;
+import faang.school.analytics.exception.EventParsingException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class MentorshipRequestedEventListener implements MessageListener {
                     receiverName, actorName);
             analyticsEventService.saveEvent(analyticsEventMapper.toAnalyticsEvent(mentorshipRequestedEvent));
         } catch (IOException e) {
-            throw new RuntimeException("Couldn't parse message into MentorshipRequestedEvent");
+            throw new EventParsingException("Couldn't parse message into MentorshipRequestedEvent");
         }
     }
 }
