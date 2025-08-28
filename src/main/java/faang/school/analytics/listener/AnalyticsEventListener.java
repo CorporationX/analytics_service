@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @ConditionalOnProperty(name = "audit-kafka.enabled", havingValue = "true")
-public class FollowerListener{
+public class AnalyticsEventListener {
 
     @KafkaListener(
             topics = "${audit-kafka.topic}",
