@@ -1,7 +1,7 @@
 package faang.school.analytics.controller;
 
 import faang.school.analytics.dto.MentorshipEventDto;
-import faang.school.analytics.service.MentorshipEventService;
+import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,15 +18,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MentorshipAnalyticsController {
 
-    private final MentorshipEventService analyticsServer;
+    private final AnalyticsEventService analyticsEventService;
 
     @GetMapping("/mentorshiprequest/{userId}")
     public List<MentorshipEventDto> getUserMentorshipAnalytics(
             @PathVariable long userId,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
 
-
-        return analyticsServer.getUserMentorshipAnalytics(userId, from, to);
+        return analyticsEventService.getUserMentorshipAnalytics(userId, from, to);
     }
 }

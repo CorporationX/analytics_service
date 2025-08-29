@@ -1,11 +1,11 @@
-package faang.school.analytics.analytics_event;
+package faang.school.analytics.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class MentorshipRequestedEvents {
+public class MentorshipRequestedEvent {
     private long senderId;
     private long receiverId;
     private long timestamp;

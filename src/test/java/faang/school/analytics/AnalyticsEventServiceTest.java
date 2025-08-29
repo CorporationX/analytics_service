@@ -4,19 +4,22 @@ import faang.school.analytics.dto.MentorshipEventDto;
 import faang.school.analytics.mapper.MentorshipEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
-import faang.school.analytics.service.MentorshipEventService;
+import faang.school.analytics.service.AnalyticsEventService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 
-import static org.mockito.Mockito.*;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class MentorshipEventServiceTest {
-
+public class AnalyticsEventServiceTest {
     @Mock
     private AnalyticsEventRepository repository;
 
@@ -24,16 +27,14 @@ public class MentorshipEventServiceTest {
     private MentorshipEventMapper mapper;
 
     @InjectMocks
-    private MentorshipEventService mentorshipEventService;
-
-    @Captor
-    private ArgumentCaptor<AnalyticsEvent> eventCaptor;
+    private AnalyticsEventService analyticsEventService;
 
     @Test
-    void testSaveMentorshipEvent_whenValidDto() {
+    void testShouldSaveEventWhenValidDto() {
         long senderId = 1L;
         long receiverId = 2L;
         LocalDateTime timestamp = LocalDateTime.now();
+
         MentorshipEventDto dto = new MentorshipEventDto(senderId, receiverId, timestamp);
 
         AnalyticsEvent mappedEvent = AnalyticsEvent.builder()
@@ -45,16 +46,22 @@ public class MentorshipEventServiceTest {
 
         when(mapper.toEntity(dto)).thenReturn(mappedEvent);
 
-        mentorshipEventService.saveEvent(dto);
+        analyticsEventService.saveEvent(dto);
 
         verify(mapper).toEntity(dto);
-        verify(repository).save(eventCaptor.capture());
+        verify(repository).save(mappedEvent);
+    }
 
-        AnalyticsEvent capturedEvent = eventCaptor.getValue();
-        org.assertj.core.api.Assertions.assertThat(capturedEvent)
-                .hasFieldOrPropertyWithValue("actorId", senderId)
-                .hasFieldOrPropertyWithValue("receiverId", receiverId)
-                .hasFieldOrPropertyWithValue("receivedAt", timestamp)
-                .hasFieldOrPropertyWithValue("eventType", faang.school.analytics.model.EventType.PROJECT_INVITE);
+    @Test
+    void testShouldThrowExceptionWhenInvalidUserIds() {
+        long invalidSenderId = 0;
+        long invalidReceiverId = -5;
+        LocalDateTime timestamp = LocalDateTime.now();
+
+        MentorshipEventDto dto = new MentorshipEventDto(invalidSenderId, invalidReceiverId, timestamp);
+
+        assertThatThrownBy(() -> analyticsEventService.saveEvent(dto))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("User IDs must be greater than zero");
     }
 }

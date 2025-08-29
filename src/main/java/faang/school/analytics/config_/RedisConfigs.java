@@ -1,4 +1,4 @@
-package faang.school.analytics.analytics_config;
+package faang.school.analytics.config_;
 
 import faang.school.analytics.listener.MentorshipRequestedEventListener;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +14,14 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @RequiredArgsConstructor
-public class RedisConfig{
+public class RedisConfigs {
+
+    @Value("${spring.data.redis.channel.mentorship-requested}")
+    private String mentorshipRequestedChannel;
 
     @Bean
     public ChannelTopic mentorshipTopic() {
-        return new ChannelTopic("mentorship.requested");
+        return new ChannelTopic(mentorshipRequestedChannel);
     }
 
     @Bean

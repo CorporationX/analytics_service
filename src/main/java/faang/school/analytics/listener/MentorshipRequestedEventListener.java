@@ -1,8 +1,8 @@
 package faang.school.analytics.listener;
 
-import faang.school.analytics.analytics_event.MentorshipRequestedEvents;
 import faang.school.analytics.dto.MentorshipEventDto;
-import faang.school.analytics.service.MentorshipEventService;
+import faang.school.analytics.event.MentorshipRequestedEvent;
+import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -17,22 +17,22 @@ import java.time.ZoneOffset;
 @RequiredArgsConstructor
 public class MentorshipRequestedEventListener implements MessageListener {
 
-    private final MentorshipEventService mentorshipEventService;
+    private final AnalyticsEventService analyticsEventService;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
             Object body = message.getBody();
-            if (body instanceof MentorshipRequestedEvents event) {
+            if (body instanceof MentorshipRequestedEvent event) {
                 log.info("Получено событие: {}", event);
 
-                var dto = new MentorshipEventDto(
+                MentorshipEventDto dto = new MentorshipEventDto(
                         event.getSenderId(),
                         event.getReceiverId(),
                         LocalDateTime.ofInstant(java.time.Instant.ofEpochMilli(event.getTimestamp()), ZoneOffset.UTC)
                 );
 
-                mentorshipEventService.saveEvent(dto);
+                analyticsEventService.saveEvent(dto);
             }
         } catch (Exception e) {
             log.error("Ошибка при обработке события", e);

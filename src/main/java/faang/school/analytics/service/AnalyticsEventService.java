@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MentorshipEventService {
+public class AnalyticsEventService {
 
     private final AnalyticsEventRepository repository;
     private final MentorshipEventMapper mapper;
