@@ -43,7 +43,7 @@ class AnalyticsEventControllerTest {
 
     @ParameterizedTest
     @MethodSource("faang.school.analytics.controller.AnalyticsEventControllerData#invalidFilterDto")
-    @DisplayName("")
+    @DisplayName("Проверка метода с невалидными параметрами фильтрации")
     public void getByFilter_WhenInvalidFilterDto(TimeIntervalType intervalType,
                                                  LocalDateTime start,
                                                  LocalDateTime end,
@@ -62,7 +62,7 @@ class AnalyticsEventControllerTest {
 
     @ParameterizedTest
     @MethodSource("faang.school.analytics.controller.AnalyticsEventControllerData#validFilterDto")
-    @DisplayName("Validation should pass for valid filter combinations")
+    @DisplayName("Успешная проверка на валидных данных")
     void getByFilter_WhenValidFilterDto(TimeIntervalType intervalType, LocalDateTime start, LocalDateTime end) {
         RecommendationFilterDto filterDto = new RecommendationFilterDto(
                 1L,
@@ -76,8 +76,8 @@ class AnalyticsEventControllerTest {
     }
 
     @Test
-    @DisplayName("")
-    public void getByFilter_() throws Exception {
+    @DisplayName("GET /analytics - возвращает корректный результат")
+    public void getByFilterSuccess() throws Exception {
         RecommendationFilterDto filterDto = new RecommendationFilterDto(
                 2L,
                 EventType.RECOMMENDATION_RECEIVED,
