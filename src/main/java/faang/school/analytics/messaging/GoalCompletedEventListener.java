@@ -1,4 +1,4 @@
-package faang.school.analytics.message;
+package faang.school.analytics.messaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.GoalCompletedEvent;

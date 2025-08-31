@@ -24,6 +24,7 @@ spring:
       channel:
         goal-completed: goal_completed_channel
         profile-view: profile_view_channel
+        mentorship-request: mentorship_request_channel
 
 server:
   port: 8086
@@ -35,3 +36,7 @@ logging:
 project-service:
   host: localhost
   port: 8082
+
+user-service:
+  host: localhost
+  port: 8080
