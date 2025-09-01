@@ -36,7 +36,7 @@ audit-kafka:
   topic: analiticsEvent
 
 server:
-  port: 8086
+  port: 8088
 
 logging:
   level:
