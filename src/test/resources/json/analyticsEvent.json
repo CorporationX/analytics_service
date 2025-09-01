@@ -1,0 +1,6 @@
+{
+  "receiverId": 1,
+  "actorId": 1,
+  "eventType": "PUBLISHED_POST",
+  "receivedAt": "2025-01-01T00:00:00"
+}

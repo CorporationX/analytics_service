@@ -5,6 +5,8 @@ import faang.school.analytics.dto.RequestAnalyticsDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -16,8 +18,9 @@ import java.util.stream.Stream;
 @Service
 @RequiredArgsConstructor
 public class AnalyticsEventServiceImpl implements AnalyticsEventService {
-    private final AnalyticsEventRepository analyticsEventRepository;
+
     private final AnalyticsEventMapper analyticsEventMapper;
+    private final AnalyticsEventRepository analyticsEventRepository;
 
     public void saveEvent(EventDto eventDto) {
         analyticsEventRepository.save(analyticsEventMapper.toEntity(eventDto));
