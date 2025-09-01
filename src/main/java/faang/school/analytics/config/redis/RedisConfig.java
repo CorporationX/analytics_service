@@ -79,7 +79,7 @@ public class RedisConfig {
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(listener, topic());
-        log.info("ДОЛЖЕН ВЫЗЫВАТЬСЯ!");
+        log.info("Redis был инициализирован");
         return container;
     }
 }
