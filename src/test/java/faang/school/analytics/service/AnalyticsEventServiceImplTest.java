@@ -11,10 +11,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -26,7 +28,7 @@ public class AnalyticsEventServiceImplTest {
     private AnalyticsEventRepository repository;
 
     @InjectMocks
-    AnalyticsEventServiceImpl service;
+    private AnalyticsEventServiceImpl service;
 
     @Test
     @DisplayName("Проверяет, что метод save вызвался")
@@ -66,10 +68,10 @@ public class AnalyticsEventServiceImplTest {
                 )
         );
 
-        when(repository.findByFilter(filterDto)).thenReturn(expectedEvents);
+        when(repository.findAll(any(Specification.class))).thenReturn(expectedEvents);
 
         service.getAnalytics(filterDto);
 
-        verify(repository, times(1)).findByFilter(filterDto);
+        verify(repository, times(1)).findAll(any(Specification.class));
     }
 }

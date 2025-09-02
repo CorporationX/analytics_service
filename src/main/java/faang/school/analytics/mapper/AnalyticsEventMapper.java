@@ -3,7 +3,6 @@ package faang.school.analytics.mapper;
 import faang.school.analytics.dto.RecommendationEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
-import faang.school.analytics.model.EventTypeRegistry;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -22,6 +21,6 @@ public interface AnalyticsEventMapper {
     AnalyticsEvent toEntity(RecommendationEvent event);
 
     default EventType getEventType(Object event) {
-        return EventTypeRegistry.getEventTypeForClass(event.getClass());
+        return EventType.getEventTypeForClass(event.getClass());
     }
 }

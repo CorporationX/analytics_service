@@ -1,8 +1,8 @@
 package faang.school.analytics.dto;
 
-import faang.school.analytics.exception.DataValidationException;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.TimeIntervalType;
+import jakarta.validation.constraints.AssertTrue;
 import lombok.NonNull;
 
 import java.time.LocalDateTime;
@@ -26,13 +26,11 @@ public record RecommendationFilterDto(
         LocalDateTime startTime,
         LocalDateTime endTime
 ) {
-    public void validate() {
-        if (timeType != null && (startTime != null || endTime != null)) {
-            throw new DataValidationException("Нельзя указывать одновременно timeType и startTime/endTime");
-        }
+    @AssertTrue
+    public boolean validate() {
+        boolean hasTimeConflict = timeType != null && (startTime != null || endTime != null);
+        boolean hasInvalidTimeRange = startTime != null && endTime != null && startTime.isAfter(endTime);
 
-        if (startTime != null && endTime != null && startTime.isAfter(endTime)) {
-            throw new DataValidationException("Дата начала не может быть позже даты окончания");
-        }
+        return !hasTimeConflict && !hasInvalidTimeRange;
     }
 }

@@ -18,11 +18,11 @@ import java.time.LocalDateTime;
 public class SpecificationBuilder {
 
     public static Specification<AnalyticsEvent> buildSpecification(RecommendationFilterDto filterDto) {
-        return Specification.where(byReceiverId(filterDto.id()))
-                .and(byEventType(filterDto.eventType()))
-                .and(byTimeIntervalType(filterDto.timeType()))
-                .and(byCreatedAtBetween(filterDto.startTime(), filterDto.endTime())
-                );
+        return Specification.allOf(byReceiverId(filterDto.id()),
+                byEventType(filterDto.eventType()),
+                byTimeIntervalType(filterDto.timeType()),
+                byCreatedAtBetween(filterDto.startTime(), filterDto.endTime())
+        );
     }
 
     public static Specification<AnalyticsEvent> byReceiverId(Long receiverId) {
@@ -46,7 +46,7 @@ public class SpecificationBuilder {
             return null;
         }
 
-        LocalDateTime[] dateRange = intervalType.getDateRange();
+        LocalDateTime[] dateRange = intervalType.getRange();
         LocalDateTime startDate = dateRange[0];
         LocalDateTime endDate = dateRange[1];
 

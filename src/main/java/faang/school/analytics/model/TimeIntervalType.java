@@ -13,43 +13,60 @@ import java.util.function.Function;
  * @since 20.08.2025
  */
 public enum TimeIntervalType {
-    DAY(d -> d.toLocalDate().atStartOfDay(),
-            d -> d.toLocalDate().atTime(LocalTime.MAX)),
+    DAY(TimeIntervalType::startOfDay, TimeIntervalType::endOfDay),
+    WEEK(TimeIntervalType::startOfWeek, TimeIntervalType::endOfWeek),
+    MONTH(TimeIntervalType::startOfMonth, TimeIntervalType::endOfMonth),
+    YEAR(TimeIntervalType::startOfYear, TimeIntervalType::endOfYear);
 
-    WEEK(d -> d.toLocalDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).atStartOfDay(),
-            d -> d.toLocalDate().with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)).atTime(LocalTime.MAX)),
+    private final Function<LocalDateTime, LocalDateTime> start;
+    private final Function<LocalDateTime, LocalDateTime> end;
 
-    MONTH(d -> d.toLocalDate().withDayOfMonth(1).atStartOfDay(),
-            d -> d.toLocalDate().with(TemporalAdjusters.lastDayOfMonth()).atTime(LocalTime.MAX)),
-
-    YEAR(d -> d.toLocalDate().withDayOfYear(1).atStartOfDay(),
-            d -> d.toLocalDate().with(TemporalAdjusters.lastDayOfYear()).atTime(LocalTime.MAX));
-
-    private final Function<LocalDateTime, LocalDateTime> startDateCalculator;
-    private final Function<LocalDateTime, LocalDateTime> endDateCalculator;
-
-    TimeIntervalType(Function<LocalDateTime, LocalDateTime> startDateCalculator,
-                     Function<LocalDateTime, LocalDateTime> endDateCalculator) {
-        this.startDateCalculator = startDateCalculator;
-        this.endDateCalculator = endDateCalculator;
+    TimeIntervalType(Function<LocalDateTime, LocalDateTime> start,
+                     Function<LocalDateTime, LocalDateTime> end) {
+        this.start = start;
+        this.end = end;
     }
 
-    public LocalDateTime getStartDate(LocalDateTime referenceDate) {
-        return startDateCalculator.apply(referenceDate);
+    private static LocalDateTime startOfDay(LocalDateTime date) {
+        return date.toLocalDate().atStartOfDay();
     }
 
-    public LocalDateTime getEndDate(LocalDateTime referenceDate) {
-        return endDateCalculator.apply(referenceDate);
+    private static LocalDateTime endOfDay(LocalDateTime date) {
+        return date.toLocalDate().atTime(LocalTime.MAX);
     }
 
-    public LocalDateTime[] getDateRange(LocalDateTime referenceDate) {
-        return new LocalDateTime[]{
-                getStartDate(referenceDate),
-                getEndDate(referenceDate)
-        };
+    private static LocalDateTime startOfWeek(LocalDateTime date) {
+        return date.toLocalDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).atStartOfDay();
     }
 
-    public LocalDateTime[] getDateRange() {
-        return getDateRange(LocalDateTime.now());
+    private static LocalDateTime endOfWeek(LocalDateTime date) {
+        return date.toLocalDate().with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)).atTime(LocalTime.MAX);
+    }
+
+    private static LocalDateTime startOfMonth(LocalDateTime date) {
+        return date.toLocalDate().withDayOfMonth(1).atStartOfDay();
+    }
+
+    private static LocalDateTime endOfMonth(LocalDateTime date) {
+        return date.toLocalDate().with(TemporalAdjusters.lastDayOfMonth()).atTime(LocalTime.MAX);
+    }
+
+    private static LocalDateTime startOfYear(LocalDateTime date) {
+        return date.toLocalDate().withDayOfYear(1).atStartOfDay();
+    }
+
+    private static LocalDateTime endOfYear(LocalDateTime date) {
+        return date.toLocalDate().with(TemporalAdjusters.lastDayOfYear()).atTime(LocalTime.MAX);
+    }
+
+    public LocalDateTime getStart(LocalDateTime date) { return start.apply(date); }
+    public LocalDateTime getEnd(LocalDateTime date) { return end.apply(date); }
+
+    public LocalDateTime[] getRange(LocalDateTime date) {
+        return new LocalDateTime[]{getStart(date), getEnd(date)};
+    }
+
+    public LocalDateTime[] getRange() {
+        return getRange(LocalDateTime.now());
     }
 }
