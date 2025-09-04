@@ -1,10 +1,10 @@
 package faang.school.analytics.controller;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.config.context.UserContext;
+import faang.school.analytics.dto.AnalyticsViewDto;
 import faang.school.analytics.dto.RecommendationFilterDto;
-import faang.school.analytics.exception.DataValidationException;
-import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.TimeIntervalType;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -21,9 +21,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,15 +38,17 @@ class AnalyticsEventControllerTest {
     private UserContext userContext;
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private MockMvc mockMvc;
 
     @ParameterizedTest
-    @MethodSource("faang.school.analytics.controller.AnalyticsEventControllerData#invalidFilterDto")
-    @DisplayName("Проверка метода с невалидными параметрами фильтрации")
-    public void getByFilter_WhenInvalidFilterDto(TimeIntervalType intervalType,
-                                                 LocalDateTime start,
-                                                 LocalDateTime end,
-                                                 String expectedError) {
+    @MethodSource("faang.school.analytics.controller.AnalyticsEventControllerData#invalidTimeTypeFilterDto")
+    @DisplayName("Проверка метода с невалидными параметрами типами времени")
+    void shouldReturnBadRequestWhenDtoInvalidTimeType(TimeIntervalType intervalType,
+                                              LocalDateTime start,
+                                              LocalDateTime end) throws Exception {
         RecommendationFilterDto filterDto = new RecommendationFilterDto(
                 1L,
                 EventType.RECOMMENDATION_RECEIVED,
@@ -56,8 +57,24 @@ class AnalyticsEventControllerTest {
                 end
         );
 
-        DataValidationException exception = assertThrows(DataValidationException.class, filterDto::validate);
-        assertEquals(expectedError, exception.getMessage());
+        assertFalse(filterDto::isTimeTypeConsistent);
+    }
+
+    @ParameterizedTest
+    @MethodSource("faang.school.analytics.controller.AnalyticsEventControllerData#invalidTimeRangeFilterDto")
+    @DisplayName("Проверка метода с невалидными параметрами промежутка времени")
+    void shouldReturnBadRequestWhenDtoInvalidTimeRange(TimeIntervalType intervalType,
+                                              LocalDateTime start,
+                                              LocalDateTime end) throws Exception {
+        RecommendationFilterDto filterDto = new RecommendationFilterDto(
+                1L,
+                EventType.RECOMMENDATION_RECEIVED,
+                intervalType,
+                start,
+                end
+        );
+
+        assertFalse(filterDto::isTimeRangeValid);
     }
 
     @ParameterizedTest
@@ -72,7 +89,8 @@ class AnalyticsEventControllerTest {
                 end
         );
 
-        assertDoesNotThrow(filterDto::validate);
+        assertTrue(filterDto::isTimeRangeValid);
+        assertTrue(filterDto::isTimeTypeConsistent);
     }
 
     @Test
@@ -85,7 +103,7 @@ class AnalyticsEventControllerTest {
                 null,
                 null
         );
-        AnalyticsEvent event = new AnalyticsEvent(
+        AnalyticsViewDto event = new AnalyticsViewDto(
                 1L,
                 2L,
                 3L,
@@ -102,11 +120,9 @@ class AnalyticsEventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].receiverId").value(2))
-                .andExpect(jsonPath("$[0].actorId").value(3))
+                .andExpect(jsonPath("$[0].receiverId").value(3))
+                .andExpect(jsonPath("$[0].actorId").value(2))
                 .andExpect(jsonPath("$[0].eventType").value("RECOMMENDATION_RECEIVED")
                 );
     }
-
-
 }

@@ -1,6 +1,8 @@
 package faang.school.analytics.service;
 
+import faang.school.analytics.dto.AnalyticsViewDto;
 import faang.school.analytics.dto.RecommendationFilterDto;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.repository.specification.SpecificationBuilder;
@@ -24,6 +26,7 @@ import java.util.List;
 public class AnalyticsEventServiceImpl implements AnalyticsEventService {
 
     private final AnalyticsEventRepository repository;
+    private final AnalyticsEventMapper mapper;
 
     @Override
     @Transactional
@@ -33,8 +36,10 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     }
 
     @Override
-    public List<AnalyticsEvent> getAnalytics(RecommendationFilterDto filterDto) {
+    public List<AnalyticsViewDto> getAnalytics(RecommendationFilterDto filterDto) {
         Specification<AnalyticsEvent> filter = SpecificationBuilder.buildSpecification(filterDto);
-        return repository.findAll(filter);
+        return repository.findAll(filter).stream()
+                .map(mapper::toDto)
+                .toList();
     }
 }

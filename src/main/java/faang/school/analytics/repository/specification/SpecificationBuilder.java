@@ -18,10 +18,10 @@ import java.time.LocalDateTime;
 public class SpecificationBuilder {
 
     public static Specification<AnalyticsEvent> buildSpecification(RecommendationFilterDto filterDto) {
-        return Specification.allOf(byReceiverId(filterDto.id()),
-                byEventType(filterDto.eventType()),
-                byTimeIntervalType(filterDto.timeType()),
-                byCreatedAtBetween(filterDto.startTime(), filterDto.endTime())
+        return Specification.allOf(byReceiverId(filterDto.getId()),
+                byEventType(filterDto.getEventType()),
+                byTimeIntervalType(filterDto.getTimeType()),
+                byCreatedAtBetween(filterDto.getStartTime(), filterDto.getEndTime())
         );
     }
 

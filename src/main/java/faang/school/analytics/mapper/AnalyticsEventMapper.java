@@ -1,5 +1,6 @@
 package faang.school.analytics.mapper;
 
+import faang.school.analytics.dto.AnalyticsViewDto;
 import faang.school.analytics.dto.RecommendationEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -19,6 +20,9 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "eventType", expression = "java(getEventType(event))")
     @Mapping(target = "actorId", source = "requesterId")
     AnalyticsEvent toEntity(RecommendationEvent event);
+
+    @Mapping(target = "eventType", expression = "java(event.getEventType())")
+    AnalyticsViewDto toDto(AnalyticsEvent event);
 
     default EventType getEventType(Object event) {
         return EventType.getEventTypeForClass(event.getClass());

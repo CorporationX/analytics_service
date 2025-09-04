@@ -1,6 +1,7 @@
 package faang.school.analytics.service;
 
 
+import faang.school.analytics.dto.AnalyticsViewDto;
 import faang.school.analytics.dto.RecommendationFilterDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -58,8 +59,8 @@ public class AnalyticsEventServiceImplTest {
                 null,
                 null);
 
-        List<AnalyticsEvent> expectedEvents = List.of(
-                new AnalyticsEvent(
+        List<AnalyticsViewDto> expectedEvents = List.of(
+                new AnalyticsViewDto(
                         1L,
                         100L,
                         101L,

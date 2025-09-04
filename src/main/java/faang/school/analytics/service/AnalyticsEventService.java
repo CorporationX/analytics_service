@@ -1,5 +1,6 @@
 package faang.school.analytics.service;
 
+import faang.school.analytics.dto.AnalyticsViewDto;
 import faang.school.analytics.dto.RecommendationFilterDto;
 import faang.school.analytics.model.AnalyticsEvent;
 
@@ -26,6 +27,6 @@ public interface AnalyticsEventService {
      * @param filterDto параметры фильтрации
      * @return отфильтрованный список ивентов
      */
-    List<AnalyticsEvent> getAnalytics(RecommendationFilterDto filterDto);
+    List<AnalyticsViewDto> getAnalytics(RecommendationFilterDto filterDto);
 
 }

@@ -1,7 +1,7 @@
 package faang.school.analytics.controller;
 
+import faang.school.analytics.dto.AnalyticsViewDto;
 import faang.school.analytics.dto.RecommendationFilterDto;
-import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +33,8 @@ public class AnalyticsEventController {
      * @return отфильтрованный список данных
      */
     @GetMapping
-    public ResponseEntity<List<AnalyticsEvent>> getByFilter(@Valid @ModelAttribute RecommendationFilterDto filterDto) {
-        filterDto.validate();
-        List<AnalyticsEvent> result = service.getAnalytics(filterDto);
+    public ResponseEntity<List<AnalyticsViewDto>> getByFilter(@Valid @ModelAttribute RecommendationFilterDto filterDto) {
+        List<AnalyticsViewDto> result = service.getAnalytics(filterDto);
         return ResponseEntity.ok(result);
     }
 }

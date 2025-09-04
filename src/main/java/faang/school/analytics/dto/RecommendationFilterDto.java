@@ -3,34 +3,43 @@ package faang.school.analytics.dto;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.TimeIntervalType;
 import jakarta.validation.constraints.AssertTrue;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 /**
  * Класс с параметрами фильтрации
  *
- * @param id идентификатор сущности (обязательный параметр)
- * @param eventType тип ивента (обязательный параметр)
- * @param timeType тип интервала (необязательный параметр)
- * @param startTime дата и время начала (необязательный параметр)
- * @param endTime дата и время конца (необязательный параметр)
- *
  * @author Linempy
  * @since 20.08.2025
  */
-public record RecommendationFilterDto(
-        @NonNull Long id,
-        @NonNull EventType eventType,
-        TimeIntervalType timeType,
-        LocalDateTime startTime,
-        LocalDateTime endTime
-) {
-    @AssertTrue
-    public boolean validate() {
-        boolean hasTimeConflict = timeType != null && (startTime != null || endTime != null);
-        boolean hasInvalidTimeRange = startTime != null && endTime != null && startTime.isAfter(endTime);
+@Getter
+@Setter
+@AllArgsConstructor
+@EqualsAndHashCode
+public class RecommendationFilterDto {
 
-        return !hasTimeConflict && !hasInvalidTimeRange;
+    @NonNull
+    private Long id;
+
+    @NonNull
+    private EventType eventType;
+
+    private TimeIntervalType timeType;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+
+    @AssertTrue(message = "Нельзя одновременно указывать timeType и start/end время")
+    public boolean isTimeTypeConsistent() {
+        return timeType == null || (startTime == null && endTime == null);
+    }
+
+    @AssertTrue(message = "Начальное время должно быть раньше конечного")
+    public boolean isTimeRangeValid() {
+        return (startTime == null || endTime == null) || !startTime.isAfter(endTime);
     }
 }
