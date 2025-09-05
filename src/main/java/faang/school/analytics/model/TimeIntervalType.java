@@ -2,6 +2,7 @@ package faang.school.analytics.model;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.function.Function;
@@ -13,60 +14,43 @@ import java.util.function.Function;
  * @since 20.08.2025
  */
 public enum TimeIntervalType {
-    DAY(TimeIntervalType::startOfDay, TimeIntervalType::endOfDay),
-    WEEK(TimeIntervalType::startOfWeek, TimeIntervalType::endOfWeek),
-    MONTH(TimeIntervalType::startOfMonth, TimeIntervalType::endOfMonth),
-    YEAR(TimeIntervalType::startOfYear, TimeIntervalType::endOfYear);
+    DAY(LocalDate::atStartOfDay,
+            d -> d.atTime(LocalTime.MAX)),
 
-    private final Function<LocalDateTime, LocalDateTime> start;
-    private final Function<LocalDateTime, LocalDateTime> end;
+    WEEK(d -> d.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).atStartOfDay(),
+            d -> d.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)).atTime(LocalTime.MAX)),
 
-    TimeIntervalType(Function<LocalDateTime, LocalDateTime> start,
-                     Function<LocalDateTime, LocalDateTime> end) {
-        this.start = start;
-        this.end = end;
+    MONTH(d -> d.withDayOfMonth(1).atStartOfDay(),
+            d -> d.with(TemporalAdjusters.lastDayOfMonth()).atTime(LocalTime.MAX)),
+
+    YEAR(d -> d.withDayOfYear(1).atStartOfDay(),
+            d -> d.with(TemporalAdjusters.lastDayOfYear()).atTime(LocalTime.MAX));
+
+    private final Function<LocalDate, LocalDateTime> startDateCalculator;
+    private final Function<LocalDate, LocalDateTime> endDateCalculator;
+
+    TimeIntervalType(Function<LocalDate, LocalDateTime> startDateCalculator,
+                     Function<LocalDate, LocalDateTime> endDateCalculator) {
+        this.startDateCalculator = startDateCalculator;
+        this.endDateCalculator = endDateCalculator;
     }
 
-    private static LocalDateTime startOfDay(LocalDateTime date) {
-        return date.toLocalDate().atStartOfDay();
+    public LocalDateTime getStartDate(LocalDateTime referenceDate) {
+        return startDateCalculator.apply(referenceDate.toLocalDate());
     }
 
-    private static LocalDateTime endOfDay(LocalDateTime date) {
-        return date.toLocalDate().atTime(LocalTime.MAX);
+    public LocalDateTime getEndDate(LocalDateTime referenceDate) {
+        return endDateCalculator.apply(referenceDate.toLocalDate());
     }
 
-    private static LocalDateTime startOfWeek(LocalDateTime date) {
-        return date.toLocalDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).atStartOfDay();
+    public LocalDateTime[] getDateRange(LocalDateTime referenceDate) {
+        return new LocalDateTime[]{
+                getStartDate(referenceDate),
+                getEndDate(referenceDate)
+        };
     }
 
-    private static LocalDateTime endOfWeek(LocalDateTime date) {
-        return date.toLocalDate().with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)).atTime(LocalTime.MAX);
-    }
-
-    private static LocalDateTime startOfMonth(LocalDateTime date) {
-        return date.toLocalDate().withDayOfMonth(1).atStartOfDay();
-    }
-
-    private static LocalDateTime endOfMonth(LocalDateTime date) {
-        return date.toLocalDate().with(TemporalAdjusters.lastDayOfMonth()).atTime(LocalTime.MAX);
-    }
-
-    private static LocalDateTime startOfYear(LocalDateTime date) {
-        return date.toLocalDate().withDayOfYear(1).atStartOfDay();
-    }
-
-    private static LocalDateTime endOfYear(LocalDateTime date) {
-        return date.toLocalDate().with(TemporalAdjusters.lastDayOfYear()).atTime(LocalTime.MAX);
-    }
-
-    public LocalDateTime getStart(LocalDateTime date) { return start.apply(date); }
-    public LocalDateTime getEnd(LocalDateTime date) { return end.apply(date); }
-
-    public LocalDateTime[] getRange(LocalDateTime date) {
-        return new LocalDateTime[]{getStart(date), getEnd(date)};
-    }
-
-    public LocalDateTime[] getRange() {
-        return getRange(LocalDateTime.now());
+    public LocalDateTime[] getDateRange() {
+        return getDateRange(LocalDateTime.now());
     }
 }

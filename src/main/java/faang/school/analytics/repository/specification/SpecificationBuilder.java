@@ -46,7 +46,7 @@ public class SpecificationBuilder {
             return null;
         }
 
-        LocalDateTime[] dateRange = intervalType.getRange();
+        LocalDateTime[] dateRange = intervalType.getDateRange();
         LocalDateTime startDate = dateRange[0];
         LocalDateTime endDate = dateRange[1];
 
