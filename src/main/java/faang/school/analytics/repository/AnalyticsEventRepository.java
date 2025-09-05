@@ -1,14 +1,17 @@
 package faang.school.analytics.repository;
 
 import faang.school.analytics.model.AnalyticsEvent;
-import faang.school.analytics.model.EventType;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import java.util.stream.Stream;
+public interface AnalyticsEventRepository extends JpaRepository<AnalyticsEvent, Long>,
+        JpaSpecificationExecutor<AnalyticsEvent> {
 
-@Repository
-public interface AnalyticsEventRepository extends CrudRepository<AnalyticsEvent, Long> {
-
-    Stream<AnalyticsEvent> findByReceiverIdAndEventType(long receiverId, EventType eventType);
+    default AnalyticsEvent findByIdOrThrow(Long id) {
+        return findById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Аналитика события id=%d не была найдена".formatted(id))
+                );
+    }
 }
