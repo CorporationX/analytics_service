@@ -1,5 +1,6 @@
 package faang.school.analytics.config.redis;
 
+import faang.school.analytics.messaging.GoalCompletedEventListener;
 import faang.school.analytics.messaging.MentorshipRequestedEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,10 @@ public class RedisConfig {
     }
 
     @Bean
+    MessageListenerAdapter goalCompleteListener(GoalCompletedEventListener goalCompletedEventListener) {
+        return new MessageListenerAdapter(goalCompletedEventListener);
+    }
+    @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisProperties.getHost(),
                 redisProperties.getPort());
@@ -46,11 +51,17 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer redisContainer(MessageListenerAdapter
-                                                         mentorshipRequestedListener) {
+    ChannelTopic goalCompleteTopic() {
+        return new ChannelTopic(redisProperties.getChannel().getGoalCompleted());
+    }
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(MessageListenerAdapter mentorshipRequestedListener,
+                                                 MessageListenerAdapter goalListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(mentorshipRequestedListener, mentorshipRequestTopic());
+        container.addMessageListener(goalListener, goalCompleteTopic());
         return container;
     }
 }
