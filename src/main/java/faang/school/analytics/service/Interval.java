@@ -10,7 +10,6 @@ public enum Interval {
     LAST_MONTH,
     LAST_YEAR;
 
-//    Pair<from, to>
     public Pair<LocalDateTime, LocalDateTime> getInterval() {
         return switch (this) {
             case LAST_DAY -> Pair.of(LocalDateTime.now().minusDays(1), LocalDateTime.now());

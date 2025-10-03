@@ -1,5 +1,6 @@
 package faang.school.analytics.controller.common;
 
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,11 +20,12 @@ public class AdviceControllerHandler {
     @ResponseBody
     public ApiExceptionDto onBaseExceptionsHandle(final Exception e) {
         log.error(e.getMessage());
-        ApiExceptionDto apiExceptionDto = new ApiExceptionDto();
-        apiExceptionDto.setMessage(e.getMessage());
-        apiExceptionDto.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        apiExceptionDto.setTimestamp(System.currentTimeMillis());
-        apiExceptionDto.setErrorType(SERVER_ERROR);
+        ApiExceptionDto apiExceptionDto = ApiExceptionDto.builder()
+                .errorType(SERVER_ERROR)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .message(e.getMessage())
+                .timestamp(System.currentTimeMillis())
+                .build();
         return apiExceptionDto;
     }
 

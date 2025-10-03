@@ -1,12 +1,14 @@
 package faang.school.analytics.controller.common;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ApiExceptionDto {
     private String message;
     private int status;

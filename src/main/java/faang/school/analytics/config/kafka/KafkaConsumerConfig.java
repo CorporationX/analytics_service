@@ -40,30 +40,16 @@ public class KafkaConsumerConfig {
     public KafkaListenerContainerFactory<
                 ConcurrentMessageListenerContainer<String, String>> analiticsEventListenerContainerFactory(
             ConsumerFactory<String, String> analiticsEventConsumerFactory,
-//            DefaultErrorHandler errorHandler,
             ObjectMapper objectMapper
     ) {
 
         ConcurrentKafkaListenerContainerFactory<String, String> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(analiticsEventConsumerFactory);
-//        factory.setCommonErrorHandler(errorHandler);
         factory.setRecordMessageConverter(new StringJsonMessageConverter(objectMapper));
 
         return factory;
     }
-
-//    @Bean
-//    public DefaultErrorHandler errorHandler(KafkaTemplate<String, Object> kafkaTemplate,
-//                                            ExponentialBackOffWithMaxRetries expBackOffRetries) {
-//
-//        DefaultErrorHandler errorHandler = new DefaultErrorHandler(
-//                new DeadLetterPublishingRecoverer(kafkaTemplate), expBackOffRetries);
-//        errorHandler.addNotRetryableExceptions(NonRetryableException.class);
-//        errorHandler.addRetryableExceptions(RetryableException.class);
-//
-//        return errorHandler;
-//    }
 
     @Bean
     public ExponentialBackOffWithMaxRetries expBackOffRetries(AuditKafkaProperties property) {
