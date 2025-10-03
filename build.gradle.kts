@@ -25,6 +25,11 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     /**
+     * Kafka
+     */
+    implementation("org.springframework.kafka:spring-kafka")
+
+    /**
      * Database
      */
     implementation("org.liquibase:liquibase-core")
@@ -41,6 +46,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.26")
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
 
     /**
      * Test containers
@@ -49,6 +56,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
     testImplementation("com.redis.testcontainers:testcontainers-redis-junit-jupiter:1.4.6")
+    testImplementation("org.springframework.kafka:spring-kafka-test")
 
     /**
      * Tests

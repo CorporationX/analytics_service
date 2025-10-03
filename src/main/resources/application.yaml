@@ -24,13 +24,41 @@ spring:
       channel:
         profile-view: profile_view_channel
 
+audit-kafka:
+  enabled: true
+  backoff:
+    init-interval: 1000
+    max-retries: 2
+    max-interval: 5000
+    multiplier: 2
+  consumer:
+    group-id: events
+  topic: analiticsEvent
+
 server:
-  port: 8086
+  port: 8088
 
 logging:
   level:
     root: info
 
-project-service:
-  host: localhost
-  port: 8082
+integration:
+  user-service:
+    host: localhost
+    port: 8888
+    get-user-url: /api/user
+  project-service:
+    host: ${PROJECT_SERVICE_HOST:localhost}
+    port: 8082
+    get-project-url: /api/project
+  post-service:
+    host: localhost
+    port: 8081
+    get-user-url: /api/post
+  achievment-service:
+    host: localhost
+    port: 8085
+    get-user-url: /api/achievment
+  payment-service:
+    host: localhost
+    port: 9080
