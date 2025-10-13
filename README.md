@@ -16,7 +16,7 @@
 # База данных
 
 * База поднимается в отдельном сервисе [infra](../infra)
-* Redis, Kafka и Avro также поднимаются в [infra](../infra)
+* Redis также поднимается в [infra](../infra)
 * Liquibase сам накатывает нужные миграции на PostgreSQL при старте приложения
 * В тестах используется [testcontainers](https://testcontainers.com/), в котором тоже запускается отдельный инстанс
   postgres
@@ -51,12 +51,7 @@ java -jar build/libs/ServiceTemplate-1.0.jar
 Но рекомендуется все это делать сделать через IDE
 
 # Код
-Реализована логика системы постов, лайков, комментариев
-
-## Лента новостей
-В этом микросервисе также реализована лента новостей. Ниже представлена архитектура фичи:
-
-![img.png](docs/images/NewsFeed.png)
+Реализована логика сбора аналитики по приложению
 
 # Тесты
 Используемые инструменты тестирования:
@@ -66,9 +61,3 @@ java -jar build/libs/ServiceTemplate-1.0.jar
 * AssertJ
 * JUnit5
 * Parameterized tests
-
-
-
-* Dockerfile, который подключается к сети запущенной postgres в docker-compose
-* Redis connectivity
-* ...
