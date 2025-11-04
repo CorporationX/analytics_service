@@ -8,15 +8,22 @@ import faang.school.analytics.service.AnalyticsEventServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AnalyticsEventServiceImplTest {
@@ -26,22 +33,29 @@ public class AnalyticsEventServiceImplTest {
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
 
+    @Captor
+    private ArgumentCaptor<List<AnalyticsEvent>> listAnalyticsEventCaptor;
+
+    private Long anyLong;
     private Long anyReciverId;
     private EventType anyEventType;
     private Interval anyInterval;
     private LocalDateTime anyLocalDateTimeFrom;
     private LocalDateTime anyLocalDateTimeTo;
-
+    private LocalDateTime anyLocalDateTimeInsideRequiredPeriod;
+    private AnalyticsEvent anyAnalyticsEvent;
 
     @BeforeEach
     public void setUp() {
-        anyReciverId = 1L;
+        anyLong = 1L;
+        anyReciverId = anyLong;
         anyEventType = EventType.FOLLOWER;
         anyInterval = Interval.DAY;
         anyLocalDateTimeFrom = LocalDateTime.now().minusHours(2);
         anyLocalDateTimeTo = LocalDateTime.now();
+        anyLocalDateTimeInsideRequiredPeriod = LocalDateTime.now().minusHours(1);
+        anyAnalyticsEvent = new AnalyticsEvent(anyLong, anyLong, anyLong, anyEventType, anyLocalDateTimeInsideRequiredPeriod);
     }
-
 
     @Test
     public void saveEventSuccessfullySaves() {
@@ -54,7 +68,10 @@ public class AnalyticsEventServiceImplTest {
 
     @Test
     public void getAnalyticsReturnsAnalyticsByInterval() {
-        analyticsEventService.getAnalytics(anyReciverId, anyEventType, anyInterval, null, null);
+        when(analyticsEventRepository.findByReceiverIdAndEventType(anyReciverId, anyEventType))
+                .thenReturn(Stream.of(anyAnalyticsEvent));
+        assertTrue(analyticsEventService.getAnalytics(anyReciverId, anyEventType, anyInterval, null, null)
+                .contains(anyAnalyticsEvent));
 
         verify(analyticsEventRepository, times(1))
                 .findByReceiverIdAndEventType(anyReciverId, anyEventType);
@@ -62,8 +79,15 @@ public class AnalyticsEventServiceImplTest {
 
     @Test
     public void getAnalyticsReturnsAnalyticsByPeriod() {
-        analyticsEventService.getAnalytics(
-                anyReciverId, anyEventType, null, anyLocalDateTimeFrom, anyLocalDateTimeTo);
+        when(analyticsEventRepository.findByReceiverIdAndEventType(anyReciverId, anyEventType))
+                .thenReturn(Stream.of(anyAnalyticsEvent));
+        assertTrue(analyticsEventService.getAnalytics(
+                anyReciverId,
+                anyEventType,
+                null,
+                anyLocalDateTimeFrom,
+                anyLocalDateTimeTo
+        ).contains(anyAnalyticsEvent));
 
         verify(analyticsEventRepository, times(1))
                 .findByReceiverIdAndEventType(anyReciverId, anyEventType);
