@@ -26,6 +26,8 @@ spring:
 
 server:
   port: 8086
+  servlet:
+    context-path: /api/v1
 
 logging:
   level:
