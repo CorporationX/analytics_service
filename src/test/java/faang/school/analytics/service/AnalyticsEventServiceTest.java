@@ -148,4 +148,41 @@ public class AnalyticsEventServiceTest {
         verify(analyticsEventRepository).save(anyEvent);
         verifyNoInteractions(analyticsEventMapper);
     }
+
+    @Test
+    void getAnalytics_WithRealLogicShouldFilterAndSort() {
+        LocalDateTime now = LocalDateTime.now();
+
+        AnalyticsEvent recentEvent = AnalyticsEvent.builder()
+                .id(1L)
+                .receiverId(12L)  // наш реальный receiverId
+                .actorId(11L)     // наш реальный actorId
+                .eventType(EventType.FOLLOWER)
+                .receivedAt(now.minusHours(2))  // недавно
+                .build();
+
+        AnalyticsEvent oldEvent = AnalyticsEvent.builder()
+                .id(2L)
+                .receiverId(12L)
+                .actorId(13L)
+                .eventType(EventType.FOLLOWER)
+                .receivedAt(now.minusMonths(2))
+                .build();
+
+        List<AnalyticsEvent> mockEvents = Arrays.asList(recentEvent, oldEvent);
+
+        when(analyticsEventRepository.findByReceiverIdAndEventType(12L, EventType.FOLLOWER))
+                .thenReturn(mockEvents.stream());
+
+        List<AnalyticsEventResponseDto> result = analyticsEventService
+                .getAnalytics(12L, EventType.FOLLOWER, Interval.LAST_WEEK, null, null);
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).actorId()).isEqualTo(11L);  // наш реальный пользователь
+        assertThat(result.get(0).receiverId()).isEqualTo(12L);
+        assertThat(result.get(0).eventType()).isEqualTo(EventType.FOLLOWER);
+
+        verify(analyticsEventRepository).findByReceiverIdAndEventType(12L, EventType.FOLLOWER);
+        verify(analyticsEventMapper, times(1)).toDto(any(AnalyticsEvent.class));
+    }
 }

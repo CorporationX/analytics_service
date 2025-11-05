@@ -40,7 +40,7 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
                 .filter(event -> isEventInRange(event, interval, from, to))
                 .sorted((e1, e2) -> e2.getReceivedAt().compareTo(e1.getReceivedAt()))
                 .map(analyticsEventMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private boolean isEventInRange(AnalyticsEvent event, Interval interval, LocalDateTime from, LocalDateTime to) {

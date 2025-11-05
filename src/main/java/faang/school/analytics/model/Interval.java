@@ -1,35 +1,23 @@
 package faang.school.analytics.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public enum Interval {
-    LAST_HOUR(LocalDateTime.now().minusHours(1), LocalDateTime.now()
-    ),
-    LAST_DAY(LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.MIN),
-            LocalDateTime.now()
-    ),
-    LAST_WEEK(LocalDateTime.of(LocalDate.now().minusWeeks(1), LocalTime.MIN),
-            LocalDateTime.now()
-    ),
-    LAST_MONTH(LocalDateTime.of(LocalDate.now().minusMonths(1), LocalTime.MIN),
-            LocalDateTime.now()
-    );
-
-    private final LocalDateTime start;
-    private final LocalDateTime end;
-
-    Interval(LocalDateTime start, LocalDateTime end) {
-        this.start = start;
-        this.end = end;
-    }
+    LAST_HOUR,
+    LAST_DAY,
+    LAST_WEEK,
+    LAST_MONTH;
 
     public LocalDateTime getStart() {
-        return start;
+        return switch (this) {
+            case LAST_HOUR -> LocalDateTime.now().minusHours(1);
+            case LAST_DAY -> LocalDateTime.now().minusDays(1).toLocalDate().atStartOfDay();
+            case LAST_WEEK -> LocalDateTime.now().minusWeeks(1).toLocalDate().atStartOfDay();
+            case LAST_MONTH -> LocalDateTime.now().minusMonths(1).toLocalDate().atStartOfDay();
+        };
     }
 
     public LocalDateTime getEnd() {
-        return end;
+        return LocalDateTime.now();
     }
 }
