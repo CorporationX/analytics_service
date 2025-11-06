@@ -2,8 +2,6 @@ package faang.school.analytics.controller;
 
 import faang.school.analytics.dto.AnalyticsEventResponseDto;
 import faang.school.analytics.dto.EventDto;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
-import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -28,24 +26,21 @@ import java.util.List;
 public class AnalyticsEventController {
 
         private final AnalyticsEventService analyticsEventService;
-        private final AnalyticsEventMapper analyticsEventMapper;
 
         @PostMapping("/events")
         void saveEvent(@RequestBody EventDto eventDto) {
             log.info("Save analytics event - receiver: {}, type: {}", eventDto.receiverId(), eventDto.eventType());
-            AnalyticsEvent event = analyticsEventMapper.toEntity(eventDto);
-            analyticsEventService.saveEvent(event);
+            analyticsEventService.saveEvent(eventDto);
         }
 
         @GetMapping
         List<AnalyticsEventResponseDto> getAnalytics(@RequestParam long receiverId,
-                                                     @RequestParam String eventType,
+                                                     @RequestParam EventType eventType,
                                                      @RequestParam(required = false) Interval interval,
                                                      @RequestParam(required = false) LocalDateTime from,
                                                      @RequestParam(required = false) LocalDateTime to) {
 
-            EventType type = EventType.valueOf(eventType.toUpperCase());
             log.info("Get analytics for receiver: {}, type: {}", receiverId, eventType);
-            return analyticsEventService.getAnalytics(receiverId, type, interval, from, to);
+            return analyticsEventService.getAnalytics(receiverId, eventType, interval, from, to);
         }
     }

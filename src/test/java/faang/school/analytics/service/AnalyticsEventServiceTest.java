@@ -1,6 +1,7 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventResponseDto;
+import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.exception.AnalyticsValidationException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
@@ -184,5 +185,31 @@ public class AnalyticsEventServiceTest {
 
         verify(analyticsEventRepository).findByReceiverIdAndEventType(12L, EventType.FOLLOWER);
         verify(analyticsEventMapper, times(1)).toDto(any(AnalyticsEvent.class));
+    }
+
+    @Test
+    void saveEvent_WithAnalyticsEventShouldSaveEventToRepository() {
+        AnalyticsEvent anyEvent = AnalyticsEvent.builder()
+                .id(3L)
+                .receiverId(50L)
+                .actorId(14L)
+                .eventType(EventType.FOLLOWER)
+                .receivedAt(LocalDateTime.now())
+                .build();
+
+        analyticsEventService.saveEvent(anyEvent);
+
+        verify(analyticsEventRepository).save(anyEvent);
+        verifyNoInteractions(analyticsEventMapper);
+    }
+
+    @Test
+    void saveEvent_WithEventDtoShouldSaveEventToRepository() {
+        EventDto eventDto = new EventDto(14L, 50L, "FOLLOWER");
+
+        analyticsEventService.saveEvent(eventDto);
+
+        verify(analyticsEventMapper).toEntity(eventDto);
+        verify(analyticsEventRepository).save(any(AnalyticsEvent.class));
     }
 }

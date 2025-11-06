@@ -33,7 +33,15 @@ spring:
       group-id: analytics-service-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "faang.school.analytics.dto"
+        spring.json.value.default.type: faang.school.analytics.dto.EventDto
+
+app:
+  kafka:
+    topics:
+      analytics: analytics
 
 server:
   port: 8086

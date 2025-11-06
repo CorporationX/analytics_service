@@ -1,6 +1,7 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventResponseDto;
+import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.exception.AnalyticsValidationException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
@@ -14,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -31,6 +31,15 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
                 event.getReceiverId(), event.getEventType());
     }
 
+    @Override
+    public void saveEvent(EventDto eventDto) {
+        AnalyticsEvent event = analyticsEventMapper.toEntity(eventDto);
+        analyticsEventRepository.save(event);
+        log.debug("Analytics event saved from DTO - receiver: {}, type: {}",
+                eventDto.receiverId(), eventDto.eventType());
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<AnalyticsEventResponseDto> getAnalytics(long receiverId, EventType eventType, Interval interval,
                                                         LocalDateTime from, LocalDateTime to) {
