@@ -36,13 +36,11 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "*"
-        spring.json.use.type.headers: false
 
 app:
   kafka:
     topics:
-      subscription-events: "subscription-events"
-      comment-create-events: "comment-create-events"
+      analytics: analytics
 
 server:
   port: 8086
