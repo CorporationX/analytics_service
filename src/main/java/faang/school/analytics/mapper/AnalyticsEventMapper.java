@@ -1,6 +1,7 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.AnalyticsEventResponseDto;
+import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import org.mapstruct.Mapper;
@@ -19,4 +20,10 @@ public interface AnalyticsEventMapper {
     AnalyticsEventResponseDto toDto(AnalyticsEvent analyticsEvent);
 
     List<AnalyticsEventResponseDto> toDtoList(List<AnalyticsEvent> events);
+
+    @Mapping(target = "receivedAt", source = "createdAt")
+    @Mapping(target = "eventType", expression = "java(faang.school.analytics.model.EventType.POST_COMMENT)")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "receiverId", source = "postAuthorId")
+    AnalyticsEvent toEntity(CommentEventDto commentEventDto);
 }

@@ -1,5 +1,6 @@
 package faang.school.analytics.listener;
 
+import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,16 @@ public class AnalyticsMessageListener {
             log.info("Analytics event saved: {}", eventDto);
         } catch (Exception e) {
             log.error("Failed to process analytics event from channel: {}", eventDto, e);
+        }
+    }
+
+    @KafkaListener(topics = "${app.kafka.topics.analytics}")
+    public void handleCommentMessage(CommentEventDto commentEventDto) {
+        try {
+            analyticsEventService.saveEvent(commentEventDto);
+            log.info("Comment analytics event saved: {}", commentEventDto);
+        } catch (Exception e) {
+            log.error("Failed to process analytics event from channel: {}", commentEventDto, e);
         }
     }
 }

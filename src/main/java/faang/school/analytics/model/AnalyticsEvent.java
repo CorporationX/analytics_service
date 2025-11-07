@@ -44,4 +44,10 @@ public class AnalyticsEvent {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "received_at", nullable = false)
     private LocalDateTime receivedAt;
+
+    @Column(name = "post_id")
+    private Long postId;
+
+    @Column(name = "comment_id")
+    private Long commentId;
 }
