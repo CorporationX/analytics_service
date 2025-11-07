@@ -39,4 +39,14 @@ public class AnalyticsMessageListener {
             log.error("Failed to process comment create event: {}", eventDto, e);
         }
     }
+
+    @KafkaListener(topics = "${app.kafka.topics.analytics}")
+    public void handleCommentMessage(CommentEventDto commentEventDto) {
+        try {
+            analyticsEventService.saveEvent(commentEventDto);
+            log.info("Comment analytics event saved: {}", commentEventDto);
+        } catch (Exception e) {
+            log.error("Failed to process analytics event from channel: {}", commentEventDto, e);
+        }
+    }
 }

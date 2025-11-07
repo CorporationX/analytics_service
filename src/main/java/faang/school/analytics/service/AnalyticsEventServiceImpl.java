@@ -1,6 +1,8 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventResponseDto;
+import faang.school.analytics.dto.CommentEventDto;
+import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.exception.AnalyticsValidationException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
@@ -11,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,11 +33,11 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     }
 
     @Override
-    public void saveEvent(Object eventDto) {
+    public void saveEvent(EventDto eventDto) {
         AnalyticsEvent event = analyticsEventMapper.toEntity(eventDto);
         analyticsEventRepository.save(event);
-        log.debug("Analytics event saved from {} - receiver: {}, type: {}",
-                eventDto.getClass().getSimpleName(), event.getReceiverId(), event.getEventType());
+        log.debug("Analytics event saved from DTO - receiver: {}, type: {}",
+                eventDto.receiverId(), eventDto.eventType());
     }
 
     @Override
@@ -71,5 +74,13 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
         if (from != null && to != null && from.isAfter(to)) {
             throw new AnalyticsValidationException("From date must be before to date");
         }
+    }
+
+    @Override
+    public void saveEvent(CommentEventDto commentEventDto) {
+        AnalyticsEvent event = analyticsEventMapper.toEntity(commentEventDto);
+        analyticsEventRepository.save(event);
+        log.debug("Analytics event saved from CommentDTO - receiver: {}, type: POST_COMMENT",
+                commentEventDto.postAuthorId());
     }
 }
