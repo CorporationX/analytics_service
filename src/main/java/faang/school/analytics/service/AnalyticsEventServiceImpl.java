@@ -1,6 +1,7 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventResponseDto;
+import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.exception.AnalyticsValidationException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -73,5 +74,13 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
         if (from != null && to != null && from.isAfter(to)) {
             throw new AnalyticsValidationException("From date must be before to date");
         }
+    }
+
+    @Override
+    public void saveEvent(CommentEventDto commentEventDto) {
+        AnalyticsEvent event = analyticsEventMapper.toEntity(commentEventDto);
+        analyticsEventRepository.save(event);
+        log.debug("Analytics event saved from CommentDTO - receiver: {}, type: POST_COMMENT",
+                commentEventDto.postAuthorId());
     }
 }

@@ -1,6 +1,7 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventResponseDto;
+import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.exception.AnalyticsValidationException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -17,6 +18,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.any;
@@ -212,4 +214,33 @@ public class AnalyticsEventServiceTest {
         verify(analyticsEventMapper).toEntity(eventDto);
         verify(analyticsEventRepository).save(any(AnalyticsEvent.class));
     }
+
+    @Test
+    void saveEvent_WithCommentEventDtoShouldSaveEventToRepository() {
+        LocalDateTime createdAt = LocalDateTime.now();
+        CommentEventDto commentEventDto = new CommentEventDto(
+                100L,
+                200L,
+                300L,
+                400L,
+                createdAt
+        );
+
+        analyticsEventService.saveEvent(commentEventDto);
+        verify(analyticsEventMapper).toEntity(commentEventDto);
+        verify(analyticsEventRepository).save(any(AnalyticsEvent.class));
+    }
+
+    @Test
+    void getAnalytics_WithInvalidDateRangeShouldThrowException() {
+        LocalDateTime from = LocalDateTime.now();
+        LocalDateTime to = LocalDateTime.now().minusDays(1);
+
+        assertThrows(AnalyticsValidationException.class, () ->
+                analyticsEventService.getAnalytics(RECEIVER_ID, EVENT_TYPE, null, from, to));
+
+        verifyNoInteractions(analyticsEventRepository);
+        verifyNoInteractions(analyticsEventMapper);
+    }
 }
+
