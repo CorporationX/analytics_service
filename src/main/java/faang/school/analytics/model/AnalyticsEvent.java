@@ -34,8 +34,8 @@ public class AnalyticsEvent {
     @Column(name="receiver_id", nullable = false)
     private long receiverId;
 
-    @Column(name = "actor_id", nullable = false)
-    private long actorId;
+    @Column(name = "author_id", nullable = false)
+    private long authorId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "event_type", nullable = false)
@@ -45,3 +45,5 @@ public class AnalyticsEvent {
     @Column(name = "received_at", nullable = false)
     private LocalDateTime receivedAt;
 }
+
+

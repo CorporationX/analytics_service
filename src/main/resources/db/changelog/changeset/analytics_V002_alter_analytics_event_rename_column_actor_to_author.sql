@@ -1,0 +1,1 @@
+ALTER TABLE analytics_event RENAME COLUMN actor_id TO author_id;

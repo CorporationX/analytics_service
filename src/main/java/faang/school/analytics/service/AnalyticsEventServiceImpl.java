@@ -33,23 +33,34 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
             LocalDateTime to
     ) {
         if (interval != null) {
-            return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
-                    .filter(event ->
-                            event.getReceivedAt()
-                                    .isAfter(LocalDateTime.now().minusSeconds(interval.toSeconds()))
-                                    && event.getReceivedAt()
-                                    .isBefore(LocalDateTime.now()))
-                    .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
-                    .toList();
+            return filterEventsByInterval(receiverId, eventType, interval);
         } else {
-            return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
-                    .filter(event ->
-                            event.getReceivedAt()
-                                    .isAfter(from)
-                                    && event.getReceivedAt()
-                                    .isBefore(to))
-                    .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
-                    .toList();
+            return filterEventsByDates(receiverId, eventType, from, to);
         }
+    }
+
+    private List<AnalyticsEvent> filterEventsByInterval(long receiverId, EventType eventType, Interval interval) {
+        return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
+                .filter(event ->
+                        event.getReceivedAt()
+                                .isAfter(LocalDateTime.now().minusSeconds(interval.toSeconds()))
+                                && event.getReceivedAt()
+                                .isBefore(LocalDateTime.now()))
+                .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
+                .toList();
+    }
+    private List<AnalyticsEvent> filterEventsByDates(long receiverId,
+                                               EventType eventType,
+                                               LocalDateTime from,
+                                               LocalDateTime to
+    ) {
+        return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
+                .filter(event ->
+                        event.getReceivedAt()
+                                .isAfter(from)
+                                && event.getReceivedAt()
+                                .isBefore(to))
+                .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
+                .toList();
     }
 }
