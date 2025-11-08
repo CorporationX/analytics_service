@@ -23,7 +23,6 @@ public interface AnalyticsEventService {
      */
     void saveEvent(AnalyticsEvent event);
 
-    // ДОБАВИТЬ этот метод для полиморфизма
     /**
      * Сохраняет аналитическое событие в базу данных из DTO.
      * Преобразует EventDto в AnalyticsEvent с помощью маппера.
