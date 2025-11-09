@@ -1,11 +1,13 @@
 package faang.school.analytics.listener;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.dto.EventDto;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -15,27 +17,30 @@ import org.springframework.stereotype.Component;
 public class AnalyticsMessageListener {
 
     private final AnalyticsEventService analyticsEventService;
+    private final AnalyticsEventMapper analyticsEventMapper;
+    private final ObjectMapper objectMapper;
 
-    @Value("${app.kafka.topics.analytics}")
-    private String analyticsTopic;
-
-    @KafkaListener(topics = "${app.kafka.topics.analytics}")
-    public void handleMessage(EventDto eventDto) {
+    @KafkaListener(topics = "${app.kafka.topics.subscription-events}")
+    public void handleSubscriptionEvents(String jsonEvent) {
         try {
-            analyticsEventService.saveEvent(eventDto);
-            log.info("Analytics event saved: {}", eventDto);
+            EventDto eventDto = objectMapper.readValue(jsonEvent, EventDto.class);
+            AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(eventDto);
+            analyticsEventService.saveEvent(analyticsEvent);
+            log.info("Subscription event saved: {}", eventDto);
         } catch (Exception e) {
-            log.error("Failed to process analytics event from channel: {}", eventDto, e);
+            log.error("Failed to process subscription event: {}", jsonEvent, e);
         }
     }
 
-    @KafkaListener(topics = "${app.kafka.topics.analytics}")
-    public void handleCommentMessage(CommentEventDto commentEventDto) {
+    @KafkaListener(topics = "${app.kafka.topics.comment-events}")
+    public void handleCommentEvents(String jsonEvent) {
         try {
-            analyticsEventService.saveEvent(commentEventDto);
-            log.info("Comment analytics event saved: {}", commentEventDto);
+            CommentEventDto eventDto = objectMapper.readValue(jsonEvent, CommentEventDto.class);
+            AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(eventDto);
+            analyticsEventService.saveEvent(analyticsEvent);
+            log.info("Comment event saved: {}", eventDto);
         } catch (Exception e) {
-            log.error("Failed to process analytics event from channel: {}", commentEventDto, e);
+            log.error("Failed to process comment event: {}", jsonEvent, e);
         }
     }
 }
