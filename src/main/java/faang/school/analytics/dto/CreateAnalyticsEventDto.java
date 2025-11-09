@@ -1,5 +1,7 @@
 package faang.school.analytics.dto;
 
+import java.time.LocalDateTime;
+
 import faang.school.analytics.model.EventType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -13,6 +15,9 @@ public record CreateAnalyticsEventDto (
     long actorId,
 
     @NotNull
-    EventType eventType
+    EventType eventType,
+
+    @NotNull
+    LocalDateTime receivedAt
 ) {
 }

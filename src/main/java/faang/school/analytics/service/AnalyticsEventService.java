@@ -5,7 +5,6 @@ import java.util.List;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.CreateAnalyticsEventDto;
-import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 

@@ -34,6 +34,7 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
         return mapper.toDto(event);
     }
 
+    @Transactional
     @Override
     public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType, Interval interval,
             LocalDateTime from, LocalDateTime to) {
@@ -48,15 +49,17 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
         LocalDateTime actualFrom = Optional.ofNullable(from)
             .orElseGet(() -> interval != null ? interval.subtractFrom(actualTo) : null);
 
-        if (from == null) {
+        if (actualFrom == null) {
             log.warn("Attempting to get events without from time");
             throw new DataValidationException("You must specify the `from` field or specify `Interval`");
         }
 
-        eventStream = eventStream.filter(event ->
-                !event.getReceivedAt().isBefore(actualFrom) &&
-                !event.getReceivedAt().isAfter(actualTo)
-                );
+        eventStream = eventStream.filter(event -> {
+            LocalDateTime receivedAt = event.getReceivedAt();
+            return receivedAt != null &&
+                !receivedAt.isBefore(actualFrom) &&
+                !receivedAt.isAfter(actualTo);
+        });
 
         return eventStream.map(mapper::toDto).toList();
     }

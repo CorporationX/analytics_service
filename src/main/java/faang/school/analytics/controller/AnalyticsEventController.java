@@ -39,9 +39,9 @@ public class AnalyticsEventController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public List<AnalyticsEventDto> getAnalytics(@PathVariable long receiverId,
             @RequestParam EventType eventType,
-            @RequestParam Interval interval,
-            @RequestParam LocalDateTime from,
-            @RequestParam LocalDateTime to) {
+            @RequestParam(required = false) Interval interval,
+            @RequestParam(required = false) LocalDateTime from,
+            @RequestParam(required = false) LocalDateTime to) {
         return service.getAnalytics(receiverId, eventType, interval, from, to);
     }
 }
