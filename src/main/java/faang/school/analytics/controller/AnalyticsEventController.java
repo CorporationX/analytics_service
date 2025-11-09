@@ -3,6 +3,7 @@ package faang.school.analytics.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,12 +37,13 @@ public class AnalyticsEventController {
     }
 
     @GetMapping("/{receiverId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public List<AnalyticsEventDto> getAnalytics(@PathVariable long receiverId,
             @RequestParam EventType eventType,
             @RequestParam(required = false) Interval interval,
-            @RequestParam(required = false) LocalDateTime from,
-            @RequestParam(required = false) LocalDateTime to) {
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
         return service.getAnalytics(receiverId, eventType, interval, from, to);
     }
 }
