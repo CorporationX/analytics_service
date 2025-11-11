@@ -32,15 +32,15 @@ public class AnalyticsMessageListener {
         }
     }
 
-    @KafkaListener(topics = "${app.kafka.topics.comment-events}")
-    public void handleCommentEvents(String jsonEvent) {
+    @KafkaListener(topics = "${app.kafka.topics.comment-create-events}")
+    public void handleCommentCreateEvents(String jsonEvent) {
         try {
             CommentEventDto eventDto = objectMapper.readValue(jsonEvent, CommentEventDto.class);
             AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(eventDto);
             analyticsEventService.saveEvent(analyticsEvent);
-            log.info("Comment event saved: {}", eventDto);
+            log.info("Comment create event saved: {}", eventDto);
         } catch (Exception e) {
-            log.error("Failed to process comment event: {}", jsonEvent, e);
+            log.error("Failed to process comment create event: {}", jsonEvent, e);
         }
     }
 }
