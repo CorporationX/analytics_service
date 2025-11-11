@@ -39,7 +39,7 @@ app:
   kafka:
     topics:
       subscription-events: "subscription-events"
-      comment-events: "comment-events"
+      comment-events: "comment-create-events"
 
 server:
   port: 8086
