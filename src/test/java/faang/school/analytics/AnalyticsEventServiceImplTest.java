@@ -49,7 +49,7 @@ public class AnalyticsEventServiceImplTest {
     public void setUp() {
         anyLong = 1L;
         anyReciverId = anyLong;
-        anyEventType = EventType.FOLLOWER;
+        anyEventType = EventType.FOLLOWER_USER;
         anyInterval = Interval.DAY;
         anyLocalDateTimeFrom = LocalDateTime.now().minusHours(2);
         anyLocalDateTimeTo = LocalDateTime.now();
