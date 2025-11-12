@@ -24,8 +24,24 @@ spring:
       channel:
         profile-view: profile_view_channel
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: analytics-service-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+
 server:
   port: 8086
+
+kafka:
+  consumers:
+    profile-view:
+      group-id: profile-view-group
+      concurrency: 3
+      topic: analytics.profile-view
 
 logging:
   level:
