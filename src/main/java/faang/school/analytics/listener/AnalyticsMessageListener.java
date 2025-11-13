@@ -18,14 +18,14 @@ public class AnalyticsMessageListener {
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper analyticsEventMapper;
 
-    @KafkaListener(topics = "${app.kafka.topics.subscription-events}")
-    public void handleSubscriptionEvents(EventDto eventDto, Acknowledgment ack) {
+    @KafkaListener(topics = "${app.kafka.topics.subscription-create-events}")
+    public void handleSubscriptionCreateEvents(EventDto eventDto, Acknowledgment ack) {
         try {
             analyticsEventService.saveEvent(eventDto);
             ack.acknowledge();
-            log.info("Subscription event saved: {}", eventDto);
+            log.info("Subscription create event saved: {}", eventDto);
         } catch (Exception e) {
-            log.error("Failed to process subscription event: {}", eventDto, e);
+            log.error("Failed to process subscription create event: {}", eventDto, e);
         }
     }
 
@@ -37,16 +37,6 @@ public class AnalyticsMessageListener {
             log.info("Comment create event saved: {}", eventDto);
         } catch (Exception e) {
             log.error("Failed to process comment create event: {}", eventDto, e);
-        }
-    }
-
-    @KafkaListener(topics = "${app.kafka.topics.analytics}")
-    public void handleCommentMessage(CommentEventDto commentEventDto) {
-        try {
-            analyticsEventService.saveEvent(commentEventDto);
-            log.info("Comment analytics event saved: {}", commentEventDto);
-        } catch (Exception e) {
-            log.error("Failed to process analytics event from channel: {}", commentEventDto, e);
         }
     }
 }
