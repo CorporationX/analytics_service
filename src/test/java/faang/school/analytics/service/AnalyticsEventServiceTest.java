@@ -11,7 +11,6 @@ import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -68,7 +67,7 @@ public class AnalyticsEventServiceTest {
     private AnalyticsEventRepository analyticsEventRepository;
 
     @Spy
-    private final AnalyticsEventMapper analyticsEventMapper = Mappers.getMapper(AnalyticsEventMapper.class);
+    private final AnalyticsEventMapper analyticsEventMapper = new AnalyticsEventMapper();
 
     @InjectMocks
     private AnalyticsEventServiceImpl analyticsEventService;
