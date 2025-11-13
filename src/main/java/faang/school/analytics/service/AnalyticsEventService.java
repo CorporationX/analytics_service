@@ -1,12 +1,9 @@
 package faang.school.analytics.service;
 
 import faang.school.analytics.dto.AnalyticsEventResponseDto;
-import faang.school.analytics.dto.CommentEventDto;
-import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,12 +23,12 @@ public interface AnalyticsEventService {
 
     /**
      * Сохраняет аналитическое событие в базу данных из DTO.
-     * Преобразует EventDto в AnalyticsEvent с помощью маппера.
+     * Универсальный метод для всех типов событий.
      *
      * @param eventDto DTO объект аналитического события для сохранения
      * @throws AnalyticsValidationException если данные события не прошли валидацию
      */
-    void saveEvent(EventDto eventDto);
+    void saveEvent(Object eventDto);
 
     /**
      * Получает аналитику по событиям для указанного пользователя и типа события.
@@ -47,13 +44,4 @@ public interface AnalyticsEventService {
      * @throws IllegalArgumentException если не указан ни interval, ни from/to
      */
     List<AnalyticsEventResponseDto> getAnalytics(long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to);
-
-    /**
-     * Сохраняет аналитическое событие в базу данных из DTO.
-     * Преобразует CommentEventDto в AnalyticsEvent с помощью маппера.
-     *
-     * @param commentEventDto DTO объект аналитического события для сохранения
-     * @throws AnalyticsValidationException если данные события не прошли валидацию
-     */
-    void saveEvent(CommentEventDto commentEventDto);
 }
