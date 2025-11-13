@@ -25,22 +25,26 @@ spring:
         profile-view: profile_view_channel
 
   kafka:
+    listener:
+      ack-mode: manual_immediate
     bootstrap-servers: localhost:9092
     properties:
       security:
         protocol: PLAINTEXT
     consumer:
+      enable-auto-commit: false
       group-id: analytics-service-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: "*"
+        spring.json.trusted.packages: "faang.school.analytics.dto"
 
 app:
   kafka:
     topics:
-      analytics: analytics
+      subscription-create-events: "subscription-create-events"
+      comment-create-events: "comment-create-events"
 
 server:
   port: 8086
