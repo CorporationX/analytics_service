@@ -4,8 +4,6 @@ CREATE TABLE analytics_event (
     actor_id bigint NOT NULL,
     event_type varchar(64) NOT NULL,
     received_at timestamptz DEFAULT current_timestamp,
-    post_id bigint,
-    comment_id bigint
 );
 
 CREATE INDEX events_idx ON analytics_event(receiver_id, event_type, received_at DESC);
