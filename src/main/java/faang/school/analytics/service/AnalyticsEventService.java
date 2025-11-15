@@ -1,5 +1,6 @@
 package faang.school.analytics.service;
 
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.AnalyticsEventResponseDto;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -29,7 +30,7 @@ public interface AnalyticsEventService {
      * @throws AnalyticsValidationException если данные события не прошли валидацию
      * @throws IllegalArgumentException если передан неподдерживаемый тип DTO
      */
-    void saveEvent(Object eventDto);
+    void saveEvent(AnalyticsEventDto eventDto);
 
     /**
      * Получает аналитику по событиям для указанного пользователя и типа события.
