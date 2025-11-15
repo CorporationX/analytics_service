@@ -25,19 +25,7 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, ProfileViewEvent> profileViewEventConsumerFactory() {
-        Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
-        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
-        
-        JsonDeserializer<ProfileViewEvent> jsonDeserializer = new JsonDeserializer<>(ProfileViewEvent.class);
-        jsonDeserializer.addTrustedPackages("*");
-        jsonDeserializer.setUseTypeHeaders(false);
-        
-        return new DefaultKafkaConsumerFactory<>(
-                props,
-                new StringDeserializer(),
-                jsonDeserializer
-        );
+        return createConsumerFactory(ProfileViewEvent.class);
     }
 
     @Bean
@@ -45,6 +33,18 @@ public class KafkaConsumerConfig {
             ConsumerFactory<String, ProfileViewEvent> profileViewEventConsumerFactory) {
         KafkaConsumerProperties.ConsumerConfig config = consumerProperties.getProfileView();
         return createListenerContainerFactory(profileViewEventConsumerFactory, config.getGroupId(), config.getConcurrency());
+    }
+
+    private <T> ConsumerFactory<String, T> createConsumerFactory(Class<T> eventClass) {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+
+        JsonDeserializer<T> jsonDeserializer = new JsonDeserializer<>(eventClass);
+        jsonDeserializer.addTrustedPackages("*");
+        jsonDeserializer.setUseTypeHeaders(false);
+
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), jsonDeserializer);
     }
 
     private <T> ConcurrentKafkaListenerContainerFactory<String, T> createListenerContainerFactory(

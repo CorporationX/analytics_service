@@ -40,7 +40,6 @@ kafka:
       topic: analytics.profile-view
       group-id: profile-view-group
       concurrency: 3
-      event-class: faang.school.analytics.dto.ProfileViewEvent
 
 logging:
   level:
