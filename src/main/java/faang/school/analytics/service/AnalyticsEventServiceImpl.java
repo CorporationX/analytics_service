@@ -1,5 +1,6 @@
 package faang.school.analytics.service;
 
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.AnalyticsEventResponseDto;
 import faang.school.analytics.exception.AnalyticsValidationException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -31,7 +32,7 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     }
 
     @Override
-    public void saveEvent(Object eventDto) {
+    public void saveEvent(AnalyticsEventDto eventDto) {
         AnalyticsEvent event = analyticsEventMapper.toEntity(eventDto);
         analyticsEventRepository.save(event);
         log.debug("Analytics event saved from DTO - type: {}", eventDto.getClass().getSimpleName());

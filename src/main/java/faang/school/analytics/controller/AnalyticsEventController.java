@@ -1,5 +1,6 @@
 package faang.school.analytics.controller;
 
+import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.AnalyticsEventResponseDto;
 import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.model.EventType;
@@ -30,7 +31,7 @@ public class AnalyticsEventController {
         @PostMapping("/events")
         void saveEvent(@RequestBody EventDto eventDto) {
             log.info("Save analytics event - receiver: {}, type: {}", eventDto.receiverId(), eventDto.eventType());
-            analyticsEventService.saveEvent(eventDto);
+            analyticsEventService.saveEvent((AnalyticsEventDto) eventDto);
         }
 
         @GetMapping
