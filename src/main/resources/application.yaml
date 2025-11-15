@@ -26,22 +26,21 @@ spring:
 
   kafka:
     bootstrap-servers: localhost:9092
-    consumer:
-      group-id: analytics-service-group
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: "*"
+
+  lifecycle:
+    timeout-per-shutdown-phase: 1s
 
 server:
   port: 8086
+  shutdown: graceful
 
 kafka:
   consumers:
     profile-view:
+      topic: analytics.profile-view
       group-id: profile-view-group
       concurrency: 3
-      topic: analytics.profile-view
+      event-class: faang.school.analytics.dto.ProfileViewEvent
 
 logging:
   level:
