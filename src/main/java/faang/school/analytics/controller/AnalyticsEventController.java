@@ -1,8 +1,6 @@
 package faang.school.analytics.controller;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.AnalyticsEventResponseDto;
-import faang.school.analytics.dto.EventDto;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.service.AnalyticsEventService;
@@ -10,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,12 +23,6 @@ import java.util.List;
 public class AnalyticsEventController {
 
         private final AnalyticsEventService analyticsEventService;
-
-        @PostMapping("/events")
-        void saveEvent(@RequestBody EventDto eventDto) {
-            log.info("Save analytics event - receiver: {}, type: {}", eventDto.receiverId(), eventDto.eventType());
-            analyticsEventService.saveEvent((AnalyticsEventDto) eventDto);
-        }
 
         @GetMapping
         List<AnalyticsEventResponseDto> getAnalytics(@RequestParam long receiverId,
