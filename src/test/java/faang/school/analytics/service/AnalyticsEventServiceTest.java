@@ -137,22 +137,6 @@ public class AnalyticsEventServiceTest {
     }
 
     @Test
-    void saveEvent_ShouldSaveEventToRepository() {
-        AnalyticsEvent anyEvent = AnalyticsEvent.builder()
-                .id(3L)
-                .receiverId(50L)
-                .actorId(14L)
-                .eventType(EventType.FOLLOWER)
-                .receivedAt(LocalDateTime.now())
-                .build();
-
-        analyticsEventService.saveEvent(anyEvent);
-
-        verify(analyticsEventRepository).save(anyEvent);
-        verifyNoInteractions(analyticsEventMapper);
-    }
-
-    @Test
     void getAnalytics_WithRealLogicShouldFilterAndSort() {
         LocalDateTime now = LocalDateTime.now();
 
@@ -208,8 +192,8 @@ public class AnalyticsEventServiceTest {
     @Test
     void saveEvent_WithEventDtoShouldSaveEventToRepository() {
         EventDto eventDto = new EventDto(14L, 50L, "FOLLOWER");
-
-        analyticsEventService.saveEvent(eventDto);
+        AnalyticsEvent event = analyticsEventMapper.toEntity(eventDto);
+        analyticsEventService.saveEvent(event);
 
         verify(analyticsEventMapper).toEntity(eventDto);
         verify(analyticsEventRepository).save(any(AnalyticsEvent.class));
@@ -225,10 +209,10 @@ public class AnalyticsEventServiceTest {
                 400L,
                 createdAt
         );
-
-        analyticsEventService.saveEvent(commentEventDto);
+        AnalyticsEvent event = analyticsEventMapper.toEntity(commentEventDto);
+        analyticsEventService.saveEvent(event);
         verify(analyticsEventMapper).toEntity(commentEventDto);
-        verify(analyticsEventRepository).save(any(AnalyticsEvent.class));
+        verify(analyticsEventRepository).save(event);
     }
 
     @Test

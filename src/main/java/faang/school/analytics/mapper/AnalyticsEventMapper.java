@@ -1,6 +1,5 @@
 package faang.school.analytics.mapper;
 
-import faang.school.analytics.dto.AnalyticsEventDto;
 import faang.school.analytics.dto.AnalyticsEventResponseDto;
 import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.dto.EventDto;
@@ -27,13 +26,4 @@ public interface AnalyticsEventMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "receiverId", source = "postAuthorId")
     AnalyticsEvent toEntity(CommentEventDto commentEventDto);
-
-    default AnalyticsEvent toEntity(AnalyticsEventDto eventDto) {
-        if (eventDto instanceof EventDto) {
-            return toEntity((EventDto) eventDto);
-        } else if (eventDto instanceof CommentEventDto) {
-            return toEntity((CommentEventDto) eventDto);
-        }
-        throw new IllegalArgumentException("Unsupported event DTO type: " + eventDto.getClass().getName());
-    }
 }
