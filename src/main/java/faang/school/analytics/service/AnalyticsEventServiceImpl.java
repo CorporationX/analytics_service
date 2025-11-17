@@ -3,6 +3,7 @@ package faang.school.analytics.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
@@ -51,10 +52,11 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
             throw new DataValidationException("You must specify the `from` field or specify `Interval`");
         }
 
-        List<AnalyticsEvent> analyticsEvents = repository.findEvents(receiverId, eventType, actualFrom, actualTo);
-        return analyticsEvents.stream()
+        try(Stream<AnalyticsEvent> analyticsEvents = repository.findEvents(receiverId, eventType, actualFrom, actualTo)) {
+            return analyticsEvents
                 .map(mapper::toDto)
                 .toList();
+        }
     }
 }
 

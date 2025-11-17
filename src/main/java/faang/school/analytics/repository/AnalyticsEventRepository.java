@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.stream.Stream;
 
 @Repository
 public interface AnalyticsEventRepository extends CrudRepository<AnalyticsEvent, Long> {
@@ -18,7 +18,7 @@ public interface AnalyticsEventRepository extends CrudRepository<AnalyticsEvent,
     "WHERE e.receiverId = :receiverId " +
     "AND e.eventType = :eventType " +
     "AND e.receivedAt BETWEEN :from AND :to")
-        List<AnalyticsEvent> findEvents(
+        Stream<AnalyticsEvent> findEvents(
                 @Param("receiverId") long receiverId,
                 @Param("eventType") EventType eventType,
                 @Param("from") LocalDateTime from,

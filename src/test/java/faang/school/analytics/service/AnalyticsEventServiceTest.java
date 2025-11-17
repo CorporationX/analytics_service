@@ -121,7 +121,7 @@ class AnalyticsEventServiceImplTest {
                 .receivedAt(NOW.minusHours(5))
                 .build();
         when(repository.findEvents(RECEIVER_ID, EVENT_TYPE, from, to))
-                .thenReturn(List.of(recentEvent));
+                .thenReturn(Stream.of(recentEvent));
 
         List<AnalyticsEventDto> result = service.getAnalytics(RECEIVER_ID, EVENT_TYPE, interval, null, null);
 
@@ -148,7 +148,7 @@ class AnalyticsEventServiceImplTest {
                 .build();
 
         when(repository.findEvents(RECEIVER_ID, EVENT_TYPE, from, to))
-                .thenReturn(List.of(inRange, outOfRange));
+                .thenReturn(Stream.of(inRange, outOfRange));
 
         List<AnalyticsEventDto> result = service.getAnalytics(RECEIVER_ID, EVENT_TYPE, null, from, to);
 
@@ -175,7 +175,7 @@ class AnalyticsEventServiceImplTest {
                 .build();
 
         when(repository.findEvents(RECEIVER_ID, EVENT_TYPE, from, to))
-                .thenReturn(List.of(inRange, outOfRange));
+                .thenReturn(Stream.of(inRange, outOfRange));
 
         List<AnalyticsEventDto> result = service.getAnalytics(RECEIVER_ID, EVENT_TYPE, null, from, to);
 
@@ -201,7 +201,7 @@ class AnalyticsEventServiceImplTest {
                 .build();
 
         when(repository.findEvents(RECEIVER_ID, EVENT_TYPE, from, to))
-                .thenReturn(List.of(e1, e2));
+                .thenReturn(Stream.of(e1, e2));
 
         List<AnalyticsEventDto> result = service.getAnalytics(RECEIVER_ID, EVENT_TYPE, null, from, to);
 
@@ -223,7 +223,7 @@ class AnalyticsEventServiceImplTest {
                 .build();
 
         when(repository.findEvents(RECEIVER_ID, EVENT_TYPE, from, to))
-                .thenReturn(List.of(e1));
+                .thenReturn(Stream.of(e1));
 
         List<AnalyticsEventDto> result = service.getAnalytics(RECEIVER_ID, EVENT_TYPE, null, from, to);
 
