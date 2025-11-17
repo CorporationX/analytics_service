@@ -1,5 +1,6 @@
 package faang.school.analytics.config;
 
+import faang.school.analytics.dto.PostViewEvent;
 import faang.school.analytics.dto.ProfileViewEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -26,6 +27,12 @@ public class KafkaConsumerConfig {
 
     @Value("${kafka.consumers.profile-view.concurrency}")
     private int profileViewConcurrency;
+
+    @Value("${kafka.consumers.post-view.group-id}")
+    private String postViewGroupId;
+
+    @Value("${kafka.consumers.post-view.concurrency}")
+    private int postViewConcurrency;
 
     private Map<String, Object> commonConsumerConfigs() {
         Map<String, Object> props = new HashMap<>();
@@ -64,5 +71,16 @@ public class KafkaConsumerConfig {
     public ConcurrentKafkaListenerContainerFactory<String, ProfileViewEvent> profileViewEventKafkaListenerContainerFactory(
             ConsumerFactory<String, ProfileViewEvent> profileViewEventConsumerFactory) {
         return createListenerContainerFactory(profileViewEventConsumerFactory, profileViewConcurrency);
+    }
+
+    @Bean("postViewConsumerFactory")
+    public ConsumerFactory<String, PostViewEvent> postViewEventConsumerFactory() {
+        return createConsumerFactory(postViewGroupId, PostViewEvent.class);
+    }
+
+    @Bean("postViewConcurrentKafkaListenerContainerFactory")
+    public ConcurrentKafkaListenerContainerFactory<String, PostViewEvent> postViewEventConcurrentKafkaListenerContainerFactory(
+            ConsumerFactory<String, PostViewEvent> postViewEventConsumerFactory) {
+        return createListenerContainerFactory(postViewEventConsumerFactory, postViewConcurrency);
     }
 }
