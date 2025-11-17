@@ -1,7 +1,6 @@
 package faang.school.analytics.mapper;
 
 import faang.school.analytics.dto.PostViewEvent;
-import faang.school.analytics.dto.ProfileViewEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import lombok.experimental.UtilityClass;
