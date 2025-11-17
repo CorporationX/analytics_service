@@ -3,7 +3,6 @@ package faang.school.analytics.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
@@ -43,8 +42,6 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
             throw new DataValidationException("You must specify the eventType");
         }
 
-        Stream<AnalyticsEvent> eventStream = repository.findByReceiverIdAndEventType(receiverId, eventType);
-
         LocalDateTime actualTo = Optional.ofNullable(to).orElse(LocalDateTime.now());
         LocalDateTime actualFrom = Optional.ofNullable(from)
             .orElseGet(() -> interval != null ? interval.subtractFrom(actualTo) : null);
@@ -54,14 +51,10 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
             throw new DataValidationException("You must specify the `from` field or specify `Interval`");
         }
 
-        eventStream = eventStream.filter(event -> {
-            LocalDateTime receivedAt = event.getReceivedAt();
-            return receivedAt != null &&
-                !receivedAt.isBefore(actualFrom) &&
-                !receivedAt.isAfter(actualTo);
-        });
-
-        return eventStream.map(mapper::toDto).toList();
+        List<AnalyticsEvent> analyticsEvents = repository.findEvents(receiverId, eventType, actualFrom, actualTo);
+        return analyticsEvents.stream()
+                .map(mapper::toDto)
+                .toList();
     }
 }
 

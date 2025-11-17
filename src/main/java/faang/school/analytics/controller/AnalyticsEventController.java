@@ -36,7 +36,7 @@ public class AnalyticsEventController {
         return service.saveEvent(dto); 
     }
 
-    @GetMapping("/{receiverId}")
+    @GetMapping("/analytics/{receiverId}")
     public List<AnalyticsEventDto> getAnalytics(@PathVariable long receiverId,
             @RequestParam EventType eventType,
             @RequestParam(required = false) Interval interval,
