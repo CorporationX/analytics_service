@@ -38,7 +38,7 @@ spring:
 app:
   kafka:
     topics:
-      comment-events: "comment-events"
+      comment-events: "comment_events"
 
 server:
   port: 8086
