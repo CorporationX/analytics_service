@@ -1,5 +1,7 @@
 package faang.school.analytics;
 
+import faang.school.analytics.event.LikeEvent;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
@@ -33,6 +35,9 @@ public class AnalyticsEventServiceImplTest {
     @Mock
     private AnalyticsEventRepository analyticsEventRepository;
 
+    @Mock
+    private AnalyticsEventMapper analyticsEventMapper;
+
     @Captor
     private ArgumentCaptor<List<AnalyticsEvent>> listAnalyticsEventCaptor;
 
@@ -57,6 +62,18 @@ public class AnalyticsEventServiceImplTest {
         anyAnalyticsEvent = new AnalyticsEvent(anyLong, anyLong, anyLong, anyEventType, anyLocalDateTimeInsideRequiredPeriod);
     }
 
+    @Test
+    void saveLikeEventSuccessful() {
+        LikeEvent likeEvent = new LikeEvent(1L, 2L, 3L, LocalDateTime.now());
+        AnalyticsEvent mapped = new AnalyticsEvent(0L, 2L, 3L, EventType.POST_LIKE, likeEvent.getTimestamp());
+
+        when(analyticsEventMapper.toEntity(likeEvent)).thenReturn(mapped);
+
+        analyticsEventService.saveLikeEvent(likeEvent);
+
+        verify(analyticsEventMapper).toEntity(likeEvent);
+        verify(analyticsEventRepository).save(mapped);
+    }
     @Test
     public void saveEventSuccessfullySaves() {
         AnalyticsEvent analyticsEvent = new AnalyticsEvent();
