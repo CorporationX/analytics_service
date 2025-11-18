@@ -36,7 +36,7 @@ public class CommentEventListenerTest {
     @Captor
     ArgumentCaptor<AnalyticsEvent> analyticsEventCaptor;
 
-    String json = """
+    private final String json = """
             {
                 "commentId": 10,
                 "authorId": 5,
@@ -44,7 +44,7 @@ public class CommentEventListenerTest {
                 "createdAt": "2025-11-14T22:20:30"
             }
             """;
-    String invalidJson = "{invalid json}";
+    private final String invalidJson = "{invalid json}";
 
     @BeforeEach
     public void prepareObjectMapper() {

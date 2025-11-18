@@ -1,5 +1,7 @@
 package faang.school.analytics.listener;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.CommentEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
@@ -22,13 +24,15 @@ public class CommentEventListener {
     public void handleCommentEvent(String jsonEvent) {
         try {
             CommentEventDto commentEventDto = objectMapper.readValue(jsonEvent, CommentEventDto.class);
-            log.info("Successfully listen event from a comment-events topic");
+            log.debug("Successfully listen event from a comment-events topic: {}", jsonEvent);
             AnalyticsEvent analyticsEvent = analyticsEventMapper.toEntity(commentEventDto);
             analyticsEventService.saveEvent(analyticsEvent);
-            log.info("Comment create event saved: {}", analyticsEvent);
-        }catch (com.fasterxml.jackson.core.JsonProcessingException exception) {
-            log.warn("Failed to parse comment event JSON: {}", jsonEvent);
-        }catch (Exception exception) {
+            log.debug("Comment create event saved: {}", analyticsEvent);
+        } catch (JsonParseException exception) {
+            log.error("Bad JSON syntax: {}", jsonEvent);
+        } catch (JsonMappingException exception) {
+            log.error("Incorrect structure of JSON: {}", jsonEvent);
+        } catch (Exception exception) {
             log.error("Failed to process or to create comment event {}", jsonEvent, exception);
         }
     }
