@@ -1,6 +1,5 @@
 package faang.school.analytics.config;
 
-import faang.school.analytics.dto.PostViewEvent;
 import faang.school.analytics.dto.ProfileViewEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -38,7 +37,7 @@ public class KafkaConsumerConfig {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         return props;
@@ -74,13 +73,13 @@ public class KafkaConsumerConfig {
     }
 
     @Bean("postViewConsumerFactory")
-    public ConsumerFactory<String, PostViewEvent> postViewEventConsumerFactory() {
-        return createConsumerFactory(postViewGroupId, PostViewEvent.class);
+    public ConsumerFactory<String, String> postViewEventConsumerFactory() {
+        return createConsumerFactory(postViewGroupId, String.class);
     }
 
     @Bean("postViewConcurrentKafkaListenerContainerFactory")
-    public ConcurrentKafkaListenerContainerFactory<String, PostViewEvent> postViewEventConcurrentKafkaListenerContainerFactory(
-            ConsumerFactory<String, PostViewEvent> postViewEventConsumerFactory) {
+    public ConcurrentKafkaListenerContainerFactory<String, String> postViewEventConcurrentKafkaListenerContainerFactory(
+            ConsumerFactory<String, String> postViewEventConsumerFactory) {
         return createListenerContainerFactory(postViewEventConsumerFactory, postViewConcurrency);
     }
 }
