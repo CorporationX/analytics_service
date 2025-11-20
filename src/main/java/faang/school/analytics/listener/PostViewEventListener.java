@@ -18,8 +18,7 @@ public class PostViewEventListener {
 
     @KafkaListener(
             topics = "${kafka.consumers.post-view.topic}",
-            containerFactory = "postViewConcurrentKafkaListenerContainerFactory",
-            errorHandler = "kafkaListenerErrorHandler"
+            containerFactory = "postViewConcurrentKafkaListenerContainerFactory"
     )
 
     public void consumePostViewEvent(ConsumerRecord<String, String> record) {
