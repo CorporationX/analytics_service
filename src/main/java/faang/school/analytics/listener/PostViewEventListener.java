@@ -1,9 +1,11 @@
 package faang.school.analytics.listener;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.PostViewEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -12,15 +14,19 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class PostViewEventListener {
     private final AnalyticsEventService analyticsEventService;
+    private final ObjectMapper objectMapper;
 
     @KafkaListener(
             topics = "${kafka.consumers.post-view.topic}",
-            containerFactory = "postViewConcurrentKafkaListenerContainerFactory"
+            containerFactory = "postViewConcurrentKafkaListenerContainerFactory",
+            errorHandler = "kafkaListenerErrorHandler"
     )
-    public void consumePostViewEvent(PostViewEvent event) {
-        log.info("Received PostViewEvent from Kafka: {}", event);
+
+    public void consumePostViewEvent(ConsumerRecord<String, String> record) {
+        log.info("Received PostViewEvent from Kafka: {}", record.value());
 
         try {
+            PostViewEvent event = objectMapper.readValue(record.value(), PostViewEvent.class);
             analyticsEventService.processPostViewEvent(event);
             log.info("Successfully processed PostViewEvent for postId: {}", event.postId());
         } catch (Exception e) {
