@@ -15,7 +15,7 @@ public class PostViewEventMapper {
                 .receiverId(event.authorId())
                 .postId(event.postId())
                 .eventType(EventType.POST_VIEW)
-                .receivedAt(LocalDateTime.now())
+                .receivedAt(event.currentTime())
                 .build();
     }
 }

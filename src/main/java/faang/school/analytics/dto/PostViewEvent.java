@@ -8,6 +8,6 @@ public record PostViewEvent(
         Long postId,
         Long authorId,
         Long viewerId,
-        LocalDateTime viewedAt
+        LocalDateTime currentTime
 ) {
 }
