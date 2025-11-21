@@ -8,6 +8,7 @@ public record PostViewEvent(
         Long postId,
         Long authorId,
         Long viewerId,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime currentTime
 ) {
 }
