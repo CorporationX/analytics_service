@@ -5,7 +5,6 @@ import faang.school.analytics.dto.PostViewEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
@@ -22,11 +21,11 @@ public class PostViewEventListener {
             containerFactory = "postViewConcurrentKafkaListenerContainerFactory"
     )
 
-    public void consumePostViewEvent(ConsumerRecord<String, String> record, Acknowledgment ack) {
-        log.info("Received PostViewEvent from Kafka: {}", record.value());
+    public void consumePostViewEvent(PostViewEvent event, Acknowledgment ack) {
+        log.info("RECEIVED PostViewEvent: postId={}, authorId={}, viewerId={}, time={}",
+                event.postId(), event.authorId(), event.viewerId(), event.currentTime());
 
         try {
-            PostViewEvent event = objectMapper.readValue(record.value(), PostViewEvent.class);
             analyticsEventService.processPostViewEvent(event);
             log.info("Successfully processed PostViewEvent for postId: {}", event.postId());
 

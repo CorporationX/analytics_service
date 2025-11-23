@@ -29,6 +29,8 @@ public class AnalyticsEventService {
 
     @Transactional
     public void processPostViewEvent(PostViewEvent event) {
+        log.info("PROCESSING PostViewEvent in service: {}", event);
+
         AnalyticsEvent analyticsEvent = PostViewEventMapper.toAnalyticsEvent(event);
         AnalyticsEvent savedEvent = repository.save(analyticsEvent);
 
