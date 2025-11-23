@@ -1,9 +1,10 @@
 package faang.school.analytics.config;
 
 import faang.school.analytics.dto.ProfileViewEvent;
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -16,16 +17,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
+@RequiredArgsConstructor
 public class KafkaConsumerConfig {
 
-    @Value("${spring.kafka.bootstrap-servers}")
-    private String bootstrapServers;
+    private final KafkaProperties kafkaProperties;
+    private final KafkaConsumerProperties consumerProperties;
 
-    @Value("${kafka.consumers.profile-view.group-id}")
-    private String profileViewGroupId;
+    @Bean
+    public ConsumerFactory<String, ProfileViewEvent> profileViewEventConsumerFactory() {
+        return createConsumerFactory(ProfileViewEvent.class);
+    }
 
-    @Value("${kafka.consumers.profile-view.concurrency}")
-    private int profileViewConcurrency;
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, ProfileViewEvent> profileViewEventKafkaListenerContainerFactory(
+            ConsumerFactory<String, ProfileViewEvent> profileViewEventConsumerFactory) {
+        KafkaConsumerProperties.ConsumerConfig config = consumerProperties.getProfileView();
+        return createListenerContainerFactory(profileViewEventConsumerFactory, config.getGroupId(), config.getConcurrency());
+    }
 
     @Value("${kafka.consumers.post-view.group-id}")
     private String postViewGroupId;
@@ -33,29 +41,26 @@ public class KafkaConsumerConfig {
     @Value("${kafka.consumers.post-view.concurrency}")
     private int postViewConcurrency;
 
-    private Map<String, Object> commonConsumerConfigs() {
+    private <T> ConsumerFactory<String, T> createConsumerFactory(Class<T> eventClass) {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
-        props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-        return props;
-    }
 
-    private <T> ConsumerFactory<String, T> createConsumerFactory(String groupId, Class<T> valueType) {
-        Map<String, Object> props = commonConsumerConfigs();
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, valueType.getName());
-        return new DefaultKafkaConsumerFactory<>(props);
+        JsonDeserializer<T> jsonDeserializer = new JsonDeserializer<>(eventClass);
+        jsonDeserializer.addTrustedPackages("*");
+        jsonDeserializer.setUseTypeHeaders(false);
+
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), jsonDeserializer);
     }
 
     private <T> ConcurrentKafkaListenerContainerFactory<String, T> createListenerContainerFactory(
             ConsumerFactory<String, T> consumerFactory,
+            String groupId,
             int concurrency
     ) {
         ConcurrentKafkaListenerContainerFactory<String, T> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
+        factory.getContainerProperties().setGroupId(groupId);
         factory.setConcurrency(concurrency);
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         return factory;
