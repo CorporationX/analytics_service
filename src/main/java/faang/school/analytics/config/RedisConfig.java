@@ -11,6 +11,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.util.Map;
@@ -34,26 +35,28 @@ public class RedisConfig {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
 
         return template;
     }
 
     @Bean
-    MessageListenerAdapter searchAppearanceEvent(SearchAppearanceEventListener searchAppearanceEventListener) {
+    MessageListenerAdapter listenerSearchAppearanceEvent(SearchAppearanceEventListener searchAppearanceEventListener) {
         return new MessageListenerAdapter(searchAppearanceEventListener);
     }
 
     @Bean
-    ChannelTopic searchAppearanceTopic(@Value ("${spring.data.redis.channel.search-appearance}") String topic) {
+    ChannelTopic topicSearchAppearance(@Value("${spring.data.redis.channel.search-appearance}") String topic) {
         return new ChannelTopic(topic);
     }
 
     @Bean
-    RedisMessageListenerContainer searchAppearanceContainer(Map<ChannelTopic, MessageListenerAdapter> listenerAdapterMap) {
+    RedisMessageListenerContainer ContainerSearchAppearance(
+            Map<MessageListenerAdapter, ChannelTopic> listenerAdapterMap,
+            JedisConnectionFactory jedisConnectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(jedisConnectionFactory());
-        listenerAdapterMap.forEach((k, v) -> container.addMessageListener(v, k));
+        container.setConnectionFactory(jedisConnectionFactory);
+        listenerAdapterMap.forEach((container::addMessageListener));
         return container;
     }
 

@@ -1,10 +1,8 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
-import faang.school.analytics.repository.AnalyticsEventRepository;
-import faang.school.analytics.service.AnalyticsEventService;
-import lombok.Getter;
+import faang.school.analytics.exception.ParsingException;
+import org.springframework.lang.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -15,17 +13,13 @@ import java.util.function.Consumer;
 
 @Slf4j
 @RequiredArgsConstructor
-@Getter
 public abstract class AbstractEventListener<T> implements MessageListener {
 
     private final ObjectMapper objectMapper;
     private final Class<T> eventType;
-    private final AnalyticsEventRepository analyticsEventRepository;
-    private final AnalyticsEventMapper analyticsEventMapper;
-    private final AnalyticsEventService analyticsService;
 
     @Override
-    public void onMessage(Message message, byte[] pattern) {
+    public void onMessage(@NonNull Message message, byte[] pattern) {
         handleEvent(message, eventType, this::eventConsumer);
     }
 
@@ -35,9 +29,8 @@ public abstract class AbstractEventListener<T> implements MessageListener {
             eventConsumer.accept(event);
         } catch (IOException e) {
             log.error("Error while parsing message", e);
-            throw new RuntimeException(e);
+            throw new ParsingException(e.getMessage(), e);
         }
-
     }
 
     protected abstract void eventConsumer(T event);
