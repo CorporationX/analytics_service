@@ -45,7 +45,6 @@ public class AnalyticsEvent {
     @Column(name = "post_id")
     private Long postId;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "received_at", nullable = false)
     private LocalDateTime receivedAt;
 }

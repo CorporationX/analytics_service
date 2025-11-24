@@ -15,7 +15,6 @@ import java.time.format.DateTimeFormatter;
 public class ObjectMapperConfig {
 
     @Bean
-    @Primary
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         JavaTimeModule javaTimeModule = new JavaTimeModule();

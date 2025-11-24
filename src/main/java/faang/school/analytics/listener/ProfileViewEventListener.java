@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ProfileViewEventListener {
+public class ProfileViewEventListener implements AnalyticsEventListener<ProfileViewEvent> {
 
     private final AnalyticsEventService analyticsEventService;
 
@@ -21,25 +21,23 @@ public class ProfileViewEventListener {
             topics = "${kafka.consumers.profile-view.topic}",
             containerFactory = "profileViewEventKafkaListenerContainerFactory"
     )
-    public void listen(
-            ProfileViewEvent event,
-            Acknowledgment acknowledgment,
-            @Header(KafkaHeaders.RECEIVED_PARTITION) int partition,
-            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic
-    ) {
-        log.info("Received ProfileViewEvent: userId={}, viewerId={}, partition={}, topic={}",
-                event.userId(), event.viewerId(), partition, topic);
+    public void listen(ProfileViewEvent event,
+                       Acknowledgment acknowledgment,
+                       @Header(KafkaHeaders.RECEIVED_PARTITION) int partition,
+                       @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+
+        log.info("Received ProfileViewEvent: partition={}, topic={}, event={}", partition, topic, event);
 
         try {
-            analyticsEventService.processProfileViewEvent(event);
+            processEvent(event);
             acknowledgment.acknowledge();
-
-            log.info("Successfully acknowledged ProfileViewEvent: userId={}, partition={}",
-                    event.userId(), partition);
         } catch (Exception e) {
-            log.error("Error processing ProfileViewEvent: userId={}, viewerId={}, partition={}, error={}",
-                    event.userId(), event.viewerId(), partition, e.getMessage(), e);
+            log.error("Error processing ProfileViewEvent: partition={}, error={}", partition, e.getMessage(), e);
         }
     }
-}
 
+    @Override
+    public void processEvent(ProfileViewEvent event) {
+        analyticsEventService.processProfileViewEvent(event);
+    }
+}
