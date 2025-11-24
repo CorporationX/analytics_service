@@ -26,14 +26,18 @@ public class CommentEventListener implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
+        log.info("Parsing incoming message");
         CommentEventDto dto;
         try {
             dto = objectMapper.readValue(message.getBody(), CommentEventDto.class);
         } catch (IOException e) {
             throw new MessageConversionException("Message conversion resulted in error: " + e);
         }
+        log.info("Converting message to analytics event");
         AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(dto);
         analyticsEvent.setEventType(EventType.POST_COMMENT);
+        log.info("Saving analytics event");
         analyticsEventService.saveEvent(analyticsEvent);
+        log.info("Analytics event saved");
     }
 }
