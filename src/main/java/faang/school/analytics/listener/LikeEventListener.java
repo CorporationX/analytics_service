@@ -20,7 +20,6 @@ public class LikeEventListener implements MessageListener {
             log.info("Received LikeEvent: {}", likeEvent);
         } catch (IOException e) {
             log.error("Failed to parse LikeEvent", e);
-            throw new RuntimeException(e);
         }
     }
 }
