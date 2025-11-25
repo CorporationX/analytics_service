@@ -1,0 +1,2 @@
+ALTER TABLE analytics_event
+ADD COLUMN post_id bigint;

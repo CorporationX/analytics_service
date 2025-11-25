@@ -1,6 +1,7 @@
 package faang.school.analytics.listener;
 
-import faang.school.analytics.dto.ProfileViewEvent;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.dto.PostViewEvent;
 import faang.school.analytics.service.AnalyticsEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,34 +11,35 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
-public class ProfileViewEventListener implements AnalyticsEventListener<ProfileViewEvent> {
+@Slf4j
+public class PostViewEventListener implements AnalyticsEventListener<PostViewEvent> {
 
     private final AnalyticsEventService analyticsEventService;
 
     @KafkaListener(
-            topics = "${kafka.consumers.profile-view.topic}",
-            containerFactory = "profileViewEventKafkaListenerContainerFactory"
+            topics = "${kafka.consumers.post-view.topic}",
+            containerFactory = "postViewConcurrentKafkaListenerContainerFactory"
     )
-    public void listen(ProfileViewEvent event,
+
+    public void listen(PostViewEvent event,
                        Acknowledgment acknowledgment,
                        @Header(KafkaHeaders.RECEIVED_PARTITION) int partition,
                        @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 
-        log.info("Received ProfileViewEvent: partition={}, topic={}, event={}", partition, topic, event);
+        log.info("Received PostViewEvent: partition={}, topic={}, event={}", partition, topic, event);
 
         try {
             processEvent(event);
             acknowledgment.acknowledge();
         } catch (Exception e) {
-            log.error("Error processing ProfileViewEvent: partition={}, error={}", partition, e.getMessage(), e);
+            log.error("Error processing PostViewEvent: partition={}, error={}", partition, e.getMessage(), e);
         }
     }
 
     @Override
-    public void processEvent(ProfileViewEvent event) {
-        analyticsEventService.processProfileViewEvent(event);
+    public void processEvent(PostViewEvent event) {
+        analyticsEventService.processPostViewEvent(event);
     }
 }

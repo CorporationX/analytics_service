@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 public class KafkaConsumerProperties {
 
     private ConsumerConfig profileView;
+    private ConsumerConfig postView;
 
     @Getter
     @Setter

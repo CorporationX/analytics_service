@@ -1,5 +1,6 @@
 package faang.school.analytics.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -41,7 +42,9 @@ public class AnalyticsEvent {
     @Column(name = "event_type", nullable = false)
     private EventType eventType;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "post_id")
+    private Long postId;
+
     @Column(name = "received_at", nullable = false)
     private LocalDateTime receivedAt;
 }

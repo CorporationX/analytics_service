@@ -40,6 +40,10 @@ kafka:
       topic: analytics.profile-view
       group-id: profile-view-group
       concurrency: 3
+    post-view:
+      topic: analytics.post-view
+      group-id: post-view-group
+      concurrency: 3
 
 logging:
   level:
