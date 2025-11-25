@@ -2,11 +2,19 @@ plugins {
     java
     id("org.springframework.boot") version "3.0.6"
     id("io.spring.dependency-management") version "1.1.0"
+    checkstyle
 }
 
 group = "faang.school"
 version = "1.0"
-java.sourceCompatibility = JavaVersion.VERSION_17
+
+val lombokVersion = "1.18.34"
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
 
 repositories {
     mavenCentral()
@@ -37,8 +45,10 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
     implementation("org.slf4j:slf4j-api:2.0.5")
     implementation("ch.qos.logback:logback-classic:1.4.6")
-    implementation("org.projectlombok:lombok:1.18.26")
-    annotationProcessor("org.projectlombok:lombok:1.18.26")
+    compileOnly("org.projectlombok:lombok:$lombokVersion")
+    annotationProcessor("org.projectlombok:lombok:$lombokVersion")
+    testCompileOnly("org.projectlombok:lombok:$lombokVersion")
+    testAnnotationProcessor("org.projectlombok:lombok:$lombokVersion")
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
 
@@ -60,6 +70,27 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+checkstyle {
+    toolVersion = "10.17.0"
+    configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml")
+    checkstyle.enableExternalDtdLoad.set(true)
+}
+
+tasks.checkstyleMain {
+    source = fileTree("${project.rootDir}/src/main/java")
+    include("**/*.java")
+    exclude("**/resources/**")
+
+    classpath = files()
+}
+
+tasks.checkstyleTest {
+    source = fileTree("${project.rootDir}/src/test")
+    include("**/*.java")
+
+    classpath = files()
 }
 
 val test by tasks.getting(Test::class) { testLogging.showStandardStreams = true }
