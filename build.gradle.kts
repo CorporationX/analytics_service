@@ -3,6 +3,7 @@ plugins {
     id("org.springframework.boot") version "3.0.6"
     id("io.spring.dependency-management") version "1.1.0"
     checkstyle
+    jacoco
 }
 
 group = "faang.school"
@@ -97,4 +98,69 @@ val test by tasks.getting(Test::class) { testLogging.showStandardStreams = true 
 
 tasks.bootJar {
     archiveFileName.set("service.jar")
+}
+
+jacoco {
+    toolVersion = "0.8.14"
+}
+
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    classDirectories.setFrom(
+        project.layout.projectDirectory.dir("build/classes/java/main")
+            .asFileTree
+            .matching {
+                exclude(
+                    "**/config/**",
+                    "**/dto/**",
+                    "**/model/**",
+                    "**/*Application*",
+                    "**/exeption/**",
+                    "**/mapper/**",
+                    "**/*Feign*",
+                    "**/repository/**",
+                    "**/client/**"
+                )
+            }
+    )
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+}
+
+tasks.jacocoTestCoverageVerification {
+    dependsOn(tasks.test)
+    classDirectories.setFrom(
+        project.layout.projectDirectory.dir("build/classes/java/main")
+            .asFileTree
+            .matching {
+                exclude(
+                    "**/config/**",
+                    "**/dto/**",
+                    "**/model/**",
+                    "**/*Application*",
+                    "**/exeption/**",
+                    "**/mapper/**",
+                    "**/*Feign*",
+                    "**/repository/**",
+                    "**/client/**"
+                )
+            }
+    )
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.7.toBigDecimal()
+            }
+        }
+    }
+}
+
+tasks.check {
+    dependsOn(tasks.jacocoTestCoverageVerification)
 }
