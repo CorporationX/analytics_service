@@ -1,0 +1,25 @@
+name: analytics-ci
+
+on:
+  push:
+    paths:
+      - 'analytics_service/**'
+  pull_request:
+    paths:
+      - 'analytics_service/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: analytics_service
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+      - run: ./gradlew clean check jacocoTestReport
+
