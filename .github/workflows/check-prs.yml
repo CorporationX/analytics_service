@@ -11,9 +11,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: analytics_service
 
     steps:
       - name: Checkout repository
@@ -40,21 +37,21 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test_report
-          path: analytics_service/build/reports/tests/test
+          path: build/reports/tests/test
 
       - name: Archive checkstyle report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: checkstyle_report
-          path: analytics_service/build/reports/checkstyle
+          path: build/reports/checkstyle
 
       - name: Archive jacoco report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: jacoco_report
-          path: analytics_service/build/reports/jacoco
+          path: build/reports/jacoco
 
       - name: Comment on Pull Request if build failed
         if: failure()
