@@ -8,5 +8,5 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnalyticsEventMapper {
 
-AnalyticsEvent toAnalyticsEvent(CommentEventDto commentEventDto);
+    AnalyticsEvent toAnalyticsEvent(CommentEventDto commentEventDto);
 }

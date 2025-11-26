@@ -24,7 +24,6 @@ spring:
       channel:
         profile-view: profile_view_channel
         comment_event:
-          name: comment_event_channel
           topic: comment_event_topic
 
 server:
