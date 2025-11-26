@@ -2,7 +2,6 @@ package faang.school.analytics.messaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.event.CommentEventDto;
-import faang.school.analytics.exception.MessageConversionException;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -30,14 +29,14 @@ public class CommentEventListener implements MessageListener {
         CommentEventDto dto;
         try {
             dto = objectMapper.readValue(message.getBody(), CommentEventDto.class);
+            log.debug("Converting message to analytics event");
+            AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(dto);
+            analyticsEvent.setEventType(EventType.POST_COMMENT);
+            log.debug("Saving analytics event");
+            analyticsEventService.saveEvent(analyticsEvent);
+            log.info("Analytics event saved");
         } catch (IOException e) {
-            throw new MessageConversionException("Message conversion resulted in error: " + e);
+            log.error("Message conversion resulted in error: ", e);
         }
-        log.info("Converting message to analytics event");
-        AnalyticsEvent analyticsEvent = analyticsEventMapper.toAnalyticsEvent(dto);
-        analyticsEvent.setEventType(EventType.POST_COMMENT);
-        log.info("Saving analytics event");
-        analyticsEventService.saveEvent(analyticsEvent);
-        log.info("Analytics event saved");
     }
 }
