@@ -1,7 +1,6 @@
 package faang.school.analytics.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import faang.school.analytics.listener.PremiumBoughtEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -33,9 +32,8 @@ public class RedisConfig {
     }
 
     @Bean
-    public GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
+    public GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer(
+            ObjectMapper objectMapper) {
         return new GenericJackson2JsonRedisSerializer(objectMapper);
     }
 

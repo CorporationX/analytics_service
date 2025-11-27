@@ -1,5 +1,7 @@
 package faang.school.analytics.listener;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.PremiumBoughtEvent;
 import faang.school.analytics.exeption.DeserializationException;
 import faang.school.analytics.exeption.ValidationException;
@@ -10,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -20,7 +21,7 @@ public class PremiumBoughtEventListener implements MessageListener {
 
     private final AnalyticsEventMapper analyticsEventMapper;
     private final AnalyticsEventService analyticsEventService;
-    private final GenericJackson2JsonRedisSerializer serializer;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
@@ -39,7 +40,7 @@ public class PremiumBoughtEventListener implements MessageListener {
                 return;
             }
 
-            PremiumBoughtEvent event = (PremiumBoughtEvent) serializer.deserialize(messageBody);
+            PremiumBoughtEvent event = objectMapper.readValue(messageBody, PremiumBoughtEvent.class);
             
             if (event == null) {
                 log.error("Deserialized event is null. Raw message: {}", rawMessage);
@@ -54,6 +55,8 @@ public class PremiumBoughtEventListener implements MessageListener {
             analyticsEventService.save(analyticsEvent);
 
             log.info("Successfully processed PremiumBoughtEvent for user: {}", event.getUserId());
+        } catch (JsonProcessingException e) {
+            log.error("Failed to deserialize PremiumBoughtEvent. Raw message: {}", rawMessage, e);
         } catch (DeserializationException e) {
             log.error("Failed to deserialize PremiumBoughtEvent. Raw message: {}", rawMessage, e);
         } catch (ValidationException e) {
