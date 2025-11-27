@@ -3,6 +3,7 @@ package faang.school.analytics.service;
 import faang.school.analytics.exeption.AnalyticsEventSaveException;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,12 +18,7 @@ public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
 
     @Transactional
-    public AnalyticsEvent save(AnalyticsEvent event) {
-
-        if (event == null) {
-            throw new IllegalArgumentException("Analytics event cannot be null");
-        }
-
+    public AnalyticsEvent save(@NonNull AnalyticsEvent event) {
         try {
             AnalyticsEvent saved = analyticsEventRepository.save(event);
             logEventSaved(saved);
@@ -39,7 +35,7 @@ public class AnalyticsEventService {
     }
 
     private void logEventSaved(AnalyticsEvent saved) {
-        log.info("Saved analytics event: id={}, receiverId={}, actorId={}, eventType={}, receivedAt={}",
+        log.debug("Saved analytics event: id={}, receiverId={}, actorId={}, eventType={}, receivedAt={}",
                 saved.getId(),
                 saved.getReceiverId(),
                 saved.getActorId(),
