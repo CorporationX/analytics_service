@@ -53,8 +53,8 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
             startDate = from;
             endDate = to;
         }
-        return !event.getReceivedAt().isBefore(startDate) &&
-                !event.getReceivedAt().isAfter(endDate);
+        return !event.getReceivedAt().isBefore(startDate)
+                && !event.getReceivedAt().isAfter(endDate);
     }
 
     private void validateAnalyticsParameters(Interval interval, LocalDateTime from, LocalDateTime to) {

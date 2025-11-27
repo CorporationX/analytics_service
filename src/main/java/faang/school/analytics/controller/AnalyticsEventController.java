@@ -22,16 +22,16 @@ import java.util.List;
 @Validated
 public class AnalyticsEventController {
 
-        private final AnalyticsEventService analyticsEventService;
+    private final AnalyticsEventService analyticsEventService;
 
-        @GetMapping
-        List<AnalyticsEventResponseDto> getAnalytics(@RequestParam long receiverId,
-                                                     @RequestParam EventType eventType,
-                                                     @RequestParam(required = false) Interval interval,
-                                                     @RequestParam(required = false) LocalDateTime from,
-                                                     @RequestParam(required = false) LocalDateTime to) {
+    @GetMapping
+    List<AnalyticsEventResponseDto> getAnalytics(@RequestParam long receiverId,
+                                                 @RequestParam EventType eventType,
+                                                 @RequestParam(required = false) Interval interval,
+                                                 @RequestParam(required = false) LocalDateTime from,
+                                                 @RequestParam(required = false) LocalDateTime to) {
 
-            log.info("Get analytics for receiver: {}, type: {}", receiverId, eventType);
-            return analyticsEventService.getAnalytics(receiverId, eventType, interval, from, to);
-        }
+        log.info("Get analytics for receiver: {}, type: {}", receiverId, eventType);
+        return analyticsEventService.getAnalytics(receiverId, eventType, interval, from, to);
     }
+}

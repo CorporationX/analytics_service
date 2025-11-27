@@ -34,5 +34,6 @@ public interface AnalyticsEventService {
      * @return список DTO с аналитическими событиями, отсортированный по убыванию даты
      * @throws IllegalArgumentException если не указан ни interval, ни from/to
      */
-    List<AnalyticsEventResponseDto> getAnalytics(long receiverId, EventType eventType, Interval interval, LocalDateTime from, LocalDateTime to);
+    List<AnalyticsEventResponseDto> getAnalytics(long receiverId, EventType eventType, Interval interval,
+                                                 LocalDateTime from, LocalDateTime to);
 }
