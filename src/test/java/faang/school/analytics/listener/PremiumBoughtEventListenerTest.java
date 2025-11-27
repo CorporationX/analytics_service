@@ -22,6 +22,9 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -76,10 +79,10 @@ public class PremiumBoughtEventListenerTest {
 
         @Test
         @DisplayName("Should successfully process valid PremiumBoughtEvent")
-        void testOnMessage_SuccessfulProcessing() throws JsonProcessingException {
+        void testOnMessage_SuccessfulProcessing() throws Exception {
             // Given
             when(message.getBody()).thenReturn(messageBody);
-            when(objectMapper.readValue(messageBody, PremiumBoughtEvent.class)).thenReturn(event);
+            doReturn(event).when(objectMapper).readValue(messageBody, PremiumBoughtEvent.class);
             when(analyticsEventMapper.toAnalyticsEvent(event)).thenReturn(analyticsEvent);
             when(analyticsEventService.save(analyticsEvent)).thenReturn(analyticsEvent);
 
@@ -95,10 +98,10 @@ public class PremiumBoughtEventListenerTest {
 
         @Test
         @DisplayName("Should handle null pattern without errors")
-        void testOnMessage_NullPattern() throws JsonProcessingException {
+        void testOnMessage_NullPattern() throws Exception {
             // Given
             when(message.getBody()).thenReturn(messageBody);
-            when(objectMapper.readValue(messageBody, PremiumBoughtEvent.class)).thenReturn(event);
+            doReturn(event).when(objectMapper).readValue(messageBody, PremiumBoughtEvent.class);
             when(analyticsEventMapper.toAnalyticsEvent(event)).thenReturn(analyticsEvent);
 
             // When
@@ -117,11 +120,11 @@ public class PremiumBoughtEventListenerTest {
 
         @Test
         @DisplayName("Should handle deserialization exception gracefully")
-        void testOnMessage_DeserializationException() throws JsonProcessingException {
+        void testOnMessage_DeserializationException() throws Exception {
             // Given
             when(message.getBody()).thenReturn(messageBody);
-            when(objectMapper.readValue(messageBody, PremiumBoughtEvent.class))
-                    .thenThrow(new JsonProcessingException("Failed to deserialize") {});
+            doThrow(new JsonProcessingException("Failed to deserialize") {})
+                    .when(objectMapper).readValue(messageBody, PremiumBoughtEvent.class);
 
             // When
             assertDoesNotThrow(() -> listener.onMessage(message, pattern));
@@ -134,10 +137,10 @@ public class PremiumBoughtEventListenerTest {
 
         @Test
         @DisplayName("Should handle null deserialization result")
-        void testOnMessage_NullDeserializationResult() throws JsonProcessingException {
+        void testOnMessage_NullDeserializationResult() throws Exception {
             // Given
             when(message.getBody()).thenReturn(messageBody);
-            when(objectMapper.readValue(messageBody, PremiumBoughtEvent.class)).thenReturn(null);
+            doReturn(null).when(objectMapper).readValue(messageBody, PremiumBoughtEvent.class);
 
             // When
             assertDoesNotThrow(() -> listener.onMessage(message, pattern));
@@ -150,10 +153,10 @@ public class PremiumBoughtEventListenerTest {
 
         @Test
         @DisplayName("Should handle service save exception gracefully")
-        void testOnMessage_ServiceException() throws JsonProcessingException {
+        void testOnMessage_ServiceException() throws Exception {
             // Given
             when(message.getBody()).thenReturn(messageBody);
-            when(objectMapper.readValue(messageBody, PremiumBoughtEvent.class)).thenReturn(event);
+            doReturn(event).when(objectMapper).readValue(messageBody, PremiumBoughtEvent.class);
             when(analyticsEventMapper.toAnalyticsEvent(event)).thenReturn(analyticsEvent);
             when(analyticsEventService.save(analyticsEvent))
                     .thenThrow(new RuntimeException("Save failed"));
@@ -169,19 +172,19 @@ public class PremiumBoughtEventListenerTest {
 
         @Test
         @DisplayName("Should handle null message gracefully")
-        void testOnMessage_NullMessage() {
+        void testOnMessage_NullMessage() throws Exception {
             // When
             assertDoesNotThrow(() -> listener.onMessage(null, pattern));
 
             // Then
-            verify(objectMapper, never()).readValue(any(), any(Class.class));
+            verify(objectMapper, never()).readValue(any(byte[].class), eq(PremiumBoughtEvent.class));
             verify(analyticsEventMapper, never()).toAnalyticsEvent(any());
             verify(analyticsEventService, never()).save(any());
         }
 
         @Test
         @DisplayName("Should handle message with null body gracefully")
-        void testOnMessage_NullMessageBody() {
+        void testOnMessage_NullMessageBody() throws Exception {
             // Given
             when(message.getBody()).thenReturn(null);
 
@@ -190,7 +193,7 @@ public class PremiumBoughtEventListenerTest {
 
             // Then
             verify(message).getBody();
-            verify(objectMapper, never()).readValue(any(), any(Class.class));
+            verify(objectMapper, never()).readValue(any(byte[].class), eq(PremiumBoughtEvent.class));
             verify(analyticsEventMapper, never()).toAnalyticsEvent(any());
             verify(analyticsEventService, never()).save(any());
         }
