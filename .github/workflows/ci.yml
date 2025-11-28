@@ -2,7 +2,7 @@ name: CI Pipeline
 
 on:
   pull_request:
-    branches: [ chimera-master-stream12, feature-BJS2-96612-add-ci-pipeline ]
+    branches: [ chimera-master-stream12 ]
     types: [opened, reopened, synchronize, edited]
 
 jobs:
