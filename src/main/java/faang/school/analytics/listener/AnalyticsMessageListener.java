@@ -19,7 +19,8 @@ public class AnalyticsMessageListener {
     private final AnalyticsEventService analyticsEventService;
     private final AnalyticsEventMapper analyticsEventMapper;
 
-    @KafkaListener(topics = "${app.kafka.topics.subscription-create-events}", properties = "spring.json.value.default.type=faang.school.analytics.dto.EventDto")
+    @KafkaListener(topics = "${app.kafka.topics.subscription-create-events}",
+            properties = "spring.json.value.default.type=faang.school.analytics.dto.EventDto")
     public void handleSubscriptionCreateEvents(EventDto eventDto, Acknowledgment ack) {
         try {
             AnalyticsEvent event = analyticsEventMapper.toEntity(eventDto);
@@ -31,7 +32,8 @@ public class AnalyticsMessageListener {
         }
     }
 
-    @KafkaListener(topics = "${app.kafka.topics.comment-create-events}", properties = "spring.json.value.default.type=faang.school.analytics.dto.CommentEventDto")
+    @KafkaListener(topics = "${app.kafka.topics.comment-create-events}",
+            properties = "spring.json.value.default.type=faang.school.analytics.dto.CommentEventDto")
     public void handleCommentCreateEvents(CommentEventDto eventDto, Acknowledgment ack) {
         try {
             AnalyticsEvent event = analyticsEventMapper.toEntity(eventDto);

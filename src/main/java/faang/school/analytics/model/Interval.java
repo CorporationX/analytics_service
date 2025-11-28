@@ -10,10 +10,10 @@ public enum Interval {
 
     public LocalDateTime getStart() {
         return switch (this) {
-            case LAST_HOUR -> LocalDateTime.now().minusHours(1);
-            case LAST_DAY -> LocalDateTime.now().minusDays(1).toLocalDate().atStartOfDay();
-            case LAST_WEEK -> LocalDateTime.now().minusWeeks(1).toLocalDate().atStartOfDay();
-            case LAST_MONTH -> LocalDateTime.now().minusMonths(1).toLocalDate().atStartOfDay();
+          case LAST_HOUR -> LocalDateTime.now().minusHours(1);
+          case LAST_DAY -> LocalDateTime.now().minusDays(1).toLocalDate().atStartOfDay();
+          case LAST_WEEK -> LocalDateTime.now().minusWeeks(1).toLocalDate().atStartOfDay();
+          case LAST_MONTH -> LocalDateTime.now().minusMonths(1).toLocalDate().atStartOfDay();
         };
     }
 
