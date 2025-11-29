@@ -26,7 +26,7 @@ spring:
         search-appearance: search_appearance_channel
 
 server:
-  port: 8086
+  port: 8087
 
 logging:
   level:

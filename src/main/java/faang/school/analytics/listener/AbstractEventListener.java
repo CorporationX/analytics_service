@@ -2,11 +2,11 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.exception.ParsingException;
-import org.springframework.lang.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.lang.NonNull;
 
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -27,6 +27,7 @@ public abstract class AbstractEventListener<T> implements MessageListener {
         try {
             T event = objectMapper.readValue(message.getBody(), eventType);
             eventConsumer.accept(event);
+            log.info("Event {} handled", event);
         } catch (IOException e) {
             log.error("Error while parsing message", e);
             throw new ParsingException(e.getMessage(), e);
