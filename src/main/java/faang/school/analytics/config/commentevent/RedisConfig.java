@@ -1,5 +1,6 @@
-package faang.school.analytics.config;
+package faang.school.analytics.config.commentevent;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.messaging.CommentEventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -32,11 +33,12 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory connectionFactory,
+                                                       ObjectMapper objectMapper) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
         return template;
     }
 
