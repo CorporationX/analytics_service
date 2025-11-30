@@ -2,7 +2,7 @@ package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.analytics.dto.SearchAppearanceEvent;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
+import faang.school.analytics.mapper.AnalyticsEventMapperInt;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.service.AnalyticsEventServiceImpl;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class SearchAppearanceEventListener extends AbstractEventListener<SearchAppearanceEvent> {
 
-    private final AnalyticsEventMapper analyticsEventMapper;
+    private final AnalyticsEventMapperInt analyticsEventMapper;
     private final AnalyticsEventServiceImpl analyticsEventService;
 
     public SearchAppearanceEventListener(ObjectMapper objectMapper,
-                                         AnalyticsEventMapper analyticsEventMapper,
+                                         AnalyticsEventMapperInt analyticsEventMapper,
                                          AnalyticsEventServiceImpl analyticsEventService) {
         super(objectMapper, SearchAppearanceEvent.class);
         this.analyticsEventMapper = analyticsEventMapper;

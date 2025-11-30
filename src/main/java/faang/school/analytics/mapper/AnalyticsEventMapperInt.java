@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface AnalyticsEventMapper {
+public interface AnalyticsEventMapperInt {
 
     @Mapping(target = "receivedAt", source = "viewTime")
     AnalyticsEvent toAnalyticsEvent(SearchAppearanceEvent searchAppearanceEvent);
