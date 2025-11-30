@@ -2,8 +2,10 @@ package faang.school.analytics.service;
 
 import faang.school.analytics.dto.PostViewEvent;
 import faang.school.analytics.dto.ProfileViewEvent;
+import faang.school.analytics.dto.commentanalysis.AnalysisCommentsEventDto;
 import faang.school.analytics.mapper.PostViewEventMapper;
 import faang.school.analytics.mapper.ProfileViewEventMapper;
+import faang.school.analytics.mapper.commentanalysis.AnalysisCommentsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,23 @@ public class AnalyticsEventService {
 
         log.info("Successfully saved PostView AnalyticsEvent with id={}, eventType={}, postId={}, viewerId={}",
                 savedEvent.getId(), savedEvent.getEventType(), event.postId(), event.viewerId());
+    }
+
+    @Transactional
+    public void handleEvent(AnalysisCommentsEventDto event) {
+        if (!isValidEvent(event)) {
+            log.warn("Invalid or unsupported event received.");
+            return;
+        }
+
+        AnalyticsEvent analyticsEvent = AnalysisCommentsEventMapper.toAnalyticsEvent(event);
+        AnalyticsEvent savedEvent = repository.save(analyticsEvent);
+        log.info("Successfully processed Analysis Comments Event with id={}, eventType=POST_COMMENT", savedEvent.getId());
+    }
+
+    private boolean isValidEvent(AnalysisCommentsEventDto event) {
+        // Проверка валидности события
+        return true; // Здесь пропишите свою логику проверки
     }
 }
 
