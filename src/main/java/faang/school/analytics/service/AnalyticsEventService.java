@@ -1,5 +1,6 @@
 package faang.school.analytics.service;
 
+import faang.school.analytics.event.LikeEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
@@ -9,6 +10,7 @@ import java.util.List;
 
 public interface AnalyticsEventService {
     void saveEvent(AnalyticsEvent event);
+    void saveLikeEvent(LikeEvent likeEvent);
 
     List<AnalyticsEvent> getAnalytics(
             long receiverId,

@@ -23,10 +23,11 @@ spring:
       host: localhost
       channel:
         profile-view: profile_view_channel
+        like: like_channel
         search-appearance: search_appearance_channel
 
 server:
-  port: 8087
+  port: 8086
 
 logging:
   level:
