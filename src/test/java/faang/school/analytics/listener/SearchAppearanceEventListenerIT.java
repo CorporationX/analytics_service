@@ -2,7 +2,7 @@ package faang.school.analytics.listener;
 
 
 import com.redis.testcontainers.RedisContainer;
-import faang.school.analytics.config.RedisConfig;
+import faang.school.analytics.config.RedisConfiguration;
 import faang.school.analytics.dto.SearchAppearanceEvent;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.repository.AnalyticsEventRepository;
@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Testcontainers
-@Import(RedisConfig.class)
+@Import(RedisConfiguration.class)
 public class SearchAppearanceEventListenerIT {
 
     @Autowired

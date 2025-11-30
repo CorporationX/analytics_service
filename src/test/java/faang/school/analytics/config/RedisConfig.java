@@ -10,7 +10,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 
 @TestConfiguration
-public class RedisTestConfig {
+public class RedisConfig {
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jedisConnectionFactory, ObjectMapper objectMapper) {
