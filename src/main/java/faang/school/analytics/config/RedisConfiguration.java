@@ -1,6 +1,9 @@
 package faang.school.analytics.config;
 
 import faang.school.analytics.listener.LikeEventListener;
+import faang.school.analytics.listener.MentorshipRequestedEventListener;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,26 +24,51 @@ public class RedisConfiguration {
     @Value("${spring.data.redis.channel.like}")
     private String likeChannel;
 
+    @Value("${spring.data.redis.channel.mentorship-request}")
+    private String mentorshipRequestChannel;
+
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
         return new JedisConnectionFactory(new RedisStandaloneConfiguration(redisHost, redisPort));
     }
 
     @Bean
-    public MessageListenerAdapter messageListener() {
-        return new MessageListenerAdapter(new LikeEventListener());
+    public MessageListenerAdapter likeEventListenerAdapter(LikeEventListener listener) {
+        return new MessageListenerAdapter(listener);
     }
 
     @Bean
-    ChannelTopic likeTopic() {
+    public MessageListenerAdapter mentorshipRequestedEventListenerAdapter(MentorshipRequestedEventListener listener) {
+        return new MessageListenerAdapter(listener);
+    }
+
+    @Bean
+    ChannelTopic likeEventTopic() {
         return new ChannelTopic(likeChannel);
     }
 
     @Bean
-    public RedisMessageListenerContainer redisContainer(MessageListenerAdapter listener) {
+    ChannelTopic mentorshipRequestedEventTopic() {
+        return new ChannelTopic(mentorshipRequestChannel);
+    }
+
+    @Bean
+    public RedisMessageListenerContainer redisMessageListenerContainer(
+            Map<String, ChannelTopic> topics,
+            Map<String, MessageListenerAdapter> listeners) {
+
+        Map<MessageListenerAdapter, ChannelTopic> listenersAndTopics = new HashMap<>();
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(listener, likeTopic());
+
+        topics.forEach((topicBeanName, topic) -> {
+            String listenerBeanName = topicBeanName.replace("Topic", "ListenerAdapter");
+            MessageListenerAdapter listener = listeners.get(listenerBeanName);
+            listenersAndTopics.put(listener, topic);
+        });
+
+        listenersAndTopics.forEach(container::addMessageListener);
+
         return container;
     }
 }

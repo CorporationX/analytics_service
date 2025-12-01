@@ -1,7 +1,7 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import faang.school.analytics.event.LikeEvent;
+import faang.school.analytics.event.MentorshipRequestedEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.service.AnalyticsEventService;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class LikeEventListener implements MessageListener, RedisChannelEventListeners {
+public class MentorshipRequestedEventListener implements MessageListener, RedisChannelEventListeners {
     private final ObjectMapper objectMapper;
     private final AnalyticsEventMapper analyticsEventMapper;
     private final AnalyticsEventService analyticsEventService;
@@ -22,16 +22,16 @@ public class LikeEventListener implements MessageListener, RedisChannelEventList
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
-            LikeEvent likeEvent = objectMapper.readValue(message.getBody(), LikeEvent.class);
-            log.info("Received LikeEvent: {}", likeEvent);
-            analyticsEventService.saveEvent(analyticsEventMapper.toLikeEntity(likeEvent));
+            MentorshipRequestedEvent event = objectMapper.readValue(message.getBody(), MentorshipRequestedEvent.class);
+            log.info("Received MentorshipRequestedEvent: {}", event);
+            analyticsEventService.saveEvent(analyticsEventMapper.toMentorshipEntity(event));
         } catch (IOException e) {
-            log.error("Failed to parse LikeEvent", e);
+            log.error("Failed to parse MentorshipRequestedEvent", e);
         }
     }
 
     @Override
     public String getChannel() {
-        return "like_channel";
+        return "mentorship_request";
     }
 }

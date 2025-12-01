@@ -1,12 +1,14 @@
 package faang.school.analytics;
 
-import faang.school.analytics.event.LikeEvent;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
 import faang.school.analytics.service.AnalyticsEventServiceImpl;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,11 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -64,16 +61,19 @@ public class AnalyticsEventServiceImplTest {
 
     @Test
     void saveLikeEventSuccessful() {
-        LikeEvent likeEvent = new LikeEvent(1L, 2L, 3L, LocalDateTime.now());
-        AnalyticsEvent mapped = new AnalyticsEvent(0L, 2L, 3L, EventType.POST_LIKE, likeEvent.getTimestamp());
+        AnalyticsEvent event = new AnalyticsEvent(
+                1L,
+                10L,
+                20L,
+                EventType.POST_LIKE,
+                LocalDateTime.now()
+        );
 
-        when(analyticsEventMapper.toEntity(likeEvent)).thenReturn(mapped);
+        analyticsEventService.saveEvent(event);
 
-        analyticsEventService.saveLikeEvent(likeEvent);
-
-        verify(analyticsEventMapper).toEntity(likeEvent);
-        verify(analyticsEventRepository).save(mapped);
+        verify(analyticsEventRepository).save(event);
     }
+
     @Test
     public void saveEventSuccessfullySaves() {
         AnalyticsEvent analyticsEvent = new AnalyticsEvent();
