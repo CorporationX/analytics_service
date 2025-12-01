@@ -1,5 +1,6 @@
 package faang.school.analytics.service;
 
+import faang.school.analytics.dto.analytics_event.AnalyticsEventDto;
 import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
@@ -21,8 +22,8 @@ public class AnalyticsEventService {
     private final AnalyticsEventMapper analyticsEventMapper;
 
     @SuppressWarnings("checkstyle:CommentsIndentation")
-    public List<AnalyticsEvent> getAnalytics(long receiverId, EventType eventType,
-                                             Interval interval, LocalDateTime from, LocalDateTime to) {
+    public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType,
+                                                Interval interval, LocalDateTime from, LocalDateTime to) {
         analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
 //       Далее из полученного набора объектов нужно оставить лишь те,
 //       что попадают либо в переданный interval, либо,
