@@ -24,16 +24,25 @@ public class ProfileViewConsumer {
             containerFactory = "objectContainerFactory"
     )
     public void consumeEvent(ConsumerRecord<String, Object> consumerRecord) {
-        ProfileViewEvent profileViewEvent = objectMapper.convertValue(consumerRecord.value(), ProfileViewEvent.class);
-        log.info("Из Kafka получен новый ProfileViewEvent c viewerId: {} и profileOwnerId: {}.",
-                profileViewEvent.viewerId(), profileViewEvent.profileOwnerId());
+        try {
+            ProfileViewEvent profileViewEvent = objectMapper.convertValue(consumerRecord.value(), ProfileViewEvent.class);
+            log.info("Из Kafka получен новый ProfileViewEvent c viewerId: {} и profileOwnerId: {}.",
+                    profileViewEvent.viewerId(), profileViewEvent.profileOwnerId());
+            AnalyticsEvent analyticsEvent = createAnalyticsEvent(profileViewEvent);
+            analyticsEventService.saveEvent(analyticsEvent);
+            log.info("Новый ProfileViewEvent c viewerId: {} и profileOwnerId: {} записан БД Аналитики.",
+                    profileViewEvent.viewerId(),
+                    profileViewEvent.profileOwnerId());
+        } catch (Exception e) {
+            log.error("Не удалось преобразовать полученный из Kafka ConsumerRecord в ProfileViewEvent.");
+        }
+    }
+
+    private AnalyticsEvent createAnalyticsEvent(ProfileViewEvent profileViewEvent) {
         AnalyticsEvent analyticsEvent = new AnalyticsEvent();
         analyticsEvent.setReceiverId(profileViewEvent.profileOwnerId());
         analyticsEvent.setAuthorId(profileViewEvent.viewerId());
         analyticsEvent.setEventType(EventType.FOLLOWER);
-        analyticsEventService.saveEvent(analyticsEvent);
-        log.info("Новый ProfileViewEvent c viewerId: {} и profileOwnerId: {} записан БД Аналитики.",
-                profileViewEvent.viewerId(),
-                profileViewEvent.profileOwnerId());
+        return analyticsEvent;
     }
 }
