@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 public record PostViewEvent(
         Long postId,
-        Long authorId,
+        UserDto author,
         Long viewerId,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime currentTime
