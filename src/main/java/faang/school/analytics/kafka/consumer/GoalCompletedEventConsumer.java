@@ -18,16 +18,27 @@ public class GoalCompletedEventConsumer {
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
 
-    @KafkaListener(topics = "goal-completed", groupId = "goal-completed-group",
+    @KafkaListener(topics = "${spring.data.kafka.topics.goal_completed.name}",
+            groupId = "${spring.data.kafka.topics.goal_completed.group_id}",
             containerFactory = "objectContainerFactory")
     public void consumeEvent(ConsumerRecord<String, Object> kafkaObject) {
-        GoalCompletedEvent event = objectMapper.convertValue(kafkaObject.value(), GoalCompletedEvent.class);
-        log.info("Получен новый GoalCompletedEvent с goalId: {}", event.goalId());
+        try {
+            GoalCompletedEvent event = objectMapper.convertValue(kafkaObject.value(), GoalCompletedEvent.class);
+            log.info("Получен новый GoalCompletedEvent с goalId: {}", event.goalId());
+            AnalyticsEvent analyticsEvent = createAnalyticsEvent(event);
+            analyticsEventService.saveEvent(analyticsEvent);
+            log.info("GoalCompletedEvent c goalId: {} сохранен в бд.", event.goalId());
+        } catch (Exception e) {
+            log.error("При получении и обработке нового GoalCompletedEvent из Kafka произошла ошибка: {}",
+                    e.toString());
+        }
+    }
+
+    private AnalyticsEvent createAnalyticsEvent(GoalCompletedEvent goalCompletedEvent) {
         AnalyticsEvent analyticsEvent = new AnalyticsEvent();
-        analyticsEvent.setAuthorId(event.userId());
-        analyticsEvent.setReceiverId(event.goalId());
+        analyticsEvent.setAuthorId(goalCompletedEvent.userId());
+        analyticsEvent.setReceiverId(goalCompletedEvent.goalId());
         analyticsEvent.setEventType(EventType.GOAL_COMPLETED);
-        analyticsEventService.saveEvent(analyticsEvent);
-        log.info("GoalCompletedEvent c goalId: {} сохранен в бд.", event.goalId());
+        return analyticsEvent;
     }
 }

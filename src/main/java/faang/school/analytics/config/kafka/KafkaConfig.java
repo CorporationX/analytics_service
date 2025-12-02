@@ -20,6 +20,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class KafkaConfig {
 
+    private final static int THREADS_COUNT = 1;
+
     @Value("${spring.data.kafka.bootstrap_servers}")
     private String bootstrapServers;
 
@@ -28,9 +30,8 @@ public class KafkaConfig {
         Map<String, Object> configProperties = new HashMap<>();
         JsonDeserializer<Object> deserializer =
                 new JsonDeserializer<>(Object.class, false);
-        deserializer.addTrustedPackages("*");
+        deserializer.addTrustedPackages("faang.school.analytics.dto");
         configProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        //configProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "goal-completed-group");
         configProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         configProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(configProperties, new StringDeserializer(), deserializer);
@@ -42,7 +43,7 @@ public class KafkaConfig {
     ) {
         ConcurrentKafkaListenerContainerFactory<String, Object> container =
                 new ConcurrentKafkaListenerContainerFactory<>();
-        container.setConcurrency(1);
+        container.setConcurrency(THREADS_COUNT);
         container.setConsumerFactory(objectConsumerFactory);
         return container;
     }
