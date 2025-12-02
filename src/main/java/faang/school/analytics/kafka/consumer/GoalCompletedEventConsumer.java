@@ -15,12 +15,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class GoalCompletedEventConsumer {
+    private final static String CONTAINER_FACTORY_NAME = "objectContainerFactory";
     private final ObjectMapper objectMapper;
     private final AnalyticsEventService analyticsEventService;
 
     @KafkaListener(topics = "${spring.data.kafka.topics.goal_completed.name}",
             groupId = "${spring.data.kafka.topics.goal_completed.group_id}",
-            containerFactory = "objectContainerFactory")
+            containerFactory = CONTAINER_FACTORY_NAME)
     public void consumeEvent(ConsumerRecord<String, Object> kafkaObject) {
         try {
             GoalCompletedEvent event = objectMapper.convertValue(kafkaObject.value(), GoalCompletedEvent.class);
