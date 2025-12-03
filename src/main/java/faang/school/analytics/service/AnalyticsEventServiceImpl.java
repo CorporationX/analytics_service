@@ -1,5 +1,7 @@
 package faang.school.analytics.service;
 
+import faang.school.analytics.event.LikeEvent;
+import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
@@ -18,10 +20,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
+    private final AnalyticsEventMapper analyticsEventMapper;
 
     @Override
     public void saveEvent(@NonNull AnalyticsEvent event) {
         analyticsEventRepository.save(event);
+    }
+
+    @Override
+    public void saveLikeEvent(LikeEvent likeEvent) {
+        AnalyticsEvent entity = analyticsEventMapper.toEntity(likeEvent);
+        analyticsEventRepository.save(entity);
     }
 
     @Override

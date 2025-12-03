@@ -25,6 +25,8 @@ spring:
         profile-view: profile_view_channel
         comment_event:
           topic: comment_event_topic
+        like: like_channel
+        search-appearance: search_appearance_channel
 
 server:
   port: 8086

@@ -45,5 +45,3 @@ public class AnalyticsEvent {
     @Column(name = "received_at", nullable = false)
     private LocalDateTime receivedAt;
 }
-
-
