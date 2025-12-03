@@ -1,5 +1,7 @@
 package faang.school.analytics.listener;
 
-public interface RedisChannelEventListeners {
+import org.springframework.data.redis.connection.MessageListener;
+
+public interface RedisChannelEventListeners extends MessageListener {
     String getChannel();
 }

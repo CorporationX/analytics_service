@@ -2,9 +2,10 @@ package faang.school.analytics.config;
 
 import faang.school.analytics.listener.LikeEventListener;
 import faang.school.analytics.listener.MentorshipRequestedEventListener;
-import java.util.HashMap;
+import faang.school.analytics.listener.RedisChannelEventListeners;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
@@ -54,20 +55,18 @@ public class RedisConfiguration {
 
     @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(
-            Map<String, ChannelTopic> topics,
-            Map<String, MessageListenerAdapter> listeners) {
+            ApplicationContext context,
+            JedisConnectionFactory jedisConnectionFactory) {
 
-        Map<MessageListenerAdapter, ChannelTopic> listenersAndTopics = new HashMap<>();
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(jedisConnectionFactory());
+        container.setConnectionFactory(jedisConnectionFactory);
 
-        topics.forEach((topicBeanName, topic) -> {
-            String listenerBeanName = topicBeanName.replace("Topic", "ListenerAdapter");
-            MessageListenerAdapter listener = listeners.get(listenerBeanName);
-            listenersAndTopics.put(listener, topic);
+        Map<String, RedisChannelEventListeners> listeners = context.getBeansOfType(RedisChannelEventListeners.class);
+
+        listeners.values().forEach(listener -> {
+            ChannelTopic topic = new ChannelTopic(listener.getChannel());
+            container.addMessageListener(listener, topic);
         });
-
-        listenersAndTopics.forEach(container::addMessageListener);
 
         return container;
     }
