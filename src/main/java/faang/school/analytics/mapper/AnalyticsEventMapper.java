@@ -6,5 +6,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface AnalyticsEventMapper {
-    AnalyticsEventDto toAnalyticsEventDto(AnalyticsEvent analyticsEvent);
+    AnalyticsEventDto toDto(AnalyticsEvent analyticsEvent);
 }

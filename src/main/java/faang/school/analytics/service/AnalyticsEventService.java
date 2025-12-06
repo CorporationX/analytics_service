@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -21,16 +22,34 @@ public class AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
     private final AnalyticsEventMapper analyticsEventMapper;
 
-    @SuppressWarnings("checkstyle:CommentsIndentation")
     public List<AnalyticsEventDto> getAnalytics(long receiverId, EventType eventType,
                                                 Interval interval, LocalDateTime from, LocalDateTime to) {
-        analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
-//       Далее из полученного набора объектов нужно оставить лишь те,
-//       что попадают либо в переданный interval, либо,
-//       если interval = null, то попадают в период от from до to. - условие задачи
 
-        /* не понимаю, как реализовать фильтрацию, описанную выше, подскажи пожалуйста */
-        return null;
+        List<AnalyticsEvent> events = analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType);
+
+        final LocalDateTime fromFinal;
+        final LocalDateTime toFinal;
+
+        if (interval != null) {
+            toFinal = LocalDateTime.now();
+            fromFinal = switch (interval) {
+                case DAY -> toFinal.minusDays(1);
+                case WEEK -> toFinal.minusWeeks(1);
+                case MONTH -> toFinal.minusMonths(1);
+                case YEAR -> toFinal.minusYears(1);
+            };
+        } else {
+            fromFinal = from;
+            toFinal = to;
+        }
+
+        return events.stream()
+                .filter(event ->
+                        !event.getReceivedAt().isBefore(fromFinal)
+                                && !event.getReceivedAt().isAfter(toFinal)
+                )
+                .map(analyticsEventMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     public void saveEvent(AnalyticsEvent analyticsEvent) {
