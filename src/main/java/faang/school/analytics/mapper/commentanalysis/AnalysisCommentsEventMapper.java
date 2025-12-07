@@ -7,10 +7,11 @@ import faang.school.analytics.model.EventType;
 public class AnalysisCommentsEventMapper {
     public static AnalyticsEvent toAnalyticsEvent(AnalysisCommentsEventDto eventDto) {
         return AnalyticsEvent.builder()
+                .receiverId(eventDto.receiverId()) //author's post
+                .actorId(eventDto.authorId()) //author's comment
                 .postId(eventDto.postId())
-                .actorId(eventDto.authorId())
-                .receiverId(eventDto.commentId()) // Здесь идентификатор комментария
-                .eventType(EventType.POST_COMMENT) // Используем тип POST_COMMENT
+                .commentId(eventDto.commentId())
+                .eventType(EventType.POST_COMMENT)
                 .receivedAt(eventDto.createdAt())
                 .build();
     }

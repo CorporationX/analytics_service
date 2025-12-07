@@ -7,8 +7,9 @@ import java.time.LocalDateTime;
 
 @Builder
 public record AnalysisCommentsEventDto(
+        Long receiverId, //author's post
+        Long authorId, //author's comment
         Long postId,
-        Long authorId,
         Long commentId,
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         LocalDateTime createdAt

@@ -44,6 +44,9 @@ kafka:
       topic: analytics.post-view
       group-id: post-view-group
       concurrency: 3
+    comment:
+      topic: analytics.comment-analysis
+      group-id: comment-analysis-group
 
 logging:
   level:

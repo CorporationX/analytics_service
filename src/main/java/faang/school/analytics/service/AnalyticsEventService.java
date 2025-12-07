@@ -42,19 +42,11 @@ public class AnalyticsEventService {
 
     @Transactional
     public void handleEvent(AnalysisCommentsEventDto event) {
-        if (!isValidEvent(event)) {
-            log.warn("Invalid or unsupported event received.");
-            return;
-        }
+        log.warn("Invalid or unsupported event received.");
 
         AnalyticsEvent analyticsEvent = AnalysisCommentsEventMapper.toAnalyticsEvent(event);
         AnalyticsEvent savedEvent = repository.save(analyticsEvent);
+
         log.info("Successfully processed Analysis Comments Event with id={}, eventType=POST_COMMENT", savedEvent.getId());
     }
-
-    private boolean isValidEvent(AnalysisCommentsEventDto event) {
-        // Проверка валидности события
-        return true; // Здесь пропишите свою логику проверки
-    }
 }
-
