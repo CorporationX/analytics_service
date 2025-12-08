@@ -42,7 +42,6 @@ public class AnalyticsEventService {
 
     @Transactional
     public void handleEvent(AnalysisCommentsEventDto event) {
-        log.warn("Invalid or unsupported event received.");
 
         AnalyticsEvent analyticsEvent = AnalysisCommentsEventMapper.toAnalyticsEvent(event);
         AnalyticsEvent savedEvent = repository.save(analyticsEvent);

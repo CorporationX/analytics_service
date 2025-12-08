@@ -30,10 +30,10 @@ public class AnalyticsEvent {
     private long id;
 
     @Column(name = "receiver_id", nullable = false)
-    private long receiverId; //author's post
+    private long receiverId;
 
     @Column(name = "actor_id", nullable = false)
-    private long actorId; //author's comment
+    private long actorId;
 
     @Column(name = "comment_id", nullable = false)
     private long commentId;

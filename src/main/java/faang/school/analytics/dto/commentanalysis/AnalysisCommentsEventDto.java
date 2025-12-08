@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 
 @Builder
 public record AnalysisCommentsEventDto(
-        Long receiverId, //author's post
-        Long authorId, //author's comment
+        Long receiverId,
+        Long authorId,
         Long postId,
         Long commentId,
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")

@@ -31,6 +31,8 @@ public class AnalysisCommentsConsumer {
             AnalysisCommentsEventDto dto = objectMapper.readValue(event, AnalysisCommentsEventDto.class);
             analyticsService.handleEvent(dto);
             acknowledgment.acknowledge();
+
+            log.info("Successfully processed and acknowledged Analysis Event [commentId={}]", dto.commentId());
         } catch (Exception e) {
             log.error("Error processing Analysis Comments Event: ", e);
         }
