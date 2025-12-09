@@ -103,9 +103,6 @@ class AnalyticsEventServiceImplTest {
     @Test
     @DisplayName("getAnalytics(): should throw exception when both 'from' and 'interval' are null")
     void getAnalytics_shouldThrowException_whenFromAndIntervalAreNull() {
-        when(repository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE))
-                .thenReturn(Stream.of(event));
-
         assertThrows(DataValidationException.class,
                 () -> service.getAnalytics(RECEIVER_ID, EVENT_TYPE, null, null, null));
     }
@@ -115,12 +112,15 @@ class AnalyticsEventServiceImplTest {
     void getAnalytics_shouldUseNowAndInterval() {
         Interval interval = Interval.DAY;
 
+        LocalDateTime to = LocalDateTime.now();
+        LocalDateTime from = interval.subtractFrom(to);
+
         AnalyticsEvent recentEvent = AnalyticsEvent.builder()
                 .receiverId(RECEIVER_ID)
                 .eventType(EVENT_TYPE)
                 .receivedAt(NOW.minusHours(5))
                 .build();
-        when(repository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE))
+        when(repository.findEvents(RECEIVER_ID, EVENT_TYPE, from, to))
                 .thenReturn(Stream.of(recentEvent));
 
         List<AnalyticsEventDto> result = service.getAnalytics(RECEIVER_ID, EVENT_TYPE, interval, null, null);
@@ -147,7 +147,7 @@ class AnalyticsEventServiceImplTest {
                 .receivedAt(NOW.minusDays(5))
                 .build();
 
-        when(repository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE))
+        when(repository.findEvents(RECEIVER_ID, EVENT_TYPE, from, to))
                 .thenReturn(Stream.of(inRange, outOfRange));
 
         List<AnalyticsEventDto> result = service.getAnalytics(RECEIVER_ID, EVENT_TYPE, null, from, to);
@@ -174,7 +174,7 @@ class AnalyticsEventServiceImplTest {
                 .receivedAt(NOW.plusDays(1))
                 .build();
 
-        when(repository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE))
+        when(repository.findEvents(RECEIVER_ID, EVENT_TYPE, from, to))
                 .thenReturn(Stream.of(inRange, outOfRange));
 
         List<AnalyticsEventDto> result = service.getAnalytics(RECEIVER_ID, EVENT_TYPE, null, from, to);
@@ -200,7 +200,7 @@ class AnalyticsEventServiceImplTest {
                 .receivedAt(NOW)
                 .build();
 
-        when(repository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE))
+        when(repository.findEvents(RECEIVER_ID, EVENT_TYPE, from, to))
                 .thenReturn(Stream.of(e1, e2));
 
         List<AnalyticsEventDto> result = service.getAnalytics(RECEIVER_ID, EVENT_TYPE, null, from, to);
@@ -222,7 +222,7 @@ class AnalyticsEventServiceImplTest {
                 .receivedAt(NOW.minusDays(5))
                 .build();
 
-        when(repository.findByReceiverIdAndEventType(RECEIVER_ID, EVENT_TYPE))
+        when(repository.findEvents(RECEIVER_ID, EVENT_TYPE, from, to))
                 .thenReturn(Stream.of(e1));
 
         List<AnalyticsEventDto> result = service.getAnalytics(RECEIVER_ID, EVENT_TYPE, null, from, to);
