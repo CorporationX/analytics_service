@@ -18,7 +18,8 @@ import java.util.Map;
 @Configuration
 public class AnalysisCommentsKafkaConsumerConfig {
 
-    private static final int THREADS = 3;
+    @Value("${kafka.consumers.comment.concurrency}")
+    private int threadsCount;
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
@@ -40,7 +41,7 @@ public class AnalysisCommentsKafkaConsumerConfig {
 
             ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
             factory.setConsumerFactory(analyticsConsumerFactory);
-            factory.setConcurrency(THREADS);
+            factory.setConcurrency(threadsCount);
             factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
             return factory;
     }

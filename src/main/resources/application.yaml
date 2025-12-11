@@ -47,6 +47,7 @@ kafka:
     comment:
       topic: analytics.comment-analysis
       group-id: comment-analysis-group
+      concurrency: 3
 
 logging:
   level:
