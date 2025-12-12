@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changeset/analytics_V001__initial.sql
   - include:
       file: db/changelog/changeset/analytics_V002__initial.sql
+  - include:
+      file: db/changelog/changeset/2025-12-08-added-comment-id-column.sql

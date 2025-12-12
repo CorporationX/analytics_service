@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 @Configuration
 public class ObjectMapperConfig {
 
+    @Primary
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
@@ -22,6 +23,23 @@ public class ObjectMapperConfig {
         javaTimeModule.addDeserializer(
                 LocalDateTime.class,
                 new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+        );
+
+        mapper.registerModule(javaTimeModule);
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        return mapper;
+    }
+
+    @Bean("objectMapperAnalysisComments")
+    public ObjectMapper objectMapperAnalysisComments() {
+        ObjectMapper mapper = new ObjectMapper();
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+
+        javaTimeModule.addDeserializer(
+                LocalDateTime.class,
+                new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))
         );
 
         mapper.registerModule(javaTimeModule);
