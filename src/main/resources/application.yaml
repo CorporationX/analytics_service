@@ -31,6 +31,8 @@ spring:
       channels:
         calculations_channel:
           name: calculations_channel
+        recommendation:
+          name: recommendation
 
 server:
   port: 8086
@@ -48,3 +50,4 @@ project-service:
 payment-service:
   host: localhost
   port: 9080
+
