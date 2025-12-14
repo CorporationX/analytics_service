@@ -7,17 +7,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record CreateAnalyticsEventDto (
-    @NotNull
-    long receiverId,
+public record CreateAnalyticsEventDto(
+        @NotNull long receiverId,
 
-    @NotNull
-    long actorId,
+        @NotNull long actorId,
 
-    @NotNull
-    EventType eventType,
+        @NotNull EventType eventType,
 
-    @NotNull
-    LocalDateTime receivedAt
-) {
+        @NotNull LocalDateTime receivedAt) {
 }
