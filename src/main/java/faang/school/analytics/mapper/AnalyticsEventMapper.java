@@ -1,5 +1,6 @@
 package faang.school.analytics.mapper;
 
+import faang.school.analytics.dto.event.CommentEventDto;
 import faang.school.analytics.event.LikeEvent;
 import faang.school.analytics.event.MentorshipRequestedEvent;
 import faang.school.analytics.model.AnalyticsEvent;
@@ -20,4 +21,6 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "MentorId", target = "receiverId")
     @Mapping(source = "timestamp", target = "receivedAt")
     AnalyticsEvent toMentorshipEntity(MentorshipRequestedEvent event);
+
+    AnalyticsEvent toAnalyticsEvent(CommentEventDto commentEventDto);
 }
