@@ -22,7 +22,7 @@ public class MentorshipRequestedEventListener implements RedisChannelEventListen
     @Override
     public void onMessage(Message message, byte[] pattern) {
         if (message == null || message.getBody() == null) {
-            log.warn("Received null message or empty body. Pattern: {}", pattern);
+            log.warn("Received null message or empty body.");
             return;
         }
         String rawMessage = new String(message.getBody(), StandardCharsets.UTF_8);

@@ -30,8 +30,7 @@ public class LikeEventListener implements RedisChannelEventListeners {
 
         try {
             LikeEvent likeEvent = objectMapper.readValue(message.getBody(), LikeEvent.class);
-            log.info("Parsed LikeEvent: {}", likeEvent);
-            
+            log.info("Parsed MentorshipRequestedEvent: {}", likeEvent);
             analyticsEventService.saveEvent(analyticsEventMapper.toLikeEntity(likeEvent));
         } catch (IOException e) {
             log.error("Failed to parse LikeEvent", e);
