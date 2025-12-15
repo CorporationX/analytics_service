@@ -1,36 +1,26 @@
 package faang.school.analytics.service;
 
-import faang.school.analytics.event.LikeEvent;
-import faang.school.analytics.mapper.AnalyticsEventMapper;
 import faang.school.analytics.model.AnalyticsEvent;
 import faang.school.analytics.model.EventType;
 import faang.school.analytics.model.Interval;
 import faang.school.analytics.repository.AnalyticsEventRepository;
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class AnalyticsEventServiceImpl implements AnalyticsEventService {
     private final AnalyticsEventRepository analyticsEventRepository;
-    private final AnalyticsEventMapper analyticsEventMapper;
 
     @Override
     public void saveEvent(@NonNull AnalyticsEvent event) {
         analyticsEventRepository.save(event);
-    }
-
-    @Override
-    public void saveLikeEvent(LikeEvent likeEvent) {
-        AnalyticsEvent entity = analyticsEventMapper.toEntity(likeEvent);
-        analyticsEventRepository.save(entity);
     }
 
     @Override
@@ -58,10 +48,11 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
                 .sorted(Comparator.comparing(AnalyticsEvent::getReceivedAt).reversed())
                 .toList();
     }
+
     private List<AnalyticsEvent> filterEventsByDates(long receiverId,
-                                               EventType eventType,
-                                               LocalDateTime from,
-                                               LocalDateTime to
+                                                     EventType eventType,
+                                                     LocalDateTime from,
+                                                     LocalDateTime to
     ) {
         return analyticsEventRepository.findByReceiverIdAndEventType(receiverId, eventType)
                 .filter(event ->

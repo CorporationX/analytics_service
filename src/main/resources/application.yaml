@@ -26,6 +26,7 @@ spring:
         comment_event:
           topic: comment_event_topic
         like: like_channel
+        mentorship-request: mentorship_request
         search-appearance: search_appearance_channel
 
 server:
