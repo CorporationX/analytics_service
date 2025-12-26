@@ -18,6 +18,6 @@ public class FollowerEventListener implements MessageListener {
     @SneakyThrows
     @Override
     public void onMessage(Message message, byte[] pattern) {
-    FollowerEvent event = objectMapper.readValue(message.getBody(), FollowerEvent.class) ;
+        FollowerEvent event = objectMapper.readValue(message.getBody(), FollowerEvent.class);
     }
 }
