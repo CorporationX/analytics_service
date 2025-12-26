@@ -45,8 +45,8 @@ public class AnalyticsEventService {
 
         return events.stream()
                 .filter(event ->
-                        !event.getReceivedAt().isBefore(fromFinal)
-                                && !event.getReceivedAt().isAfter(toFinal)
+                        event.getReceivedAt().isAfter(fromFinal)
+                                && event.getReceivedAt().isBefore(toFinal)
                 )
                 .map(analyticsEventMapper::toDto)
                 .collect(Collectors.toList());
