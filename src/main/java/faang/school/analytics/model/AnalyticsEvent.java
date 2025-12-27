@@ -15,7 +15,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 
 @Getter
@@ -24,14 +23,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="analytics_event")
+@Table(name = "analytics_event")
 public class AnalyticsEvent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name="receiver_id", nullable = false)
+    @Column(name = "receiver_id", nullable = false)
     private long receiverId;
 
     @Column(name = "actor_id", nullable = false)
