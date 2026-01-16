@@ -5,13 +5,15 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 import faang.school.analytics.dto.AnalyticsEventDto;
+import faang.school.analytics.dto.CommentEvent;
 import faang.school.analytics.dto.CreateAnalyticsEventDto;
 import faang.school.analytics.dto.RecommendationEvent;
 import faang.school.analytics.model.AnalyticsEvent;
+import faang.school.analytics.model.EventType;
 
 @Mapper(componentModel = "spring",
     unmappedTargetPolicy = ReportingPolicy.IGNORE,
-    imports = {faang.school.analytics.model.EventType.class}
+    imports = EventType.class
 )
 public interface AnalyticsEventMapper {
     AnalyticsEventDto toDto(AnalyticsEvent model);
@@ -22,4 +24,10 @@ public interface AnalyticsEventMapper {
     @Mapping(source = "createdAt", target = "receivedAt")
     @Mapping(target = "eventType", constant = "RECOMMENDATION_RECEIVED")
     CreateAnalyticsEventDto toDto(RecommendationEvent event);
+
+    @Mapping(source = "commentAuthorId", target = "actorId")
+    @Mapping(source = "postAuthorId", target = "receiverId")
+    @Mapping(source = "createdAt", target = "receivedAt")
+    @Mapping(target = "eventType", constant = "POST_COMMENT")
+    CreateAnalyticsEventDto toDto(CommentEvent event);
 }
