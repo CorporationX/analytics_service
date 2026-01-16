@@ -33,6 +33,8 @@ spring:
           name: calculations_channel
         recommendation:
           name: recommendation
+        comment:
+          name: comment
 
 server:
   port: 8086
