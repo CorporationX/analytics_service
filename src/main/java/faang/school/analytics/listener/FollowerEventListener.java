@@ -1,6 +1,7 @@
 package faang.school.analytics.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import faang.school.analytics.client.UserServiceClient;
 import faang.school.analytics.dto.FollowerEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
