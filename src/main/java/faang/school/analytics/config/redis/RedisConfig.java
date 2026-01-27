@@ -23,9 +23,12 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
+    @Value("${spring.data.redis.channel.profile-view}")
+    private String profileViewChannel;
+
     @Bean
-    ChannelTopic topic() {
-        return new ChannelTopic("follower_topic");
+    ChannelTopic profileViewTopic() {
+        return new ChannelTopic(profileViewChannel);
     }
 
     @Bean
@@ -44,7 +47,7 @@ public class RedisConfig {
         RedisMessageListenerContainer container
                 = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(followerListener, topic());
+        container.addMessageListener(followerListener, profileViewTopic());
         return container;
     }
 
